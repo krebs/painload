@@ -1,0 +1,5 @@
+#! /bin/sh
+set -euf
+kv="`cat`"
+echo "$kv" | cut -f 1 | tr '\n' , | sed 's/,$//' ; echo
+echo "$kv" | cut -f 2 | tr '\n' , | sed 's/,$//' ; echo

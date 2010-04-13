@@ -1,0 +1,3 @@
+#! /bin/sh
+# TODO escape and ensure correct sh syntax
+sed -r 's/\t/="/;s/$/"/'
