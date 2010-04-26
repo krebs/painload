@@ -13,5 +13,7 @@ case "$1" in
     echo amplitude: $a
     echo gap: $g
     #echo "[31mespeak -p \"$pitch\" -v \"$lang\" \"$*\"[m" >&2
-    espeak -a $a -k $k -p $p -v $v -g $g "$*" &
+    espeak -a $a -k $k -p $p -v $v -g $g<<EOF
+$*
+EOF
 esac
