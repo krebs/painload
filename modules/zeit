@@ -1,0 +1,15 @@
+#! /bin/sh
+
+case "$1" in
+  (--help)
+    echo "say current time" ;;
+  (*)
+    exec >>$NOISE_linefeed
+    echo /set pitch 10
+    case "$lang" in
+      (de|'') date +'"Es ist %k Uhr %M."' >$NOISE_linefeed ;;
+      (en|*-en) date +'"It is %k o clock and %M minutes"' >$NOISE_linefeed ;;
+      (*) echo "[31mError: unsupported [4mlang[0;31m = $lang[m" >&2
+    esac
+    echo /set pitch ${noise_pitch-100}
+esac 2>&1

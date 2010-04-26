@@ -1,0 +1,17 @@
+#! /bin/sh
+case "$1" in
+  (--help) echo say something with espeak ;;
+  (*)
+    p="${noise_pitch-100}"
+    v="${noise_lang-de}"
+    k="${noise_capital-0}"
+    a="${noise_amplitude-100}"
+    g="${noise_gap-1}"
+    echo pitch: $p
+    echo lang: $v
+    echo capital: $k
+    echo amplitude: $a
+    echo gap: $g
+    #echo "[31mespeak -p \"$pitch\" -v \"$lang\" \"$*\"[m" >&2
+    espeak -a $a -k $k -p $p -v $v -g $g "$*" &
+esac
