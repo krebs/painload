@@ -1,4 +1,4 @@
 #! /bin/sh
 qname="`readlink -f "$0"`"
 dirname="`dirname "$qname"`"
-exec tcpserver -c 423 -t 2 -D 0.0.0.0 23 "$dirname/noise-as-shack"
+exec su - shack -c "$dirname"/noise
