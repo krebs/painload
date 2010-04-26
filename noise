@@ -40,13 +40,28 @@ cleanup() {
   kill $jobs
 }
 
+
+qname="`readlink -f "$0"`"
+dirname="`dirname "$qname"`"
+if test -d "$dirname/modules" ; then
+  export NOISE_PATH="${NOISE_PATH+$NOISE_PATH:}$dirname/modules"
+fi
 linefeed="/tmp/noise-client-$$"
 trap cleanup EXIT
 mkfifo $linefeed
-while eval `{ read && echo $REPLY ; } | tr -d \' | sed -rn "
-      s:^/([a-z]+)([[:space:]]+(.*))?$:command='\1'; args='\3';:p;t
-      s:.*:command='$noise_default_command'; args='&';:p;t
-    "` ; do
+##
+##
+##
+readline() {
+  { read && echo $REPLY ; } | sed -rn "
+    s/['\"]//g
+    s:^/([a-z]+)([[:space:]]+(.*))?$:command=\1; args='\3';:p;t
+    s@^([[:alnum:]_/+-]+):[[:space:]]*(.*)@command=lang; args='\1 \2';@p;t
+    s@^\![[:space:]]*(.*)@command=play; args='\1';@p;t
+    s:.*:command='$noise_default_command'; args='&';:p;t
+  "
+}
+while eval "`readline`" ; do
   #echo "command: $command; args: $args"
   ## modcall
   for dir in `echo "$NOISE_PATH" | tr : \ ` ; do
@@ -66,18 +81,24 @@ while eval `{ read && echo $REPLY ; } | tr -d \' | sed -rn "
   fail unknown command "[4m$command[m"
 done <$linefeed &
 jobs="${jobs+$jobs }`jobs -p`"
+##
+##
+##
 cat<<EOF
 [35mwelcome to [4mSHACK UTTERANCE[;35m version 0.9 beta 2
 get help with [32m/help[m
 [33mTIP: benutze [4mrlwrap[;33m für eine elitäre Kommandozeile.[m
 EOF
+##
+##
+##
 exec >>$linefeed
 echo /set default_command espeak
-  while read ; do
-    case $REPLY in
-      (/quit) echo /quit ; exit ;;
-      (*) tr \; \\n | grep . ;;
-    esac<<EOF
+while read ; do
+  case $REPLY in
+    (/quit) echo /quit ; exit ;; 
+    (*) tr \; \\n | grep . ;;
+  esac<<EOF
 $REPLY
 EOF
 done
