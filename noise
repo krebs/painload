@@ -45,6 +45,7 @@ qname="`readlink -f "$0"`"
 dirname="`dirname "$qname"`"
 if test -d "$dirname/modules" ; then
   export NOISE_PATH="${NOISE_PATH+$NOISE_PATH:}$dirname/modules"
+  export NOISE_PATH="${NOISE_PATH+$NOISE_PATH:}$HOME/noise/modules"
 fi
 linefeed="/tmp/noise-client-$$"
 trap cleanup EXIT
