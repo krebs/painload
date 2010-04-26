@@ -1,0 +1,102 @@
+#! /bin/sh
+
+noise_set() { # set a variable
+  if test "x$1" = x ; then
+    env | sed -rn '
+      s/^noise_([[:alnum:]_]+)=(.*)$/[35;4m\1[;35m = [32m\2[m/p
+    ' | sort
+  elif test "x$2" = x ; then
+    eval "echo \"[35;4m$1[0;35m is [0;32m\$noise_$1[m\""
+  else
+    if echo "$1" | grep -q '[^[:alnum:]_]' ; then
+      fail invalid variable name "[4m$1"
+      return 23
+    fi
+    eval "old=\"\$noise_$1\""
+    if test "x$old" = "x$2" ; then
+      eval "echo \"[35;4m$1[0;35m is already [0;32m$2[m\""
+    elif test -z "$old" ; then
+      eval "export noise_$1='$2' ; echo \
+\"[35;4m$1[0;35m set to [0;32m$2[m\""
+    else
+      eval "export noise_$1='$2' ; echo \
+\"[35;4m$1[0;35m changed from $old to [0;32m$2[m\""
+    fi
+  fi
+}
+
+noise_quit() { # exit
+  echo "[35mGood bye![m"
+  exit
+}
+
+fail() {
+  echo "[31mFAIL: $*[m"
+  return 23
+}
+
+linefeed="/tmp/noise-client-$$"
+trap "rm -f $linefeed" EXIT
+mkfifo $linefeed
+while eval `{ read && echo $REPLY ; } | tr -d \' | sed -rn "
+      s:^/([a-z]+)([[:space:]]+(.*))?$:command='\1'; args='\3';:p;t
+      s:.*:command='$noise_default_command'; args='&';:p;t
+    "` ; do
+  #echo "command: $command; args: $args"
+  ## modcall
+  for dir in `echo "$NOISE_PATH" | tr : \ ` ; do
+    module="$dir/$command"
+    if test -x "$module" ; then
+      shift
+      NOISE="$0" NOISE_linefeed="$linefeed" "$module" $args
+      continue 2
+    fi
+  done
+  ## funcall
+  if type noise_$command &>/dev/null ; then
+    noise_$command $args
+    continue
+  fi
+  ##
+  fail unknown command "[4m$command[m"
+done <$linefeed &
+cat<<EOF
+[35mwelcome to [4mSHACK UTTERANCE[;35m version 0.9 beta 2
+get help with [32m/help[m
+[33mTIP: benutze [4mrlwrap[;33m für eine elitäre Kommandozeile.[m
+EOF
+exec >>$linefeed
+echo /set default_command espeak
+  while read ; do
+    case $REPLY in
+      (/quit) echo /quit ; exit ;;
+      (*) tr \; \\n | grep . ;;
+    esac<<EOF
+$REPLY
+EOF
+done
+#### end of file.
+
+
+
+
+exit
+modcall() {
+  for dir in `echo "$NOISE_PATH" | tr : \ ` ; do
+    module="$dir/$1"
+    if test -x "$module" ; then
+      shift
+      "$module" "$@"
+      : && return
+    fi
+  done
+  return 23
+}
+
+funcall() {
+  if type noise_"$1" &>/dev/null ; then
+    noise_"$@"
+    : && return
+  fi
+  return 23
+}
