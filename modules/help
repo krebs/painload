@@ -11,5 +11,14 @@ case "$1" in
     } | sort | sed -rn '
       $s/$/[m/
       s:^([a-z]+) (.+):[35mtype [32m/\1[35m to \2:p' ;;
-  (*) exit 23 ;;
+  (*)
+    ## call
+    for directory in `echo "$NOISE_PATH" | tr : \ ` ; do
+      for module in "$directory/$1" ; do
+        if test -e $module ; then
+          shift
+          exec $module --help --verbose "$@" 2>&1
+        fi
+      done
+    done
 esac
