@@ -62,7 +62,7 @@ readline() {
     s:.*:command='$noise_default_command'; args='&';:p;t
   "
 }
-while eval "`readline`" ; do
+while echo "READY." && eval "`readline`" ; do
   #echo "command: $command; args: $args"
   ## modcall
   for dir in `echo "$NOISE_PATH" | tr : \ ` ; do
