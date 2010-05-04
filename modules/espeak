@@ -1,4 +1,9 @@
 #! /bin/sh
+
+print_var() {
+  echo "[35;4m$1[;35m = [32m$2[m"
+}
+
 case "$1" in
   (--help) echo say something with espeak ;;
   (*)
@@ -7,11 +12,11 @@ case "$1" in
     k="${noise_capital-0}"
     a="${noise_amplitude-100}"
     g="${noise_gap-1}"
-    echo pitch: $p
-    echo lang: $v
-    echo capital: $k
-    echo amplitude: $a
-    echo gap: $g
+    print_var pitch $p
+    print_var lang $v
+    print_var capital $k
+    print_var amplitude $a
+    print_var gap $g
     #echo "[31mespeak -p \"$pitch\" -v \"$lang\" \"$*\"[m" >&2
     espeak -a $a -k $k -p $p -v $v -g $g<<EOF
 $*
