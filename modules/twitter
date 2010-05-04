@@ -1,0 +1,116 @@
+#!/usr/bin/python
+#encode=utf8
+
+import sys, twitter
+
+sys.stderr = sys.stdout
+
+def shorten(text):
+	
+	text = text.replace("about ", "~")
+	text = text.replace("an", "1")
+	text = text.replace(" minutes", "m")
+	text = text.replace(" minute", "m")
+	text = text.replace(" hours", "h")
+	text = text.replace(" hour", "h")
+	text = text.replace(" seconds", "s")
+	text = text.replace(" second", "s")
+	text = text.replace(" days", "d")
+	text = text.replace(" day", "d")
+	text = text.replace(" weeks", "w")
+	text = text.replace(" week", "w")
+	text = text.replace(" years", "y")
+	text = text.replace(" year", "y")
+	text = text.replace(" ago", "")
+	return text
+	
+
+def parse(text):
+	text = text.replace("\n","")
+	t = text.split(" ")
+	new = ""
+	for piece in t:
+		escape = ""
+		if piece.startswith("@"):
+			escape = "[33;4m"
+			if piece[1:].lower() == "shackspace":
+				escape = "[31;4m"
+				
+		elif piece.startswith("#"):
+			escape = "[35m"
+		elif piece.startswith("http://"):
+			escape = "[36;4m"
+		if escape:
+			new += escape + piece + "[m "
+		else:
+			new += piece + " "
+
+	return new
+
+if len(sys.argv) > 1 and sys.argv[1] == "--help":
+	print "read or post to the shackspace twitter timeline"
+	if len(sys.argv) == 3 and sys.argv[2] == "--verbose":
+		print "call without parameters to read"
+		print "use /twitter [your tweet] to tweet something to the shackspace twitter timeline"
+	exit()	
+
+
+
+
+api = twitter.Api(username="shackspace", password="0b0dallaf4lla")
+
+#api.SetXTwitterHeaders("Shackspace UTTERANCE","","0.00.0.01.42")
+
+if len(sys.argv) > 1:
+	
+	
+	tweet = u""
+	
+	for t in sys.argv[1:]:
+		tweet += t.decode("utf8") + u" "
+	tweet = tweet[:-1]
+
+	print u"Length: [32;1m" + str(len(tweet)) + u"[m"
+
+	if len(tweet) > 140:
+		print u"[31;6mYour Tweet must be shorter than 140 characters.[m\n"
+		exit()
+	
+	status = api.PostUpdate(tweet)
+	
+	
+	
+
+else:	
+	"""print "\t[31;4mshackspace tweets:[m"
+	for i in api.GetUserTimeline():
+		i.text = parse(i.text)
+		print ("[32m" + i.user.screen_name + "[m [34m" + i.GetRelativeCreatedAt() + "[m " + i.text).encode("utf8").replace("\n"," ")
+	
+	print "\n\t[31;4mfriends tweets[m"
+	"""
+	a = api.GetFriendsTimeline()
+	a.reverse()
+	for i in a:
+		text = i.text
+		if i.user.screen_name.lower() == "shackspace":
+			info = "[32;4m" + i.user.screen_name + "[m [34m" + shorten(i.GetRelativeCreatedAt()) + "[m" 
+		else:
+			info = "[32m" + i.user.screen_name + "[m [34m" + shorten(i.GetRelativeCreatedAt()) + "[m" 
+		text = info + " " + parse(text)
+		
+		t = text.split(" ")
+		tmp = ""
+		for n in t:
+			if ((len(tmp) + len(n)) > 80):
+				print parse(tmp).encode("utf8")
+				tmp = " " *( len(info)-15)
+			
+			tmp += " " + n
+		if len(tmp) > (len(info)-15+1):	
+			print parse(tmp).encode("utf8")
+		
+
+
+
+

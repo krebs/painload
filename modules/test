@@ -1,0 +1,9 @@
+#! /bin/sh
+
+case "$1" in
+  (--help) echo do some test-module related stuff ;;
+  (*)
+    echo test-module called with following arguments: "$@"
+    ## send command for re-evaluation:
+    echo /espeak test >$NOISE_linefeed
+esac
