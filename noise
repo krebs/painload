@@ -102,7 +102,7 @@ jobs="${jobs+$jobs }`jobs -p`"
 ##
 ##
 cat<<EOF
-[35mwelcome to [4mSHACK UTTERANCE[;35m version 0.9 beta 2
+[35mwelcome to [4mSHACK UTTERANCE[;35m version 0.9 beta 3
 get help with [32m/help[m
 [33mTIP: benutze [4mrlwrap[;33m für eine elitäre Kommandozeile.[m
 EOF
