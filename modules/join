@@ -1,14 +1,12 @@
 #! /bin/sh
 
 case "$1" in
-  (--help) echo set default_command to atwall and back ;;
-  (off)
-    echo /set default_command espeak >$NOISE_linefeed
-    echo "[32mdisabled chat mode (set back to espeak)[m" ;;
+  (--help) echo set default_command to chat and join channel ;;
   (*)
     echo /set default_command atwall >$NOISE_linefeed
-    echo "[32menabled chat mode[m" 
-    echo q or /chat off to go back to espeak ;;
+    echo /set chat_channel $1 >$NOISE_linefeed
+    echo "[32mjoined channel $1[m" 
+    echo  /part off to go back to espeak ;;
 
 
 esac
