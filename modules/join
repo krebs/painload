@@ -3,7 +3,7 @@
 case "$1" in
   (--help) echo set default_command to chat and join channel ;;
   (*)
-    echo /set default_command atwall >$NOISE_linefeed
+    echo /set default_command chat >$NOISE_linefeed
     echo /set chat_channel $1 >$NOISE_linefeed
     echo "[32mjoined channel $1[m" 
     echo  /part off to go back to espeak ;;
