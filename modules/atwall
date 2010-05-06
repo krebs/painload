@@ -1,0 +1,11 @@
+#! /bin/sh
+
+case "$1" in
+  (--help) echo send text to everyone with @@ prepended ;;
+  (q)
+    echo quit chat mode
+    echo /set default_command espeak >$NOISE_linefeed;;
+
+  (*)    
+    echo /wall [33m@@[m $* >$NOISE_linefeed
+esac

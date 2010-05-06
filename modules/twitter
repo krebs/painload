@@ -33,7 +33,7 @@ def parse(text):
 		escape = ""
 		if piece.startswith("@"):
 			escape = "[33;4m"
-			if piece[1:].lower() == "shackspace":
+			if piece[1:].lower() == "shackspam" or piece[1:].lower() == "shackspace":
 				escape = "[31;4m"
 				
 		elif piece.startswith("#"):
@@ -48,16 +48,16 @@ def parse(text):
 	return new
 
 if len(sys.argv) > 1 and sys.argv[1] == "--help":
-	print "read or post to the shackspace twitter timeline"
+	print "read or post to the shackspam twitter timeline"
 	if len(sys.argv) == 3 and sys.argv[2] == "--verbose":
 		print "call without parameters to read"
-		print "use /twitter [your tweet] to tweet something to the shackspace twitter timeline"
+		print "use /twitter [your tweet] to tweet something to the shackspam twitter timeline"
 	exit()	
 
 
 
 
-api = twitter.Api(username="shackspace", password="0b0dallaf4lla")
+api = twitter.Api(username="shackspam", password="sh4ckit")
 
 #api.SetXTwitterHeaders("Shackspace UTTERANCE","","0.00.0.01.42")
 
@@ -93,7 +93,7 @@ else:
 	a.reverse()
 	for i in a:
 		text = i.text
-		if i.user.screen_name.lower() == "shackspace":
+		if i.user.screen_name.lower() == "shackspace" or i.user.screen_name.lower() == "shackspam":
 			info = "[32;4m" + i.user.screen_name + "[m [34m" + shorten(i.GetRelativeCreatedAt()) + "[m" 
 		else:
 			info = "[32m" + i.user.screen_name + "[m [34m" + shorten(i.GetRelativeCreatedAt()) + "[m" 

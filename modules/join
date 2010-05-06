@@ -1,0 +1,14 @@
+#! /bin/sh
+
+case "$1" in
+  (--help) echo set default_command to atwall and back ;;
+  (off)
+    echo /set default_command espeak >$NOISE_linefeed
+    echo "[32mdisabled chat mode (set back to espeak)[m" ;;
+  (*)
+    echo /set default_command atwall >$NOISE_linefeed
+    echo "[32menabled chat mode[m" 
+    echo q or /chat off to go back to espeak ;;
+
+
+esac
