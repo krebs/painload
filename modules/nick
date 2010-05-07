@@ -1,0 +1,10 @@
+#! /bin/sh
+
+case "$1" in
+  (--help) echo send text to everyone with @@ prepended ;;
+  (*)
+    . /tmp/noise/$NOISE_pid/environment
+    nick="${chat_nick-$NOISE_pid}"
+    echo /send_to_channel $chat_channel $nick is now known as $1 > $NOISE_linefeed
+    echo /set chat_nick $1 >$NOISE_linefeed;;
+esac

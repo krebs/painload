@@ -1,0 +1,17 @@
+#! /bin/sh
+
+wrapper() {
+  exec 2>&1
+  echo date: `date +%H:%M`
+  "$@"
+}
+
+case "$1" in
+  (--help) echo query VVS ;;
+  (*)
+    case $# in
+      (2) wrapper vvs.de "$@" ;;
+      (0) wrapper vvs ;;
+      (*) echo "[31mSyntax: /vvs [ORIGIN DESTINATION][m" ; return ;;
+    esac
+esac

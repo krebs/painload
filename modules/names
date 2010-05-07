@@ -1,0 +1,22 @@
+#! /bin/sh
+
+case "$1" in
+  (--help) echo send text to everyone with @@ prepended ;;
+  (*)
+    cd /tmp/noise
+    . $NOISE_pid/environment
+    if test "$default_command" != chat ; then exit ; fi
+    nick="${chat_nick-$NOISE_pid}"
+    channel="${1-$chat_channel}"
+    echo "[34mUsers in channel [4m$channel[m"
+    for client in * ; do
+      . $client/environment
+       chat_nick="${chat_nick-$client}"
+       if test "$channel" = "$chat_channel" && test "$default_command" = chat ; then
+       	 echo "[33m$chat_nick[m"
+       fi
+       unset chat_nick
+       unset chat_channel
+       unset default_command
+    done 
+esac
