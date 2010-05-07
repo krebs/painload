@@ -110,10 +110,32 @@ jobs="${jobs+$jobs }`jobs -p`"
 ##
 ##
 cat<<EOF
-[35mwelcome to [4mSHACK UTTERANCE[;35m version 0.9 beta 4
-get help with [32m/help[m
-[33mTIP: benutze [4mrlwrap[;33m für eine elitäre Kommandozeile.[m
+[35mWelcome to [1;4m23.shack[;35m version 0.9 beta 4 \
+commit `cat $dirname/.git/refs/heads/master | dd count=23 bs=1`...
+[;33m
+## Motto Of The Day\
+[m
+[33;1mJoin the 23.shack-dev-team, we've got `
+  sloccount $dirname/* |
+  sed -rn '
+    s/.*\(SLOC\)[[:space:]]*=[[:space:]]*([0-9]+)$/\1/p
+  '` SLOC, `
+  { ls $dirname/modules/ ; ls ~shack/noise/modules/ ; } | sort | uniq | wc -l
+  ` mods,
+`grep ^- $dirname/TODO | wc -l`+ TODOs and drive the irregular Hackathon @shackspace.
+Follow [34;4mhttp://twitter.com/shackspam[;1;33m [5mFTW[;1;33m!
+[;33m
+## Hints\
+[m
+Start your telnet session with [4mrlwrap[;m for MAXIMUM profit.
+Get online-help with [32m/help[m.
+[m
 EOF
+# TODO: MOTD-candidates:
+#twitter: #shackspam
+#mail: shockspasm@googlemail.com
+#irc: freenode/#shackspace
+#afk: @shackspace
 ##
 ##
 ##
@@ -121,8 +143,8 @@ exec >>$linefeed
 ##
 ##
 ##
-echo '/set prompt "[30mREADY.[m~%"'
-echo '/set default_command espeak'
+echo '/set -q default_command espeak'
+echo '/set -q prompt "[30mREADY.[m~%"'
 ##
 ##
 ##
