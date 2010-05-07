@@ -22,6 +22,7 @@ def shorten(text):
 	text = text.replace(" years", "y")
 	text = text.replace(" year", "y")
 	text = text.replace(" ago", "")
+	text = text.replace("a", "1")
 	return text
 	
 
@@ -93,6 +94,7 @@ else:
 	a.reverse()
 	for i in a:
 		text = i.text
+		ilen = len(i.user.screen_name) + len(shorten(i.GetRelativeCreatedAt())) + 2 
 		if i.user.screen_name.lower() == "shackspace" or i.user.screen_name.lower() == "shackspam":
 			info = "[32;4m" + i.user.screen_name + "[m [34m" + shorten(i.GetRelativeCreatedAt()) + "[m" 
 		else:
@@ -102,12 +104,12 @@ else:
 		t = text.split(" ")
 		tmp = ""
 		for n in t:
-			if ((len(tmp) + len(n)) > 80):
+			if ((len(tmp) + len(n)) >= 80):
 				print parse(tmp).encode("utf8")
-				tmp = " " *( len(info)-15)
+				tmp = " " * ilen
 			
 			tmp += " " + n
-		if len(tmp) > (len(info)-15+1):	
+		if len(tmp) > ilen:	
 			print parse(tmp).encode("utf8")
 		
 
