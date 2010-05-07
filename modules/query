@@ -1,0 +1,20 @@
+#! /bin/sh
+
+case "$1" in
+  (--help) echo send a message to a specific user ;;
+  (*)   
+    cd /tmp/noise
+    nick="$1"
+    shift
+    for client in * ; do
+       . $client/environment
+       if test "$nick" = "${chat_nick-$client}" ; then
+       	 echo "/echo $*" > $client/linefeed
+          exit
+       fi
+       unset chat_channel 
+      
+    done   
+
+    echo "$nick not found"
+esac
