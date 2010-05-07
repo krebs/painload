@@ -8,7 +8,7 @@ case "$1" in
         done
         ## print all documented built-in commands
         sed -rn 's:^noise_([a-z]+)\(\) \{ # (.+)?$:\1 \2:p' "$NOISE"
-    } | sort | sed -rn '
+    } | sort | uniq | sed -rn '
       $s/$/[m/
       s:^([a-z]+) (.+):[35mtype [32m/\1[35m to \2:p' ;;
   (*)

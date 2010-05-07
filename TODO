@@ -1,0 +1,63 @@
+#### file:noise/TODO
+
+- /channels
+- /query NICK -- falls NICK gesetzt
+  - /query ID -- sonst
+- /hist N -- zum anzeigen von N letzten Nachrichten
+  - Log? Es werden maximal chat_histsize Zeilen gespeichert.
+- Anbindung ans MoinMoin
+- IRC <-> 23.shack - Brücke
+- when nick changes say "You're now known as XXX" to yourself
+- twitter: push new tweets as they arrive to all connected clients with
+  the variable tweet_me set to ON
+
+- Author, Maintainer etc. direkt in die Module in der erweiterten Hilfe, also
+  in /help MODULENAME -> man sollte sich auf ein einheitliches Dokmentierungs-
+  Format einigen.
+  - All modules should contain:
+    - Author(s) w/ e-mail, Copyright, License
+    - Maintainer(s) w/ e-mail
+    - Module-Version
+    - last tested System-Version
+      - we need to export the system version
+- GIT commits tweeten (shack und root)
+- /kick [CHANNEL] # from channel / telnet
+- /ban # :-)
+- /op
+- USER-A: /ping USER-B
+  - USER-B: /pong
+    - write time to USER-{A,B}
+- style-sheets for everything MOAR!!1
+- libraries
+- HTTP-interface
+- /whois, /whoami, /whowas
+- join,part&co. should support multiple channels
+- /TODO,/bug,/issue or something should be added as tracking-system
+- /part should say something like "X has left."
+- /join should say something like "X has joined."
+  # it's obvious that the channels is meant... 
+  - or else say: "X has joined channel Y." when we can join more than one
+    channel
+- /part should unset chat_channel (somehow) else keeping /part'ing will
+  broadcast to chat_channel that X has quit...
+- split /twitter into /tweet and X, to make it clear when tweets are fired
+- POP3 mail off googlemail and show them to curious telnetters
+
+
+- /rewrite -- e.g. /rewrite "!%s" "/play %s" oder sowasi
+- Zugriff per ssh
+- /zeit Eins uhr
+- module to standard unix-commands (name like /system)
+  - unix-commands should simply link to system
+- /unset
+- /save TOKEN, /load TOKEN
+- /op # NUR VIA SSH! (s.o.)
+- MODULE-TEST-SUITE [blackbox]
+- sub-modules like /chat-join which may be abbreviated as /join when
+  $default_command is set to /chat, YAY
+  - unclutter /help:
+    - /help -> show all (main) modules
+    - /help MODULE -> show help of MODULE and show all sub-modules
+    - /help MODULE SUB-MODULE -> show help of SUB-MODULE and show all sub^2...
+
+#### end of file.
