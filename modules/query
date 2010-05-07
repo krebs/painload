@@ -4,13 +4,16 @@ case "$1" in
   (--help) echo send a message to a specific user ;;
   (*)   
     cd /tmp/noise
-    nick="$1"
+    . $NOISE_pid/environment
+    nick="${chat_nick-$NOISE_pid}"
+    target="$1"
     shift
     for client in * ; do
        . $client/environment
-       if test "$nick" = "${chat_nick-$client}" ; then
-       	 echo "/echo $*" > $client/linefeed
-          exit
+       if test "$target" = "${chat_nick-$client}" ; then
+       	 echo "/echo <-- $nick: $*" > $client/linefeed
+       	 echo "--> $target: $*"
+         exit
        fi
        unset chat_channel 
       
