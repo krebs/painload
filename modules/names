@@ -2,14 +2,11 @@
 
 case "$1" in
   (--help) echo send text to everyone with @@ prepended ;;
-  (/nick)
-    echo set nick to $2
-    echo /set chat_nick $2 >$NOISE_linefeed;;
-  (/names)
+  (*)
     cd /tmp/noise
     . $NOISE_pid/environment
     nick="${chat_nick-$NOISE_pid}"
-    channel="$chat_channel"
+    channel="${1-$chat_channel}"
     echo "[34mUsers in channel [4m$channel[m"
     for client in * ; do
       . $client/environment
@@ -19,15 +16,6 @@ case "$1" in
        fi
        unset chat_nick
        unset chat_channel
-       unset default_command 
-    done  ;; 
-  (*)   
-    cd /tmp/noise
-    . $NOISE_pid/environment
-    nick="${chat_nick-$NOISE_pid}"
-    
-    echo "/send_to_channel $chat_channel [33m$nick:[m $*" > $NOISE_linefeed
-      
- 
-    #echo /wall [33m@@[m $* >$NOISE_linefeed
+       unset default_command
+    done 
 esac
