@@ -50,8 +50,10 @@ fail() {
 }
 
 cleanup() {
-  rm -f $linefeed $env
   kill $jobs
+  rm -f $linefeed $env
+  rmdir /tmp/noise/$$ 2>/dev/null
+  rmdir /tmp/noise 2>/dev/null
 }
 
 
@@ -62,8 +64,9 @@ if test -d "$dirname/modules" ; then
   export NOISE_PATH="${NOISE_PATH+$NOISE_PATH:}$dirname/modules"
   export NOISE_PATH="${NOISE_PATH+$NOISE_PATH:}$HOME/noise/modules"
 fi
-linefeed="/tmp/noise-client-$$"
-env="/tmp/noise-client-$$-env"
+mkdir -vp /tmp/noise/$$
+linefeed="/tmp/noise/$$/linefeed"
+env="/tmp/noise/$$/environment"
 trap cleanup EXIT
 mkfifo $linefeed
 touch $env
@@ -89,7 +92,7 @@ while echo -n "$noise_prompt" && eval "`readline`" ; do
     module="$dir/$command"
     if test -x "$module" ; then
       shift
-      eval 'NOISE="$0" NOISE_linefeed="$linefeed" "$module"' "$args"
+      eval 'NOISE="$0" NOISE_pid="$$" NOISE_linefeed="$linefeed" "$module"' "$args"
       continue 2
     fi
   done

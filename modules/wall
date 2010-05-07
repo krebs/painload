@@ -2,8 +2,7 @@
 case "$1" in
   (--help) : ;;
   (?*)
-    for client in /tmp/noise-client-* ; do
-      #echo /msg "$*`printf '\a'`" >$client
-      echo /msg "$*" >$client
+    for linefeed in /tmp/noise/*/linefeed ; do
+      echo /msg "$*" >$linefeed
     done
 esac
