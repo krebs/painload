@@ -9,10 +9,10 @@ case "$1" in
     M=`date +%M|sed 's/0*//'`
     echo /set pitch 10
     case "$lang" in
-      (de|'') echo " Es ist $k Uhr $M" >$NOISE_linefeed ;;
+      (de|'') echo "/espeak Es ist $k Uhr $M" ;;
       (en|*-en)
           test -z "$M" || M="and $M minutes"
-          echo " It is $k o clock $M" >$NOISE_linefeed ;;
+          echo "/espeak It is $k o clock $M" ;;
       (*) echo "[31mError: unsupported [4mlang[0;31m = $lang[m" >&2
     esac
     echo /set pitch ${noise_pitch-100}

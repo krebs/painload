@@ -1,0 +1,17 @@
+#! /bin/sh
+
+case "$1" in
+  (--help) : ;;
+  (*)   
+    cd /tmp/noise
+    channel="$1"
+    shift
+    for client in * ; do
+       . $client/environment
+       if test "$channel" = "$chat_channel" && test "$default_command" = chat ; then
+       	 echo "/echo $*" > $client/linefeed
+       fi
+       unset chat_channel 
+      
+    done   
+esac

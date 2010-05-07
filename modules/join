@@ -1,0 +1,15 @@
+#! /bin/sh
+
+case "$1" in
+  (--help) echo set default_command to chat and join channel ;;
+  (*)
+    . /tmp/noise/$NOISE_pid/environment
+    nick="${chat_nick-$NOISE_pid}"
+    echo /send_to_channel "${1-#23}" "$nick" joined the channel >$NOISE_linefeed
+    echo /set default_command chat >$NOISE_linefeed
+    echo /set chat_channel "${1-#23}" >$NOISE_linefeed
+    echo "[32m joined channel ${1-#23}[m" 
+    echo  /part to go back to espeak ;;
+
+
+esac

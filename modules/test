@@ -3,7 +3,11 @@
 case "$1" in
   (--help) echo do some test-module related stuff ;;
   (*)
-    echo test-module called with following arguments: "$@"
-    ## send command for re-evaluation:
-    echo /espeak test >$NOISE_linefeed
+    
+    echo -n ">> "    
+    read TEST
+    if [ $TEST == 'q' ]; then exit; fi
+    echo /wall [33m@@[m $TEST >$NOISE_linefeed
+    #sleep 1
+    #sleep 1; echo /test >$NOISE_linefeed &
 esac

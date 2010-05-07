@@ -1,0 +1,6 @@
+#! /bin/sh
+case "$1" in
+  (--help) : ;;
+  (*)
+    date --rfc-3339=s
+esac

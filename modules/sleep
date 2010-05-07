@@ -1,0 +1,10 @@
+#! /bin/sh
+case "$1" in
+  (--help) echo "pause for NUMBER seconds" ;;
+  (*)
+    if ! echo "$1" | grep -Eq '^([0-9]+(\.[0-9]*)?|[0-9]*\.[0-9]+)$' ; then
+      echo '[31;1mFAIL: $1 is not a number[m'
+    else
+      sleep "$1"
+    fi
+esac
