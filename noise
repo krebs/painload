@@ -77,7 +77,7 @@ readline() {
   { read && echo "$REPLY" ; } | sed -rn "
     s/[']//g
     s/~%/\n/g
-    s/([^\\])#/\1\\\\#/g
+    s/([^\\])([#<>])/\1\\\\\2/g
     s:^/([a-z_]+)([[:space:]]+(.*))?$:command=\1; args='\3';:p;t
     s@^([[:alnum:]_/+-]+):[[:space:]]*(.*)@command=lang; args='\1 \2';@p;t
     s@^\![[:space:]]*(.*)@command=play; args='\1';@p;t
