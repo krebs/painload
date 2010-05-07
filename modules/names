@@ -5,6 +5,7 @@ case "$1" in
   (*)
     cd /tmp/noise
     . $NOISE_pid/environment
+    if test "$default_command" != chat ; then exit ; fi
     nick="${chat_nick-$NOISE_pid}"
     channel="${1-$chat_channel}"
     echo "[34mUsers in channel [4m$channel[m"
