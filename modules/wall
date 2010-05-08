@@ -3,6 +3,6 @@ case "$1" in
   (--help) : ;;
   (?*)
     for linefeed in /tmp/noise/*/linefeed ; do
-      echo /msg "$*" >$linefeed
+      echo /echo "$*" >$linefeed
     done
 esac
