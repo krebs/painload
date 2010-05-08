@@ -1,8 +1,6 @@
 #### file:noise/TODO
 
 - /channels
-- /query NICK -- falls NICK gesetzt
-  - /query ID -- sonst
 - /hist N -- zum anzeigen von N letzten Nachrichten
   - Log? Es werden maximal chat_histsize Zeilen gespeichert.
 - Anbindung ans MoinMoin
@@ -46,10 +44,8 @@
 
 - /rewrite -- e.g. /rewrite "!%s" "/play %s" oder sowasi
 - Zugriff per ssh
-- /zeit Eins uhr
 - module to standard unix-commands (name like /system)
   - unix-commands should simply link to system
-- /unset
 - /save TOKEN, /load TOKEN
 - /op # NUR VIA SSH! (s.o.)
 - MODULE-TEST-SUITE [blackbox]
