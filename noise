@@ -39,6 +39,22 @@ noise_set() { # set a variable
   esac
 }
 
+noise_unset() { # unset a variable
+  case "$1" in
+    (-q|--quiet) echo=: ; shift ;;
+    (*) echo=echo ;;
+  esac
+  case $# in
+    (1) ## 
+      unset "noise_$1"
+      sed -ni "/^$1=/!p" $env
+    ;;
+    (*)
+      fail "broken commandline: $@"
+    ;;
+  esac
+}
+
 noise_quit() { # exit
   echo "[35mGood bye![m"
   exit
