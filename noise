@@ -72,7 +72,7 @@ cleanup() {
   rmdir /tmp/noise 2>/dev/null
 }
 
-
+exec 2>&1
 qname="`readlink -f "$0"`"
 dirname="`dirname "$qname"`"
 export HOME='/home/shack'
@@ -80,7 +80,7 @@ if test -d "$dirname/modules" ; then
   export NOISE_PATH="${NOISE_PATH+$NOISE_PATH:}$dirname/modules"
   export NOISE_PATH="${NOISE_PATH+$NOISE_PATH:}$HOME/noise/modules"
 fi
-mkdir -vp /tmp/noise/$$
+mkdir -p /tmp/noise/$$
 linefeed="/tmp/noise/$$/linefeed"
 env="/tmp/noise/$$/environment"
 trap cleanup EXIT
@@ -127,7 +127,10 @@ jobs="${jobs+$jobs }`jobs -p`"
 ##
 cat<<EOF
 [35mWelcome to [1;4m23.shack[;35m version 0.9 beta 4 \
-commit `cat $dirname/.git/refs/heads/master | dd count=23 bs=1`...
+commit `
+  cd $dirname &&
+  git log -n 1 | head -n 1 | cut -d\  -f 2 | dd count=23 bs=1 2>/dev/null
+`...
 [;33m
 ## Motto Of The Day\
 [m
