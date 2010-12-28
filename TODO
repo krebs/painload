@@ -40,7 +40,7 @@
   broadcast to chat_channel that X has quit...
 - split /twitter into /tweet and X, to make it clear when tweets are fired
 - POP3 mail off googlemail and show them to curious telnetters
-
+- /set x 23 -> blah $x
 
 - /rewrite -- e.g. /rewrite "!%s" "/play %s" oder sowasi
 - Zugriff per ssh
@@ -55,5 +55,6 @@
     - /help -> show all (main) modules
     - /help MODULE -> show help of MODULE and show all sub-modules
     - /help MODULE SUB-MODULE -> show help of SUB-MODULE and show all sub^2...
+- watchdog
 
 #### end of file.
