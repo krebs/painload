@@ -4,21 +4,31 @@ print_var() {
   echo "[35;4m$1[;35m = [32m$2[m"
 }
 
-case "$1" in
-  (--help) echo say something with espeak ;;
-  (*)
-    p="${noise_pitch-100}"
-    v="${noise_lang-de}"
-    k="${noise_capital-0}"
-    a="${noise_amplitude-100}"
-    g="${noise_gap-1}"
+speak() {
+  p="${noise_pitch-100}"
+  v="${noise_lang-de}"
+  k="${noise_capital-0}"
+  a="${noise_amplitude-100}"
+  g="${noise_gap-1}"
+  if test "$debug" = true; then
     print_var pitch $p
     print_var lang $v
     print_var capital $k
     print_var amplitude $a
     print_var gap $g
-    #echo "[31mespeak -p \"$pitch\" -v \"$lang\" \"$*\"[m" >&2
-    (espeak --stdout -a $a -k $k -p $p -v $v -g $g | paplay)<<EOF
+  fi
+  if test "$verbose" = true; then
+    echo "espeak: $@"
+  fi
+  #echo "[31mespeak -p \"$pitch\" -v \"$lang\" \"$*\"[m" >&2
+  (espeak --stdout -a $a -k $k -p $p -v $v -g $g | paplay)<<EOF
 $*
 EOF
+}
+
+case "$1" in
+  (--help) echo say something with espeak ;;
+  (-d|--debug) shift; debug=true speak "$@";;
+  (-v|--verbose) shift; verbose=true speak "$@";;
+  (*) speak "$@";;
 esac
