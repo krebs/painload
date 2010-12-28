@@ -18,7 +18,7 @@ case "$1" in
     print_var amplitude $a
     print_var gap $g
     #echo "[31mespeak -p \"$pitch\" -v \"$lang\" \"$*\"[m" >&2
-    espeak -a $a -k $k -p $p -v $v -g $g<<EOF
+    (espeak --stdout -a $a -k $k -p $p -v $v -g $g | paplay)<<EOF
 $*
 EOF
 esac
