@@ -1,0 +1,24 @@
+#! /bin/sh
+cd /tmp/noise
+case "$1" in
+  (--help) : ;;
+  ('')
+    . $NOISE_pid/environment
+    ping_timestamp=${ping_timestamp-0}
+    ping_challenger=${ping_challenger-0}
+    if test $ping_challenger != 0 ; then
+      echo There is already a ping challange running
+    else
+      timestamp=`date +%s%N`
+      for client in * ; do
+        echo /ping $NOISE_pid $timestamp >$client/linefeed &
+      done
+    fi
+  ;;
+  (*)
+    echo "/set -q ping_timestamp $2" >$NOISE_pid/linefeed
+    if test $NOISE_pid != $1 ; then
+      echo "/set -q ping_challenger $1" >$NOISE_pid/linefeed
+      echo "PING?"
+    fi
+esac
