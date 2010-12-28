@@ -5,7 +5,7 @@ case "$1" in
     echo "say current time" ;;
   (*)
     exec >>$NOISE_linefeed
-    k=`date +%k`
+    k=`date +%k|sed 's/^[[:space:]]*1[[:space:]]*$/ein/'`
     M=`date +%M|sed 's/0*//'`
     echo /set pitch 10
     case "$lang" in

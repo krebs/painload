@@ -1,6 +1,10 @@
 #!/usr/bin/python
 #encode=utf8
 
+print "[31;4;5;1mBug Robert to implement Twitter-OAuth![m"
+exit(1)
+
+
 import sys, twitter
 
 sys.stderr = sys.stdout
@@ -54,7 +58,6 @@ if len(sys.argv) > 1 and sys.argv[1] == "--help":
 		print "call without parameters to read"
 		print "use /twitter [your tweet] to tweet something to the shackspam twitter timeline"
 	exit()	
-
 
 
 

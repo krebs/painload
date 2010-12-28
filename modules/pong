@@ -1,0 +1,26 @@
+#! /bin/sh
+cd /tmp/noise
+case "$1" in
+  (--help) : ;;
+  ('')
+    . $NOISE_pid/environment
+    ping_timestamp=${ping_timestamp-0}
+    ping_challenger=${ping_challenger-0}
+    if test $ping_challenger = 0 ; then
+      echo There is no ping challange running
+    else
+      timestamp=`date +%s%N`
+      echo /pong $NOISE_pid $timestamp >$ping_challenger/linefeed
+      ## reset ping TODO /unset
+      echo /set -q ping_timestamp 0 >$NOISE_pid/linefeed
+      echo /set -q ping_challenger 0 >$NOISE_pid/linefeed
+    fi
+  ;;
+  (*)
+    . $1/environment
+    # XXX is attendee the right counterpart to 'challenger'?
+    attendee_nick=$chat_nick
+    . $NOISE_pid/environment
+    time=`echo "scale=3; ($2 - $ping_timestamp)/10^9" | bc`
+    echo "PONG! $attendee_nick ${time}s"
+esac

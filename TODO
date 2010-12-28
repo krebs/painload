@@ -1,8 +1,6 @@
 #### file:noise/TODO
 
 - /channels
-- /query NICK -- falls NICK gesetzt
-  - /query ID -- sonst
 - /hist N -- zum anzeigen von N letzten Nachrichten
   - Log? Es werden maximal chat_histsize Zeilen gespeichert.
 - Anbindung ans MoinMoin
@@ -42,14 +40,12 @@
   broadcast to chat_channel that X has quit...
 - split /twitter into /tweet and X, to make it clear when tweets are fired
 - POP3 mail off googlemail and show them to curious telnetters
-
+- /set x 23 -> blah $x
 
 - /rewrite -- e.g. /rewrite "!%s" "/play %s" oder sowasi
 - Zugriff per ssh
-- /zeit Eins uhr
 - module to standard unix-commands (name like /system)
   - unix-commands should simply link to system
-- /unset
 - /save TOKEN, /load TOKEN
 - /op # NUR VIA SSH! (s.o.)
 - MODULE-TEST-SUITE [blackbox]
@@ -59,5 +55,6 @@
     - /help -> show all (main) modules
     - /help MODULE -> show help of MODULE and show all sub-modules
     - /help MODULE SUB-MODULE -> show help of SUB-MODULE and show all sub^2...
+- watchdog
 
 #### end of file.

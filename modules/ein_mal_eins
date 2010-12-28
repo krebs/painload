@@ -1,0 +1,38 @@
+#! /bin/bash
+
+R() {
+  echo "`od -t d -N 1 /dev/urandom | sed -rn '1s/^[0-9]+ +//p'` % $@" | bc
+}
+
+
+
+
+case "$1" in
+  (--help) echo Stellt eine einfache Aufgabe ;;
+  (*)
+    a="`R 69`"
+    b="`R 69`"
+    op="`echo "\
+Was ist, A hoch B
+Was ist, A plus B
+Was ist, A minus B
+Was ist, A mal B
+Was ist, sinus von 0
+Was ist, Pi halbe mal 2
+Was ist, 2 hoch 8
+Was ist, 2 hoch 16
+Was ist, 2 hoch 32
+Was ist, 42 geteilt durch Pi mal 100
+Was ist, l n von 1
+Was ist, 42
+Was ist, 23
+Starte den Server neu
+Löte ein Kabel an einen Kompjuter
+Was ist, A geteilt durch B"`"
+    o="$(R `echo "$op" | wc -l` + 1)"
+
+    aufgabe=`echo "$op" | sed -n "$o{s/A/$a/;s/B/$b/;p}"`
+    
+    echo "Löse die Aufgabe: $aufgabe?" |
+        espeak -v de --stdout | paplay
+esac
