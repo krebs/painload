@@ -78,19 +78,19 @@ case "$1" in
 # just a multiline comment
 cat << EOF > /dev/null
 	/set pitch 10
-	/espeak Hallo. Krietscher hat seinen Meister vermisst.
-	/espeak Heute ist `wochentag`, der `tag`  --- `monat` -- `date +%Y`
+	/espeak -v Hallo. Krietscher hat seinen Meister vermisst.
+	/espeak -v Heute ist `wochentag`, der `tag`  --- `monat` -- `date +%Y`
 	/zeit
-	/espeak check der systeme:
-	/espeak Energie versorgung -- aktiv
-	/espeak schäckhost -- läuft
-	/espeak telnet     -- läuft
-	/espeak interner - de - enn -- es, interne domein -- $STAT_DNS_I
-	/espeak interner - de - enn -- es, externe domein -- $STAT_DNS_E
-	/espeak externer - de - enn -- es - $STAT_DNS_X
-	/espeak Leitungsqualität - $STAT_LINE prozent.
-	/espeak Die Aussen temper atur beträgt $STAT_TEMP
-	/espeak Willkommen zu Hause, -- Meister
+	/espeak -v check der systeme:
+	/espeak -v Energie versorgung -- aktiv
+	/espeak -v schäckhost -- läuft
+	/espeak -v telnet     -- läuft
+	/espeak -v interner - de - enn -- es, interne domein -- $STAT_DNS_I
+	/espeak -v interner - de - enn -- es, externe domein -- $STAT_DNS_E
+	/espeak -v externer - de - enn -- es - $STAT_DNS_X
+	/espeak -v Leitungsqualität - $STAT_LINE prozent.
+	/espeak -v Die Aussen temper atur beträgt $STAT_TEMP
+	/espeak -v Willkommen zu Hause, -- Meister
 EOF
 
 [ $( dig +short localhost     @10.42.0.10 ) = "127.0.0.1" ] && STAT_DNS_I="läuft" || STAT_DNS_I="antwortet nicht"
@@ -109,19 +109,19 @@ STAT_TEMP=$( dig +short txt outside.elwood.temp.citecs.de |
 
 cat <<-EOF >> $NOISE_linefeed
 	/set pitch 10
-	/espeak Hallo. Krietscher hat seinen Meister vermisst.
-	/espeak Heute ist `wochentag`, der `tag`  --- `monat` -- `date +%Y`
+	/espeak -v Hallo. Krietscher hat seinen Meister vermisst.
+	/espeak -v Heute ist `wochentag`, der `tag`  --- `monat` -- `date +%Y`
 	/zeit
-	/espeak check der systeme:
-	/espeak Energie versorgung -- aktiv
-	/espeak schäckhost -- läuft
-	/espeak telnet     -- läuft
-	/espeak interner - de - enn -- es, interne domein -- $STAT_DNS_I
-	/espeak interner - de - enn -- es, externe domein -- $STAT_DNS_E
-	/espeak externer - de - enn -- es - $STAT_DNS_X
-	/espeak Leitungsqualität - $STAT_LINE prozent.
-	/espeak Die Aussen temper atur beträgt $STAT_TEMP
-	/espeak Willkommen zu Hause, -- Meister
+	/espeak -v check der systeme:
+	/espeak -v Energie versorgung -- aktiv
+	/espeak -v schäckhost -- läuft
+	/espeak -v telnet     -- läuft
+	/espeak -v interner - de - enn -- es, interne domein -- $STAT_DNS_I
+	/espeak -v interner - de - enn -- es, externe domein -- $STAT_DNS_E
+	/espeak -v externer - de - enn -- es - $STAT_DNS_X
+	/espeak -v Leitungsqualität - $STAT_LINE prozent.
+	/espeak -v Die Aussen temper atur beträgt $STAT_TEMP
+	/espeak -v Willkommen zu Hause, -- Meister
 EOF
     ;;
 esac 2>&1
