@@ -1,16 +1,17 @@
 #! /bin/sh
 inputdir=$HOME/noise/streams
+basename="`basename "$0"`"
 case "$1" in
   (--help)
     if echo "$0 $*" | grep -q '[[:space:]]--verbose\>'; then
-  echo -e "\x1B[35mtype \x1B[32m/espeak off \x1B[35mto turn stream off\x1B[m"
+  echo -e "\x1B[35mtype \x1B[32m/$basename off \x1B[35mto turn stream off\x1B[m"
       for i in `ls $inputdir` ; do
 	filename="$inputdir/$i"
 	shortcut=`xmlstarlet sel -t -v /station/@shortcut "$inputdir/$i"`
 	title=`xmlstarlet sel -t -v /station/@title "$inputdir/$i"`
 	topic=`xmlstarlet sel -t -v /station/@topic "$inputdir/$i"`
 	stream=`xmlstarlet sel -t -v /station/@stream "$inputdir/$i"`
-  echo -e "\x1B[35mtype \x1B[32m/espeak $shortcut \x1B[35mfor $topic\x1B[m"
+  echo -e "\x1B[35mtype \x1B[32m/$basename $shortcut \x1B[35mfor $topic\x1B[m"
       done
     else
       echo "play an audio stream"
