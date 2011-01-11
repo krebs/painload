@@ -1,5 +1,6 @@
 #! /bin/bash
-#### anonbox.net - anonbox account creator
+#### anonbox.net [--check]
+#### anonbox account creator
 set -euf
 
 ## 
@@ -16,7 +17,7 @@ eval "$(${GET-GET} |
 s^<dd><p>([[:alnum:]@.]+)</p></dd>$\
       email="\1" ; p
 s^<dd><p><a href="([^"\\]+)">.*</a></p></dd>$\
-      uri="\1" ; p
+      uri="\1/" ; p
 s^<dd><p>([0-9]+)/([0-9]+)/([0-9]+) ([0-9]+):([0-9]+) ([ap]).m.</p></dd>$\
       Y=20\3 ; \
       m=\1 ; \
@@ -39,7 +40,18 @@ script_end_date="`date --rfc-3339=ns`"
 ##
 for key in email uri best_before script_begin_date script_end_date ; do
   eval "val=\"\$$key\""
-  echo "$key	$val"
+  echo "$key=\"$val\""
 done
+
+##
+if echo "$*" | tr "$IFS" ' ' | egrep -q "(^| )--check( |$)"; then
+  file="/tmp/save-$email"
+  echo "file=\"$file\""
+  echo >&2
+  echo "# downloading email..." >&2
+  while ! curl -ksS "$uri" | tee "$file" | grep .; do
+    sleep 10
+  done
+fi
 
 #### end of file.
