@@ -1,7 +1,7 @@
 #!/usr/bin/python2
 import subprocess,re
 import logging
-from arping import arpingy,pingy
+from arping import arpingy
 log = logging.getLogger('snmp_users')
 
 class snmp_users:
