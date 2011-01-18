@@ -45,11 +45,11 @@ class snmp_users:
         if mac in self.mac_list.keys():
           log.info( "%s already assigned for ip %s (new IP %s) " %
               ( mac ,self.mac_list[mac], ip))
-          self.mac_list[mac]['counter'] +=1
+          self.mac_list[mac].append ( ip)
           continue
         else:
           log.debug("%s => %s" % (mac,ip))
-          self.mac_list[mac] = { 'ip' : ip, 'counter' : 1}
+          self.mac_list[mac] = [ ip ]
       else:
         log.warning("Verification failed %s => %s" % (mac,ip))
 
