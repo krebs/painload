@@ -9,5 +9,4 @@ This package contains a Genericore output module to forward logs to IRC.
 
 - [node](http://nodejs.org/) v0.2.5 or compatible
 - [node-amqp](https://github.com/ry/node-amqp) v0.0.2 or compatible
-- [node-irc](https://github.com/martynsmith/node-irc) v0.1.2 or compatible
 
