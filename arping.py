@@ -8,7 +8,7 @@ try:
     raise Exception('no root permissions')
   from scapy.all import * #might throws "no such module"
 
-  def arpingy(iprange="10.42.1.0/24",iface='eth0'):
+  def arpingy(iprange="10.42.1.0/24",iface='wlan0'):
     log.debug("pinging"+ iprange)
     """Arping function takes IP Address or Network, returns nested mac/ip list"""
     try:

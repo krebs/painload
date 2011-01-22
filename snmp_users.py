@@ -77,8 +77,8 @@ class snmp_users:
     return self.mac_list
   def print_results(self):
     log.debug('printing results:')
-    print '\n'.join([ mac + " => " + ip['ip'] + " ( %d active leases )" %
-      ip['counter'] for mac,ip in self.mac_list.items() ])
+    print '\n'.join([ mac + " => %s" %
+      str(ips) for mac,ips in self.mac_list.items() ])
     print '%d *unique* nodes in network' % len(self.mac_list)
 
 
