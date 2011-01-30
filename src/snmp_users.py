@@ -24,7 +24,7 @@ def arping_helper(dic):
 class snmp_users(Configurable):
   mac_list = {}
 
-  def __init__(self,config={}):
+  def __init__(self,config=None):
     Configurable.__init__(self,DEFAULT_CONFIG)
     self.load_conf(config)
 
@@ -68,16 +68,25 @@ class snmp_users(Configurable):
     """ verifies retrieved data where data is an array of arrays where
     [0] is the ip and [1] is the mac (space-delimited)"""
     arp_data = self.arping_parallel(snmp_data)
-    print arp_data
     self.update_results(arp_data)
+  def get_own_addr(self):
+    data = subprocess.Popen(['/sbin/ifconfig',self.config['arping']['dev']],
+        stdout=subprocess.PIPE).communicate()[0].replace('\n','')
+    return re.sub(r'.*HWaddr ([0-9:A-F]*).*inet addr:([0-9.]*).*' ,r'\1 \2',data).split()
+
 
   def arping_parallel(self,data):
     conf = self.config['arping']
     if conf['active']:
-      p = Pool(10)
       tmp = [ {'iprange':dat[0],'iface':conf['dev']} for dat in data]
       try:
-        return  filter(lambda x:x , p.map(arping_helper, tmp))
+        p = Pool(10)
+        ret = filter(lambda x:x , p.map(arping_helper, tmp))
+
+        myip,mymac = self.get_own_addr() #append self to list
+        ret.append([mymac,myip ] )
+        p.terminate()
+        return ret
       except Exception as e:
         log.warning("Something happened,falling back to original data: "+ str(e))
         return data
@@ -85,17 +94,26 @@ class snmp_users(Configurable):
   def collect(self):
     output = self.call_external()
     data = self.parse_output(output)
+    log.debug('Got following output from snmpwalk program: ' +str(data))
     macs = self.verify(data)
     #self.print_results(self.mac_list)
     return self.mac_list
+
   def print_results(self,macs):
     log.debug('printing results:')
     print '\n'.join([ mac + " => %s" %
       str(ips) for mac,ips in macs.items() ])
     print '%d *unique* nodes in network' % len(macs)
 
+  def populate_parser(self,parser):
+    parser.add_argument('--repeat',type=int,dest='repeat',default=30,help='Seconds between Scans',metavar='SECS') #TODO add this to configuration
+
+  def eval_parser(self,parsed):
+    self.repeat = parsed.repeat
+
 if __name__ == "__main__":
   logging.basicConfig(level=logging.INFO)
   a = snmp_users()
+  print a.get_own_addr()
   a.collect()
   a.print_results(a.mac_list)
