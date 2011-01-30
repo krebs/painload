@@ -8,8 +8,8 @@ log = logging.getLogger('snmp_users')
 
 DEFAULT_CONFIG= {
   "snmp" : {
-      "server" : "10.42.0.1",
-      "community" : "shammunity",
+      "server" : "127.0.0.1",
+      "community" : "community",
       "tree" : "1.3.6.1.2.1.3.1.1.2"
     },
   "arping" : {
@@ -55,8 +55,8 @@ class snmp_users(Configurable):
   def update_results(self,new):
     """ Verifies ip and mac via ARP Scan 
         in addition it adds the correct ip to the mac_list """ 
-    macl = self.mac_list
-
+    macl = self.mac_list = {}
+     
     for ip,mac in new: # fill the mac_list
       if not macl.get(mac,None):
         macl[mac] = []
@@ -68,6 +68,7 @@ class snmp_users(Configurable):
     """ verifies retrieved data where data is an array of arrays where
     [0] is the ip and [1] is the mac (space-delimited)"""
     arp_data = self.arping_parallel(snmp_data)
+    print arp_data
     self.update_results(arp_data)
 
   def arping_parallel(self,data):
@@ -76,7 +77,7 @@ class snmp_users(Configurable):
       p = Pool(10)
       tmp = [ {'iprange':dat[0],'iface':conf['dev']} for dat in data]
       try:
-        return filter(lambda x:x , p.map(arping_helper, tmp))
+        return  filter(lambda x:x , p.map(arping_helper, tmp))
       except Exception as e:
         log.warning("Something happened,falling back to original data: "+ str(e))
         return data
@@ -85,7 +86,8 @@ class snmp_users(Configurable):
     output = self.call_external()
     data = self.parse_output(output)
     macs = self.verify(data)
-    self.print_results(self.mac_list)
+    #self.print_results(self.mac_list)
+    return self.mac_list
   def print_results(self,macs):
     log.debug('printing results:')
     print '\n'.join([ mac + " => %s" %
@@ -96,3 +98,4 @@ if __name__ == "__main__":
   logging.basicConfig(level=logging.INFO)
   a = snmp_users()
   a.collect()
+  a.print_results(a.mac_list)
