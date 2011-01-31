@@ -3,15 +3,16 @@ import sys,json,time
 from snmp_users import snmp_users
 import logging
 import genericore as gen
-log = logging.getLogger('mail_proc_main')
+MODULE_NAME='snmp_users'
+log = logging.getLogger(MODULE_NAME)
 PROTO_VERSION = 1
 DESCRIPTION = 'performes statistical analysis against mails from stream'
 
 
 # set up instances of needed modules
 conf = gen.Configurator(PROTO_VERSION,DESCRIPTION)  
-amqp = gen.auto_amqp()   
-s = snmp_users()       # the magic mail parsing class
+amqp = gen.auto_amqp(MODULE_NAME)   
+s = snmp_users(MODULE_NAME)       # the magic mail parsing class
 
 conf.configure([amqp,s]) #set up parser and eval parsed stuff
 

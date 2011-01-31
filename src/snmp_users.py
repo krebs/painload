@@ -24,13 +24,15 @@ def arping_helper(dic):
 class snmp_users(Configurable):
   mac_list = {}
 
-  def __init__(self,config=None):
-    Configurable.__init__(self,DEFAULT_CONFIG)
+  def __init__(self,MODULE_NAME,config=None):
+    self.NAME=MODULE_NAME
+    newConf = { MODULE_NAME : DEFAULT_CONFIG }
+    Configurable.__init__(self,newConf)
     self.load_conf(config)
 
   def call_external(self):
     """returns an array of lines produced by snmpwalk """
-    conf = self.config['snmp']
+    conf = self.config[self.NAME]['snmp']
 
     out = subprocess.Popen(
         ['snmpwalk',
@@ -56,12 +58,10 @@ class snmp_users(Configurable):
     """ Verifies ip and mac via ARP Scan 
         in addition it adds the correct ip to the mac_list """ 
     macl = self.mac_list = {}
-     
     for ip,mac in new: # fill the mac_list
       if not macl.get(mac,None):
         macl[mac] = []
       macl[mac].append(ip)
-
     return True
 
   def verify(self,snmp_data):
@@ -69,14 +69,15 @@ class snmp_users(Configurable):
     [0] is the ip and [1] is the mac (space-delimited)"""
     arp_data = self.arping_parallel(snmp_data)
     self.update_results(arp_data)
+
   def get_own_addr(self):
-    data = subprocess.Popen(['/sbin/ifconfig',self.config['arping']['dev']],
+    data = subprocess.Popen(['/sbin/ifconfig',self.config[self.NAME]['arping']['dev']],
         stdout=subprocess.PIPE).communicate()[0].replace('\n','')
     return re.sub(r'.*HWaddr ([0-9:A-F]*).*inet addr:([0-9.]*).*' ,r'\1 \2',data).split()
 
 
   def arping_parallel(self,data):
-    conf = self.config['arping']
+    conf = self.config[self.NAME]['arping']
     if conf['active']:
       tmp = [ {'iprange':dat[0],'iface':conf['dev']} for dat in data]
       try:
@@ -94,6 +95,8 @@ class snmp_users(Configurable):
   def collect(self):
     output = self.call_external()
     data = self.parse_output(output)
+    if not data:
+      raise Exception('External tool had not returned any parsable output')
     log.debug('Got following output from snmpwalk program: ' +str(data))
     macs = self.verify(data)
     #self.print_results(self.mac_list)
