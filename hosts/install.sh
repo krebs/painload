@@ -1,4 +1,5 @@
-! /bin/sh
+#! /bin/sh
+# USE WITH GREAT CAUTION
 
 set -e
 myname="${1:-dummy}"
