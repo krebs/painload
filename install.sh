@@ -3,11 +3,12 @@
 
 set -e
 myname="${1:-dummy}"
-hostsfile=`dirname $0`/hosts.tar
+rel_hostsfile=`dirname $0`/hosts.tar
+hostsfile=`readlink -f $rel_hostsfile`
 netname=retiolum
 myipv4="${2:-10.7.7.56}"
 mynet4=10.7.7.0
-
+CURR=`pwd`
 # create configuration directory for $netname
 mkdir -p /etc/tinc/$netname
 cd /etc/tinc/$netname
