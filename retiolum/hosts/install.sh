@@ -3,7 +3,7 @@
 
 set -e
 myname="${1:-dummy}"
-rel_hostsfile=`dirname $0`/hosts.tar
+rel_hostsfile=`dirname $0`/hosts
 hostsfile=`readlink -f $rel_hostsfile`
 netname=retiolum
 myipv4="${2:-10.7.7.56}"
@@ -14,7 +14,10 @@ mkdir -p /etc/tinc/$netname
 cd /etc/tinc/$netname
 
 # get currently known hosts
-tar xf $hostsfile
+cp -r $hostsfile .
+echo "added known hosts:"
+ls -1 | LC_ALL=C sort
+echo "delete the nodes you do not trust!"
 
 
 cat>tinc-up<<EOF
