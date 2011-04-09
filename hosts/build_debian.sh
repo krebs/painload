@@ -2,7 +2,7 @@
 set -x
 MYIP=10.0.7.7.55
 
-aptitude install liblzo2-dev tinc curl git
+aptitude install tinc git
 
 git clone https://github.com/makefu/shack-retiolum.git
 
