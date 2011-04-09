@@ -1,0 +1,13 @@
+This directory contains the build and install scripts for shack-retiolum
+
+1. build_arch 
+    arch linux build script
+2. build_debian
+    debian build script
+3. build_ec2
+    Amazon ec2 base instance build script
+4. install.sh
+    configures the tinc daemon 
+    $1 is the nickname
+    $2 is the ip-address
+hosts.tar contains the currently available hosts
