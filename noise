@@ -75,7 +75,7 @@ cleanup() {
 exec 2>&1
 qname="`readlink -f "$0"`"
 dirname="`dirname "$qname"`"
-export HOME='/home/shack'
+export HOME='/home/noise'
 if test -d "$dirname/modules" ; then
   export NOISE_PATH="${NOISE_PATH+$NOISE_PATH:}$dirname/modules"
   export NOISE_PATH="${NOISE_PATH+$NOISE_PATH:}$HOME/noise/modules"
@@ -90,7 +90,7 @@ touch $env
 ##
 ##
 readline() {
-  { read && echo "$REPLY" ; } | sed -rn "
+  { read REPLY && echo "$REPLY" ; } | sed -rn "
     s/[']//g
     s/~%/\n/g
     s/([^\\])([#<>])/\1\\\\\2/g
@@ -108,13 +108,14 @@ while echo -n "$noise_prompt" && eval "`readline`" ; do
   for dir in `echo "$NOISE_PATH" | tr : \ ` ; do
     module="$dir/$command"
     if test -x "$module" ; then
-      shift
+#echo foo $module:$@:
+      #shift
       eval 'NOISE="$0" NOISE_pid="$$" NOISE_linefeed="$linefeed" "$module"' "$args"
       continue 2
     fi
   done
   ## funcall
-  if type noise_$command &>/dev/null ; then
+  if type noise_$command | grep -q function ; then
     eval 'noise_$command' "$args"
     continue
   fi
@@ -139,7 +140,10 @@ commit `
   sed -rn '
     s/.*\(SLOC\)[[:space:]]*=[[:space:]]*([0-9]+)$/\1/p
   '` SLOC, `
-  { ls $dirname/modules/ ; ls ~shack/noise/modules/ ; } | sort | uniq | wc -l
+  {
+    ls $dirname/modules/
+    test -d ~noise/modules && ls ~noise/modules/
+  } | sort | uniq | wc -l
   ` mods,
 `grep ^- $dirname/TODO | wc -l`+ TODOs and drive the irregular Hackathon @shackspace.
 Follow [34;4mhttp://twitter.com/shackspam[;1;33m [5mFTW[;1;33m!
@@ -167,7 +171,7 @@ echo '/set -q prompt "[30mREADY.[m~%"'
 ##
 ##
 ##
-while read ; do
+while read REPLY; do
   case $REPLY in
     (/quit) echo /quit ; exit ;; 
     (*) tr \; \\n | grep . ;;
