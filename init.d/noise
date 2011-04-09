@@ -1,0 +1,48 @@
+#!/bin/sh -e
+### BEGIN INIT INFO
+# Provides:          noise
+# Required-Start:    $remote_fs $syslog dbus
+# Required-Stop:     $remote_fs $syslog dbus
+# Default-Start:     2 3 4 5
+# Default-Stop:      1
+# Short-Description: Start the noise "Telnet" server
+# Description:       System mode startup script for
+#                    the noise "Telnet" server.
+### END INIT INFO
+
+DAEMON=/root/noise/noise-server
+
+test -x $DAEMON || exit 1
+
+noise_pid() {
+	ps aux | grep tcpserver | grep noise-as-user | awk '{print$2}'
+}
+
+noise_start() {
+	"$DAEMON" &
+}
+
+noise_stop() {
+	kill "`noise_pid`"
+}
+
+case "$1" in
+	start|stop)
+		noise_${1}
+		;;
+	restart|reload|force-reload)
+		noise_stop
+		noise_start
+		;;
+	#force-stop) ;;
+	status)
+		kill -s 0 "`noise_pid`"
+		exit $?
+		;;
+	*)
+		echo "Usage: /etc/init.d/noise {start|stop|force-stop|restart|reload|force-reload|status}"
+		exit 1
+		;;
+esac
+
+exit 0
