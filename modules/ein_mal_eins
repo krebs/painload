@@ -33,6 +33,5 @@ Was ist, A geteilt durch B"`"
 
     aufgabe=`echo "$op" | sed -n "$o{s/A/$a/;s/B/$b/;p}"`
     
-    echo "Löse die Aufgabe: $aufgabe?" |
-        espeak -v de --stdout | paplay
+    echo "/espeak -v Löse die Aufgabe: $aufgabe?" >$NOISE_linefeed
 esac
