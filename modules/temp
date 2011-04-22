@@ -1,0 +1,41 @@
+#! /bin/bash
+
+main() {
+  case "$1" in
+    (--help)
+      echo "report temperature in K, °C, °R, or °F."
+    ;;
+    (-C|--celsius)
+      echo `temp 'x - 273.15'` Grad Zelsius | to_espeak
+    ;;
+    (-F|--fahrenheit)
+      echo `temp 'x * 9/5 - 459.67'` Grad Fahrenheit | to_espeak
+    ;;
+    (-R|--rankine)
+      echo `temp 'x * 9/5'` Grad Renkin | to_espeak
+    ;;
+    (-K|--kelvin|*)
+      echo `temp` Kelvin | to_espeak
+    ;;
+  esac
+}
+
+## temp [<formula with temperature as x>]
+## Echo temperature in K.  If formula is given then return that result instead.
+temp() {
+  echo "scale=2; x=`dig +short txt outside.elwood.temp.citecs.de |
+          sed 's/^"DEG \([0-9]\+\.[0-9]\+\)"$/\1/'
+       ` + 273.15; ${1-x}" | bc
+}
+
+to_espeak() {
+  sed '
+    s/\(\.[0-9]\)0\+/\1/g
+    s/\(\.[0-9]\)\([0-9]\)[0-9]*/ \1 \2 /;
+    s/^-/minus /;
+    s/\./ komma /;
+    s:^:/espeak -v Die Außen-tempera-tur beträgt :;
+  ' >$NOISE_linefeed
+}
+
+main "$@"
