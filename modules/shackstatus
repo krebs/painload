@@ -15,15 +15,8 @@ main() {
   
       STAT_LINE=$(ping -c 5 -i 0.2 -q 141.31.176.214 |
           awk '/packet loss/ { print 100-$6}' )
-      STAT_TEMP=$(dig +short txt outside.elwood.temp.citecs.de |
-          sed 's/^"DEG //;
-               s/"$//;
-               s/^-/minus /;
-               s/\./ komma /;
-               s/\(.\)$/ \1 grad zelsius/
-  	')
   
-      cat <<-EOF >> $NOISE_linefeed
+      cat <<-EOF >$NOISE_linefeed
         /set pitch 10
         /espeak -v Hallo - Ich bin Krebs.
         /espeak -v Heute ist `wochentag`, der `tag`  --- `monat` -- `date +%Y`
@@ -36,7 +29,7 @@ main() {
         /espeak -v interner - D N S -- externe - do-mejn -- $STAT_DNS_E
         /espeak -v externer - D N S - $STAT_DNS_X
         /espeak -v Leitungsqualität - $STAT_LINE prozent.
-        /espeak -v Die Außen-tempera-tur beträgt $STAT_TEMP
+        /temp
         /espeak -v krebs kompjuting bereit
 	EOF
     ;;
