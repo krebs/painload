@@ -1,127 +1,111 @@
 #! /bin/bash
-inputdir=$HOME/noise/streams
 
-speak () {
-    echo "$@" >> $NOISE_linefeed
-}
-
-wochentag () {
-	case $(date +%a) in
-	Mon) echo Montag     ;;
-	Tue) echo Dienstag   ;;
-	Wed) echo Mittwoch   ;;
-	Thu) echo Donnerstag ;;
-	Fri) echo Freitag    ;;
-	Sat) echo Samstag    ;;
-	Sun) echo Sonntag    ;;
-	esac
-}
-
-tag () {
-	case $(date +%d) in
-	1)  echo erste    ;;
-	2)  echo zweite   ;;
-	3)  echo dritte   ;;
-	4)  echo vierte   ;;
-	5)  echo fünfte   ;;
-	6)  echo sechste  ;;
-	7)  echo siebte   ;;
-	8)  echo achte    ;;
-	9)  echo neunte   ;;
-	10) echo zehnte   ;;
-	11) echo elfte    ;;
-	12) echo zwölfte  ;;
-	13) echo dreizehnte ;;
-	14) echo vierzehnte ;;
-	15) echo fünfzehnte ;;
-	16) echo sechzehnte ;;
-	17) echo siebzehnte ;;
-	18) echo achtzehnte ;;
-	19) echo neunzehnte ;;
-	20) echo zwanzigste ;;
-	21) echo einundzwanzigste    ;;
-	22) echo zweiundzwanzigste   ;;
-	23) echo dreiundzwanzigste   ;;
-	24) echo vierundzwanzigste   ;;
-	25) echo füfundzwanzigste   ;;
-	26) echo sechsundzwanzigste  ;;
-	27) echo siebenundzwanzigste ;;
-	28) echo achtundzwanzigste   ;;
-	29) echo neunundzwanzigste   ;;
-	30) echo dreissigste         ;;
-	31) echo einunddreissigste   ;;
-	esac
-}
-
-monat () {
-	case $(date +%b) in
-	Jan) echo Januar    ;;
-	Feb) echo Februar   ;;
-	Mar) echo März      ;;
-	Apr) echo April     ;;
-	May) echo Mai       ;;
-	Jun) echo Juni      ;;
-	Jul) echo Juli      ;;
-	Aug) echo August    ;;
-	Sep) echo September ;;
-	Oct) echo Oktober   ;;
-	Nov) echo November  ;;
-	Dec) echo Dezember  ;;
-	esac
-}
-
-case "$1" in
-  (--help)
-    echo "report status of all shack services."
+main() {
+  case "$1" in
+    (--help)
+      echo "report status of all shack services."
     ;;
-  (*)
-# just a multiline comment
-cat << EOF > /dev/null
-	/set pitch 10
-	/espeak -v Hallo. Krietscher hat seinen Meister vermisst.
-	/espeak -v Heute ist `wochentag`, der `tag`  --- `monat` -- `date +%Y`
-	/zeit
-	/espeak -v check der systeme:
-	/espeak -v Energie versorgung -- aktiv
-	/espeak -v schäckhost -- läuft
-	/espeak -v telnet     -- läuft
-	/espeak -v interner - de - enn -- es, interne domein -- $STAT_DNS_I
-	/espeak -v interner - de - enn -- es, externe domein -- $STAT_DNS_E
-	/espeak -v externer - de - enn -- es - $STAT_DNS_X
-	/espeak -v Leitungsqualität - $STAT_LINE prozent.
-	/espeak -v Die Aussen temper atur beträgt $STAT_TEMP
-	/espeak -v Willkommen zu Hause, -- Meister
-EOF
-
-[ $( dig +short localhost     @10.42.0.10 ) = "127.0.0.1" ] && STAT_DNS_I="läuft" || STAT_DNS_I="antwortet nicht"
-[ $( dig +short shackspace.de @10.42.0.10 ) = "141.31.176.214" ] && STAT_DNS_E="läuft"|| STAT_DNS_E="antwortet nicht"
-[ $( dig +short shackspace.de @141.31.176.214 ) = "141.31.176.214" ] && STAT_DNS_X="läuft"|| STAT_DNS_X="antwortet nicht"
-
-STAT_LINE=$( ping -c 5 -i 0.2 -q 141.31.176.214 | awk '/packet loss/ { print 100-$6}' )
-STAT_TEMP=$( dig +short txt outside.elwood.temp.citecs.de |
-    sed 's/^"DEG //;
-         s/"$//;
-         s/^-/minus /;
-         s/\./ komma /;
-         s/\(.\)$/ \1 grad zelsius/
-	'
-)
-
-cat <<-EOF >> $NOISE_linefeed
-	/set pitch 10
-	/espeak -v Hallo. Krietscher hat seinen Meister vermisst.
-	/espeak -v Heute ist `wochentag`, der `tag`  --- `monat` -- `date +%Y`
-	/zeit
-	/espeak -v check der systeme:
-	/espeak -v Energie versorgung -- aktiv
-	/espeak -v schäckhost -- läuft
-	/espeak -v telnet     -- läuft
-	/espeak -v interner - de - enn -- es, interne domein -- $STAT_DNS_I
-	/espeak -v interner - de - enn -- es, externe domein -- $STAT_DNS_E
-	/espeak -v externer - de - enn -- es - $STAT_DNS_X
-	/espeak -v Leitungsqualität - $STAT_LINE prozent.
-	/espeak -v Die Aussen temper atur beträgt $STAT_TEMP
-	/espeak -v Willkommen zu Hause, -- Meister
-EOF
+    (*)
+      test "$(dig +short localhost     @10.42.0.10 )" = "127.0.0.1" &&
+          STAT_DNS_I="läuft" || STAT_DNS_I="antwortet nicht"
+      test "$(dig +short shackspace.de @10.42.0.10 )" = "141.31.176.214" &&
+          STAT_DNS_E="läuft" || STAT_DNS_E="antwortet nicht"
+      test "$(dig +short shackspace.de @141.31.176.214 )" = "141.31.176.214" &&
+          STAT_DNS_X="läuft"|| STAT_DNS_X="antwortet nicht"
+  
+      STAT_LINE=$(ping -c 5 -i 0.2 -q 141.31.176.214 |
+          awk '/packet loss/ { print 100-$6}' )
+      STAT_TEMP=$(dig +short txt outside.elwood.temp.citecs.de |
+          sed 's/^"DEG //;
+               s/"$//;
+               s/^-/minus /;
+               s/\./ komma /;
+               s/\(.\)$/ \1 grad zelsius/
+  	')
+  
+      cat <<-EOF >> $NOISE_linefeed
+        /set pitch 10
+        /espeak -v Hallo - Ich bin Krebs.
+        /espeak -v Heute ist `wochentag`, der `tag`  --- `monat` -- `date +%Y`
+        /zeit
+        /espeak -v tcheck der systeme:
+        /espeak -v Energie versorgung -- aktiv
+        /espeak -v shackhost -- läuft
+        /espeak -v telnet    -- läuft
+        /espeak -v interner - D N S -- interne - do-mejn -- $STAT_DNS_I
+        /espeak -v interner - D N S -- externe - do-mejn -- $STAT_DNS_E
+        /espeak -v externer - D N S - $STAT_DNS_X
+        /espeak -v Leitungsqualität - $STAT_LINE prozent.
+        /espeak -v Die Außen-tempera-tur beträgt $STAT_TEMP
+        /espeak -v krebs kompjuting bereit
+	EOF
     ;;
-esac 2>&1
+  esac 2>&1
+}
+
+wochentag() {
+  case $(date +%a) in
+    (Mon) echo Montag     ;;
+    (Tue) echo Dienstag   ;;
+    (Wed) echo Mittwoch   ;;
+    (Thu) echo Donnerstag ;;
+    (Fri) echo Freitag    ;;
+    (Sat) echo Samstag    ;;
+    (Sun) echo Sonntag    ;;
+  esac
+}
+
+tag() {
+  case $(date +%d) in
+    (1)  echo erste    ;;
+    (2)  echo zweite   ;;
+    (3)  echo dritte   ;;
+    (4)  echo vierte   ;;
+    (5)  echo fünfte   ;;
+    (6)  echo sechste  ;;
+    (7)  echo siebte   ;;
+    (8)  echo achte    ;;
+    (9)  echo neunte   ;;
+    (10) echo zehnte   ;;
+    (11) echo elfte    ;;
+    (12) echo zwölfte  ;;
+    (13) echo dreizehnte ;;
+    (14) echo vierzehnte ;;
+    (15) echo fünfzehnte ;;
+    (16) echo sechzehnte ;;
+    (17) echo siebzehnte ;;
+    (18) echo achtzehnte ;;
+    (19) echo neunzehnte ;;
+    (20) echo zwanzigste ;;
+    (21) echo einundzwanzigste    ;;
+    (22) echo zweiundzwanzigste   ;;
+    (23) echo dreiundzwanzigste   ;;
+    (24) echo vierundzwanzigste   ;;
+    (25) echo füfundzwanzigste   ;;
+    (26) echo sechsundzwanzigste  ;;
+    (27) echo siebenundzwanzigste ;;
+    (28) echo achtundzwanzigste   ;;
+    (29) echo neunundzwanzigste   ;;
+    (30) echo dreissigste         ;;
+    (31) echo einunddreissigste   ;;
+  esac
+}
+
+monat() {
+  case $(date +%b) in
+    (Jan) echo Januar    ;;
+    (Feb) echo Februar   ;;
+    (Mar) echo März      ;;
+    (Apr) echo April     ;;
+    (May) echo Mai       ;;
+    (Jun) echo Juni      ;;
+    (Jul) echo Juli      ;;
+    (Aug) echo August    ;;
+    (Sep) echo September ;;
+    (Oct) echo Oktober   ;;
+    (Nov) echo November  ;;
+    (Dec) echo Dezember  ;;
+  esac
+}
+
+main "$@"
