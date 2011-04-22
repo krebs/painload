@@ -1,11 +1,15 @@
 #!/usr/bin/python
 #encode=utf8
 
-print "[31;4;5;1mBug Robert to implement Twitter-OAuth![m"
-exit(1)
+#print "[31;4;5;1mTODO Bug Robert to implement Twitter-OAuth![m"
+#exit(1)
+import sys
 
+#sys.path.append("/usr/local/lib/")
 
-import sys, twitter
+import twitter, os, pwd
+
+#os.getlogin = lambda: pwd.getpwuid(os.getuid())[0]
 
 sys.stderr = sys.stdout
 
@@ -61,7 +65,7 @@ if len(sys.argv) > 1 and sys.argv[1] == "--help":
 
 
 
-api = twitter.Api(username="shackspam", password="sh4ckit")
+api = twitter.Api("Z7f9npE5ixvZ0lMCHDZBOg", "8z0gyfOABar1HxKvqL6fYXLqRFUPLQ9OOzDFt7Q4F4", "139766258-94TGPvNsJ8tYVv68eZewfXOIyDvRCWdycNlUgHrs", "NRnDQZPCoLrDizFvakZkSWgoG4vgGuT3OOMChSfiI")
 
 #api.SetXTwitterHeaders("Shackspace UTTERANCE","","0.00.0.01.42")
 
