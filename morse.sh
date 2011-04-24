@@ -5,6 +5,7 @@ freq=2000
 dit=60
 mode=compile+execute
 
+## plain stupid options "parser"
 while test $# -gt 0; do
   case "$1" in
     (-l) dit=$2; shift 2;;
@@ -18,6 +19,8 @@ done
 # Ein Dah ist dreimal so lang wie ein Dit.
 dah=`echo "$dit * 3" | bc`
 
+## Convert a character to the corresponting morse code.
+## Note: any unknown characters are left unaltered.
 char2morse() {
 tr [a-z] [A-Z] |
 sed '
@@ -123,6 +126,7 @@ sed '
 '
 }
 
+## Convert morse code to beep(1) arguments.
 morse2beeparg() {
 sed "
   s: : -n -f 1 -l $dit:g
@@ -142,7 +146,7 @@ execute() {
   `morse2beeparg`
 }
 
-
+## main - process either [any non-option] arguments or stdin.
 if test $# -gt 0; then
   echo "$*"
 else
