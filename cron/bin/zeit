@@ -12,3 +12,5 @@ expect READY.
 # pitch changed from 10 to 100
 expect READY.
 EOF
+sleep 1
+/sbin/morse -l 100 -f 700 `date +%k`
