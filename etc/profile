@@ -54,3 +54,5 @@ test -e ~/TODO && cat ~/TODO >&2
 echo '--' >&2
 
 set +u
+
+cd /krebs
