@@ -1,16 +1,11 @@
 #!/bin/bash
-set -x
-MYIP=10.0.7.7.55
+set -xe
+MYIP=10.7.7.66
 
-aptitude install tinc git
-
-
-git clone https://github.com/makefu/shack-retiolum.git
-
-cd shack-retiolum
+apt-get install -y install tinc git curl python git-core
 
 ./install.sh `hostname` $MYIP
 
 # for autostart
 echo "retiolum" >> /etc/tinc/nets.boot
-echo "EXTRA=\"--user=tincd --chroot\"" >> /etc/default/tinc
+echo "EXTRA=\"\"" >> /etc/default/tinc
