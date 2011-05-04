@@ -7,3 +7,4 @@ all: select-target
 infest:
 	infest/passwd
 	infest/motd
+	infest/profile

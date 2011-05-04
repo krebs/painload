@@ -1,0 +1,56 @@
+#! /bin/sh
+
+export EDITOR=vi
+
+set -u
+alias bc='bc -q'
+alias df='df -h'
+alias du='du -h'
+alias grep='grep --color=auto'
+alias ps?="ps ax | head -n 1;ps ax | fgrep -v ' grep --color=auto ' | grep"
+alias la='ls -lA'
+alias lAtr='ls -lAtr'
+alias ll='ls -l'
+alias ls='ls -h --color=auto --group-directories-first'
+alias vi='vim'
+alias vim='vim -p'
+alias view='vim -R'
+
+set -o notify
+
+if test -n "${BASH_VERSION-}" ; then
+  shopt -s checkhash
+  shopt -s histappend histreedit histverify
+  shopt -s no_empty_cmd_completion
+  complete -d cd
+
+  function comp_sch() {
+    local cword="${COMP_WORDS[$COMP_CWORD]}"
+    COMPREPLY=( $(sch -l "$cword.*" ) )
+  }
+  complete -F comp_sch sch
+fi
+
+export HISTSIZE='65536'
+export HISTFILESIZE="$HISTSIZE"
+export HISTCONTROL='ignoredups'
+
+case "${TERM-dumb}" in
+  linux) PS1_COLOR=34 ;;
+  rxvt-unicode) PS1_COLOR=30 ;;
+      *) PS1_COLOR=39 ;;
+esac
+PS1='\[\033[${PS1_COLOR}m\]$(PS1)\[\033[32m\]\w\[\033[39m\]${PSx-} ' # green \w
+PS1='\[\033[32m\]\w\[\033[m\] ' # green \w
+
+if test -n "${SSH_CLIENT-}" ; then
+  PS1='\[\033[35m\]\h'" $PS1" # prefix with magenta hostname
+  #TERM=xterm-256color xtermcontrol --bg \#292d29 --fg \#d0d0d0
+fi
+
+export PATH="/krebs/bin:$PATH"
+
+test -e ~/TODO && cat ~/TODO >&2
+echo '--' >&2
+
+set +u
