@@ -5,6 +5,5 @@ all: select-target
 
 .PHONY: infest
 infest:
-	infest/passwd
-	infest/motd
-	cat etc/profile >/etc/profile
+	infest/etc
+	make -C modules/noise infest

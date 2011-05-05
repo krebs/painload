@@ -1,0 +1,10 @@
+#! /bin/sh -e
+
+morse() {
+  /krebs/modules/morse/morse.sh "$@"
+}
+
+morse -l 42 -f 4000 `hostname`
+morse -l 42 -f 2000 BEREIT
+
+exit 0

