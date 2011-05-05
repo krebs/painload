@@ -1,0 +1,16 @@
+#! /bin/sh
+
+expect >/dev/null <<EOF
+spawn nc localhost telnet
+expect READY.
+send "/zeit\r"
+expect READY.
+# pitch set to 10
+expect READY.
+# Playing WAVE 'stdin' : Signed 16 bit Little Endian, Rate 22050 Hz, Mono
+expect READY.
+# pitch changed from 10 to 100
+expect READY.
+EOF
+sleep 1
+/sbin/morse -l 100 -f 700 `date +%k`

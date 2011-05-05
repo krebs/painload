@@ -1,0 +1,14 @@
+#! /bin/sh
+
+case "$1" in
+  (--help) 
+    case "$2" in
+      (--verbose) mpc --help ;;
+      (*) echo access mpd
+    esac ;;
+  (*)
+    ##echo test-module called with following arguments: "$@"
+    ## send command for re-evaluation:
+    ##echo /espeak test >$NOISE_linefeed
+    MPD_HOST=mpd.shack mpc $@
+esac

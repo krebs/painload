@@ -1,0 +1,22 @@
+#! /bin/sh
+
+case "$1" in
+  (--help)
+    echo "set language or list available languages" ;;
+  (list)
+    espeak --voices | sed -n '1!p' | awk '{\
+        printf"[32m/lang %s [0;35mset [4mlang[0;35m to %s[m\n",$2,$4
+    }' ;;
+  ('')
+    echo /set lang >$NOISE_linefeed ;;
+  (*)
+    if test -z "$2" ; then
+      echo /set lang "$1"
+    else
+      echo /set lang "$1"
+      shift
+      echo "$*"
+      echo /set lang "${noise_lang-de}"
+    fi >$NOISE_linefeed
+esac
+

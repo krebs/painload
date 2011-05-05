@@ -1,0 +1,15 @@
+#! /bin/sh
+
+case "$1" in
+  (--help) echo leave chat mode ;;
+  (*)
+    . /tmp/noise/$NOISE_pid/environment
+    nick="${chat_nick-$NOISE_pid}" 
+    
+    echo "/send_to_channel $chat_channel $nick has quit [4m${*-no reason}[m" > $NOISE_linefeed   
+
+    echo /set default_command espeak >$NOISE_linefeed
+    echo "[32mdisabled chat mode (set back to espeak)[m" ;;
+
+
+esac

@@ -1,0 +1,4 @@
+#! /bin/sh
+qname="`readlink -f "$0"`"
+dirname="`dirname "$qname"`"
+exec sudo -u noise env -i TCPREMOTEIP="$TCPREMOTEIP" "$dirname/noise"

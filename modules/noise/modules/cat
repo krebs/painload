@@ -1,0 +1,14 @@
+#! /bin/sh
+case "$1" in
+  (--help) : ;;
+  (*)
+    while read line ; do
+      case "$line" in
+        (/quit)
+          break 2
+        ;;
+        (*)
+          echo "[$line]"
+      esac
+    done
+esac
