@@ -1,0 +1,32 @@
+MORSE(1)                                                              MORSE(1)
+
+NAME
+       morse.sh - morse code generator
+
+SYNOPSIS
+       morse [-l N] [-f N] [-c|-x] [text...]
+
+DESCRIPTION
+       Generate visible or audible from text or stdin.
+
+OPTIONS
+       -l N   use N milliseconds as length of dit.  Default: 60 ms
+
+       -f N   beep at N Hz.  Default: 2000 Hz
+
+       -c     compile only.  Morse will output morse-executable morse code.
+
+       -x     execute only.  Interpret text as morse code, i.e. do not try
+              to convert text or stdin.
+
+BUGS
+       None.^_^
+
+REPORTING BUGS
+       Please use Github's issue tracking system.
+
+AUTHOR
+       This program was written by tv@shackspace and is distributed under the
+       Do What The Fuck You Want To Public License.
+
+                                   April 2011                         MORSE(1)
