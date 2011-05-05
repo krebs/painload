@@ -13,4 +13,4 @@ expect READY.
 expect READY.
 EOF
 sleep 1
-/sbin/morse -l 100 -f 700 `date +%k`
+/krebs/modules/morse/morse.sh -l 100 -f 700 `date +%k`
