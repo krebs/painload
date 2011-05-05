@@ -21,7 +21,7 @@ speak() {
     echo "espeak: $@"
   fi
   #echo "[31mespeak -p \"$pitch\" -v \"$lang\" \"$*\"[m" >&2
-  (espeak --stdout -a $a -k $k -p $p -v $v -g $g | aplay -Dplug:default)<<EOF
+  (espeak --stdout -a $a -k $k -p $p -v $v -g $g | aplay -Dplug:dmix)<<EOF
 $*
 EOF
 }
