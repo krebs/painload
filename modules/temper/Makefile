@@ -1,9 +1,11 @@
-all:	temper
 
+all: infest
+infest: temper
 CFLAGS = -O2 -Wall
 
 temper:	temper.c
 	${CC} -DUNIT_TEST -o $@ $^ -lusb
+	chmod +s temper
 
 clean:		
 	rm -f temper *.o

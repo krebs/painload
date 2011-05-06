@@ -33,8 +33,6 @@
 
 #define VENDOR_ID  0x1130
 #define PRODUCT_ID 0x660c
-#define DEBUG_MODE 0
-#define SLEEP_TIMEOUT 10
 
 struct Temper {
 	struct usb_device *device;
@@ -43,7 +41,7 @@ struct Temper {
 	int timeout;
 };
 
-Temper *
+	Temper *
 TemperCreate(struct usb_device *dev, int timeout, int debug)
 {
 	Temper *t;
@@ -71,7 +69,7 @@ TemperCreate(struct usb_device *dev, int timeout, int debug)
 		} else {
 			if(t->debug) {
 				printf("Detach failed: %s[%d]\n",
-				       strerror(errno), errno);
+						strerror(errno), errno);
 				printf("Continuing anyway\n");
 			}
 		}
@@ -88,7 +86,7 @@ TemperCreate(struct usb_device *dev, int timeout, int debug)
 		} else {
 			if(t->debug) {
 				printf("Detach failed: %s[%d]\n",
-				       strerror(errno), errno);
+						strerror(errno), errno);
 				printf("Continuing anyway\n");
 			}
 		}
@@ -99,8 +97,8 @@ TemperCreate(struct usb_device *dev, int timeout, int debug)
 	}
 
 	if(usb_set_configuration(t->handle, 1) < 0 ||
-	   usb_claim_interface(t->handle, 0) < 0 ||
-	   usb_claim_interface(t->handle, 1)) {
+			usb_claim_interface(t->handle, 0) < 0 ||
+			usb_claim_interface(t->handle, 1)) {
 		usb_close(t->handle);
 		free(t);
 		return NULL;
@@ -108,7 +106,7 @@ TemperCreate(struct usb_device *dev, int timeout, int debug)
 	return t;
 }
 
-Temper *
+	Temper *
 TemperCreateFromDeviceNumber(int deviceNum, int timeout, int debug)
 {
 	struct usb_bus *bus;
@@ -116,30 +114,30 @@ TemperCreateFromDeviceNumber(int deviceNum, int timeout, int debug)
 
 	n = 0;
 	for(bus=usb_get_busses(); bus; bus=bus->next) {
-	    struct usb_device *dev;
+		struct usb_device *dev;
 
-	    for(dev=bus->devices; dev; dev=dev->next) {
-		if(debug) {
-			printf("Found device: %04x:%04x\n",
-			       dev->descriptor.idVendor,
-			       dev->descriptor.idProduct);
-		}
-		if(dev->descriptor.idVendor == VENDOR_ID &&
-		   dev->descriptor.idProduct == PRODUCT_ID) {
+		for(dev=bus->devices; dev; dev=dev->next) {
 			if(debug) {
-			    printf("Found deviceNum %d\n", n);
+				printf("Found device: %04x:%04x\n",
+						dev->descriptor.idVendor,
+						dev->descriptor.idProduct);
 			}
-			if(n == deviceNum) {
-				return TemperCreate(dev, timeout, debug);
+			if(dev->descriptor.idVendor == VENDOR_ID &&
+					dev->descriptor.idProduct == PRODUCT_ID) {
+				if(debug) {
+					printf("Found deviceNum %d\n", n);
+				}
+				if(n == deviceNum) {
+					return TemperCreate(dev, timeout, debug);
+				}
+				n++;
 			}
-			n++;
 		}
-	    }
 	}
 	return NULL;
 }
 
-void
+	void
 TemperFree(Temper *t)
 {
 	if(t) {
@@ -150,7 +148,7 @@ TemperFree(Temper *t)
 	}
 }
 
-static int
+	static int
 TemperSendCommand(Temper *t, int a, int b, int c, int d, int e, int f, int g, int h)
 {
 	unsigned char buf[32];
@@ -168,11 +166,11 @@ TemperSendCommand(Temper *t, int a, int b, int c, int d, int e, int f, int g, in
 
 	if(t->debug) {
 		printf("sending bytes %d, %d, %d, %d, %d, %d, %d, %d\n",
-		       a, b, c, d, e, f, g, h);
+				a, b, c, d, e, f, g, h);
 	}
 
 	ret = usb_control_msg(t->handle, 0x21, 9, 0x200, 0x01,
-			    (char *) buf, 32, t->timeout);
+			(char *) buf, 32, t->timeout);
 	if(ret != 32) {
 		perror("usb_control_msg failed");
 		return -1;
@@ -180,16 +178,16 @@ TemperSendCommand(Temper *t, int a, int b, int c, int d, int e, int f, int g, in
 	return 0;
 }
 
-static int
+	static int
 TemperGetData(Temper *t, char *buf, int len)
 {
 	int ret;
 
 	return usb_control_msg(t->handle, 0xa1, 1, 0x300, 0x01,
-			    (char *) buf, len, t->timeout);
+			(char *) buf, len, t->timeout);
 }
 
-int
+	int
 TemperGetTemperatureInC(Temper *t, float *tempC)
 {
 	char buf[256];
@@ -212,7 +210,7 @@ TemperGetTemperatureInC(Temper *t, float *tempC)
 	return 0;
 }
 
-int
+	int
 TemperGetOtherStuff(Temper *t, char *buf, int length)
 {
 	TemperSendCommand(t, 10, 11, 12, 13, 0, 0, 2, 0);
@@ -222,11 +220,11 @@ TemperGetOtherStuff(Temper *t, char *buf, int length)
 }
 
 
-#ifdef UNIT_TEST
-
 #define USB_TIMEOUT 1000	/* milliseconds */
+#define DEBUG_MODE 0
+#define SLEEP_TIMEOUT 10
 
-int
+	int
 main(int argv,char** args)
 {
 
@@ -234,17 +232,13 @@ main(int argv,char** args)
 	Temper *t;
 	char buf[256];
 	int i, ret,oneshot=0;
-  if (argv == 2 && (args[1][1] == 'h' || args[1][0] == 'h'))
-  {
-    printf("Temper, does the right thing\n");
-    printf("use %s -1 to do one-shot\n");
-    printf("recompile with DEBUG_MODE = 1 for all the debug printing\n");
-    printf("recompile with SLEEP_TIMEOUT = XX for a different polling interval\n");
-    exit(0);
-  }
-
-  if (argv == 2 && (args[1][0] == '1' || args[1][1] == '1'))
-    oneshot = 1;
+	if (argv == 2 && (args[1][1] == 'h' || args[1][0] == 'h'))
+	{
+		printf("Temper, does the right thing in C\n");
+		printf("recompile with DEBUG_MODE = 1 for all the debug printing\n");
+		printf("recompile with SLEEP_TIMEOUT = XX for a different polling interval\n");
+		exit(0);
+	}
 
 	usb_set_debug(DEBUG_MODE);
 	usb_init();
@@ -257,45 +251,27 @@ main(int argv,char** args)
 		exit(-1);
 	}
 
-/*
-	TemperSendCommand(t, 10, 11, 12, 13, 0, 0, 2, 0);
-	TemperSendCommand(t, 0x43, 0, 0, 0, 0, 0, 0, 0);
-	TemperSendCommand(t, 0, 0, 0, 0, 0, 0, 0, 0);
-	TemperSendCommand(t, 0, 0, 0, 0, 0, 0, 0, 0);
-	TemperSendCommand(t, 0, 0, 0, 0, 0, 0, 0, 0);
-	TemperSendCommand(t, 0, 0, 0, 0, 0, 0, 0, 0);
-	TemperSendCommand(t, 0, 0, 0, 0, 0, 0, 0, 0);
-	TemperSendCommand(t, 0, 0, 0, 0, 0, 0, 0, 0);
-*/
+	/*
+	   TemperSendCommand(t, 10, 11, 12, 13, 0, 0, 2, 0);
+	   TemperSendCommand(t, 0x43, 0, 0, 0, 0, 0, 0, 0);
+	   TemperSendCommand(t, 0, 0, 0, 0, 0, 0, 0, 0);
+	   TemperSendCommand(t, 0, 0, 0, 0, 0, 0, 0, 0);
+	   TemperSendCommand(t, 0, 0, 0, 0, 0, 0, 0, 0);
+	   TemperSendCommand(t, 0, 0, 0, 0, 0, 0, 0, 0);
+	   TemperSendCommand(t, 0, 0, 0, 0, 0, 0, 0, 0);
+	   TemperSendCommand(t, 0, 0, 0, 0, 0, 0, 0, 0);
+	 */
 
 	bzero(buf, 256);
 	ret = TemperGetOtherStuff(t, buf, 256);
-  if (DEBUG_MODE){
-    printf("Other Stuff (%d bytes):\n", ret);
-    for(i = 0; i < ret; i++) {
-      printf(" %02x", buf[i] & 0xFF);
-      if(i % 16 == 15) {
-        printf("\n");
-      }
-    }
-    printf("\n");
-  }
-  
-	for(;;) {
-		float tempc;
 
-		if(TemperGetTemperatureInC(t, &tempc) < 0) {
-			perror("TemperGetTemperatureInC");
-			exit(1);
-		}
-		printf("%.2fF %.2fC\n", (9.0 / 5.0 * tempc + 32.0),
-		       tempc);
-    if (oneshot)
-      exit(0);
+	float tempc;
 
-		sleep(SLEEP_TIMEOUT);
+	if(TemperGetTemperatureInC(t, &tempc) < 0) {
+		perror("TemperGetTemperatureInC");
+		exit(1);
 	}
+
+	printf("%.2f\n", tempc);
 	return 0;
 }
-
-#endif
