@@ -12,4 +12,5 @@ infest:
 	##
 	amixer sset 'Master' 100 unmute
 	amixer sset 'PCM' 100 unmute
-	amixer sset 'PC Speaker' 100 unmute
+	amixer sset 'PC Speaker' 100 unmute || \
+	amixer sset 'Beep' 100 unmute
