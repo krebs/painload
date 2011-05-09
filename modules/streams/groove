@@ -1,4 +1,4 @@
 #! /bin/sh
 set -euf
-pkill mplayer
+pkill mplayer || true
 exec mplayer http://somafm.com/groovesalad.pls
