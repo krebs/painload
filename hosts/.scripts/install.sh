@@ -3,7 +3,7 @@
 
 set -e
 myname="${1:-dummy}"
-rel_hostsfile=`dirname $0`/hosts
+rel_hostsfile=`dirname $0`/..
 hostsfile=`readlink -f $rel_hostsfile`
 netname=retiolum
 myipv4="${2:-10.7.7.56}"
@@ -14,7 +14,7 @@ mkdir -p /etc/tinc/$netname
 cd /etc/tinc/$netname
 
 # get currently known hosts
-cp -r $hostsfile .
+cp -r $hostsfile hosts
 echo "added known hosts:"
 ls -1 | LC_ALL=C sort
 echo "delete the nodes you do not trust!"
