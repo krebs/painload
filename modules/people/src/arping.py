@@ -1,8 +1,8 @@
-#!/usr/bin/python2
+#!/usr/bin/python
 
 import logging 
 log = logging.getLogger('arpingy')
-import os
+import os,sys
 try:
   if (os.geteuid() != 0):
     raise Exception('no root permissions')
@@ -13,7 +13,7 @@ try:
     """Arping function takes IP Address or Network, returns nested mac/ip list"""
     try:
       conf.verb=0
-      ans,unans=arping(iprange,iface=iface,timeout=1)
+      ans,unans=arping(iprange,iface=iface,timeout=1,retry=3)
 
       collection = []
       for snd, rcv in ans:
@@ -28,3 +28,8 @@ except Exception as e:
   log.error("Cannot load arping functions!" + str(e))
   def arpingy(iprange='',iface=''):
     raise Exception ('arping not available')
+
+
+if __name__ =='__main__':
+  logging.basicConfig(level=logging.DEBUG)
+  arpingy(sys.argv[1],sys.argv[2])
