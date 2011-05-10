@@ -1,15 +1,14 @@
 #!/usr/bin/python
-from arping import arpingy
 import subprocess,re,logging
+
+from arping import arpingy
 from multiprocessing import Pool
 
-logging.basicConfig(level=logging.ERROR)
 DEV='eth0'
 MAC_NAMES='mac_names.lst'
 data = []
 ret = {}
-names = load_names(FNAME)
-
+exit (0)
 def get_own_addr():
   data = subprocess.Popen(['/sbin/ifconfig',DEV], 
       stdout=subprocess.PIPE).communicate()[0].replace('\n','')
@@ -20,9 +19,8 @@ def load_names(MAC_NAMES):
   names = {}
   f = open(MAC_NAMES)
   for l in f:
-    print l
     mac,name = l.split()
-    names[mac] = name
+    names[mac] = name.replace('\n','')
   f.close()
   return names
 
@@ -33,6 +31,7 @@ for first in range(3):
   for second in range(255):
     data.append({'iprange':'10.42.'+str(first)+'.'+str(second),'iface':DEV})
 
+names = load_names(MAC_NAMES)
 try:
   p = Pool(20)
   ret = filter(lambda x:x , p.map(arping_helper, data))
@@ -46,4 +45,4 @@ except:
 
 for p in ret:
   if p[1] in names:
-    print name + " is online"
+    print names[p[1]]+ " is online"

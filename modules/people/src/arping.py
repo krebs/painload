@@ -2,6 +2,8 @@
 
 import logging 
 log = logging.getLogger('arpingy')
+logging.disable(logging.WARNING)
+
 import os,sys
 try:
   if (os.geteuid() != 0):
@@ -12,7 +14,7 @@ try:
     log.debug("pinging "+ str(iprange))
     """Arping function takes IP Address or Network, returns nested mac/ip list"""
     try:
-      conf.verb=0
+      conf.verb=1
       ans,unans=arping(iprange,iface=iface,timeout=1,retry=3)
 
       collection = []
