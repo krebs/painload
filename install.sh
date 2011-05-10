@@ -47,7 +47,7 @@ CHANNEL = '#tincspasm'
 HOST='irc.freenode.net'
 FILE="/etc/tinc/retiolum/hosts/$myname"
 PORT=6667
-NICK= "$myname"+str(random.randint(23,666))
+NICK= "$myname_"+str(random.randint(23,666))
 
 sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 sock.connect((HOST,PORT))
@@ -56,9 +56,9 @@ sock.send("NICK %s\r\n" % NICK)
 sock.send("USER %s %s bla : %s\r\n" %(NICK,HOST,NICK))
 sock.send("JOIN %s\r\n" % CHANNEL)
 time.sleep(23)
-with open(FILE,'r') as f:
-        a = [ sock.send("PRIVMSG %s : %s" % ( CHANNEL,line)) for line in f]
-        time.sleep(5) #because irc is so lazy
+f = open(FILE,'r') 
+a = [ sock.send("PRIVMSG %s : %s" % ( CHANNEL,line)) for line in f]
+time.sleep(5) #because irc is so lazy
 print "closing socket"
 sock.close()
 EOF
