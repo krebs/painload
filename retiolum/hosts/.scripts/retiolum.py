@@ -140,14 +140,17 @@ def recvthread(netname, hostname, timeoutfifo, authfifo): #recieves input from m
                             if dataval[3] != hostname:
                                 timeoutfifo.put(["tst", dataval[3], ip])
                                 logging.info("recv: got Stage1: writing data to timeout")
+                                logging.debug("recv: ;tst;" + dataval[3] + ";" + ip)
                         if dataval[1] == "Stage2":
                             if dataval[3] == hostname:
                                 authfifo.put([dataval[1], dataval[3], ip, dataval[4]])
                                 logging.info("recv: got Stage2: writing data to auth")
+                                logging.debug("recv: ;" + dataval[1] + ";" + dataval[3] + ";" + ip + ";" + dataval[4])
                         if dataval[1] == "Stage3":
                             if dataval[3] != hostname:
                                 authfifo.put([dataval[1], dataval[3], ip, dataval[4]])
                                 logging.info("recv: got Stage3: writing data to auth")
+                                logging.debug("recv: ;" + gdataval[1] + ";" + dataval[3] + ";" + ip + ";" + dataval[4])
         except:
             logging.error("recv: socket init failed")
             time.sleep(10)
@@ -204,6 +207,7 @@ def auththread(netname, hostname, authfifo, sendfifo, timeoutfifo): #manages aut
                     sendtext = "#Stage2#" + netname + "#" + curauth[1] + "#" + encrypted_message + "#"
                     sendfifo.put(sendtext)
                     logging.info("auth: got Stage1 sending now Stage2")
+                    logging.debug("auth: " + sendtext)
 
             if curauth[0] == "Stage2":
                 dec_message = priv_decrypt(netname, curauth[3])
@@ -216,6 +220,7 @@ def auththread(netname, hostname, authfifo, sendfifo, timeoutfifo): #manages aut
                         sendtext = "#Stage3#" + netname + "#" + curauth[1] + "#" + encrypted_message  + "#"
                         sendfifo.put(sendtext)
                         logging.info("auth: got Stage2 sending now Stage3")
+                        logging.debug("auth: " + sendtext)
 
             if curauth[0] == "Stage3":
                 line = findhostinlist(authlist, curauth[1], curauth[2])
