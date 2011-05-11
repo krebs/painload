@@ -1,8 +1,12 @@
-GRAPH_SETTER=dot
+GRAPH_SETTER1=dot
+GRAPH_SETTER2=circo
 LOG_FILE=/var/log/everything.log
+OPENER=/bin/true
 
 sudo pkill -USR2 tincd
 sudo sed -n '/tinc.retiolum/{s/.*tinc.retiolum\[[1-9]*\]: //gp}' $LOG_FILE |\
-    ./parse.py | tee retiolum.dot |\
-    $GRAPH_SETTER -Tpng -o retiolum.png
-xdg-open retiolum.png
+    ./parse.py > retiolum.dot
+
+$GRAPH_SETTER1 -Tpng -o retiolum_1.png retiolum.dot
+$GRAPH_SETTER2 -Tpng -o retiolum_2.png retiolum.dot
+$OPENER retiolum_1.png &>/dev/null 
