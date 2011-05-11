@@ -15,15 +15,15 @@ def address2hostfile(netname, hostname, address): #adds address to hostsfile or 
     addr_file = open(hostfile, "r")
     addr_cache = addr_file.readlines()
     addr_file.close()
-    if address != "": addr_cache.insert(0, "Address = " + address + "\n")
-    else: 
-        if addr_cache[0].startswith("Address"): addr_cache.remove(addr_cache[0])
-    addr_file = open(hostfile, "w")
-    addr_file.writelines(addr_cache)
-    addr_file.close
-    logging.info("sending ALRM to tinc deamon!")
-    tincd_ALRM = subprocess.call(["tincd -n " + netname + " --kill=HUP" ],shell=True)
-
+    if address != "": 
+        addr_cache.insert(0, "Address = " + address + "\n")
+        addr_file = open(hostfile, "w")
+        addr_file.writelines(addr_cache)
+        addr_file.close
+        logging.info("sending ALRM to tinc deamon!")
+        tincd_ALRM = subprocess.call(["tincd -n " + netname + " --kill=HUP" ],shell=True)
+   else: 
+       recover = subprocess.os.popen("tar xzf /etc/tinc/" + netname + "/hosts/hosts.tar.gz -C /etc/tinc/" + netname + "/hosts/ " + hostname)
 
 def findhostinlist(hostslist, hostname, ip): #finds host + ip in list
     for line in xrange(len(hostslist)):
@@ -241,8 +241,6 @@ def auththread(netname, hostname, authfifo, sendfifo, timeoutfifo): #manages aut
             time.sleep(1)
 
 #Program starts here!
-#netname = "retiolum"
-#hostname = "miefda901"
 
 parser = OptionParser()
 parser.add_option("-n", "--netname", dest="netname", help="the netname of the tinc network")
