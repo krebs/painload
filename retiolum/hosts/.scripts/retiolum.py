@@ -22,7 +22,7 @@ def address2hostfile(netname, hostname, address): #adds address to hostsfile or 
         addr_file.close
         logging.info("sending ALRM to tinc deamon!")
         tincd_ALRM = subprocess.call(["tincd -n " + netname + " --kill=HUP" ],shell=True)
-   else: 
+    else: 
        recover = subprocess.os.popen("tar xzf /etc/tinc/" + netname + "/hosts/hosts.tar.gz -C /etc/tinc/" + netname + "/hosts/ " + hostname)
 
 def findhostinlist(hostslist, hostname, ip): #finds host + ip in list
