@@ -1,69 +1,29 @@
 #!/usr/bin/python2 
-import sys, os, time, socket, subprocess, thread, random, Queue, binascii, logging #these should all be in the stdlib
-import sqlite3
-from Crypto.PublicKey import RSA
+import sys, os, time, socket, subprocess, thread, random, Queue, binascii, logging, hashlib, urllib2 #these should all be in the stdlib
 from optparse import OptionParser
 
 def pub_encrypt(netname, hostname_t, text):  #encrypt data with public key
-    conn = sqlite3.connect("/etc/tinc/" + netname + "/hosts.sqlite")
-    c = conn.cursor()
-    hostname_tupel = [hostname_t]
-    pubkey = ""
-    try:
-        c.execute("select r_pub from hosts where hostname=?", hostname_tupel)
-    except:
-        logging.error("RSA_Encryption: Database error")
-        return -1
-    for i in c:
-        pubkey += i[0]
-    c.close
-    rsa_pub = RSA.importKey(pubkey)
-    enc_text = rsa_pub.encrypt(text, 0) #seems like RSA_encrypt needs no random
-    return(binascii.b2a_base64(enc_text[0]))
+    enc_text = subprocess.os.popen("echo '" + text + "' | openssl rsautl -pubin -inkey /etc/tinc/" + netname + "/hosts/.pubkeys/" + hostname_t + " -encrypt | base64")
+    return(enc_text.read())
 
 def priv_decrypt(netname, enc_data): #decrypt data with private key
-    raw_privkey = open("/etc/tinc/" + netname + "/rsa_key.priv", "r")
-    r_privkey = raw_privkey.readlines()
-    privkey = ""
-    for i in xrange(len(r_privkey)):
-        privkey += r_privkey[i]
-    raw_privkey.close()
-    
-
-    rsa_priv = RSA.importKey(privkey)
-    dec_text = rsa_priv.decrypt(binascii.a2b_base64(enc_data))
-    return(dec_text)
-
-def database2hostfiles(netname): #make hostsfiles from database
-    conn = sqlite3.connect("/etc/tinc/" + netname + "/hosts.sqlite")
-    c = conn.cursor()
-    c.execute("select * from hosts")
-    for i in c:
-        host = open("/etc/tinc/" + netname + "/hosts/" + i[0], "w")
-        host.write(i[2])
-        host.write(i[3])
-        host.write(i[1])
-        host.write(i[5])
-        host.close()
-    c.close()
+    dec_text = subprocess.os.popen("echo '" + enc_data + "' | base64 -d | openssl rsautl -inkey /etc/tinc/" + netname + "/rsa_key.priv -decrypt")
+    return(dec_text.read())
 
 def address2hostfile(netname, hostname, address): #adds address to hostsfile or restores it if address is empty
-    tupel = [hostname,]
-    conn = sqlite3.connect("/etc/tinc/" + netname + "/hosts.sqlite")
-    c = conn.cursor()
-    c.execute("select * from hosts where hostname=?", tupel)
-    for i in c:
-        host = open("/etc/tinc/" + netname + "/hosts/" + i[0], "w")
-        if address != "":
-            host.write("Address = " + address + "\n")
-        host.write(i[2])
-        host.write(i[3])
-        host.write(i[1])
-        host.write(i[5])
-        host.close()
-    c.close()
+    hostfile = "/etc/tinc/" + netname + "/hosts/" + hostname
+    addr_file = open(hostfile, "r")
+    addr_cache = addr_file.readlines()
+    addr_file.close()
+    if address != "": addr_cache.insert(0, "Address = " + address + "\n")
+    else: 
+        if addr_cache[0].startswith("Address"): addr_cache.remove(addr_cache[0])
+    addr_file = open(hostfile, "w")
+    addr_file.writelines(addr_cache)
+    addr_file.close
     logging.info("sending ALRM to tinc deamon!")
     tincd_ALRM = subprocess.call(["tincd -n " + netname + " --kill=HUP" ],shell=True)
+
 
 def findhostinlist(hostslist, hostname, ip): #finds host + ip in list
     for line in xrange(len(hostslist)):
@@ -82,6 +42,22 @@ def getHostname(netname):
     print("hostname not found!")
     return -1 #nothing found
 
+def get_hostfiles(netname, url_files, url_md5sum):
+    try:
+        get_hosts_tar = urllib2.urlopen(url_files)
+        get_hosts_md5 = urllib2.urlopen(url_md5sum)
+        hosts_tar = get_hosts_tar.read()
+        hosts_md5 = get_hosts_md5.read()
+    
+        if str(hosts_md5) == str(hashlib.md5(hosts_tar).hexdigest() + "  hosts.tar.gz\n"):
+            hosts = open("/etc/tinc/" + netname + "/hosts/hosts.tar.gz", "w")
+            hosts.write(hosts_tar)
+            hosts.close()
+        else:
+            logging.error("hosts.tar.gz md5sum check failed!")
+    except:
+        logging.error("hosts file  download failed!")
+    
 
 ####Thread functions
 
@@ -294,8 +270,9 @@ level_name = option.debug
 level = LEVELS.get(level_name, logging.NOTSET)
 logging.basicConfig(level=level)
 
-wget = subprocess.call(["wget vpn.miefda.org/hosts.sqlite -O /etc/tinc/" + netname + "/hosts.sqlite"], shell=True)
-database2hostfiles(netname)
+get_hostfiles(netname, "http://vpn.miefda.org/hosts.tar.gz", "http://vpn.miefda.org/hosts.md5")
+
+tar = subprocess.call(["tar -xzf /etc/tinc/" + netname + "/hosts/hosts.tar.gz -C /etc/tinc/" + netname + "/hosts/"], shell=True)
 start_tincd = subprocess.call(["tincd -n " + netname ],shell=True)
 
 sendfifo = Queue.Queue() #sendtext
