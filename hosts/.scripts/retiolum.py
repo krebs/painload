@@ -1,38 +1,15 @@
 #!/usr/bin/python2 
 import sys, os, time, socket, subprocess, thread, random, Queue, binascii, logging #these should all be in the stdlib
 import sqlite3
-from Crypto.PublicKey import RSA
 from optparse import OptionParser
 
 def pub_encrypt(netname, hostname_t, text):  #encrypt data with public key
-    conn = sqlite3.connect("/etc/tinc/" + netname + "/hosts.sqlite")
-    c = conn.cursor()
-    hostname_tupel = [hostname_t]
-    pubkey = ""
-    try:
-        c.execute("select r_pub from hosts where hostname=?", hostname_tupel)
-    except:
-        logging.error("RSA_Encryption: Database error")
-        return -1
-    for i in c:
-        pubkey += i[0]
-    c.close
-    rsa_pub = RSA.importKey(pubkey)
-    enc_text = rsa_pub.encrypt(text, 0) #seems like RSA_encrypt needs no random
-    return(binascii.b2a_base64(enc_text[0]))
+    enc_text = subprocess.os.popen("echo '" + text + "' | openssl rsautl -pubin -inkey /etc/tinc/" + netname + "/hosts/.pubkeys/" + hostname_t + " -encrypt | base64")
+    return(enc_text.read())
 
 def priv_decrypt(netname, enc_data): #decrypt data with private key
-    raw_privkey = open("/etc/tinc/" + netname + "/rsa_key.priv", "r")
-    r_privkey = raw_privkey.readlines()
-    privkey = ""
-    for i in xrange(len(r_privkey)):
-        privkey += r_privkey[i]
-    raw_privkey.close()
-    
-
-    rsa_priv = RSA.importKey(privkey)
-    dec_text = rsa_priv.decrypt(binascii.a2b_base64(enc_data))
-    return(dec_text)
+    dec_text = subprocess.os.popen("echo '" + enc_data + "' | base64 -d | openssl rsautl -inkey /etc/tinc/" + netname + "/rsa_key.priv -decrypt")
+    return(dec_text.read())
 
 def database2hostfiles(netname): #make hostsfiles from database
     conn = sqlite3.connect("/etc/tinc/" + netname + "/hosts.sqlite")
