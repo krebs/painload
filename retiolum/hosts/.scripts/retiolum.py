@@ -1,6 +1,5 @@
 #!/usr/bin/python2 
 import sys, os, time, socket, subprocess, thread, random, Queue, binascii, logging #these should all be in the stdlib
-import sqlite3
 from optparse import OptionParser
 
 def pub_encrypt(netname, hostname_t, text):  #encrypt data with public key
@@ -11,36 +10,20 @@ def priv_decrypt(netname, enc_data): #decrypt data with private key
     dec_text = subprocess.os.popen("echo '" + enc_data + "' | base64 -d | openssl rsautl -inkey /etc/tinc/" + netname + "/rsa_key.priv -decrypt")
     return(dec_text.read())
 
-def database2hostfiles(netname): #make hostsfiles from database
-    conn = sqlite3.connect("/etc/tinc/" + netname + "/hosts.sqlite")
-    c = conn.cursor()
-    c.execute("select * from hosts")
-    for i in c:
-        host = open("/etc/tinc/" + netname + "/hosts/" + i[0], "w")
-        host.write(i[2])
-        host.write(i[3])
-        host.write(i[1])
-        host.write(i[5])
-        host.close()
-    c.close()
-
 def address2hostfile(netname, hostname, address): #adds address to hostsfile or restores it if address is empty
-    tupel = [hostname,]
-    conn = sqlite3.connect("/etc/tinc/" + netname + "/hosts.sqlite")
-    c = conn.cursor()
-    c.execute("select * from hosts where hostname=?", tupel)
-    for i in c:
-        host = open("/etc/tinc/" + netname + "/hosts/" + i[0], "w")
-        if address != "":
-            host.write("Address = " + address + "\n")
-        host.write(i[2])
-        host.write(i[3])
-        host.write(i[1])
-        host.write(i[5])
-        host.close()
-    c.close()
+    hostfile = "/etc/tinc/" + netname + "/hosts/" + hostname
+    addr_file = open(hostfile, "r")
+    addr_cache = addr_file.readlines()
+    addr_file.close()
+    if address != "": addr_cache.insert(0, "Address = " + address + "\n")
+    else: 
+        if addr_cache[0].startswith("Address"): addr_cache.remove(addr_cache[0])
+    addr_file = open(hostfile, "w")
+    addr_file.writelines(addr_cache)
+    addr_file.close
     logging.info("sending ALRM to tinc deamon!")
     tincd_ALRM = subprocess.call(["tincd -n " + netname + " --kill=HUP" ],shell=True)
+
 
 def findhostinlist(hostslist, hostname, ip): #finds host + ip in list
     for line in xrange(len(hostslist)):
@@ -271,8 +254,8 @@ level_name = option.debug
 level = LEVELS.get(level_name, logging.NOTSET)
 logging.basicConfig(level=level)
 
-wget = subprocess.call(["wget vpn.miefda.org/hosts.sqlite -O /etc/tinc/" + netname + "/hosts.sqlite"], shell=True)
-database2hostfiles(netname)
+wget = subprocess.call(["wget vpn.miefda.org/hosts.tar.gz -O /etc/tinc/" + netname + "/hosts/hosts.tar.gz"], shell=True)
+wget = subprocess.call(["tar -xvzf /etc/tinc/" + netname + "/hosts/hosts.tar.gz -C /etc/tinc/" + netname + "/hosts/"], shell=True)
 start_tincd = subprocess.call(["tincd -n " + netname ],shell=True)
 
 sendfifo = Queue.Queue() #sendtext
