@@ -1,5 +1,5 @@
 #!/usr/bin/python2 
-import sys, os, time, socket, subprocess, thread, random, Queue, binascii, logging #these should all be in the stdlib
+import sys, os, time, socket, subprocess, thread, random, Queue, binascii, logging, hashlib, urllib2 #these should all be in the stdlib
 from optparse import OptionParser
 
 def pub_encrypt(netname, hostname_t, text):  #encrypt data with public key
@@ -42,6 +42,22 @@ def getHostname(netname):
     print("hostname not found!")
     return -1 #nothing found
 
+def get_hostfiles(netname, url_files, url_md5sum):
+    try:
+        get_hosts_tar = urllib2.urlopen(url_files)
+        get_hosts_md5 = urllib2.urlopen(url_md5sum)
+        hosts_tar = get_hosts_tar.read()
+        hosts_md5 = get_hosts_md5.read()
+    
+        if str(hosts_md5) == str(hashlib.md5(hosts_tar).hexdigest() + "  hosts.tar.gz\n"):
+            hosts = open("/etc/tinc/" + netname + "/hosts/hosts.tar.gz", "w")
+            hosts.write(hosts_tar)
+            hosts.close()
+        else:
+            logging.error("hosts.tar.gz md5sum check failed!")
+    except:
+        logging.error("hosts file  download failed!")
+    
 
 ####Thread functions
 
@@ -254,8 +270,9 @@ level_name = option.debug
 level = LEVELS.get(level_name, logging.NOTSET)
 logging.basicConfig(level=level)
 
-wget = subprocess.call(["wget vpn.miefda.org/hosts.tar.gz -O /etc/tinc/" + netname + "/hosts/hosts.tar.gz"], shell=True)
-wget = subprocess.call(["tar -xvzf /etc/tinc/" + netname + "/hosts/hosts.tar.gz -C /etc/tinc/" + netname + "/hosts/"], shell=True)
+get_hostfiles(netname, "http://vpn.miefda.org/hosts.tar.gz", "http://vpn.miefda.org/hosts.md5")
+
+tar = subprocess.call(["tar -xzf /etc/tinc/" + netname + "/hosts/hosts.tar.gz -C /etc/tinc/" + netname + "/hosts/"], shell=True)
 start_tincd = subprocess.call(["tincd -n " + netname ],shell=True)
 
 sendfifo = Queue.Queue() #sendtext
