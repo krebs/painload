@@ -8,7 +8,7 @@ def write_digraph(nodes):
   """
   writes the complete digraph in dot format
   """
-  print ('graph retiolum {')
+  print ('digraph retiolum {')
   print ('  node[shape=box,style=filled,fillcolor=grey]')
   generate_stats(nodes)
   merge_edges(nodes)
@@ -31,6 +31,7 @@ def merge_edges(nodes):
       for i,secon in enumerate(nodes[con['name']].get('to',[])):
         if k == secon['name']:
           del (nodes[con['name']]['to'][i])
+          con['bidirectional'] = True
 
 
 def write_node(k,v):
@@ -46,8 +47,11 @@ def write_node(k,v):
   node += "]"
   print (node)
   for con in v.get('to',[]):
-    print "  "+k+ " -- " +con['name'] + "[weight="+str(10/float(con['weight']))+"]"
-
+    edge = "  "+k+ " -> " +con['name'] + "[weight="+str(10/float(con['weight']))
+    if con.get('bidirectional',False):
+      edge += ",dir=both"
+    edge += "]"
+    print edge
 def parse_input():
   nodes={}
   for line in sys.stdin:
