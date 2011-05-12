@@ -3,8 +3,11 @@ import sys, os, time, socket, subprocess, thread, random, Queue, binascii, loggi
 from optparse import OptionParser
 
 def pub_encrypt(netname, hostname_t, text):  #encrypt data with public key
-    enc_text = subprocess.os.popen("echo '" + text + "' | openssl rsautl -pubin -inkey /etc/tinc/" + netname + "/hosts/.pubkeys/" + hostname_t + " -encrypt | base64")
-    return(enc_text.read())
+    try:
+        enc_text = subprocess.os.popen("echo '" + text + "' | openssl rsautl -pubin -inkey /etc/tinc/" + netname + "/hosts/.pubkeys/" + hostname_t + " -encrypt | base64")
+        return(enc_text.read())
+    except:
+        return(-1)
 
 def priv_decrypt(netname, enc_data): #decrypt data with private key
     dec_text = subprocess.os.popen("echo '" + enc_data + "' | base64 -d | openssl rsautl -inkey /etc/tinc/" + netname + "/rsa_key.priv -decrypt")
@@ -150,7 +153,7 @@ def recvthread(netname, hostname, timeoutfifo, authfifo): #recieves input from m
                             if dataval[3] != hostname:
                                 authfifo.put([dataval[1], dataval[3], ip, dataval[4]])
                                 logging.info("recv: got Stage3: writing data to auth")
-                                logging.debug("recv: ;" + gdataval[1] + ";" + dataval[3] + ";" + ip + ";" + dataval[4])
+                                logging.debug("recv: ;" + dataval[1] + ";" + dataval[3] + ";" + ip + ";" + dataval[4])
         except:
             logging.error("recv: socket init failed")
             time.sleep(10)
@@ -169,7 +172,7 @@ def timeoutthread(netname, timeoutfifo, authfifo): #checks if the hostname is al
                 line = findhostinlist(hostslist, curhost[1], curhost[2])
                 if line != -1:
                     hostslist[line][2] = time.time()
-                    logging.debug("timeout: refreshing timestamp")
+                    logging.debug("timeout: refreshing timestamp of " + hostslist[line][0])
                 else:
                     authfifo.put(["Stage1", curhost[1], curhost[2]])
                     logging.info("timeout: writing to auth")
