@@ -231,12 +231,13 @@ def auththread(netname, hostname, authfifo, sendfifo, timeoutfifo): #manages aut
                     dec_message = priv_decrypt(netname, curauth[3])
                     splitmes = dec_message.split("#")
                     logging.info("auth: checking challenge")
-                    if splitmes[0] == "" and splitmes[1] == str(authlist[line][2]):
-                        timeoutfifo.put(["add", curauth[1], curauth[2]])
-                        del authlist[line]
-                        logging.info("auth: Stage3 checked, sending now to timeout")
-                    else:
-                        logging.error("auth: challenge failed")
+                    if splitmes[0] == "":
+                        if splitmes[1] == str(authlist[line][2]):
+                            timeoutfifo.put(["add", curauth[1], curauth[2]])
+                            del authlist[line]
+                            logging.info("auth: Stage3 checked, sending now to timeout")
+                        else: logging.error("auth: challenge checking failed")
+                    else: logging.error("auth: decryption failed")
 
         else:
             i = 0
