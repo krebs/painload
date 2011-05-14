@@ -13,9 +13,10 @@ pacman -Sy git || \
 
 cd /krebs || { echo "cannot change into /krebs folder:(" ; exit 1; } || exit 1
 
-read -n1 -p "infest now? [yN]"
+#read -n1 -p "infest now? [yN]"
 
-[[ $REPLY = [yY] ]] && make infest 
-echo $REPLY
+#[[ $REPLY = [yY] ]] && make infest 
+#echo $REPLY
+echo "do 'make infest' in /krebs"
 echo "have a nice day"
 
