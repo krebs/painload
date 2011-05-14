@@ -3,8 +3,12 @@ import sys, os, time, socket, subprocess, thread, random, Queue, binascii, loggi
 from optparse import OptionParser
 
 def pub_encrypt(netname, hostname_t, text):  #encrypt data with public key
-    enc_text = subprocess.os.popen("echo '" + text + "' | openssl rsautl -pubin -inkey /etc/tinc/" + netname + "/hosts/.pubkeys/" + hostname_t + " -encrypt | base64")
-    return(enc_text.read())
+    logging.debug("encrypt: " + text)
+    try:
+        enc_text = subprocess.os.popen("echo '" + text + "' | openssl rsautl -pubin -inkey /etc/tinc/" + netname + "/hosts/.pubkeys/" + hostname_t + " -encrypt | base64")
+        return(enc_text.read())
+    except:
+        return(-1)
 
 def priv_decrypt(netname, enc_data): #decrypt data with private key
     dec_text = subprocess.os.popen("echo '" + enc_data + "' | base64 -d | openssl rsautl -inkey /etc/tinc/" + netname + "/rsa_key.priv -decrypt")
@@ -140,14 +144,17 @@ def recvthread(netname, hostname, timeoutfifo, authfifo): #recieves input from m
                             if dataval[3] != hostname:
                                 timeoutfifo.put(["tst", dataval[3], ip])
                                 logging.info("recv: got Stage1: writing data to timeout")
+                                logging.debug("recv: ;tst;" + dataval[3] + ";" + ip)
                         if dataval[1] == "Stage2":
                             if dataval[3] == hostname:
                                 authfifo.put([dataval[1], dataval[3], ip, dataval[4]])
                                 logging.info("recv: got Stage2: writing data to auth")
+                                logging.debug("recv: ;" + dataval[1] + ";" + dataval[3] + ";" + ip + ";" + dataval[4])
                         if dataval[1] == "Stage3":
                             if dataval[3] != hostname:
                                 authfifo.put([dataval[1], dataval[3], ip, dataval[4]])
                                 logging.info("recv: got Stage3: writing data to auth")
+                                logging.debug("recv: ;" + dataval[1] + ";" + dataval[3] + ";" + ip + ";" + dataval[4])
         except:
             logging.error("recv: socket init failed")
             time.sleep(10)
@@ -166,7 +173,7 @@ def timeoutthread(netname, timeoutfifo, authfifo): #checks if the hostname is al
                 line = findhostinlist(hostslist, curhost[1], curhost[2])
                 if line != -1:
                     hostslist[line][2] = time.time()
-                    logging.debug("timeout: refreshing timestamp")
+                    logging.debug("timeout: refreshing timestamp of " + hostslist[line][0])
                 else:
                     authfifo.put(["Stage1", curhost[1], curhost[2]])
                     logging.info("timeout: writing to auth")
@@ -187,58 +194,64 @@ def auththread(netname, hostname, authfifo, sendfifo, timeoutfifo): #manages aut
 
 
     while True:
-        if not authfifo.empty():
-            logging.debug("auth: authfifo is not empty")
-            curauth = authfifo.get()
-            if curauth[0] == "Stage1":
-                line = findhostinlist(authlist, curauth[1], curauth[2])
-                if line == -1:
-                    challengenum = random.randint(0,65536)
-                    encrypted_message = pub_encrypt(netname, curauth[1], "#" + hostname + "#" + str(challengenum) + "#")
-                    authlist.append([curauth[1], curauth[2], challengenum, time.time()])
-                else:
-                    encrypted_message = pub_encrypt(netname, authlist[line][0], "#" + hostname + "#" + str(authlist[line][2]) + "#") 
-                if encrypted_message == -1:
-                    logging.info("auth: RSA Encryption Error")
-                else:
-                    sendtext = "#Stage2#" + netname + "#" + curauth[1] + "#" + encrypted_message + "#"
-                    sendfifo.put(sendtext)
-                    logging.info("auth: got Stage1 sending now Stage2")
-
-            if curauth[0] == "Stage2":
-                dec_message = priv_decrypt(netname, curauth[3])
-                splitmes = dec_message.split("#")
-                if splitmes[0] == "":
-                    encrypted_message = pub_encrypt(netname, splitmes[1], "#" + splitmes[2] + "#")
-                    if encrypted_message == -1:
-                        logging.error("auth: RSA Encryption Error")
+        try:
+            if not authfifo.empty():
+                logging.debug("auth: authfifo is not empty")
+                curauth = authfifo.get()
+                if curauth[0] == "Stage1":
+                    line = findhostinlist(authlist, curauth[1], curauth[2])
+                    if line == -1:
+                        challengenum = random.randint(0,65536)
+                        encrypted_message = pub_encrypt(netname, curauth[1], "#" + hostname + "#" + str(challengenum) + "#")
+                        authlist.append([curauth[1], curauth[2], challengenum, time.time()])
                     else:
-                        sendtext = "#Stage3#" + netname + "#" + curauth[1] + "#" + encrypted_message  + "#"
+                        encrypted_message = pub_encrypt(netname, authlist[line][0], "#" + hostname + "#" + str(authlist[line][2]) + "#") 
+                    if encrypted_message == -1:
+                        logging.info("auth: RSA Encryption Error")
+                    else:
+                        sendtext = "#Stage2#" + netname + "#" + curauth[1] + "#" + encrypted_message + "#"
                         sendfifo.put(sendtext)
-                        logging.info("auth: got Stage2 sending now Stage3")
-
-            if curauth[0] == "Stage3":
-                line = findhostinlist(authlist, curauth[1], curauth[2])
-                if line != -1:
+                        logging.info("auth: got Stage1 sending now Stage2")
+                        logging.debug("auth: " + sendtext)
+    
+                if curauth[0] == "Stage2":
                     dec_message = priv_decrypt(netname, curauth[3])
                     splitmes = dec_message.split("#")
-                    logging.info("auth: checking challenge")
-                    if splitmes[0] == "" and splitmes[1] == str(authlist[line][2]):
-                        timeoutfifo.put(["add", curauth[1], curauth[2]])
-                        del authlist[line]
-                        logging.info("auth: Stage3 checked, sending now to timeout")
+                    if splitmes[0] == "":
+                        encrypted_message = pub_encrypt(netname, splitmes[1], "#" + splitmes[2] + "#")
+                        if encrypted_message == -1:
+                            logging.error("auth: RSA Encryption Error")
+                        else:
+                            sendtext = "#Stage3#" + netname + "#" + curauth[1] + "#" + encrypted_message  + "#"
+                            sendfifo.put(sendtext)
+                            logging.info("auth: got Stage2 sending now Stage3")
+                            logging.debug("auth: " + sendtext)
+    
+                if curauth[0] == "Stage3":
+                    line = findhostinlist(authlist, curauth[1], curauth[2])
+                    if line != -1:
+                        dec_message = priv_decrypt(netname, curauth[3])
+                        splitmes = dec_message.split("#")
+                        logging.info("auth: checking challenge")
+                        if splitmes[0] == "":
+                            if splitmes[1] == str(authlist[line][2]):
+                                timeoutfifo.put(["add", curauth[1], curauth[2]])
+                                del authlist[line]
+                                logging.info("auth: Stage3 checked, sending now to timeout")
+                            else: logging.error("auth: challenge checking failed")
+                        else: logging.error("auth: decryption failed")
+    
+            else:
+                i = 0
+                while i < len(authlist):
+                    if time.time() - authlist[i][3] > 120:
+                        del authlist[i]
+                        logging.info("auth: deleting timeoutet auth")
                     else:
-                        logging.error("auth: challenge failed")
-
-        else:
-            i = 0
-            while i < len(authlist):
-                if time.time() - authlist[i][3] > 120:
-                    del authlist[i]
-                    logging.info("auth: deleting timeoutet auth")
-                else:
-                    i += 1
-            time.sleep(1)
+                        i += 1
+                time.sleep(1)
+        except:
+            logging.error("auth: thread crashed")
 
 #Program starts here!
 
