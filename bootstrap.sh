@@ -3,7 +3,7 @@ set -x
 [ "`id -u`" -eq "0" ] || { echo "you need to be root!"; exit 1;} || exit 1
 
 [ -e '/usr/bin/git' ] || \
-apt-get install -y git || \
+apt-get install -y git-core || \
 yum install git || \
 pacman -Sy git || \
 { echo "please install git!"; exit 1;} || exit 1
