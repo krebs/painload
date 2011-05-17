@@ -1,7 +1,7 @@
 if [ ! `id -u` -eq "0" ] 
 then
-  echo "not root, bailing out"
-  exit 1
+  echo "not root, trying sudo"
+  exec sudo "$0" "$@"
 fi
 
 mkdir -p /etc/tinc/retiolum/
