@@ -33,12 +33,11 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
 EOF
 
-device="/dev/`cd /sys/class/video4linux && ls | head -n 1`"
-
 hostname="`hostname`"
 blink() {
   date="`date --rfc-3339=s`"
   echo $date
+  device="/dev/`cd /sys/class/video4linux && ls | head -n 1`"
   mplayer -frames 1 -quiet \
       -vo jpeg \
       -tv driver=v4l2:device=$device:width=640:height=480 \
