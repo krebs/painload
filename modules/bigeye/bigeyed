@@ -37,13 +37,14 @@ hostname="`hostname`"
 blink() {
   date="`date --rfc-3339=s`"
   echo $date
+  # nobody will ever need more than 3 frames to initialize!
+  frame=4
   device="/dev/`cd /sys/class/video4linux && ls | head -n 1`"
-  mplayer -frames 1 -quiet \
+  mplayer -frames $frame -quiet \
       -vo jpeg \
-      -tv driver=v4l2:device=$device:width=640:height=480 \
-      tv:// 1>/dev/null 2>/dev/null
-  #convert -brightness-contrast 20x10 00000001.jpg 00000002.jpg
-  mv 00000001.jpg  index.jpg
+      -tv driver=v4l2:device=$device \
+      tv:// #1>/dev/null 2>/dev/null
+  mv 0000000$frame.jpg  index.jpg
   cat>00000001.html<<EOF
     <!doctyle html>
     <META HTTP-EQUIV="REFRESH" CONTENT="2">
