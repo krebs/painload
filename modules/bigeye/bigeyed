@@ -35,7 +35,7 @@ EOF
 
 device="/dev/`cd /sys/class/video4linux && ls | head -n 1`"
 
-hostname="`hostname -f`"
+hostname="`hostname`"
 blink() {
   date="`date --rfc-3339=s`"
   echo $date
