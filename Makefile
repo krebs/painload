@@ -7,4 +7,3 @@ all: select-target
 infest:
 	infest/etc
 	infest/root
-	make -C modules/noise infest
