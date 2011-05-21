@@ -7,10 +7,13 @@ all: select-target
 infest:
 	infest/etc
 	infest/root
-	make -C modules/noise infest
+
 install-debian:
 	[ `which git` ] || apt-get install git-core
 	[ `which tmux` ] || apt-get install tmux
 	[ `which screen` ] && apt-get remote screen
 	[ `which vim` ] || apt-get install vim
+
+noise:
+	make -C modules/noise infest
 
