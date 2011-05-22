@@ -2,6 +2,8 @@
 
 import logging 
 log = logging.getLogger('arpingy')
+logging.disable(logging.WARNING)
+
 import os,sys
 try:
   if (os.geteuid() != 0):

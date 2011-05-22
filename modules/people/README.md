@@ -1,12 +1,11 @@
-SNMP Users
+ARPING Users
 ==========
 
-asks an snmp-router for its arp-list and tries to verify this list via
-ARPING. The snmping is done via snmp-net and command line parsing,
-the arping uses 'scapy'.
+This is a simplified python script which checks the available subnet for computers online and returns a list of users which are online based on their mac-address
 
-This script needs superuser rights and otherwise will just skip the
-verification
+
+arping_users.py:
+  call `python arping_users.py v` for verbose output -> print all discovered hosts
 
 SNMPWALK Command
 ===============
