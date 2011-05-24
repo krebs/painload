@@ -1,0 +1,33 @@
+Enterprise Patterns
+==================
+Stellt sicher, dass das richtige passiert, egal was gemacht wird
+
+Enterprise Loop
+---------------
+
+Enterprise Exception Handling
+-----------------------------
+ggf ersetzbar durch enterprise loop.
+
+
+Enterprise Installation
+-----------------------
+
+Rebooting
+----------
+
+Enterprise Einschalter
+--------------------
+
+
+Enterprise Shutdown
+------------------
+Mittel der Wahl um einen Shutdown zu forcen
+Bsp: Not-Aus also kommerzielles Produkt
+
+Enterprise Thinking
+-------------------
+Prozess um auf Enterprise Patterns 
+
+Bug-Driven Development
+---------------------
