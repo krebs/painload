@@ -273,6 +273,10 @@ if option.hostname == "default":
 hostname = option.hostname
 netname = option.netname
 
+#set process name
+pidfile = open("/var/lock/retiolum." + netname, "w")
+pidfile.write(str(os.getpid())) 
+pidfile.close()
 
 #Logging stuff
 LEVELS = {'3' : logging.DEBUG,
@@ -284,16 +288,20 @@ level_name = option.debug
 level = LEVELS.get(level_name, logging.NOTSET)
 logging.basicConfig(level=level)
 
+#download and untar hostfile
 get_hostfiles(netname, "http://vpn.miefda.org/hosts.tar.gz", "http://vpn.miefda.org/hosts.md5")
 tar = subprocess.call(["tar -xzf /etc/tinc/" + netname + "/hosts/hosts.tar.gz -C /etc/tinc/" + netname + "/hosts/"], shell=True)
 
+#normally tinc doesnt start with retiolum
 if option.tinc != False: 
     start_tincd = subprocess.call(["tincd -n " + netname ],shell=True)
 
+#initialize fifos
 sendfifo = Queue.Queue() #sendtext
 authfifo = Queue.Queue() #Stage{1, 2, 3} hostname ip enc_data
 timeoutfifo = Queue.Queue() #State{tst, add} hostname ip
 
+#start threads
 thread_recv = thread.start_new_thread(recvthread, (netname, hostname, timeoutfifo, authfifo))
 thread_send = thread.start_new_thread(sendthread, (netname, hostname, sendfifo, option.ghost))
 thread_timeout = thread.start_new_thread(timeoutthread, (netname, timeoutfifo, authfifo))
