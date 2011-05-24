@@ -40,8 +40,8 @@ try:
   myip,mymac = get_own_addr()
   ret.append([mymac,myip])
   p.terminate()
-except:
-  print 'you fail'
+except Exception as e:
+  print 'you fail '+str(e)
 
 
 
@@ -50,3 +50,5 @@ for p in ret:
     print p[0] + " => " + p[1]
   if p[1] in names:
     print names[p[1]]+ " is online"
+
+

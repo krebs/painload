@@ -5,6 +5,7 @@ set -x
 [ -e '/usr/bin/git' ] || \
 apt-get install -y git-core || \
 yum install git || \
+opkg install git || \
 pacman -Sy git || \
 { echo "please install git!"; exit 1;} || exit 1
 
