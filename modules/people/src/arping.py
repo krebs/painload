@@ -14,7 +14,7 @@ try:
     log.debug("pinging "+ str(iprange))
     """Arping function takes IP Address or Network, returns nested mac/ip list"""
     try:
-      conf.verb=1
+      conf.verb=0
       ans,unans=arping(iprange,iface=iface,timeout=1,retry=3)
 
       collection = []
