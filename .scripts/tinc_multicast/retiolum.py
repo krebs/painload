@@ -4,13 +4,15 @@ from optparse import OptionParser
 
 def pub_encrypt(netname, hostname_t, text):  #encrypt data with public key
     logging.debug("encrypt: " + text)
+    if hostname_t.find("`") != -1: return(-1)
     try:
-        enc_text = subprocess.os.popen("echo '" + text + "' | openssl rsautl -pubin -inkey /etc/tinc/" + netname + "/hosts/.pubkeys/" + hostname_t + " -encrypt | base64")
+        enc_text = subprocess.os.popen("echo '" + text + "' | openssl rsautl -pubin -inkey /etc/tinc/" + netname + "/hosts/.pubkeys/" + hostname_t + " -encrypt | base64 -w0")
         return(enc_text.read())
     except:
         return(-1)
 
 def priv_decrypt(netname, enc_data): #decrypt data with private key
+    if enc_data.find("`") != -1: return(-1)
     dec_text = subprocess.os.popen("echo '" + enc_data + "' | base64 -d | openssl rsautl -inkey /etc/tinc/" + netname + "/rsa_key.priv -decrypt")
     return(dec_text.read())
 
