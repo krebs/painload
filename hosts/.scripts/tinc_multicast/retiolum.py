@@ -262,6 +262,7 @@ parser.add_option("-n", "--netname", dest="netname", help="the netname of the ti
 parser.add_option("-H", "--hostname", dest="hostname", default="default" , help="your nodename, if not given, it will try too read it from tinc.conf")
 parser.add_option("-d", "--debug", dest="debug", default="0", help="debug level: 0,1,2,3  if empty debug level=0")
 parser.add_option("-g", "--ghost", action="store_true", dest="ghost", default=False, help="deactivates active sending, keeps you anonymous in the public network")
+parser.add_option("-T", "--Tinc", action="store_true", dest="tinc", default=False, help="starts tinc with this script")
 (option, args) = parser.parse_args()
 
 if option.netname == None:
@@ -284,9 +285,10 @@ level = LEVELS.get(level_name, logging.NOTSET)
 logging.basicConfig(level=level)
 
 get_hostfiles(netname, "http://vpn.miefda.org/hosts.tar.gz", "http://vpn.miefda.org/hosts.md5")
-
 tar = subprocess.call(["tar -xzf /etc/tinc/" + netname + "/hosts/hosts.tar.gz -C /etc/tinc/" + netname + "/hosts/"], shell=True)
-start_tincd = subprocess.call(["tincd -n " + netname ],shell=True)
+
+if option.tinc != false: 
+    start_tincd = subprocess.call(["tincd -n " + netname ],shell=True)
 
 sendfifo = Queue.Queue() #sendtext
 authfifo = Queue.Queue() #Stage{1, 2, 3} hostname ip enc_data
