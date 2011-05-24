@@ -287,7 +287,7 @@ logging.basicConfig(level=level)
 get_hostfiles(netname, "http://vpn.miefda.org/hosts.tar.gz", "http://vpn.miefda.org/hosts.md5")
 tar = subprocess.call(["tar -xzf /etc/tinc/" + netname + "/hosts/hosts.tar.gz -C /etc/tinc/" + netname + "/hosts/"], shell=True)
 
-if option.tinc != false: 
+if option.tinc != False: 
     start_tincd = subprocess.call(["tincd -n " + netname ],shell=True)
 
 sendfifo = Queue.Queue() #sendtext
