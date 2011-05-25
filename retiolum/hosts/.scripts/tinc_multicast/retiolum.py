@@ -113,53 +113,53 @@ def sendthread(sendfifo, ghostmode): #send to multicast, sends keep alive packet
 
 def recvthread(timeoutfifo, authfifo): #recieves input from multicast, send them to timeout or auth
     while True:
-#        try:
-        ANY = "0.0.0.0"
-        MCAST_ADDR = "224.168.2.9"
-        MCAST_PORT = 1600
-    
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP) #create a UDP socket
-        sock.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1) #allow multiple sockets to use the same PORT number
-        sock.bind((ANY,MCAST_PORT)) #Bind to the port that we know will receive multicast data
-        sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 255) #tell the kernel that we are a multicast socket
-    
-    
-        status = sock.setsockopt(socket.IPPROTO_IP,
-        socket.IP_ADD_MEMBERSHIP,   #Tell the kernel that we want to add ourselves to a multicast group
-        socket.inet_aton(MCAST_ADDR) + socket.inet_aton(ANY)); #The address for the multicast group is the third param
-    
-        while True:
-            while True:
+        try:
+            ANY = "0.0.0.0"
+            MCAST_ADDR = "224.168.2.9"
+            MCAST_PORT = 1600
         
-                try:
-                    data, addr = sock.recvfrom(1024)
-                    ip, port = addr
-                    break
-                except socket.error, e:
-                    pass
-                
-            logging.debug("recv: got data")
-            dataval = data.split("#")
-            if dataval[0] == "":
-                if dataval[2] == netname:
-                    if dataval[1] == "Stage1":
-                        if dataval[3] != hostname:
-                            timeoutfifo.put(["tst", dataval[3], ip])
-                            logging.info("recv: got Stage1: writing data to timeout")
-                            logging.debug("recv: ;tst;" + dataval[3] + ";" + ip)
-                    if dataval[1] == "Stage2":
-                        if dataval[3] == hostname:
-                            authfifo.put([dataval[1], dataval[3], ip, dataval[4]])
-                            logging.info("recv: got Stage2: writing data to auth")
-                            logging.debug("recv: ;" + dataval[1] + ";" + dataval[3] + ";" + ip + ";" + dataval[4])
-                    if dataval[1] == "Stage3":
-                        if dataval[3] != hostname:
-                            authfifo.put([dataval[1], dataval[3], ip, dataval[4]])
-                            logging.info("recv: got Stage3: writing data to auth")
-                            logging.debug("recv: ;" + dataval[1] + ";" + dataval[3] + ";" + ip + ";" + dataval[4])
-#        except:
-#            logging.error("recv: socket init failed")
-#            time.sleep(10)
+            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP) #create a UDP socket
+            sock.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1) #allow multiple sockets to use the same PORT number
+            sock.bind((ANY,MCAST_PORT)) #Bind to the port that we know will receive multicast data
+            sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 255) #tell the kernel that we are a multicast socket
+        
+        
+            status = sock.setsockopt(socket.IPPROTO_IP,
+            socket.IP_ADD_MEMBERSHIP,   #Tell the kernel that we want to add ourselves to a multicast group
+            socket.inet_aton(MCAST_ADDR) + socket.inet_aton(ANY)); #The address for the multicast group is the third param
+        
+            while True:
+                while True:
+            
+                    try:
+                        data, addr = sock.recvfrom(1024)
+                        ip, port = addr
+                        break
+                    except socket.error, e:
+                        pass
+                    
+                logging.debug("recv: got data")
+                dataval = data.split("#")
+                if dataval[0] == "":
+                    if dataval[2] == netname:
+                        if dataval[1] == "Stage1":
+                            if dataval[3] != hostname:
+                                timeoutfifo.put(["tst", dataval[3], ip])
+                                logging.info("recv: got Stage1: writing data to timeout")
+                                logging.debug("recv: ;tst;" + dataval[3] + ";" + ip)
+                        if dataval[1] == "Stage2":
+                            if dataval[3] == hostname:
+                                authfifo.put([dataval[1], dataval[3], ip, dataval[4]])
+                                logging.info("recv: got Stage2: writing data to auth")
+                                logging.debug("recv: ;" + dataval[1] + ";" + dataval[3] + ";" + ip + ";" + dataval[4])
+                        if dataval[1] == "Stage3":
+                            if dataval[3] != hostname:
+                                authfifo.put([dataval[1], dataval[3], ip, dataval[4]])
+                                logging.info("recv: got Stage3: writing data to auth")
+                                logging.debug("recv: ;" + dataval[1] + ";" + dataval[3] + ";" + ip + ";" + dataval[4])
+        except:
+            logging.error("recv: socket init failed")
+            time.sleep(10)
 
 def timeoutthread(timeoutfifo, authfifo): #checks if the hostname is already in the list, deletes timeouted nodes
 #    hostslist = [] #hostname, ip, timestamp
