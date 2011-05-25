@@ -1,0 +1,4 @@
+set -x
+cp -r /krebs/home/* $HOME 2>/dev/null
+cp -r /krebs/home/.* $HOME 2>/dev/null
+set +x
