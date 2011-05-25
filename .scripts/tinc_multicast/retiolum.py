@@ -290,9 +290,9 @@ def process_restart(signum, frame):
 def kill_process(signum, frame):
     logging.error("got SIGINT/SIGTERM exiting now")
     os.remove("/var/lock/retiolum." + netname)
-    sys.exit(0)
-    if option.Tinc != False:
+    if option.tinc != False:
         stop_tincd = subprocess.call(["tincd -n " + netname + " -k"],shell=True)
+    sys.exit(0)
 
 #Program starts here!
 
@@ -316,9 +316,13 @@ hostslist = []
 hostslock = thread.allocate_lock()
 
 #set process name
-pidfile = open("/var/lock/retiolum." + netname, "w")
-pidfile.write(str(os.getpid())) 
-pidfile.close()
+if not os.path.exists("/var/lock/retiolum." + netname):
+    pidfile = open("/var/lock/retiolum." + netname, "w")
+    pidfile.write(str(os.getpid())) 
+    pidfile.close()
+else:
+    logging.error("pidfile already exists")
+    sys.exit(0)
 
 #Logging stuff
 LEVELS = {'3' : logging.DEBUG,
