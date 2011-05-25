@@ -1,20 +1,22 @@
 #!/usr/bin/python2 
-import sys, os, time, socket, subprocess, thread, random, Queue, binascii, logging, hashlib, urllib2 #these should all be in the stdlib
+import sys, os, time, signal, socket, subprocess, thread, random, Queue, binascii, logging, hashlib, urllib2 #these should all be in the stdlib
 from optparse import OptionParser
 
-def pub_encrypt(netname, hostname_t, text):  #encrypt data with public key
+def pub_encrypt(hostname_t, text):  #encrypt data with public key
     logging.debug("encrypt: " + text)
+    if hostname_t.find("`") != -1: return(-1)
     try:
-        enc_text = subprocess.os.popen("echo '" + text + "' | openssl rsautl -pubin -inkey /etc/tinc/" + netname + "/hosts/.pubkeys/" + hostname_t + " -encrypt | base64")
+        enc_text = subprocess.os.popen("echo '" + text + "' | openssl rsautl -pubin -inkey /etc/tinc/" + netname + "/hosts/.pubkeys/" + hostname_t + " -encrypt | base64 -w0")
         return(enc_text.read())
     except:
         return(-1)
 
-def priv_decrypt(netname, enc_data): #decrypt data with private key
+def priv_decrypt(enc_data): #decrypt data with private key
+    if enc_data.find("`") != -1: return(-1)
     dec_text = subprocess.os.popen("echo '" + enc_data + "' | base64 -d | openssl rsautl -inkey /etc/tinc/" + netname + "/rsa_key.priv -decrypt")
     return(dec_text.read())
 
-def address2hostfile(netname, hostname, address): #adds address to hostsfile or restores it if address is empty
+def address2hostfile(hostname, address): #adds address to hostsfile or restores it if address is empty
     hostfile = "/etc/tinc/" + netname + "/hosts/" + hostname
     addr_file = open(hostfile, "r")
     addr_cache = addr_file.readlines()
@@ -24,7 +26,7 @@ def address2hostfile(netname, hostname, address): #adds address to hostsfile or 
         addr_file = open(hostfile, "w")
         addr_file.writelines(addr_cache)
         addr_file.close
-        logging.info("sending ALRM to tinc deamon!")
+        logging.info("sending SIGHUP to tinc deamon!")
         tincd_ALRM = subprocess.call(["tincd -n " + netname + " --kill=HUP" ],shell=True)
     else: 
        recover = subprocess.os.popen("tar xzf /etc/tinc/" + netname + "/hosts/hosts.tar.gz -C /etc/tinc/" + netname + "/hosts/ " + hostname)
@@ -46,7 +48,7 @@ def getHostname(netname):
     print("hostname not found!")
     return -1 #nothing found
 
-def get_hostfiles(netname, url_files, url_md5sum):
+def get_hostfiles(url_files, url_md5sum):
     try:
         get_hosts_tar = urllib2.urlopen(url_files)
         get_hosts_md5 = urllib2.urlopen(url_md5sum)
@@ -66,7 +68,7 @@ def get_hostfiles(netname, url_files, url_md5sum):
 ####Thread functions
 
 
-def sendthread(netname, hostname, sendfifo, ghostmode): #send to multicast, sends keep alive packets
+def sendthread(sendfifo, ghostmode): #send to multicast, sends keep alive packets
     while True:
         try:
             #{socket init start
@@ -109,7 +111,7 @@ def sendthread(netname, hostname, sendfifo, ghostmode): #send to multicast, send
 
 
 
-def recvthread(netname, hostname, timeoutfifo, authfifo): #recieves input from multicast, send them to timeout or auth
+def recvthread(timeoutfifo, authfifo): #recieves input from multicast, send them to timeout or auth
     while True:
         try:
             ANY = "0.0.0.0"
@@ -159,37 +161,40 @@ def recvthread(netname, hostname, timeoutfifo, authfifo): #recieves input from m
             logging.error("recv: socket init failed")
             time.sleep(10)
 
-def timeoutthread(netname, timeoutfifo, authfifo): #checks if the hostname is already in the list, deletes timeouted nodes
-    hostslist = [] #hostname, ip, timestamp
+def timeoutthread(timeoutfifo, authfifo): #checks if the hostname is already in the list, deletes timeouted nodes
+#    hostslist = [] #hostname, ip, timestamp
 
     while True:
         if not timeoutfifo.empty():
             curhost = timeoutfifo.get()
             if curhost[0] == "add":
-                hostslist.append([curhost[1], curhost[2], time.time()])
-                address2hostfile(netname, curhost[1], curhost[2])
+                with hostslock:
+                    hostslist.append([curhost[1], curhost[2], time.time()])
+                address2hostfile(curhost[1], curhost[2])
                 logging.info("adding host to hostslist")
             elif curhost[0] == "tst":
-                line = findhostinlist(hostslist, curhost[1], curhost[2])
-                if line != -1:
-                    hostslist[line][2] = time.time()
-                    logging.debug("timeout: refreshing timestamp of " + hostslist[line][0])
-                else:
-                    authfifo.put(["Stage1", curhost[1], curhost[2]])
-                    logging.info("timeout: writing to auth")
+                with hostslock:
+                    line = findhostinlist(hostslist, curhost[1], curhost[2])
+                    if line != -1:
+                        hostslist[line][2] = time.time()
+                        logging.debug("timeout: refreshing timestamp of " + hostslist[line][0])
+                    else:
+                        authfifo.put(["Stage1", curhost[1], curhost[2]])
+                        logging.info("timeout: writing to auth")
 
         else:
             i = 0
-            while i < len(hostslist):
-                if time.time() - hostslist[i][2] > 60:
-                    address2hostfile(netname, hostslist[i][0], "")
-                    del hostslist[i]
-                    logging.info("timeout: deleting dead host")
-                else:
-                    i += 1
+            with hostslock:
+                while i < len(hostslist):
+                    if time.time() - hostslist[i][2] > 60:
+                        address2hostfile(hostslist[i][0], "")
+                        hostslist.remove(hostslist[i])
+                        logging.info("timeout: deleting dead host")
+                    else:
+                        i += 1
             time.sleep(2)
 
-def auththread(netname, hostname, authfifo, sendfifo, timeoutfifo): #manages authentication with clients (bruteforce sensitve, should be fixed)
+def auththread(authfifo, sendfifo, timeoutfifo): #manages authentication with clients (bruteforce sensitve, should be fixed)
     authlist = [] #hostname, ip, Challenge, timestamp
 
 
@@ -202,10 +207,10 @@ def auththread(netname, hostname, authfifo, sendfifo, timeoutfifo): #manages aut
                     line = findhostinlist(authlist, curauth[1], curauth[2])
                     if line == -1:
                         challengenum = random.randint(0,65536)
-                        encrypted_message = pub_encrypt(netname, curauth[1], "#" + hostname + "#" + str(challengenum) + "#")
+                        encrypted_message = pub_encrypt(curauth[1], "#" + hostname + "#" + str(challengenum) + "#")
                         authlist.append([curauth[1], curauth[2], challengenum, time.time()])
                     else:
-                        encrypted_message = pub_encrypt(netname, authlist[line][0], "#" + hostname + "#" + str(authlist[line][2]) + "#") 
+                        encrypted_message = pub_encrypt(authlist[line][0], "#" + hostname + "#" + str(authlist[line][2]) + "#") 
                     if encrypted_message == -1:
                         logging.info("auth: RSA Encryption Error")
                     else:
@@ -215,10 +220,10 @@ def auththread(netname, hostname, authfifo, sendfifo, timeoutfifo): #manages aut
                         logging.debug("auth: " + sendtext)
     
                 if curauth[0] == "Stage2":
-                    dec_message = priv_decrypt(netname, curauth[3])
+                    dec_message = priv_decrypt(curauth[3])
                     splitmes = dec_message.split("#")
                     if splitmes[0] == "":
-                        encrypted_message = pub_encrypt(netname, splitmes[1], "#" + splitmes[2] + "#")
+                        encrypted_message = pub_encrypt(splitmes[1], "#" + splitmes[2] + "#")
                         if encrypted_message == -1:
                             logging.error("auth: RSA Encryption Error")
                         else:
@@ -230,7 +235,7 @@ def auththread(netname, hostname, authfifo, sendfifo, timeoutfifo): #manages aut
                 if curauth[0] == "Stage3":
                     line = findhostinlist(authlist, curauth[1], curauth[2])
                     if line != -1:
-                        dec_message = priv_decrypt(netname, curauth[3])
+                        dec_message = priv_decrypt(curauth[3])
                         splitmes = dec_message.split("#")
                         logging.info("auth: checking challenge")
                         if splitmes[0] == "":
@@ -253,13 +258,51 @@ def auththread(netname, hostname, authfifo, sendfifo, timeoutfifo): #manages aut
         except:
             logging.error("auth: thread crashed")
 
+def process_start(): #starting of the process
+    #download and untar hostfile
+    logging.info("downloading hostfiles")
+    get_hostfiles("http://vpn.miefda.org/hosts.tar.gz", "http://vpn.miefda.org/hosts.md5") #Currently Hardcoded, should be editable by config or parameter
+    tar = subprocess.call(["tar -xzf /etc/tinc/" + netname + "/hosts/hosts.tar.gz -C /etc/tinc/" + netname + "/hosts/"], shell=True)
+    
+    #initialize fifos
+    sendfifo = Queue.Queue() #sendtext
+    authfifo = Queue.Queue() #Stage{1, 2, 3} hostname ip enc_data
+    timeoutfifo = Queue.Queue() #State{tst, add} hostname ip
+    
+    #start threads
+    thread_recv = thread.start_new_thread(recvthread, (timeoutfifo, authfifo))
+    thread_send = thread.start_new_thread(sendthread, (sendfifo, option.ghost))
+    thread_timeout = thread.start_new_thread(timeoutthread, (timeoutfifo, authfifo)) 
+    thread_auth = thread.start_new_thread(auththread, (authfifo, sendfifo, timeoutfifo))
+
+def process_restart(signum, frame):
+    logging.error("root: restarting process")
+    with hostslock:
+        del hostslist[:]
+        #download and untar hostfile
+        logging.info("downloading hostfiles")
+        get_hostfiles("http://vpn.miefda.org/hosts.tar.gz", "http://vpn.miefda.org/hosts.md5") #Currently Hardcoded, should be editable by config or parameter
+        tar = subprocess.call(["tar -xzf /etc/tinc/" + netname + "/hosts/hosts.tar.gz -C /etc/tinc/" + netname + "/hosts/"], shell=True)
+
+    logging.info("sending SIGHUP")
+    tincd_ALRM = subprocess.call(["tincd -n " + netname + " --kill=HUP" ],shell=True)
+
+def kill_process(signum, frame):
+    logging.error("got SIGINT/SIGTERM exiting now")
+    os.remove("/var/lock/retiolum." + netname)
+    if option.tinc != False:
+        stop_tincd = subprocess.call(["tincd -n " + netname + " -k"],shell=True)
+    sys.exit(0)
+
 #Program starts here!
 
 parser = OptionParser()
 parser.add_option("-n", "--netname", dest="netname", help="the netname of the tinc network")
-parser.add_option("-H", "--hostname", dest="hostname", default="default" , help="your nodename, if not given, it will try too read it from tinc.conf")
+parser.add_option("-H", "--hostname", dest="hostname", default="default", help="your nodename, if not given, it will try too read it from tinc.conf")
+parser.add_option("-t", "--timeout", dest="timeout", default=65536, help="timeout after retiolum gets restartet, default is 65536")
 parser.add_option("-d", "--debug", dest="debug", default="0", help="debug level: 0,1,2,3  if empty debug level=0")
 parser.add_option("-g", "--ghost", action="store_true", dest="ghost", default=False, help="deactivates active sending, keeps you anonymous in the public network")
+parser.add_option("-T", "--Tinc", action="store_true", dest="tinc", default=False, help="starts tinc with this script")
 (option, args) = parser.parse_args()
 
 if option.netname == None:
@@ -269,7 +312,17 @@ if option.hostname == "default":
 
 hostname = option.hostname
 netname = option.netname
+hostslist = []
+hostslock = thread.allocate_lock()
 
+#set process name
+if not os.path.exists("/var/lock/retiolum." + netname):
+    pidfile = open("/var/lock/retiolum." + netname, "w")
+    pidfile.write(str(os.getpid())) 
+    pidfile.close()
+else:
+    logging.error("pidfile already exists")
+    sys.exit(0)
 
 #Logging stuff
 LEVELS = {'3' : logging.DEBUG,
@@ -281,20 +334,16 @@ level_name = option.debug
 level = LEVELS.get(level_name, logging.NOTSET)
 logging.basicConfig(level=level)
 
-get_hostfiles(netname, "http://vpn.miefda.org/hosts.tar.gz", "http://vpn.miefda.org/hosts.md5")
+#normally tinc doesnt start with retiolum
+if option.tinc != False: 
+    start_tincd = subprocess.call(["tincd -n " + netname ],shell=True)
 
-tar = subprocess.call(["tar -xzf /etc/tinc/" + netname + "/hosts/hosts.tar.gz -C /etc/tinc/" + netname + "/hosts/"], shell=True)
-start_tincd = subprocess.call(["tincd -n " + netname ],shell=True)
+process_start()
 
-sendfifo = Queue.Queue() #sendtext
-authfifo = Queue.Queue() #Stage{1, 2, 3} hostname ip enc_data
-timeoutfifo = Queue.Queue() #State{tst, add} hostname ip
+signal.signal(signal.SIGTERM, kill_process)
+signal.signal(signal.SIGINT, kill_process)
+signal.signal(signal.SIGUSR1, process_restart)
 
-thread_recv = thread.start_new_thread(recvthread, (netname, hostname, timeoutfifo, authfifo))
-thread_send = thread.start_new_thread(sendthread, (netname, hostname, sendfifo, option.ghost))
-thread_timeout = thread.start_new_thread(timeoutthread, (netname, timeoutfifo, authfifo))
-thread_auth = thread.start_new_thread(auththread, (netname, hostname, authfifo, sendfifo, timeoutfifo))
-
-##dirty while function, SHOULD BE IMPROVED
 while True:
-    time.sleep(10)
+    time.sleep(float(option.timeout))
+    process_restart(0, 0)
