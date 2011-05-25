@@ -20,7 +20,7 @@ case "$1" in
   stop)
     stat_busy "Stopping retiolum Daemon"
     kill `cat /var/lock/retiolum.retiolum`
-    rm_daemon tincd
+    rm_daemon retiolum
     stat_done
     ;;
   restart)
