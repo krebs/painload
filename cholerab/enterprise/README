@@ -28,7 +28,7 @@ then
   echo "not root, trying sudo"
   exec sudo "$0" "$@"
 fi
-</script>
+</script> // enterprise ist, wenn <code> ... </script> trotzdem matcht
 
 Enterprise Shutdown
 ------------------
