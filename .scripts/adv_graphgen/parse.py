@@ -1,4 +1,5 @@
 #!/usr/bin/python2
+# -*- coding: utf8 -*-
 
 import sys
 """ TODO: Refactoring needed to pull the edges out of the node structures again,
@@ -35,23 +36,28 @@ def merge_edges(nodes):
 
 
 def write_node(k,v):
-  """ writes a single node and its edges """
+  """ writes a single node and its edges 
+      edges are weightet with the informations inside the nodes provided by
+      tinc
+  """
   node = "  "+k+"[label=\""
   node += k+"\\l"
   node += "external:"+v['external-ip']+":"+v['external-port']+"\\l"
   if v.has_key('num_conns'):
     node += "Num Connects:"+str(v['num_conns'])+"\\l"
-  node += "internal:"+v['internal-ip']+"\\l\""
+
+  node += "internal:"+v.get('internal-ip','¯\\\\(°_o)/¯')+"\\l\""
   if v['external-ip'] == "MYSELF":
     node += ",fillcolor=steelblue1"
   node += "]"
   print (node)
   for con in v.get('to',[]):
-    edge = "  "+k+ " -> " +con['name'] + "[weight="+str(10/float(con['weight']))
+    edge = "  "+k+ " -> " +con['name'] + "[weight="+str(float(con['weight']))
     if con.get('bidirectional',False):
       edge += ",dir=both"
     edge += "]"
     print edge
+
 def parse_input():
   nodes={}
   for line in sys.stdin:
