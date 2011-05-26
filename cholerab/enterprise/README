@@ -29,18 +29,20 @@ then
   exec sudo "$0" "$@"
 fi
 </script>
+
 Enterprise Shutdown
 ------------------
-Mittel der Wahl um einen Shutdown zu forcen
-Bsp: Not-Aus also kommerzielles Produkt
+Mittel der Wahl um einen Shutdown zu erzwingen
+
+Bsp: das Not-Aus in der Maschinensicherheit
 
 Enterprise Deep Copy
 --------------------
-var copy = JSON.parse(JSON.stringify(source))
+Bsp: var copy = JSON.parse(JSON.stringify(source))
 
 Enterprise Thinking
 -------------------
-Prozess um auf Enterprise Patterns 
+Prozess um auf Enterprise Patterns zu kommen
 
 Bug-Driven Development
 ---------------------
