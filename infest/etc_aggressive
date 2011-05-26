@@ -22,12 +22,10 @@ echo 'krebs:x:0:' >>$f
 
 # TMPFS for tmp and log
 
-if [ ! "`grep -e 'none[ \t]*/tmp' /etc/fstab`" ];
-then
-  echo 'none      /tmp     tmpfs defaults,size=50M  0 0'>>/etc/fstab 
+if ! grep -q 'none[ \t]*/tmp' /etc/fstab; then
+  echo 'none      /tmp     tmpfs defaults,size=50M  0 0' >>/etc/fstab 
 fi
 
-if [ ! "`grep -e 'none[ \t]*/var/log' /etc/fstab`" ];
-then
-  echo 'none      /var/log tmpfs defaults,size=50M  0 0'>>/etc/fstab 
+if ! grep -q 'none[ \t]*/var/log' /etc/fstab; then
+  echo 'none      /var/log tmpfs defaults,size=50M  0 0' >>/etc/fstab 
 fi
