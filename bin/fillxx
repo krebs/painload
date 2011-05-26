@@ -1,0 +1,6 @@
+#! /bin/sh
+while echo $1 | grep -q xx; do 
+  xx=`od -An -tx1 -N 1 /dev/urandom | tr -d \ `
+  set -- `echo $1 | sed s/xx/$xx/`
+done
+echo $1 
