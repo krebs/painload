@@ -3,10 +3,16 @@
 .PHONY: all
 all: select-target
 
+.PHONY: aggressive
+.PHONY: coop
 .PHONY: infest
-infest:
-	infest/etc
-	infest/root
+infest: aggressive
+aggressive: 
+	infest/etc_aggressive
+	infest/home
+coop: 
+	infest/etc_coop
+	infest/home
 
 install-debian:
 	[ `which git` ] || apt-get install git-core
