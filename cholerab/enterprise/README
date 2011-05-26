@@ -34,6 +34,10 @@ Enterprise Shutdown
 Mittel der Wahl um einen Shutdown zu forcen
 Bsp: Not-Aus also kommerzielles Produkt
 
+Enterprise Deep Copy
+--------------------
+var copy = JSON.parse(JSON.stringify(source))
+
 Enterprise Thinking
 -------------------
 Prozess um auf Enterprise Patterns 
