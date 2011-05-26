@@ -1,4 +1,4 @@
-
+DIST = debian
 
 .PHONY: all
 all: select-target
@@ -13,11 +13,8 @@ coop:
 	infest/etc_coop
 	infest/home
 
-install-debian:
-	[ `which git` ] || apt-get install git-core
-	[ `which tmux` ] || apt-get install tmux
-	[ `which screen` ] && apt-get remote screen
-	[ `which vim` ] || apt-get install vim
+install-core:
+	core/$(DIST)
 
 noise:
 	make -C modules/noise infest

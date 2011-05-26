@@ -1,7 +1,7 @@
 #! /bin/sh
 
 #prereqs
-/krebs/infest/etc_coexistential
+/krebs/infest/coop
 
 f=/etc/passwd
 sed -ri 's^(root:[^:]+):0:0:(.*)$\1:23:23:\2' $f
