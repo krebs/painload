@@ -1,4 +1,5 @@
 #!/usr/bin/python2
+# -*- coding: utf8 -*-
 
 import sys
 """ TODO: Refactoring needed to pull the edges out of the node structures again,
@@ -44,7 +45,8 @@ def write_node(k,v):
   node += "external:"+v['external-ip']+":"+v['external-port']+"\\l"
   if v.has_key('num_conns'):
     node += "Num Connects:"+str(v['num_conns'])+"\\l"
-  node += "internal:"+v['internal-ip']+"\\l\""
+
+  node += "internal:"+v.get('internal-ip','¯\\\\(°_o)/¯')+"\\l\""
   if v['external-ip'] == "MYSELF":
     node += ",fillcolor=steelblue1"
   node += "]"
