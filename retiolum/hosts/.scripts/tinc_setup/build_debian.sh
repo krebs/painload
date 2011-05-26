@@ -28,3 +28,5 @@ sed -i '/retiolum/d' /etc/tinc/nets.boot
 echo "retiolum" >> /etc/tinc/nets.boot
 sed -i '/EXTRA/d' /etc/tinc/nets.boot
 echo "EXTRA=\"\"" >> /etc/default/tinc
+
+/etc/init.d/tinc start
