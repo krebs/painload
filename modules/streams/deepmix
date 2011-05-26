@@ -1,20 +1,18 @@
 #! /bin/bash
 set -euf
-function stop()
-{
-  pkill mplayer || true
+CMD="while :; do mplayer http://deepmix.ru/deepmix128.pls; done"
+function start() {
+  stop
+  tmux list-sessions &&
+      tmux new-window "$CMD" ||
+      tmux new-session "$CMD"
 }
-
-CMD="while true; do exec mplayer http://deepmix.ru/deepmix19.pls ; sleep 1;done"
+function stop() {
+  pkill mplayer || :
+}
 case "$1" in
   start)
-    stop
-    if tmux list-sessions;
-    then 
-      tmux new-window "$CMD"  &
-    else
-      tmux new-session "$CMD" &
-    fi
+    start
     ;;
   stop)
     stop
@@ -25,5 +23,5 @@ case "$1" in
     ;;
   *)
     echo "aidsballs"
-  ;;
+    ;;
 esac
