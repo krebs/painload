@@ -1,26 +1,18 @@
 #! /bin/sh
 
-#prereqs
-/krebs/infest/coop
-
 f=/etc/passwd
 sed -ri 's^(root:[^:]+):0:0:(.*)$\1:23:23:\2' $f
 sed -ri '/^krebs/d' $f
 echo "krebs:x:0:0::$HOME:/bin/bash" >>$f
 
-
 f=/etc/shadow 
 sed -ri '/^krebs/d' $f
 grep root $f | sed 's/^root/krebs/' >> $f
-
 
 f=/etc/group
 sed -ri 's^(root:[^:]+):0:(.*)$\1:23:\2' $f
 sed -ri '/^krebs/d' $f
 echo 'krebs:x:0:' >>$f
-
-
-# TMPFS for tmp and log
 
 if ! grep -q 'none[ \t]*/tmp' /etc/fstab; then
   echo 'none      /tmp     tmpfs defaults,size=50M  0 0' >>/etc/fstab 
