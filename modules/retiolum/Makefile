@@ -1,6 +1,9 @@
-.phony: update install all
+.phony: update it all so install
 
 all: select-target
+
+it: so
+so: it
 
 /etc/tinc/retiolum/hosts:
 	cd $(dir $@) && git clone https://github.com/krebscode/hosts
