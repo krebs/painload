@@ -1,0 +1,6 @@
+#!/bin/sh
+set -x
+[ `which git` ] || apt-get install --yes git-core
+[ `which tmux` ] || apt-get install --yes tmux
+[ `which screen` ] && apt-get remote --yes screen
+[ `which vim` ] || apt-get install --yes vim
