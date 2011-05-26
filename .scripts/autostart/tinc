@@ -25,6 +25,8 @@ TCONF="/etc/tinc"
 NETSFILE="$TCONF/nets.boot"
 NETS=""
 
+modprobe tun
+
 test -f $DAEMON || exit 0
 
 [ -r /etc/default/tinc ] && . /etc/default/tinc
