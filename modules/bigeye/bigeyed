@@ -12,8 +12,10 @@ cleanup() {
   test -n "$spid" && kill -9 $spid && spid=
 }
 
-#python -m http.server 3 & server=$!
-python -m SimpleHTTPServer 3 & spid=$?
+port=`touch /dev/bigeye 2>/dev/null && rm /dev/bigeye && echo 3 || echo 3333`
+
+#python -m http.server $port & server=$!
+python -m SimpleHTTPServer $port & spid=$?
 trap cleanup EXIT HUP INT QUIT TERM
 
 base64 -d>favicon.ico<<EOF
