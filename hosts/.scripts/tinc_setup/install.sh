@@ -47,7 +47,7 @@ CHANNEL = '#tincspasm'
 HOST='irc.freenode.net'
 FILE="/etc/tinc/retiolum/hosts/$myname"
 PORT=6667
-NICK= "$myname_"+str(random.randint(23,666))
+NICK= "${myname}_"+str(random.randint(23,666))
 
 sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 sock.connect((HOST,PORT))
@@ -65,4 +65,3 @@ EOF
 python write_channel.py
 # add user tincd
 useradd tincd
-tincd --user=tincd --chroot -n $netname
