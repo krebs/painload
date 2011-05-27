@@ -12,4 +12,4 @@ update: /etc/tinc/retiolum/hosts
 	cd $< && git pull
 
 install:
-	curl -k https://github.com/miefda/retiolum/raw/master/.scripts/tinc_setup/bootstrap.sh | sh
+	scripts/tinc_setup/install.sh

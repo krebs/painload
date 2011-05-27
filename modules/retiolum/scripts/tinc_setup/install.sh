@@ -1,29 +1,63 @@
 #! /bin/sh
 # USE WITH GREAT CAUTION
 
+make -C ../../ update
+
 set -e
-myname="${1:-dummy}"
-rel_hostsfile=`dirname $0`/..
-hostsfile=`readlink -f $rel_hostsfile`
-netname=retiolum
-myipv4="${2:-10.7.7.56}"
-mynet4=10.7.7.0
+
+
 CURR=`pwd`
+MYBIN=../../bin
+netname=penisland
 # create configuration directory for $netname
-mkdir -p /etc/tinc/$netname
+mkdir -p /etc/tinc/$netname/hosts
 cd /etc/tinc/$netname
 
-# get currently known hosts
-cp -r $hostsfile hosts
 echo "added known hosts:"
-ls -1 | LC_ALL=C sort
+ls -1 hosts | LC_ALL=C sort
 echo "delete the nodes you do not trust!"
 
+myname="${1:-}"
+if [ ! "$myname" ] 
+then
+  echo "select username: "
+  read myname
+fi
+if [ ! -e "hosts/$myname" ]
+then
+  myipv4="${2:-}"
+  mynet4=10.7.7.0
+  
+  if [ ! "$myipv4" ] 
+  then
+    echo "select v4 subnet ip (1-255) :"
+    read v4num
+    if [  "$v4num" -gt 0 -a "$v4num" -lt "256" ];
+    then 
+      echo "check"
+    else
+      echo "you are made of stupid. bailing out" 
+      exit 1
+    fi
+    myipv4=10.7.7.$v4num
+  fi
+  echo "Subnet = $myipv4" > hosts/$myname
+
+  myipv6=`${CURR}/../../bin/fillxx 42:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx`/128
+  echo "Subnet = $myipv6" >> hosts/$myname
+else
+  echo "own host file already exists! will not write again!"
+fi
+
+
+myipv6=${myipv6:-`sed -rn 's|^Subnet *= *(42:[0-9A-Fa-f:]*/128)|\1|p' /etc/tinc/$netname/hosts/$myname`}
 
 cat>tinc-up<<EOF
 #! /bin/sh
 ifconfig \$INTERFACE up $myipv4/24
 route add -net $mynet4/24 dev \$INTERFACE
+ip -6 addr add ${myipv6} dev \$INTERFACE
+ip -6 route add 42::/16 dev \$INTERFACE
 EOF
 
 chmod +x tinc-up
@@ -35,33 +69,17 @@ ConnectTo = kaah
 ConnectTo = pa_sharepoint
 Device = /dev/net/tun
 EOF
-echo "Subnet = $myipv4" > hosts/$myname
-tincd -n $netname -K
 
-echo Writing Public Key to irc channel
-cat>write_channel.py<<EOF
-#!/usr/bin/python
-import random, sys, time, socket
-
-CHANNEL = '#tincspasm'
-HOST='irc.freenode.net'
-FILE="/etc/tinc/retiolum/hosts/$myname"
-PORT=6667
-NICK= "${myname}_"+str(random.randint(23,666))
-
-sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-sock.connect((HOST,PORT))
-print NICK
-sock.send("NICK %s\r\n" % NICK)
-sock.send("USER %s %s bla : %s\r\n" %(NICK,HOST,NICK))
-sock.send("JOIN %s\r\n" % CHANNEL)
-time.sleep(23)
-f = open(FILE,'r') 
-a = [ sock.send("PRIVMSG %s : %s" % ( CHANNEL,line)) for line in f]
-time.sleep(5) #because irc is so lazy
-print "closing socket"
-sock.close()
-EOF
-python write_channel.py
+if [ ! -e rsa_key.priv ] 
+then
+  echo "creating new keys"
+  tincd -n $netname -K 
+  python ${CURR}/write_channel.py || \
+  echo "cannot write public key to IRC, you are on your own. Good Luck"
+else
+  echo "key files already exist, skipping"
+  echo "if you know what you are doing, remove rsa_key.priv"
+fi
 # add user tincd
-useradd tincd
+# this is what the setup scripts for the distribution has to do
+#useradd tincd
