@@ -1,0 +1,29 @@
+#!/bin/sh
+DIRNAME=`dirname $0`
+HERE=`readlink -f ${DIRNAME}`
+
+if test `id -u` != 0; then
+  echo "we're going sudo..." >&2
+  exec sudo "$0" "$@"
+  exit 23 # go to hell
+fi
+
+case $1 in
+  start)
+    $0 stop
+    echo "# BEGIN OF RETIOLUM" >> /etc/hosts
+    $HERE/hosts >> /etc/hosts
+    echo "# END OF RETIOLUM" >> /etc/hosts
+
+    ;;
+  stop)
+    sed -ie "/\# BEGIN OF RETIOLUM/,/\# END OF RETIOLUM/d" /etc/hosts 
+    ;;
+  restart)
+    $0 stop
+    $0 start
+    ;;
+  *)
+    echo "You are made of stupid!"
+    exit 23
+esac
