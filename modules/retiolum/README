@@ -1,0 +1,29 @@
+Retiolum Darknet Module for Krebs
+========================
+
+Enter the darknet with the help of tinc retiolum
+
+Getting Started
+-------------
+to get you started, check out scripts/tinc_setup/README
+
+1. the first step you will need to do is grab a binary copy of tinc via your
+packet manager, build it yourself or place all your hope into the build
+script of your distribution.
+2. after doing that you might want to run the scripts/tinc_setup/install.sh
+script to write all the configuration files and private/public keys.
+This installation is somewhat interactive so be sure not to fuck shit up.
+
+Other cool stuff
+---------------
+in bin/ there are some cool scripts which are partly needed and partly
+totally unnecessary to work with retiolum.
+
+As all the scripts are not too horribly long, be sure to use 
+`cat bin/SCRIPTNAME` to get an understanding of what they do
+
+besides that in scripts/ there are 3 more scripts which perform pretty
+sophisticated tasks like finding instances via multicast or writing graphs
+of the current retiolum network. Try them if you dare :)
+
+
