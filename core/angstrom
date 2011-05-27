@@ -1,0 +1,4 @@
+#!/bin/sh
+
+opkg install vim vim-syntax 
+opkg install git

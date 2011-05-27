@@ -1,3 +1,27 @@
-#! /bin/sh
+#! /bin/bash
 set -euf
-exec mplayer http://deepmix.ru/deepmix128.pls
+CMD="while :; do mplayer http://deepmix.ru/deepmix128.pls; done"
+function start() {
+  stop
+  tmux list-sessions &&
+      tmux new-window "$CMD" ||
+      tmux new-session "$CMD"
+}
+function stop() {
+  pkill mplayer || :
+}
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart)
+    stop
+    start
+    ;;
+  *)
+    echo "aidsballs"
+    ;;
+esac

@@ -3,7 +3,7 @@
 
 set -e
 myname="${1:-dummy}"
-rel_hostsfile=`dirname $0`/hosts
+rel_hostsfile=`dirname $0`/..
 hostsfile=`readlink -f $rel_hostsfile`
 netname=retiolum
 myipv4="${2:-10.7.7.56}"
@@ -14,7 +14,7 @@ mkdir -p /etc/tinc/$netname
 cd /etc/tinc/$netname
 
 # get currently known hosts
-cp -r $hostsfile .
+cp -r $hostsfile hosts
 echo "added known hosts:"
 ls -1 | LC_ALL=C sort
 echo "delete the nodes you do not trust!"
@@ -47,7 +47,7 @@ CHANNEL = '#tincspasm'
 HOST='irc.freenode.net'
 FILE="/etc/tinc/retiolum/hosts/$myname"
 PORT=6667
-NICK= "$myname_"+str(random.randint(23,666))
+NICK= "${myname}_"+str(random.randint(23,666))
 
 sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 sock.connect((HOST,PORT))
@@ -56,7 +56,7 @@ sock.send("NICK %s\r\n" % NICK)
 sock.send("USER %s %s bla : %s\r\n" %(NICK,HOST,NICK))
 sock.send("JOIN %s\r\n" % CHANNEL)
 time.sleep(23)
-f = open(FILE,'r')
+f = open(FILE,'r') 
 a = [ sock.send("PRIVMSG %s : %s" % ( CHANNEL,line)) for line in f]
 time.sleep(5) #because irc is so lazy
 print "closing socket"
@@ -65,4 +65,3 @@ EOF
 python write_channel.py
 # add user tincd
 useradd tincd
-tincd --user=tincd --chroot -n $netname

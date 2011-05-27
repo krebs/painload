@@ -1,0 +1,19 @@
+#! /bin/sh
+#
+# Add IPv6 to the retiolum interface.
+#
+# usage: addipv6
+#
+set -euf
+
+file=/etc/tinc/retiolum/hosts/`hostname`
+addr=`sed -rn 's|^Subnet *= *(42:[0-9A-Fa-f:]*/128)|\1|p' $file`
+
+if test `id -u` != 0; then
+  echo "we're going sudo..." >&2
+  exec sudo "$0" "$@"
+  exit 23 # go to hell
+fi
+
+ip -6 addr add $addr dev retiolum
+ip -6 route add 42::/16 dev retiolum

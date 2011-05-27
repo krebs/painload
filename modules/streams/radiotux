@@ -5,7 +5,7 @@ function stop()
   pkill mplayer || true
 }
 
-CMD="while true; do exec mplayer http://somafm.com/groovesalad.pls; sleep 1;done"
+CMD="while true; do exec mplayer http://streams.xenim.de/radiotux.ogg; sleep 1;done"
 case "$1" in
   start)
     stop
