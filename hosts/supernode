@@ -1,6 +1,6 @@
 Address = miefda.org
 Subnet = 10.7.7.1
-Subnet = 42::255/128
+Subnet = 42:0:0:0:0:0:0:255/128
 -----BEGIN RSA PUBLIC KEY-----
 MIIBCgKCAQEAr3DlBmQxP9UTBCkohK8FCYSk2td4Ov5lQYvC3Adx04lEWHfp+0nP
 sShYqqN9Aj3iCqj/DHx5jGuSqjyTmmFWIOMM9IwKMo2Oiz/PcBM56N6gzIHuR5wj
