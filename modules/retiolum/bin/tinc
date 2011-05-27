@@ -1,0 +1,18 @@
+#! /bin/sh
+#
+set -euf
+
+init() {
+  f=/tmp/retiolum.GraphDumpFile
+  if ! test -f $f; then
+    touch $f &&
+    chown -v tincd: $f
+  fi
+
+  modprobe -v tun
+}
+
+if init; then
+  exec tincd --user=tincd --net=retiolum "$@"
+fi
+
