@@ -1,0 +1,20 @@
+# source: krebscode/painload/modules/retiolum/scripts/tinc_setup/tinc-up
+
+dirname="`dirname "$0"`"
+
+conf=$dirname/tinc.conf
+
+name=`sed -rn 's|^ *Name *= *([^ ]*) *$|\1|p' $conf`
+
+host=$dirname/hosts/$name
+
+route4=10.7.7.0/24
+addr4=`sed -rn 's|^ *Subnet *= *(10\.[^ ]*) *$|\1|p' $host`
+
+route6=42::/16
+addr6=`sed -rn 's|^ *Subnet *= *(42:[^ ]*) *$|\1|p' $host`
+
+ifconfig $INTERFACE up $addr4
+route add -net $route4 dev $INTERFACE
+ip -6 addr add $addr6 dev $INTERFACE
+ip -6 route add $route6 dev $INTERFACE

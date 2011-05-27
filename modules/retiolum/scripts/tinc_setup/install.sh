@@ -5,8 +5,7 @@ make -C ../../ update
 
 set -e
 
-
-CURR=`pwd`
+CURR=`dirname "$0"`
 MYBIN=../../bin
 netname=penisland
 # create configuration directory for $netname
@@ -49,18 +48,7 @@ else
   echo "own host file already exists! will not write again!"
 fi
 
-
-myipv6=${myipv6:-`sed -rn 's|^Subnet *= *(42:[0-9A-Fa-f:]*/128)|\1|p' /etc/tinc/$netname/hosts/$myname`}
-
-cat>tinc-up<<EOF
-#! /bin/sh
-ifconfig \$INTERFACE up $myipv4/24
-route add -net $mynet4/24 dev \$INTERFACE
-ip -6 addr add ${myipv6} dev \$INTERFACE
-ip -6 route add 42::/16 dev \$INTERFACE
-EOF
-
-chmod +x tinc-up
+cp $CURR/tinc-up .
 
 cat>tinc.conf<<EOF
 Name = $myname
