@@ -1,11 +1,16 @@
 #!/usr/bin/python
 import random, sys, time, socket
+try:
+  myname=sys.argv[1]
+except:
+  print "you are made of stupid"
+  exit (23)
 
 CHANNEL = '#tincspasm'
 HOST='irc.freenode.net'
-FILE="/etc/tinc/retiolum/hosts/$myname"
+FILE="/etc/tinc/retiolum/hosts/"+myname
 PORT=6667
-NICK= "${myname}_"+str(random.randint(23,666))
+NICK= myname+"_"+str(random.randint(23,666))
 
 sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 sock.connect((HOST,PORT))

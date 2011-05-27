@@ -1,0 +1,35 @@
+#! /bin/sh
+#
+# Manage IPv6 of the retiolum interface.
+#
+# usage: ipv6 {start,stop}
+#
+set -euf
+
+if test `id -u` != 0; then
+  echo "we're going sudo..." >&2
+  exec sudo "$0" "$@"
+  exit 23 # go to hell
+fi
+
+file=/etc/tinc/retiolum/hosts/`hostname`
+addr=`sed -rn 's|^Subnet *= *(42:[0-9A-Fa-f:]*/128)|\1|p' $file`
+route=42::/16
+
+start() {
+  stop
+  ip -6 addr add $addr dev retiolum
+  ip -6 route add $route dev retiolum
+}
+
+stop() {
+  ip -6 addr del $addr dev retiolum 2>/dev/null || :
+  ip -6 route del $route dev retiolum 2>/dev/null || :
+}
+
+## dispatch
+case "$1" in
+  (start) start;;
+  (stop) stop;;
+  (*) echo "You're made of stupid" 2>/dev/null; exit 23;;
+esac

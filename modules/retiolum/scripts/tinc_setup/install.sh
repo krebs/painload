@@ -2,13 +2,11 @@
 # USE WITH GREAT CAUTION
 
 make -C ../../ update
-
 set -e
-
 
 CURR=`pwd`
 MYBIN=../../bin
-netname=penisland
+netname=retiolum
 # create configuration directory for $netname
 mkdir -p /etc/tinc/$netname/hosts
 cd /etc/tinc/$netname
@@ -50,7 +48,7 @@ else
 fi
 
 
-myipv6=${myipv6:-`sed -rn 's|^Subnet *= *(42:[0-9A-Fa-f:]*/128)|\1|p' /etc/tinc/$netname/hosts/$myname`}
+myipv6=${myipv6-`sed -rn 's|^Subnet *= *(42:[0-9A-Fa-f:]*/128)|\1|p' /etc/tinc/$netname/hosts/$myname`}
 
 cat>tinc-up<<EOF
 #! /bin/sh
