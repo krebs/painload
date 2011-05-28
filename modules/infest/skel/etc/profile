@@ -43,10 +43,10 @@ esac
 PS1='\[\033[${PS1_COLOR}m\]$(PS1)\[\033[32m\]\w\[\033[39m\]${PSx-} ' # green \w
 PS1='\[\033[32m\]\w\[\033[m\] ' # green \w
 
-if test -n "${SSH_CLIENT-}" ; then
+#if test -n "${SSH_CLIENT-}" ; then
   PS1='\[\033[35m\]\h'" $PS1" # prefix with magenta hostname
   #TERM=xterm-256color xtermcontrol --bg \#292d29 --fg \#d0d0d0
-fi
+#fi
 
 export PATH="/krebs/bin:$PATH"
 
