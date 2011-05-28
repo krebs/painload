@@ -29,10 +29,6 @@ cat $f >$t
 if ! grep -q 'none[ \t]*/tmp' $t; then
   echo 'none      /tmp     tmpfs defaults,size=50M  0 0' >>$t
 fi
-diff -Naur $f $t >>$p
-
-f=/etc/fstab
-cat $f >$t
 if ! grep -q 'none[ \t]*/var/log' $t; then
   echo 'none      /var/log tmpfs defaults,size=50M  0 0' >>$t
 fi
