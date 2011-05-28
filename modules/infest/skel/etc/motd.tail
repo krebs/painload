@@ -1,6 +1,3 @@
-#! /bin/sh
-set -x
-cat>/etc/motd.tail<<EOF
 KREBS PAINLOAD (MORE COBRA)
 [31;1m  x x              x x
  xx xx  xx    xx  xx xx
@@ -11,10 +8,3 @@ KREBS PAINLOAD (MORE COBRA)
    x  xxxxxxxxxxxx  x
   x  x   x     x  x  x
   x  x   x     x  x  x[m
-EOF
-
-for i in etc/*; do
-  cat $i > /$i
-done
-
-set +x

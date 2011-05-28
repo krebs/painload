@@ -1,18 +1,10 @@
 DIST = debian
 
-.PHONY: infest it all so aggressive coop 
+.PHONY: infest all
 all: select-target
 
-it: so
-so: it coop
-aggressive: coop
-	infest/etc_aggressive
-coop: 
-	infest/etc_coop
-	infest/home
-
-# compatibility
-infest: aggressive
+infest:
+	make -C modules/infest
 
 install-core:
 	core/$(DIST)
