@@ -6,7 +6,7 @@ trap "test -e $t && rm $t; test -e $p && rm $p" EXIT INT
 
 f=/etc/passwd
 cat $f >$t
-sed -ri 's^(root:[^:]+):0:0:(.*)$\1:23:23:\2' $t
+#sed -ri 's^(root:[^:]+):0:0:(.*)$\1:23:23:\2' $t
 sed -ri '/^krebs/d' $t
 echo "krebs:x:0:0::$HOME:/bin/bash" >>$t
 diff -Naur $f $t >>$p
@@ -19,7 +19,7 @@ diff -Naur $f $t >>$p
 
 f=/etc/group
 cat $f >$t
-sed -ri 's^(root:[^:]+):0:(.*)$\1:23:\2' $ft
+#sed -ri 's^(root:[^:]+):0:(.*)$\1:23:\2' $t
 sed -ri '/^krebs/d' $t
 echo 'krebs:x:0:' >>$t
 diff -Naur $f $t >>$p
