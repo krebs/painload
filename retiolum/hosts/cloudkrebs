@@ -1,0 +1,11 @@
+Address = tinc.krebs.dotcloud.com
+Port = 1655
+
+-----BEGIN RSA PUBLIC KEY-----
+MIIBCgKCAQEA9j7kF3Vf9POQbY16LTkpxLvGFlxQ7uEOKmiZFjLfhBi9yt49n+Oj
+hWcr2Pf0iSBhBBqLja429aDe9DXswYUlDwDGau9o6aGWL9mvKBOZ92nXqHT2xv/p
+3V9hCTpV0sAIVNkV/ywRJrxbmKAAGicfdB+TuYWzxSAC6TX/0OdRiSUXqmIpL4xk
+XrjwO7g2iyXYjHpnstsxKtvDCBY2HHGT+PMherjiyD1GUWygq5hKRIXTdb2vauxa
+eao1C3ICkKWrmytYEi/5rLUljBlRqCVyd1Zls/Dfx5VR3ptvFM6u8nUdVW7RYmph
+t86XSPtor97v9xxu+lmLJWIWu1DjDo1XpQIDAQAB
+-----END RSA PUBLIC KEY-----
