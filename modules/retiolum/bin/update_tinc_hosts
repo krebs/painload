@@ -28,6 +28,6 @@ case "${1-imstupid}" in
     sed -ie "/^$bs$/,/^$es$/d" $hosts 
     ;;
   (*)
-    echo 'You are made of stupid!' >&2
+    echo 'Error 1: You are made of stupid!' >&2
     exit 23
 esac
