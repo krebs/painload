@@ -1,10 +1,10 @@
 #! /bin/sh
 # USE WITH GREAT CAUTION
 
-make -C ../../ update
+#make -C ../../ update
 set -e
-
-CURR=`dirname "$0"`
+DIRNAME=`dirname $0`
+CURR=`readlink -f ${DIRNAME}`
 MYBIN=../../bin
 netname=retiolum
 # create configuration directory for $netname
@@ -30,6 +30,7 @@ then
   then
     echo "select v4 subnet ip (1-255) :"
     read v4num
+    myipv4=10.7.7.$v4num
     if [  "$v4num" -gt 0 -a "$v4num" -lt "256" ];
     then 
       echo "check"
@@ -37,7 +38,6 @@ then
       echo "you are made of stupid. bailing out" 
       exit 1
     fi
-    myipv4=10.7.7.$v4num
   fi
   echo "Subnet = $myipv4" > hosts/$myname
 
@@ -47,7 +47,7 @@ else
   echo "own host file already exists! will not write again!"
 fi
 
-cp $CURR/tinc-up .
+cp $CURR/tinc-up /etc/tinc/$netname/
 
 cat>tinc.conf<<EOF
 Name = $myname
@@ -61,7 +61,7 @@ if [ ! -e rsa_key.priv ]
 then
   echo "creating new keys"
   tincd -n $netname -K 
-  python ${CURR}/write_channel.py || \
+  python ${CURR}/write_channel.py $myname || \
   echo "cannot write public key to IRC, you are on your own. Good Luck"
 else
   echo "key files already exist, skipping"
