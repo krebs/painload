@@ -1,29 +1,33 @@
-#!/bin/sh
-DIRNAME=`dirname $0`
-HERE=`readlink -f ${DIRNAME}`
+#! /bin/sh
+set -euf
 
-if test `id -u` != 0; then
+if test "${nosudo-false}" != true -a `id -u` != 0; then
   echo "we're going sudo..." >&2
   exec sudo "$0" "$@"
   exit 23 # go to hell
 fi
 
-case $1 in
-  start)
-    $0 stop
-    echo "# BEGIN OF RETIOLUM" >> /etc/hosts
-    $HERE/hosts >> /etc/hosts
-    echo "# END OF RETIOLUM" >> /etc/hosts
+DIRNAME=`dirname $0`
+export PATH="`readlink -f $DIRNAME`:$PATH"
 
+hosts="${hosts-/etc/hosts}"
+
+bs='# BEGIN OF RETIOLUM'
+es='# END OF RETIOLUM'
+
+case "${1-imstupid}" in
+  (start|restart)
+    if grep -q "^$bs$" $hosts && grep -q "^$es$" $hosts; then
+      $0 stop
+      echo "$bs" >> $hosts
+      hosts      >> $hosts
+      echo "$es" >> $hosts
+    fi
     ;;
-  stop)
-    sed -ie "/\# BEGIN OF RETIOLUM/,/\# END OF RETIOLUM/d" /etc/hosts 
+  (stop)
+    sed -ie "/^$bs$/,/^$es$/d" $hosts 
     ;;
-  restart)
-    $0 stop
-    $0 start
-    ;;
-  *)
-    echo "You are made of stupid!"
+  (*)
+    echo 'You are made of stupid!' >&2
     exit 23
 esac
