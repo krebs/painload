@@ -1,4 +1,4 @@
 # Error 1: You are made of stupid!
 
-This error code gets issued whenever there is a general error in the
-user's thinking process.
+This gets issued whenever the probability of General Failure riding the
+user's thinking process approaches 1.
