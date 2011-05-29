@@ -10,7 +10,7 @@
 #                    the noise "Telnet" server.
 ### END INIT INFO
 
-DAEMON=/krebs/modules/noise/noise-server
+DAEMON=/krebs/noise/noise-server
 
 test -x $DAEMON || exit 1
 

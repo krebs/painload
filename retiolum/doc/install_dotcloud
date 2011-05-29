@@ -62,7 +62,7 @@ https://hackerspace.be/TincVPN
   make install
   mkdir ~/etc
   mkdir -p ~/var/run
-  cd ~/painload/modules/retiolum/scripts/tinc_setup
+  cd ~/painload/retiolum/scripts/tinc_setup
   ./install  cloudkrebs 10.7.7.221
 </code>
 
