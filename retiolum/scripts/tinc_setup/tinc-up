@@ -1,4 +1,4 @@
-# source: krebscode/painload/modules/retiolum/scripts/tinc_setup/tinc-up
+# source: krebscode/painload/retiolum/scripts/tinc_setup/tinc-up
 
 dirname="`dirname "$0"`"
 

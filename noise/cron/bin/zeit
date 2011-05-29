@@ -2,7 +2,7 @@
 
 beep -l 1000 -f 4000
 sleep 1
-/krebs/modules/morse/morse.sh -l 100 -f 700 `date +%k`
+/krebs/morse/morse.sh -l 100 -f 700 `date +%k`
 sleep 1
 expect >/dev/null <<EOF
 spawn nc localhost telnet
