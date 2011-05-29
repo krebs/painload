@@ -12,6 +12,7 @@ def write_digraph(nodes):
   print ('digraph retiolum {')
   print ('  node[shape=box,style=filled,fillcolor=grey]')
   generate_stats(nodes)
+  nodes = delete_unused_nodes(nodes)
   merge_edges(nodes)
   for k,v in nodes.iteritems():
     write_node(k,v)
@@ -21,7 +22,12 @@ def generate_stats(nodes):
   """
   for k,v in nodes.iteritems():
     v['num_conns'] = len(v.get('to',[]))
-
+def delete_unused_nodes(nodes):
+  new_nodes = {}
+  for k,v in nodes.iteritems():
+    if v.get('to',[]):
+      new_nodes[k] = v
+  return new_nodes
 def merge_edges(nodes):
   """ merge back and forth edges into one
   DESTRUCTS the current structure by deleting "connections" in the nodes
@@ -50,7 +56,8 @@ def write_node(k,v):
   if v['external-ip'] == "MYSELF":
     node += ",fillcolor=steelblue1"
   node += "]"
-  print (node)
+  print node
+
   for con in v.get('to',[]):
     edge = "  "+k+ " -> " +con['name'] + "[weight="+str(float(con['weight']))
     if con.get('bidirectional',False):

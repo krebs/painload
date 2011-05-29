@@ -26,23 +26,23 @@ You will gain a user shell with
 we will need to build some stuff in order to get a working copy of tinc.
 Everything needs to be done in userspace.
 <code>
-mkdir build
-cd build
-curl http://www.openssl.org/source/openssl-1.0.0d.tar.gz | tar xz
-cd openssl-1.0.0d
-./config --prefix=$HOME/usr -fPIC
-make install
-cp lib* $HOME/usr/lib
-cd ..
+  mkdir build
+  cd build
+  curl http://www.openssl.org/source/openssl-1.0.0d.tar.gz | tar xz
+  cd openssl-1.0.0d
+  ./config --prefix=$HOME/usr -fPIC
+  make install
+  cp lib* $HOME/usr/lib
+  cd ..
 
-curl http://www.oberhumer.com/opensource/lzo/download/lzo-2.04.tar.gz | tar xz
-cd lzo-2.04
-./configure --prefix=$HOME/usr
+  curl http://www.oberhumer.com/opensource/lzo/download/lzo-2.04.tar.gz | tar xz
+  cd lzo-2.04
+  ./configure --prefix=$HOME/usr
 
-curl http://zlib.net/zlib-1.2.5.tar.gz | tar xz
-cd zlib-1.2.5/
-./configure --prefix=$HOME/usr
-make install
+  curl http://zlib.net/zlib-1.2.5.tar.gz | tar xz
+  cd zlib-1.2.5/
+  ./configure --prefix=$HOME/usr
+  make install
 </code>
 before building we need to patch the tinc daemon to run without the need
 for a tun device.
@@ -51,35 +51,35 @@ tutorial is here:
 https://hackerspace.be/TincVPN
 <code>
 
-curl http://www.tinc-vpn.org/packages/tinc-1.0.14.tar.gz | tar xz
-cd tinc-1.0.14
-#apply patch here
-./configure --prefix=$HOME/usr --sysconfdir=$HOME/etc \
---localstatedir=$HOME/var --with-openssl=`pwd`/../openssl-1.0.0d/ \
---with-openssl-lib=`pwd`/../openssl-1.0.0d/ \
---with-zlib-include=$HOME/usr/include --with-zlib-lib=$HOME/usr/lib
-make
-make install
-mkdir ~/etc
-mkdir ~/var
-cd ~/painload/modules/retiolum/scripts/tinc_setup
-./install  cloudkrebs 10.7.7.221
+  curl http://www.tinc-vpn.org/packages/tinc-1.0.14.tar.gz | tar xz
+  cd tinc-1.0.14
+  #replace the device.c with the patched (empty) one from the webpage
+  ./configure --prefix=$HOME/usr --sysconfdir=$HOME/etc \
+    --localstatedir=$HOME/var --with-openssl=`pwd`/../openssl-1.0.0d/ \
+    --with-openssl-lib=`pwd`/../openssl-1.0.0d/ \
+    --with-zlib-include=$HOME/usr/include --with-zlib-lib=$HOME/usr/lib
+  make
+  make install
+  mkdir ~/etc
+  mkdir -p ~/var/run
+  cd ~/painload/modules/retiolum/scripts/tinc_setup
+  ./install  cloudkrebs 10.7.7.221
 </code>
 
 be sure to fix the portnumber in the generated host file and add your own
 address in hosts/cloudkrebs:
 <code>
-Address = my.public.address
-Port = 1655
+  Address = my.public.address
+  Port = 1655
 
-PUBKEY
+  PUBKEY
 </code>
 
 also write the right in tinc.conf:
 <code>
-Name = cloudkrebs
+  Name = cloudkrebs
 
-Mode = switch
-#device = ...
-# no device :)
+  Mode = switch
+  #device = ...
+  # no device :)
 </code>
