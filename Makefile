@@ -4,16 +4,16 @@ DIST = debian
 all: select-target
 
 infest:
-	make -C modules/infest
+	make -C infest
 
 install-core:
 	core/$(DIST)
 
 noise:
-	make -C modules/noise infest
+	make -C noise infest
 streams:
-	make -C modules/streams
+	make -C streams
 monitoring:
-	make -C modules/Monitoring debian
+	make -C Monitoring debian
 zoneminder:
-	make -C modules/zoneminder fix it so hard
+	make -C zoneminder fix it so hard

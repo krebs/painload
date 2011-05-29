@@ -27,7 +27,7 @@ main() {
 ## temp [<formula with temperature as x>]
 ## Echo temperature in K.  If formula is given then return that result instead.
 inside_temp() {
-  echo "scale=2; x=`/krebs/modules/temper/temper` + 273.15; ${1-x}" | bc
+  echo "scale=2; x=`/krebs/temper/temper` + 273.15; ${1-x}" | bc
 }
 
 outside_temp() {
