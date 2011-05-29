@@ -24,7 +24,8 @@ shutdown -r now
 
 ssh -i .ssh/krebs/also.id_rsa krebs@pornocauster -p 2222
 
-===
+=== 
+
 - conflicting ~/.profile
 - morse: beep not found wegen rc.local
 - /etc/.vimrc legacy compat
