@@ -12,6 +12,7 @@ def write_digraph(nodes):
   print ('digraph retiolum {')
   print ('  node[shape=box,style=filled,fillcolor=grey]')
   generate_stats(nodes)
+  nodes = delete_unused_nodes(nodes)
   merge_edges(nodes)
   for k,v in nodes.iteritems():
     write_node(k,v)
@@ -21,7 +22,12 @@ def generate_stats(nodes):
   """
   for k,v in nodes.iteritems():
     v['num_conns'] = len(v.get('to',[]))
-
+def delete_unused_nodes(nodes):
+  new_nodes = {}
+  for k,v in nodes.iteritems():
+    if v.get('to',[]):
+      new_nodes[k] = v
+  return new_nodes
 def merge_edges(nodes):
   """ merge back and forth edges into one
   DESTRUCTS the current structure by deleting "connections" in the nodes
@@ -45,12 +51,14 @@ def write_node(k,v):
   node += "external:"+v['external-ip']+":"+v['external-port']+"\\l"
   if v.has_key('num_conns'):
     node += "Num Connects:"+str(v['num_conns'])+"\\l"
-
-  node += "internal:"+v.get('internal-ip','¯\\\\(°_o)/¯')+"\\l\""
+  for addr in v.get('internal-ip',['¯\\\\(°_o)/¯']):
+    node += "internal:"+addr+"\\l"
+  node +="\""
   if v['external-ip'] == "MYSELF":
     node += ",fillcolor=steelblue1"
   node += "]"
-  print (node)
+  print node
+
   for con in v.get('to',[]):
     edge = "  "+k+ " -> " +con['name'] + "[weight="+str(float(con['weight']))
     if con.get('bidirectional',False):
@@ -74,7 +82,9 @@ def parse_input():
         if line == 'End of subnet list.\n':
           break
         l = line.replace('\n','').split() 
-        nodes[l[2]]['internal-ip'] = l[0].split('#')[0]
+        if not nodes[l[2]].get('internal-ip',False):
+           nodes[l[2]]['internal-ip'] = []
+        nodes[l[2]]['internal-ip'].append(l[0].split('#')[0])
     if line == 'Edges:':
       edges = {}
       for line in sys.stdin:
