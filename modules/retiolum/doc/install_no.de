@@ -1,4 +1,16 @@
 ok, i tried to just do the same step i did in the other cloud service, but
 it failed when trying to include tunnel headers.this is what to do:
 
+./configure 
+./configure --prefix=$HOME/usr --sysconfdir=$HOME/etc --disable-lzo --disable-zlib --localstatedir=$HOME/var
 # add PATH_MAX to conf.c
+
+Add to your own path:
+$PATH:/home/node/usr/sbin/:/home/node/painload/modules/retiolum/bin/
+
+patch the install paths in modules/retiolum/scripts/tinc_setup/krebs
+
+update the write_channel script with the correct path
+
+mkdir -p ~/var/run
+
