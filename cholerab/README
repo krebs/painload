@@ -1,0 +1,38 @@
+
+~/p/krebscode/painload/infest/home
+  aggressive
+  cooperative
+  -- currently it is aggressive and stupid
+
+~/p/krebscode/painload/infest/etc
+  aggressive
+  cooperative
+  -- currently it is aggressive and stupid
+
+
+- node install script
+
+
+===
+
+ssh root@pornocauster -p 2222
+git clone https://github.com/krebscode/painload.git /krebs
+cd /krebs
+apt-get install --yes make
+make infest
+shutdown -r now
+
+ssh -i .ssh/krebs/also.id_rsa krebs@pornocauster -p 2222
+
+===
+- conflicting ~/.profile
+- morse: beep not found wegen rc.local
+- /etc/.vimrc legacy compat
+
+
+~/p/krebscode/painload/node/Makefile
+  ./configure --prefix=$HOME
+  and ensure that the resulting bin is in $PATH
+  which node or build
+
+
