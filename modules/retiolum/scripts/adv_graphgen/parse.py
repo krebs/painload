@@ -51,8 +51,9 @@ def write_node(k,v):
   node += "external:"+v['external-ip']+":"+v['external-port']+"\\l"
   if v.has_key('num_conns'):
     node += "Num Connects:"+str(v['num_conns'])+"\\l"
-
-  node += "internal:"+v.get('internal-ip','¯\\\\(°_o)/¯')+"\\l\""
+  for addr in v.get('internal-ip',['¯\\\\(°_o)/¯']):
+    node += "internal:"+addr+"\\l"
+  node +="\""
   if v['external-ip'] == "MYSELF":
     node += ",fillcolor=steelblue1"
   node += "]"
@@ -81,7 +82,9 @@ def parse_input():
         if line == 'End of subnet list.\n':
           break
         l = line.replace('\n','').split() 
-        nodes[l[2]]['internal-ip'] = l[0].split('#')[0]
+        if not nodes[l[2]].get('internal-ip',False):
+           nodes[l[2]]['internal-ip'] = []
+        nodes[l[2]]['internal-ip'].append(l[0].split('#')[0])
     if line == 'Edges:':
       edges = {}
       for line in sys.stdin:
