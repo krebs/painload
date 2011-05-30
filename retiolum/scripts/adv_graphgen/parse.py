@@ -11,6 +11,7 @@ def write_digraph(nodes):
   """
   print ('digraph retiolum {')
   print ('  node[shape=box,style=filled,fillcolor=grey]')
+  print ('  overlap=false')
   generate_stats(nodes)
   nodes = delete_unused_nodes(nodes)
   merge_edges(nodes)
