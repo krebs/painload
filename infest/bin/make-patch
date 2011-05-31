@@ -36,22 +36,24 @@ diff -Naur $f $t >>$p
 
 readlink=`readlink -f $0`
 dirname=`dirname $readlink`
-if pushd $dirname/../skel >/dev/null; then
-  if pushd etc >/dev/null; then
+echo [32m$dirname/../skel[m >&2
+ls -l  $dirname/../skel 
+if cd $dirname/../skel; then
+  if cd etc; then
     find . -mindepth 1 -maxdepth 1 -exec diff -Naur /etc/\{\} \{\} \; >>$p
-    popd >/dev/null
+    cd ..
     sed -i '
       s:^+++ \./:+++ /etc/:
     ' $p
   fi
-  if pushd home >/dev/null; then
+  if cd home; then
     find . -type f -exec diff -Naur $HOME/\{\} \{\} \; >>$p
-    popd >/dev/null
+    cd ..
     sed -i '
       s:^+++ \./:+++ '$HOME'/:
     ' $p
   fi
-  popd >/dev/null
+  cd ..
 fi
 
 cat $p
