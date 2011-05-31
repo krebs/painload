@@ -15,17 +15,32 @@ hosts="${hosts-/etc/hosts}"
 bs='# BEGIN OF RETIOLUM'
 es='# END OF RETIOLUM'
 
-case "${1-imstupid}" in
+case "${*-I am made of stupid}" in
   (start|restart)
-    if grep -q "^$bs$" $hosts && grep -q "^$es$" $hosts; then
-      $0 stop
-      echo "$bs" >> $hosts
-      hosts      >> $hosts
-      echo "$es" >> $hosts
-    fi
+    hosts | $0 replace magic
     ;;
   (stop)
-    sed -ie "/^$bs$/,/^$es$/d" $hosts 
+    $0 clear magic
+    ;;
+  ('print magic')
+    echo "$bs"
+    cat
+    echo "$es"
+    ;;
+  ('create magic')
+    $0 has magic || $0 print magic >> $hosts < /dev/null
+    ;;
+  ('destroy magic')
+    $0 has magic && sed -ie "/^$bs$/,/^$es$/d" $hosts 
+    ;;
+  ('has magic')
+    grep -q "^$bs$" $hosts && grep -q "^$es$" $hosts
+    ;;
+  ('replace magic')
+    $0 destroy magic && $0 print magic >> $hosts
+    ;;
+  ('clear magic')
+    $0 replace magic < /dev/null
     ;;
   (*)
     echo 'Error 1: You are made of stupid!' >&2
