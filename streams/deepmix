@@ -1,11 +1,11 @@
 #! /bin/bash
 set -euf
-CMD="while :; do mplayer http://deepmix.ru/deepmix128.pls; done"
+CMD="mplayer http://deepmix.ru/deepmix128.pls"
 function start() {
   stop
   tmux list-sessions &&
       tmux new-window "$CMD" ||
-      tmux new-session "$CMD"
+      tmux new-session "$CMD" ||
 }
 function stop() {
   pkill mplayer || :
