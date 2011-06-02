@@ -1,0 +1,4 @@
+Makefile:
+  update:
+    when hosts folder is not yet a git repository, check out
+    http://github.com/krebscode/hosts.git (no https, because this fails on old systems)
