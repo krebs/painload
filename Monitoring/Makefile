@@ -10,8 +10,8 @@ debian:
 	cp -r conf/* $(NAGDIR)/conf.d/
 	htpasswd -bc htpasswd.users nagiosadmin krebs
 	htpasswd -b htpasswd.users shack shackit
-	sed -i 's/\(authorized_for_all_hosts=nagiosadmin$\)/\1,shack/
-	sed -i 's/\(authorized_for_all_services=nagiosadmin$\)/\1,shack/
+	sed -i 's/\(authorized_for_all_hosts=nagiosadmin\)$$/\1,shack/' $(NAGDIR)/cgi.cfg
+	sed -i 's/\(authorized_for_all_services=nagiosadmin\)$$/\1,shack/' $(NAGDIR)/cgi.cfg
 	cp -R htdocs/* $(HTDOCS)
 	cp -r plugins $(NAGLIBDIR)
 	/etc/init.d/nagios3 reload
