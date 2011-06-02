@@ -1,21 +1,20 @@
 #! /bin/bash
 set -euf
+CMD="mplayer http://somafm.com/groovesalad.pls"
+function start() {
+  stop
+  tmux list-sessions &&
+      tmux new-window "$CMD" ||
+      tmux new-session "$CMD" ||
+}
 function stop()
 {
-  pkill mplayer || true
+  pkill mplayer || :
 }
 
-CMD="while true; do exec mplayer http://somafm.com/groovesalad.pls; sleep 1;done"
 case "$1" in
   start)
-    stop
-    if tmux list-sessions;
-    then 
-      tmux new-window "$CMD"  &
-    else
-      tmux new-session "$CMD" &
-    fi
-    ;;
+    start
   stop)
     stop
     ;;
