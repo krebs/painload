@@ -1,0 +1,53 @@
+auto application architect
+
+p2p
+
+web services
+
+streaming
+
+protokolle - file formate
+
+sprachen (c)
+
+verschiedene module generieren (in verschiedene sprachen)
+
+kann komplette projekte planen
+
+aus TODOs sachen generieren (auto-CEO)
+
+auto-salesmen
+  wer braucht was gebaut wurden?
+  auto-verkaufsgespraeche mit voice
+
+auto-innovation
+
+Wie soll getestet werden (unit-test,sichttest)
+
+wie soll dokumentiert werden (doxygen,grep)
+
+entwicklungs-prozesse:
+  v-modell
+  extreme-programming
+  ...
+
+projektarten:
+  worum soll es gehen?
+    alles bis auf die implementierung soll automatisiert werden
+
+entscheidung automatiseren:
+  die maschine hat es so gewollt
+
+Auto-Corp
+
+auf welchen konferenzen soll es verkauft werden, veranstaltungen,etc
+
+Betriebssystem auswaehlen
+
+wie soll es skalieren?
+  web scale
+  Auto-mengengeruest
+
+Auto-specifierer
+
+
