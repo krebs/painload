@@ -1,33 +1,25 @@
-Nimm zutaten und mach ein rezept:
 
-0. Ding:
-  Timing
-  limit (max 4)
+RANDOM_RAGOUT:
+In einem Topf ${OEL} erhitzen, das ${HAUPTESSBARE} darin rundherum anbraten und
+die gehackten ${GEMUESE} und die ${KREUTER} dazugeben. ${WURZEL}scheiben und
+${GEMUESE}mark dazu rühren und mitbraten. Mit den ${GEMUESE} aufgießen,
+${GEWUERZ1} und ${GEWUERZ2}. ${ALKOHOLHALTIGESGETRAENK} nach Belieben beifügen.
+Das Ragout mindestens eine halbe Stunde lang bei geöffnetem Topf einkochen
+lassen.
 
-Heuristiken
+RANDOM_SAUCE:
+${FETT} in einem kleinen Topf schmelzen und das ${VERDICKUNGSMITTEL1} mit dem
+Schneebesen dazuarbeiten. Die ${FLUESSIGKEIT} nun dazugießen und die Sauce
+glatt rühren. Die Sauce sollte fast eine {halbe-ganze} Stunde lang auf kleiner
+Flamme köcheln, damit sie den ${VERDICKUNGSMITTEL1}geschmack verliert. Mit
+${GEWUERZ1}, ${GEWUERZ2} und ${FRUCHT}saft sowie etwas ${GEWUERZ3} abschmecken.
 
-1. Gewuerze
-
-2. 
-
-
-BSP:
-Kitchen verbs:
-  hacken
-  fritieren
-  backen
-  kochen
-  garen
-  braten
-  filetieren
-  pressen
-  grillen
-  mixen
-  gefrieren
-  duensten
-  trocknen
-  mahlen
-  reiben
-  ziehen lassen
-
-
+RANDOM_LASAGNE:
+In einer ge${FETT}eten, feuerfesten Form etwas ${RANDOM_RAGOUT1} verteilen,
+eine Schicht ${TEIGWAREN1} darauf legen, die ${TEIGWAREN1} wieder mit Ragout
+und dann mit einer ${RANDOM_SAUCE}nnschicht bedecken.  Anschließend wieder eine
+Schicht ${TEIGWAREN1}, Ragout und ${RANDOM_SAUCE}. So Schicht für Schicht die
+Form füllen.  Die letzte Schicht sollte die ${RANDOM_SAUCE} bilden.  Dick mit
+geriebenen ${REIBBAREM} bestreuen, ${FETT}flöckchen darauf setzen. Die Lasagne
+bei {150-230}°C im Ofen überbacken, bis die Kruste goldbraun ist.
+  
