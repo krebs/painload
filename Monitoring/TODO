@@ -1,5 +1,0 @@
-add guest user
-add guest user to 
->     * authorized_for_all_services=usernagios,guest
->     * authorized_for_all_hosts=usernagios,guest
-in /etc/nagios3/somewhere
