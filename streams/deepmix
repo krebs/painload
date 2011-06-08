@@ -3,9 +3,8 @@ set -euf
 CMD="mplayer http://deepmix.ru/deepmix128.pls"
 function start() {
   stop
-  tmux list-sessions &&
-      tmux new-window "$CMD" ||
-      tmux new-session "$CMD" ||
+  tmux start-server 
+  tmux new-session -d "$CMD" 
 }
 function stop() {
   pkill mplayer || :

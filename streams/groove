@@ -1,11 +1,10 @@
 #! /bin/bash
 set -euf
-CMD="mplayer http://somafm.com/groovesalad.pls"
+CMD="exec mplayer http://somafm.com/groovesalad.pls"
 function start() {
   stop
-  tmux list-sessions &&
-      tmux new-window "$CMD" ||
-      tmux new-session "$CMD" ||
+  tmux start-server 
+  tmux new-session -d "$CMD" 
 }
 function stop()
 {
