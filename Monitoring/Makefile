@@ -5,8 +5,7 @@ HTDOCS = /usr/share/nagios3/htdocs
 .phony: debian
 debian:
 	[ `which nagios3` ] || apt-get install nagios3
-	rm $(NAGDIR)/conf.d/localhost_nagios2.cfg  || true
-	rm $(NAGDIR)/conf.d/host-gateway_nagios3.cfg  || true
+	rm $(NAGDIR)/conf.d/* || true
 	cp -r conf/* $(NAGDIR)/conf.d/
 	htpasswd -bc htpasswd.users nagiosadmin krebs
 	htpasswd -b htpasswd.users shack shackit
