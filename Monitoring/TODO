@@ -1,2 +1,0 @@
-check_external_commands=0 -> =1 in nagios.cfg
---> rwx -> /var/lib/nagios3/rw/nagios.cmd
