@@ -1,0 +1,5 @@
+How to Configure
+===============
+
+1. change the mining-url in ~/startup.sh
+2. sudo /etc/init.d/gdm restart
