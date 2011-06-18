@@ -1,0 +1,9 @@
+What to do:
+format the usb-stick:
+Device Boot      Start         End      Blocks   Id  System
+/dev/sda1   *           1         254      976345    c  W95 FAT32 (LBA)
+/dev/sda2             255        1017     2932972   83  Linux
+
+1. install coinlinux live system on sda1.
+2. mkfs.ext3 /dev/sda2 -L live-rw
+3. install grub on /dev/sda
