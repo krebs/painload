@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OVERDRIVE_PROFILE>
+  <PERFORMANCE_LEVEL level="2" gpu="90000" mem="30000" voltage="1040"/>
+  <PERFORMANCE_LEVEL level="1" gpu="55000" mem="30000" voltage="1000"/>
+  <PERFORMANCE_LEVEL level="0" gpu="15700" mem="30000" voltage="950"/>
+  <FAN_SETTING percentage="AUTO"/>
+  <FAN_CTRL enabled="yes"/>
+  <FAN_CTRL_CURVE type="0"/>
+  <FAN_CTRL_POINT nr="0" temperature="2000" percentage="0"/>
+  <FAN_CTRL_POINT nr="1" temperature="3400" percentage="9300"/>
+  <FAN_CTRL_POINT nr="2" temperature="4800" percentage="10000"/>
+  <FAN_CTRL_POINT nr="3" temperature="7000" percentage="10100"/>
+  <FAN_CTRL_POINT nr="4" temperature="10000" percentage="10100"/>
+  <MONITOR_SAMPLE_TIME interval="10"/>
+  <COLOR_PROFILE enabled="no" longitude="-13.000000" latitude="52.000000" color_temp_day="0" color_temp_night="0" transition="30"/>
+</OVERDRIVE_PROFILE>
