@@ -1,0 +1,5 @@
+#displays:  CARD1TEMP CARD2TEMP CPUTEMP OUTSIDE
+echo -n "`DISPLAY=:0 aticonfig --adapter=1 --od-gettemperature | grep Temperature | sed -n 's/.*Temperature - \([0-9.]*\) C/\1/;p'` " 
+echo -n "`DISPLAY=:0 aticonfig --adapter=2 --od-gettemperature | grep Temperature | sed -n 's/.*Temperature - \([0-9.]*\) C/\1/;p'` " 
+echo -n "`sensors | grep temp1 | sed -e 's/temp1: *+\([0-9.]*\).*/\1/'` "
+echo "`temper`"
