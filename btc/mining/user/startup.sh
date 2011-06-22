@@ -3,7 +3,7 @@ sudo pkill tmux
 sleep 1
 export DISPLAY=:0
 
-export URL="http://txgen_chinaman:lolwut@uk.btcguild.com:8332"
+export URL="${URL-http://txgen_chinaman:lolwut@uk.btcguild.com:8332}"
 #export URL="http://txgen:qJrXefWX@bitcoinpool.com:8334"
 slock &
 tmux start-server
