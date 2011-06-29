@@ -1,0 +1,18 @@
+#! /bin/sh
+#
+#
+#
+set -euf
+
+trap 'echo "${comment+$comment
+}You are made of stupid!">&2; exit 23' EXIT
+
+if ! test -e /usr/sbin/tincd; then
+  if grep -iq ubuntu /etc/issue; then
+    sudo apt-get install --yes tinc
+  else
+    comment='Install tinc to continue.' exit
+  fi
+fi
+
+trap - EXIT
