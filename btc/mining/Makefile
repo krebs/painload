@@ -1,12 +1,12 @@
-.PHONY: all format install
+.PHONY: all format install configure
 select-target:
 	@echo "You are made of stupid!"
 	echo "look here"
 	@cat Makefile
 format:
 	cat README
-install:
-	apt-get install --yes lm-sensors tmux 
+install: configure
+	apt-get install --yes lm-sensors tmux
 	echo '#!/bin/bash' > /usr/bin/ati_license
 	echo '#!/bin/sh' > /etc/init.d/live-boot
 	echo 'wall "going down"' >> /etc/init.d/live-boot
