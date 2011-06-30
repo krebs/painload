@@ -1,5 +1,11 @@
-#!/usr/bin/python2
-import json,urllib,datetime,sys
+#!/usr/bin/python
+import urllib,sys
+try:
+  import json
+  getattr(json,"load") 
+except: #deal with it
+  import simplejson as json
+
 if len(sys.argv) != 4 :
     print "** Usage: %s APIKEY WORKER_NAME LOW_WORKER_SPEED" % sys.argv[0]
     print "**  aka YOU ARE MADE OF STUPID"
@@ -11,7 +17,7 @@ LOW_WORKER_SPEED=float(sys.argv[3])
 url="http://www.btcguild.com/api.php?api_key=%s" % API_KEY
 try:
     result = json.load(urllib.urlopen(url))
-except e:
+except:
     print "?? cannot parse json or connect to server"
     exit (1)
 
