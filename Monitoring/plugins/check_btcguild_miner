@@ -1,0 +1,27 @@
+#!/usr/bin/python2
+import json,urllib,datetime,sys
+if len(sys.argv) != 4 :
+    print "** Usage: %s APIKEY WORKER_NAME LOW_WORKER_SPEED" % sys.argv[0]
+    print "**  aka YOU ARE MADE OF STUPID"
+    exit (3)
+
+API_KEY=sys.argv[1]
+WORKER_NAME=sys.argv[2]
+LOW_WORKER_SPEED=float(sys.argv[3])
+url="http://www.btcguild.com/api.php?api_key=%s" % API_KEY
+try:
+    result = json.load(urllib.urlopen(url))
+except e:
+    print "?? cannot parse json or connect to server"
+    exit (1)
+
+for k,v in result["workers"].iteritems():
+    if v["worker_name"] == WORKER_NAME:
+        curr = v["hash_rate"]
+        if curr < LOW_WORKER_SPEED:
+            print "!! %f is below expected %f" (curr,LOW_WORKER_SPEED)
+            exit (2)
+        else:
+            print "++ everything fine, current speed is %f" % curr
+            exit(0)
+
