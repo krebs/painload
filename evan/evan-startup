@@ -1,0 +1,74 @@
+#! /bin/sh
+#
+### BEGIN INIT INFO
+# Provides:          evan
+# Required-Start:    $remote_fs $network
+# Required-Stop:     $remote_fs $network
+# Should-Start:      $syslog $named
+# Should-Stop:       $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start evan daemons
+# Description:       
+
+### END INIT INFO
+#
+# Based on Lubomir Bulej's Redhat init script.
+
+DAEMON="/root/bin/evan"
+PIDFILE="/var/lock/evan"
+NAME="evan"
+DESC="evan daemons"
+TCONF="/etc/evan"
+
+test -f $DAEMON || exit 0
+
+[ -r /etc/default/evan ] && . /etc/default/evan
+
+
+start() {
+  [ -e $PIDFILE ] && echo "$PIDFILE already exists" && return 
+  $DAEMON $EXTRA -d "$@" &
+  echo $(($$+1)) > $PIDFILE #TODO fix this ugly hack!
+}
+stop() {
+  [ ! -e $PIDFILE ] && echo "$PIDFILE does not exist" && return
+  kill `cat $PIDFILE`
+  #killall evan
+  rm $PIDFILE
+}
+
+reload() {
+  echo "do nothing"
+  # do nothing
+}
+
+restart() {
+  stop "$@"
+  start "$@"
+}
+
+case "$1" in
+  start)
+    echo -n "Starting $DESC:" 
+    start
+  ;;
+  stop)
+    echo -n "Stopping $DESC:" 
+    stop
+  ;;
+  reload|force-reload)
+    echo -n "Reloading $DESC configuration:" 
+    reload
+  ;;
+  restart)
+    echo -n "Restarting $DESC:" 
+    restart
+  ;;
+  *)
+    echo "Usage: /etc/init.d/$NAME {start|stop|reload|restart|force-reload}"
+    exit 1
+  ;;
+esac
+echo "done"
+exit 0
