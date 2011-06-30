@@ -21,7 +21,7 @@ def load_names(MAC_NAMES):
   names = {}
   f = open(MAC_NAMES)
   for l in f:
-    mac,name = l.split()
+    mac,name = l.split(' ',1)
     names[mac] = name.replace('\n','')
   f.close()
   return names
@@ -29,7 +29,7 @@ def load_names(MAC_NAMES):
 def arping_helper(dic):
   return arpingy(**dic)
 
-for first in range(4):
+for first in range(1,3):
   for second in range(255):
     data.append({'iprange':'10.42.'+str(first)+'.'+str(second),'iface':DEV})
 
@@ -50,5 +50,3 @@ for p in ret:
     print p[0] + " => " + p[1]
   if p[1] in names:
     print names[p[1]]+ " is online"
-
-
