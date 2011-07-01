@@ -1,5 +1,7 @@
 #!/usr/bin/python
-import urllib,sys
+
+import sys
+from urllib2 import urlopen
 try:
   import json
   getattr(json,"load") 
@@ -16,16 +18,17 @@ WORKER_NAME=sys.argv[2]
 LOW_WORKER_SPEED=float(sys.argv[3])
 url="http://www.btcguild.com/api.php?api_key=%s" % API_KEY
 try:
-    result = json.load(urllib.urlopen(url))
-except:
-    print "?? cannot parse json or connect to server"
+    fh = urlopen(url)
+    result = json.load(fh)
+except Exception,e:
+    print "?? cannot parse json or connect to server: %s"% str(e)
     exit (1)
 
 for k,v in result["workers"].iteritems():
     if v["worker_name"] == WORKER_NAME:
         curr = v["hash_rate"]
         if curr < LOW_WORKER_SPEED:
-            print "!! %f is below expected %f" (curr,LOW_WORKER_SPEED)
+            print "!! %f is below expected %f" % (curr,LOW_WORKER_SPEED)
             exit (2)
         else:
             print "++ everything fine, current speed is %f" % curr
