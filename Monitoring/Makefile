@@ -4,6 +4,7 @@ HTDOCS = /usr/share/nagios3/htdocs
 
 .phony: debian
 debian:
+	git pull origin master
 	[ `which python` ] || apt-get install python python-simplejson
 	[ `which nagios3` ] || apt-get install nagios3
 	rm $(NAGDIR)/conf.d/* || true
