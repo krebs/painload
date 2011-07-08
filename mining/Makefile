@@ -17,40 +17,4 @@ configure:
 	sensors-detect
 	@cat CONFIGURE
 archlinux:
-	@echo "!! ARCHLINUX Cruise Control Mining installer !!"
-	@echo "** adding main network profile"
-	cp /etc/network.d/examples/ethernet-dhcp /etc/network.d/main
-	echo 'POST_UP="sed -i \"1i nameserver 8.8.8.8\" /etc/resolv.conf"' >> /etc/network.d/main
-	@echo "** adding worker account"
-	grep -q worker /etc/passwd || adduser worker
-	@echo "** adding archlinuxfr to pacman.conf"
-	grep -q archlinuxfr /etc/pacman.conf || echo "[archlinuxfr]" >> /etc/pacman.conf && echo "Server = http://repo.archlinux.fr/x86_64" >> /etc/pacman.conf 
-
-	pacman --needed --noconfirm -Syu rsync git openssh yajl sudo tmux lm_sensors vim yaourt kernel26-headers 
-	@echo "** installing tinc"
-	yaourt -S tinc
-	sed -i -e 's/.*\%wheel.*/%wheel	ALL=(ALL) NOPASSWD: ALL/1' /etc/sudoers
-	@echo "** Installing ATI drivers"
-	[ "`yaourt -Q catalyst-utils`" ] || yaourt -S --noconfirm catalyst-utils
-	[ "`yaourt -Q catalyst-hook`" ] || yaourt -S --noconfirm catalyst-hook
-	[ "`yaourt -Q amdstream`" ] || yaourt -S --noconfirm amdstream
-	@echo "** installing X"
-	pacman --needed -S --noconfirm -f xorg-server xorg-apps xorg-appres xorg-xinit xautolock xlockmore xorg-fonts xorg-xhost xorg-xauth xterm rxvt-unicode xorg-twm
-	@echo "** copying bin folder"
-	cp -r bin /home/worker
-	@echo "** creating new .Xauthority for worker"
-	sudo -u worker /home/worker/bin/newkey.sh
-	@echo "configuring X"
-	@echo "!! ACTION REQUIRED, write down the first number of your ATI Graphics Adapter."
-	@echo "!! i will open /etc/X11/xorg.conf for you, change the BusID of every Device to the numbers you see here"
-	@echo "!!press enter to continue"
-	lspci|grep VGA 
-	read
-	aticonfig --initial=dual-head
-	vim /etc/X11/xorg.conf
-	@echo "** creating xinitrc and start x"
-	echo 'setxkbmap -option terminate:ctrl_alt_bksp' > /home/worker/.xinitrc
-	echo 'xautolock -corners +-+- -locker "xlock -mode blank"&' >> /home/worker/.xinitrc	
-	echo 'xterm &' >> /home/worker/.xinitrc	
-	echo 'exec awesome' >> /home/worker/.xinitrc	
-	@echo '!! start x with `xinit -- -auth ~/.Xauthority`'
+	bin/archlinux-cruise-control
