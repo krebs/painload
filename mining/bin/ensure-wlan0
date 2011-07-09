@@ -12,13 +12,16 @@ has_internet() {
 
 if ! has_internet; then
 
-  ## get rid of the nightmare applet
-  pkill -9 nm-applet
-  if test -x "`type -p nm-applet`"; then
-    rm -vf "`type -p nm-applet`"
-  fi
+  ## get rid of the fuckers
+  for fucker in NetworkManager nm-applet; do
+    pkill -9 $fucker
+    if test -x "`type -p $fucker`"; then
+      rm -vf "`type -p $fucker`"
+    fi
+  done
 
-  beep -l 50 -f 2000; pkill wpa_supplicant
+  beep -l 50 -f 2000; pkill wpa
+  beep -l 50 -f 2000; rm -vf /var/run/wpa_supplicant/*
   beep -l 50 -f 2000; wpa_supplicant -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf &
   while ! wpa_cli status | grep -q wpa_state=COMPLETED; do
     beep -l 50 -f 2000 -D 50 -n -l 50 -f 2000
