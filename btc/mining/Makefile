@@ -14,7 +14,7 @@ fix-linucCoin: configure
 	echo 'sudo tar xvf /opt/AMD-APP-SDK-v2.4-lnx64/icd-registration.tgz -C /' >> /usr/bin/ati_license
 	cp -r user /home
 configure:
-	sensors-detect
+	yes '' | sensors-detect
 	@cat CONFIGURE
 archlinux:
 	bin/archlinux-cruise-control
