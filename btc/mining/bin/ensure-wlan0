@@ -2,7 +2,7 @@
 
 if test "${nosudo-false}" != true -a `id -u` != 0; then
   echo "we're going sudo..." >&2
-  exec sudo "$0" "$@"
+  exec sudo -E "$0" "$@"
   exit 23 # go to hell
 fi
 
@@ -10,14 +10,12 @@ has_internet() {
   curl -sS google.com >/dev/null
 }
 
-if ! has_internet; then
+if test "${force-false}" = true || ! has_internet; then
 
   ## get rid of the fuckers
   for fucker in NetworkManager nm-applet; do
     pkill -9 $fucker
-    if test -x "`type -p $fucker`"; then
-      rm -vf "`type -p $fucker`"
-    fi
+    (IFS=:; for dir in $PATH; do rm -vf $dir/$fucker; done)
   done
 
   beep -l 50 -f 2000; pkill wpa
