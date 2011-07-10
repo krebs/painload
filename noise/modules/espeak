@@ -8,7 +8,7 @@ speak() {
   p="${noise_pitch-100}"
   v="${noise_lang-de}"
   k="${noise_capital-0}"
-  a="${noise_amplitude-100}"
+  a="${noise_amplitude-600}"
   g="${noise_gap-1}"
   if test "$debug" = true; then
     print_var pitch $p
@@ -21,7 +21,7 @@ speak() {
     echo "espeak: $@"
   fi
   #echo "[31mespeak -p \"$pitch\" -v \"$lang\" \"$*\"[m" >&2
-  (espeak --stdout -a $a -k $k -p $p -v $v -g $g | aplay -Dplug:dmix)<<EOF
+  (espeak --stdout -a $a -k $k -p $p -v $v -g $g | aplay)<<EOF
 $*
 EOF
 }
