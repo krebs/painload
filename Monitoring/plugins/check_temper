@@ -4,8 +4,8 @@ import sys
 import urllib
 
 if len(sys.argv) < 2 or '-h' in sys.argv: 
-  print ("usage: %s URL [high-val field 1] [high field 2] ..." % sys.argv[0])
-  print ("  Server reply should look like this: '2011-07-11T09:00 50.0 40.0'")
+  print ("?? usage: %s URL [high-val field 1] [high field 2] ..." % sys.argv[0])
+  print ("??   Server reply should look like this: '2011-07-11T09:00 50.0 40.0'")
   exit(3)
 
 URL=sys.argv[1]
@@ -15,17 +15,17 @@ ecode=0
 try:
   ret = urllib.urlopen(URL).read().split()
   date = ret[0]
-  speeds = [float(i) for i in ret[1:]]
-  if len(speeds) != len(thresholds):
-    raise Exception("Number of speeds != number of given thresholds")
-  for i,speed in enumerate(speeds):
-    if speed > thresholds[i]:
-      print ("Warning: %f°C > %f°C (field %d)!" %(speed,thresholds[i],i))
+  temps = [float(i) for i in ret[1:]]
+  print ("** %s : %s" % (date,' '.join([str(i)+"°C" for i in temps])))
+  if len(temps) != len(thresholds):
+    raise Exception("Number of temps != number of given thresholds")
+  for i,temp in enumerate(temps):
+    if temp > thresholds[i]:
+      print ("!! %.2f°C > %.2f°C (field %d)!" %(temp,thresholds[i],i))
       ecode=2
 except Exception,e:
-  print("!! Something aweful happened: "+str(e))
+  print("!! Something awful happened: "+str(e))
   exit (1)
 if not ecode:
-  print ("Success: Everything is fine!")
-print ("Info: %s Current speeds: %s" % (date,' '.join([str(i) for i in speeds])))
+  print ("** Everything is fine!")
 exit(ecode)
