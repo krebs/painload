@@ -16,12 +16,12 @@ try:
   ret = urllib.urlopen(URL).read().split()
   date = ret[0]
   temps = [float(i) for i in ret[1:]]
-  print ("** %s : %s" % (date,' '.join([str(i)+"째C" for i in temps])))
+  print ("** %s : %s" % (date,' '.join([str(i)+"캜" for i in temps])))
   if len(temps) != len(thresholds):
     raise Exception("Number of temps != number of given thresholds")
   for i,temp in enumerate(temps):
     if temp > thresholds[i]:
-      print ("!! %.2f째C > %.2f째C (field %d)!" %(temp,thresholds[i],i))
+      print ("!! %.2f같C > %.2f캜 (field %d)!" %(temp,thresholds[i],i))
       ecode=2
 except Exception,e:
   print("!! Something awful happened: "+str(e))
