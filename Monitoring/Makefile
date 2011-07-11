@@ -20,4 +20,4 @@ debian:
 	chown nagios:www-data /var/lib/nagios3 || true
 	chown nagios:www-data /var/lib/nagios3/rw || true
 	chmod g+x /var/lib/nagios3 || true
-	chmod ug=rwx /var/lib/nagios3/rw/nagios.cmd || true
+	chmod ugo=rwx /var/lib/nagios3/rw/nagios.cmd || true
