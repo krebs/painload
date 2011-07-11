@@ -1,0 +1,32 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#TODO check_speed is nearly the same as check_temper, consolidate both scripts, probably by giving HIGH:LOW as params
+import sys
+import urllib
+
+if len(sys.argv) < 2 or '-h' in sys.argv: 
+  print ("usage: %s URL [low-mhashes] ..." % sys.argv[0])
+  print ("  Server reply should look like this: '2011-07-11T09:00 400.0'")
+  exit(3)
+
+URL=sys.argv[1]
+thresholds=[ float(i) for i in sys.argv[2:]]
+
+ecode=0
+try:
+  ret = urllib.urlopen(URL).read().split()
+  date = ret[0]
+  temps = [float(i) for i in ret[1:]]
+  if len(temps) != len(thresholds):
+    raise Exception("Number of temps != number of given thresholds")
+  for i,temp in enumerate(temps):
+    if temp < thresholds[i]:
+      print ("Warning: %.2f Mhash < %.2f Mhash ! (field %d)" %(temp,thresholds[i],i))
+      ecode=2
+except Exception,e:
+  print("!! Something aweful happened: "+str(e))
+  exit (1)
+if not ecode:
+  print ("Success: Everything is fine!")
+print ("Info: %s Current Mhash: %s" % (date,' '.join([str(i) for i in temps])))
+exit(ecode)
