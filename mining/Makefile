@@ -5,7 +5,7 @@ select-target:
 	@cat Makefile
 format:
 	cat README
-install: configure
+fix-linucCoin: configure
 	apt-get install --yes lm-sensors tmux
 	echo '#!/bin/bash' > /usr/bin/ati_license
 	echo '#!/bin/sh' > /etc/init.d/live-boot
@@ -14,5 +14,7 @@ install: configure
 	echo 'sudo tar xvf /opt/AMD-APP-SDK-v2.4-lnx64/icd-registration.tgz -C /' >> /usr/bin/ati_license
 	cp -r user /home
 configure:
-	sensors-detect
+	yes '' | sensors-detect
 	@cat CONFIGURE
+archlinux:
+	bin/archlinux-cruise-control

@@ -1,0 +1,70 @@
+#!/bin/bash
+set -euf
+export EDITOR=vim
+echo "!! ARCHLINUX Cruise Control Mining installer !!"
+echo "** adding main network profile"
+cp /etc/network.d/examples/ethernet-dhcp /etc/network.d/main
+echo 'POST_UP="sed -i \"1i nameserver 8.8.8.8\" /etc/resolv.conf"' >> /etc/network.d/main
+echo "** adding worker account"
+grep -q worker /etc/passwd || adduser worker
+gpasswd -a worker wheel
+gpasswd -a worker tty
+gpasswd -a worker audio
+gpasswd -a worker video
+gpasswd -a worker network
+gpasswd -a worker power
+
+echo "** adding archlinuxfr to pacman.conf"
+grep -q archlinuxfr /etc/pacman.conf || echo "[archlinuxfr]" >> /etc/pacman.conf && echo "Server = http://repo.archlinux.fr/x86_64" >> /etc/pacman.conf 
+echo "** installing all the required parts"
+pacman --needed --noconfirm -Syu rsync git openssh yajl sudo tmux lm_sensors vim yaourt kernel26-headers beep
+echo "** doing some tweaks"
+rm /usr/bin/python -f
+ln -s /usr/bin/python2 /usr/bin/python
+echo "syntax on" > /home/worker/.vimrc
+echo "syntax on" > /root/.vimrc
+echo "** installing tinc"
+[ "`yaourt -Q tinc`" ] || yaourt -S --noconfirm tinc
+sed -i -e 's/.*\%wheel.*/%wheel	ALL=(ALL) NOPASSWD: ALL/1' /etc/sudoers
+echo "** Installing ATI drivers"
+[ "`yaourt -Q catalyst-utils`" ] || yaourt -S --noconfirm catalyst-utils
+[ "`yaourt -Q catalyst-hook`" ] || yaourt -S --noconfirm catalyst-hook
+[ "`yaourt -Q amdstream`" ] || yaourt -S --noconfirm amdstream
+echo "** installing X"
+pacman --needed -S --noconfirm xorg-server xorg-apps xorg-appres xorg-xinit xautolock xlockmore xorg-fonts xorg-xhost xorg-xauth xterm rxvt-unicode fluxbox slim
+echo "** editing slim configuration"
+sed -i 's/.*default_user.*/default_user	worker/' /etc/slim.conf
+sed -i 's/.*auto_login.*/auto_login	yes/' /etc/slim.conf
+echo "** Installing mining tools and overclocking stuff"
+[ "`yaourt -Q phoenix-miner-svn`" ] || yaourt -S --noconfirm phoenix-miner-svn
+echo "!! warning, you might need to adjust the version number of AMDOverdriveCTRL !!"
+[ "`yaourt -Q amdoverdrivectrl`" ] || yaourt -S amdoverdrivectrl
+echo "** copying bin folder"
+cp  -r $(readlink -f `dirname $0`)/ /home/worker
+echo "** creating new .Xauthority for worker"
+sudo -u worker /home/worker/bin/newkey.sh
+mkdir -p /home/worker/.fluxbox
+cp /krebs/mining/user/startup.sh /home/worker/startup.sh
+chmod a+x /home/worker/startup.sh
+cp /krebs/mining/user/startup.sh /home/worker/.fluxbox/startup
+chmod a+x /home/worker/.fluxbox/startup
+cp /krebs/mining/user/mining.ovdr /home/worker/
+chown -R worker:users /home/worker
+echo "configuring X"
+echo "!! ACTION REQUIRED, write down the first number of your ATI Graphics Adapter."
+echo "!! i will open /etc/X11/xorg.conf for you, change the BusID of every Device to the numbers you see here"
+echo "!! press enter to continue"
+lspci|grep VGA 
+read
+aticonfig --initial=dual-head
+vim /etc/X11/xorg.conf
+echo "** creating xinitrc and start x"
+echo 'setxkbmap -option terminate:ctrl_alt_bksp' > /home/worker/.xinitrc
+echo 'xautolock -corners +-+- -locker "xlock -mode blank"&' >> /home/worker/.xinitrc	
+echo '/home/worker/startup.sh &' >> /home/worker/.xinitrc	
+echo 'xterm &' >> /home/worker/.xinitrc	
+echo 'exec fluxbox' >> /home/worker/.xinitrc	
+echo '!! start x with `xinit `'
+echo 'add "x:5:respawn:/usr/bin/slim >/dev/null 2>&1" to /etc/inittab to start slim"
+
+
