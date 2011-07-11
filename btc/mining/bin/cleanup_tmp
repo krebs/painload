@@ -1,0 +1,4 @@
+#! /bin/sh
+ls -lAtr /tmp/ | sed -rn '
+  /\.so$/{$!{s/.* ([A-Za-z0-9]+\.so)$/rm -v \/tmp\/\1/p}}
+' | sudo sh
