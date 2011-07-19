@@ -1,0 +1,7 @@
+#! /bin/sh
+set -euf
+for path; do
+  type="`file -bi "$path"`"
+  data="`base64 -w 0 "$path"`"
+  echo "data:$type;base64,$data"
+done
