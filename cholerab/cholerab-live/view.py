@@ -26,6 +26,7 @@ class CursesView(threading.Thread):
             elif c == KEY_UP : self.y -=1
             elif c == KEY_DOWN : self.y +=1
             elif c == ord('q') : self.stop()
+            #TODO handle backspace correctly
             else : 
                 try: 
                     self.win.addch(c) #TODO UTF8 here
@@ -57,10 +58,13 @@ class CursesView(threading.Thread):
         self.cholerab = cholerab
         threading.Thread.__init__(self)
         self.scr = initscr()
-        noecho()
+            noecho()
         cbreak()
         self.scr.keypad(1)
-        curs_set(2)
+        try:
+            curs_set(2)
+        except: # go home with your non-standard terminals!
+            pass
 
         begin_x = 0;begin_y = 0
         self.height = height
