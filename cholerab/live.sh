@@ -2,75 +2,87 @@
 set -euf
 stty cbreak -echo
 
-getc() {
-  echo -n "7[1;70H             8" >&2
-  echo -n "7[1;70Hstate=$state8" >&2
-  set -- "`dd bs=1 count=1 2>/dev/null`"
-  set -- "$1" "`echo -n "$1" | od -An -tx | tr -d "[$IFS]"`"
-  char="$1"
-  odchar="$2"
+go() {
+  state=$1
+  wr 7
+  wr "[1;70H             " >&2
+  wr "[1;70Hstate=$state" >&2
+  wr 8
+  $1
+}
+
+rd() {
+  dd bs=1 count=1 2>/dev/null
+}
+
+bufrd() {
+  buf="`rd`"
+  bufinfowr
+}
+
+bufrda() {
+  buf="$buf`rd`"
+  bufinfowr
+}
+
+bufinfowr() {
+  wr 7
+  wr "[2;70H          " >&2
+  wr "[3;70H          " >&2
+  case "$buf" in
+    () wr '[2;70H[35m^[[m' >&2;;
+    (*) wr "[2;70H$buf" >&2;;
+  esac
+  wr "[3;70H`wr "$buf" | xxd -p`" >&2
+  wr 8
+}
+
+wr() {
   echo -n "$1"
 }
 
-state() {
-  state="$1"
-  echo -n "7[1;70H             8" >&2
-  echo -n "7[1;70Hstate=$state8" >&2
-  char="`dd bs=1 count=1 2>/dev/null`"
-  odchar="`echo -n "$char" | od -An -tx | tr -d "[$IFS]"`"
-  history="$odchar  [10D[B${history-}"
-  echo -n "7[2;70H          8" >&2
-  echo -n "7[3;70H          8" >&2
-  echo -n "7[4;70H`echo -n "$history"`8" >&2
-}
-
-
+C0="`echo C0 | xxd -r -p`"; DF="`echo DF | xxd -r -p`" 
+E0="`echo E0 | xxd -r -p`"; EF="`echo EF | xxd -r -p`"
+F0="`echo F0 | xxd -r -p`"; F7="`echo F7 | xxd -r -p`"
 S() {
-  state S
-  case "$char" in
-    () ESC "$char";;
-    () echo -n '[D [D'; S;;
-    (*)
-      echo -n "$char"
-      S
-      ;;
+  bufrd
+  case "$buf" in
+    () go ESC;;
+    () wr '[D [D'; go S;;
+    ([$C0-$DF]) go U1;;
+    ([$E0-$EF]) go U2;;
+    ([$F0-$F7]) go U3;;
+    (*) wr "$buf"; go S;;
   esac
 }
 
+U1() { buf="$buf`rd`"; wr "$buf"; go S; }
+U2() { buf="$buf`rd`"; go U1; }
+U3() { buf="$buf`rd`"; go U2; }
+
+
 ESC() {
-  state ESC
-  case "$char" in
-    ('[') ESC_OSQRB "$1$char";;
+  bufrda
+  case "$buf" in
+    ('[') go ESC_OSQRB;;
     (*)
-      echo -n '[35m^[[m'
-      S
+      wr '[35m^[[m'
+      go S
       ;;
   esac
 }
 
 ESC_OSQRB() {
-  state ESC_OSQRB
-  case "$char" in
-    (A|B|C|D) echo -n "$1$char"; S;;
-    ('[') ESC_OSQRB2 "$1$char";;
+  bufrda
+  case "$buf" in
+    ('[A'|'[B'|'[C'|'[D') wr "$buf"; go S;;
     (*)
-      echo -n '[35m^[[m['
-      S
-      ;;
-  esac
-}
-
-ESC_OSQRB2() {
-  state ESC_OSQRB2
-  case "$char" in
-    (A|B|C|D) echo -n "$1$char"; S;;
-    (*)
-      echo -n '[35m^[[m[['
-      S
+      wr '[35m^[[m['
+      go S
       ;;
   esac
 }
 
 
-echo -n 'c'
-S
+wr 'c'
+go S
