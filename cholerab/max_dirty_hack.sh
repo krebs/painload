@@ -84,7 +84,7 @@ while x="`dd bs=1 count=1 2>/dev/null`"; do
                 echo -n "[$y_cur;${x_cur}H"
             else
                 echo -n "$x"
-                echo "<0 $x $x_cur $y_cur>" >> $tmpfile
+                echo "<0 $x $x_cur $y_cur>" >> $outputfile
                 x_cur=$(( x_cur+1 ))
             fi
             y=
