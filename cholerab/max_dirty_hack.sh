@@ -6,6 +6,8 @@ x_cur=1
 y_cur=1
 y=
 t=1
+outputfile=/tmp/cholerab_out
+inputfile=/tmp/cholerab_in
 echo -n "c"
 
 while [ $t -lt $(( y_max+2 )) ];do
@@ -77,20 +79,22 @@ while x="`dd bs=1 count=1 2>/dev/null`"; do
             :
             ;;
         (*)
-            if [[ $x_cur -gt $x_max ]];then
-                x_cur=1
-                echo -n "[$y_cur;${x_cur}H"
-            elif [[ $x_cur -eq $x_max ]];then
-                echo -n "$x"
+            if [[ $x_cur -ge $x_max ]];then
                 x_cur=1
                 echo -n "[$y_cur;${x_cur}H"
             else
                 echo -n "$x"
+                echo "<0 $x $x_cur $y_cur>" >> $tmpfile
                 x_cur=$(( x_cur+1 ))
             fi
             y=
             ;;
     esac
+    while [[ -s $inputfile ]]; do
+        cat $inputfile | head -n 1 | sed 's,[<>],,g' | { read MODE CHAR XN YN ; echo -n "7[$YN;${XN}H$CHAR8"; }
+        sed -i -e "1d" $inputfile
+    done
+
     state=`echo -n "$x" | od -An -tx | tr -d "[$IFS]"`
     echo -n "7[1;$(( x_max+2 ))H$state8"
     echo -n "7[2;$(( x_max+2 ))H             8"
