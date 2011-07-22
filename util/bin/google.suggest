@@ -1,0 +1,8 @@
+#! /bin/sh
+
+uri="http://google.com/complete/search?output=json&q=$*"
+
+curl -sS "$uri" | sed -n '
+  s:^window.google.ac.h(\|)$::gp
+'
+echo
