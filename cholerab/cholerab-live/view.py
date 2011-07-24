@@ -7,10 +7,21 @@ import logging
 log = logging.getLogger('cholerab-curses')
 
 class CursesView(threading.Thread):
+  def addch(self,char):
+    """
+    adds a char at the current cursor position
+    abstraction to the curses win.addch()
+    """
+    try: self.win.addch(char)
+    except: pass
+    self.cholerab.send_char(self.x,self.y,chr(char))
   def stop(self):
+    #TODO setting back the whole terminal currently does not work correctly, fix me harder
     self.running = False
+    self.clear()
+    self.win.refresh()
     nocbreak(); self.scr.keypad(0); echo()
-    endwin()
+    #endwin()
 
   def run(self):
     """
@@ -28,7 +39,7 @@ class CursesView(threading.Thread):
 
     while self.running:
       c = self.scr.getch() #get_char(self.scr) 
-      log.debug(str(c))
+                           #TODO UTF8 here, get_wch not yet implemented
       if c == KEY_LEFT : self.x -=1
       elif c == KEY_RIGHT : self.x +=1
       elif c == KEY_UP : self.y -=1
@@ -39,19 +50,14 @@ class CursesView(threading.Thread):
         self.x -=1; 
         self.x,self.y = try_move(self.x,self.y)
         self.win.addch(' ')
-
-      #TODO handle backspace correctly
       else : 
-        try: 
-          self.win.addch(c) #TODO UTF8 here
-          #self.cholerab.write_char(self.x,self.y,c)
-        except: 
-          pass
+        self.addch(c) 
         self.x +=1
       self.x,self.y = try_move(self.x,self.y)
       self.refresh()
 
-  def write_char(self,x,y,char):
+  def write_char(self,x,y,char,user=1):
+    user = user % 3 + 1
     self.win.addch(y,x,char)
     self.win.move(self.y,self.x)
     self.refresh()
@@ -63,6 +69,7 @@ class CursesView(threading.Thread):
     self.scr.refresh()
     self.win.refresh()
   def clear(self):
+    self.win.clear()
     pass
   def write_field(self,ar):
     """
@@ -71,17 +78,19 @@ class CursesView(threading.Thread):
     self.clear()
     pass
 
-
   def __init__(self,height=24,width=80,cholerab=None,scr=None):
-    init_pair(1,COLOR_WHITE,COLOR_BLACK)
-    init_pair(2,COLOR_RED,COLOR_BLACK)
-    init_pair(3,COLOR_GREEN,COLOR_BLACK)
-    self.cholerab = cholerab
-    threading.Thread.__init__(self)
+    # TODO handle sessions somehow
     if scr:
      self.scr = scr
     else:
      self.scr = initscr()
+    start_color()
+    init_pair(1,COLOR_WHITE,COLOR_BLACK)
+    init_pair(2,COLOR_RED,COLOR_BLACK)
+    init_pair(3,COLOR_GREEN,COLOR_BLACK)
+    init_pair(3,COLOR_CYAN,COLOR_BLACK)
+    threading.Thread.__init__(self)
+    self.cholerab = cholerab
 
     noecho()
     cbreak()
@@ -95,3 +104,4 @@ class CursesView(threading.Thread):
     self.x = 0 ; self.y = 0
 
     self.win = newwin(height,width,begin_y,begin_x)
+    self.clear()

@@ -147,3 +147,1299 @@ DEBUG:cholerab-curses:261
 DEBUG:cholerab-curses:261
 DEBUG:cholerab-curses:261
 DEBUG:cholerab-curses:113
+DEBUG:main:started main
+DEBUG:cholerab-curses:258
+DEBUG:cholerab-curses:261
+DEBUG:cholerab-curses:261
+DEBUG:cholerab-curses:261
+DEBUG:cholerab-curses:261
+DEBUG:cholerab-curses:261
+DEBUG:cholerab-curses:261
+DEBUG:cholerab-curses:261
+DEBUG:cholerab-curses:261
+DEBUG:cholerab-curses:258
+DEBUG:cholerab-curses:258
+DEBUG:cholerab-curses:258
+DEBUG:cholerab-curses:258
+DEBUG:cholerab-curses:258
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:259
+DEBUG:cholerab-curses:261
+DEBUG:cholerab-curses:97
+DEBUG:cholerab-curses:115
+DEBUG:cholerab-curses:261
+DEBUG:cholerab-curses:97
+DEBUG:cholerab-curses:115
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:118
+DEBUG:cholerab-curses:120
+DEBUG:cholerab-curses:106
+DEBUG:cholerab-curses:108
+DEBUG:cholerab-curses:107
+DEBUG:cholerab-curses:106
+DEBUG:cholerab-curses:100
+DEBUG:cholerab-curses:102
+DEBUG:cholerab-curses:115
+DEBUG:cholerab-curses:258
+DEBUG:cholerab-curses:115
+DEBUG:cholerab-curses:258
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:97
+DEBUG:cholerab-curses:97
+DEBUG:cholerab-curses:97
+DEBUG:cholerab-curses:97
+DEBUG:cholerab-curses:97
+DEBUG:cholerab-curses:97
+DEBUG:cholerab-curses:97
+DEBUG:cholerab-curses:97
+DEBUG:cholerab-curses:97
+DEBUG:cholerab-curses:97
+DEBUG:cholerab-curses:97
+DEBUG:cholerab-curses:97
+DEBUG:cholerab-curses:97
+DEBUG:cholerab-curses:97
+DEBUG:cholerab-curses:97
+DEBUG:cholerab-curses:97
+DEBUG:cholerab-curses:97
+DEBUG:cholerab-curses:97
+DEBUG:cholerab-curses:97
+DEBUG:cholerab-curses:97
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:127
+INFO:cholerab-curses:backspace pressed
+DEBUG:cholerab-curses:113
+DEBUG:main:started main
+DEBUG:main:started main
+DEBUG:main:started main
+INFO:main:Sending 97 at (2,1) to connected peers
+INFO:main:Sending 115 at (3,1) to connected peers
+INFO:main:Sending 100 at (4,1) to connected peers
+INFO:main:Sending 100 at (5,1) to connected peers
+INFO:main:Sending 97 at (6,1) to connected peers
+INFO:main:Sending 115 at (7,1) to connected peers
+INFO:main:Sending 115 at (8,1) to connected peers
+INFO:main:Sending 100 at (9,1) to connected peers
+DEBUG:main:started main
+INFO:main:Sending a at (6,4) to connected peers
+INFO:main:Sending a at (8,4) to connected peers
+INFO:main:Sending s at (9,5) to connected peers
+INFO:main:Sending d at (10,6) to connected peers
+INFO:main:Sending f at (11,6) to connected peers
+INFO:main:Sending d at (12,6) to connected peers
+DEBUG:main:started main
+INFO:main:Sending a at (5,4) to connected peers
+INFO:main:Sending a at (6,4) to connected peers
+INFO:main:Sending s at (7,4) to connected peers
+INFO:main:Sending d at (8,4) to connected peers
+INFO:main:Sending s at (9,4) to connected peers
+INFO:main:Sending f at (10,4) to connected peers
+INFO:main:Sending d at (11,4) to connected peers
+INFO:main:Sending a at (12,4) to connected peers
+INFO:main:Sending d at (13,4) to connected peers
+INFO:main:Sending f at (14,4) to connected peers
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+DEBUG:main:started main
+INFO:main:Sending a at (5,5) to connected peers
+INFO:main:Sending a at (6,5) to connected peers
+INFO:main:Sending a at (7,5) to connected peers
+INFO:main:Sending a at (8,5) to connected peers
+INFO:main:Sending a at (9,5) to connected peers
+INFO:main:Sending a at (10,5) to connected peers
+INFO:main:Sending a at (11,5) to connected peers
+INFO:main:Sending a at (12,5) to connected peers
+INFO:main:Sending a at (13,5) to connected peers
+INFO:main:Sending a at (14,5) to connected peers
+INFO:main:Sending a at (15,5) to connected peers
+INFO:main:Sending a at (16,5) to connected peers
+INFO:main:Sending a at (17,5) to connected peers
+INFO:main:Sending a at (18,5) to connected peers
+INFO:main:Sending a at (19,5) to connected peers
+INFO:main:Sending a at (20,5) to connected peers
+INFO:main:Sending a at (21,5) to connected peers
+INFO:main:Sending a at (22,5) to connected peers
+INFO:main:Sending a at (23,5) to connected peers
+INFO:main:Sending a at (24,5) to connected peers
+INFO:main:Sending a at (25,5) to connected peers
+INFO:main:Sending a at (26,5) to connected peers
+INFO:main:Sending a at (27,5) to connected peers
+INFO:main:Sending a at (28,5) to connected peers
+INFO:main:Sending a at (29,5) to connected peers
+INFO:main:Sending a at (30,5) to connected peers
+INFO:main:Sending a at (31,5) to connected peers
+INFO:main:Sending a at (32,5) to connected peers
+INFO:main:Sending a at (33,5) to connected peers
+INFO:main:Sending a at (34,5) to connected peers
+INFO:main:Sending a at (35,5) to connected peers
+INFO:main:Sending a at (36,5) to connected peers
+INFO:main:Sending a at (37,5) to connected peers
+INFO:main:Sending a at (38,5) to connected peers
+INFO:main:Sending a at (39,5) to connected peers
+INFO:main:Sending a at (40,5) to connected peers
+INFO:main:Sending a at (41,5) to connected peers
+INFO:main:Sending a at (42,5) to connected peers
+INFO:main:Sending a at (43,5) to connected peers
+INFO:main:Sending a at (44,5) to connected peers
+INFO:main:Sending a at (45,5) to connected peers
+INFO:main:Sending a at (46,5) to connected peers
+INFO:main:Sending a at (47,5) to connected peers
+INFO:main:Sending a at (48,5) to connected peers
+INFO:main:Sending a at (49,5) to connected peers
+INFO:main:Sending a at (50,5) to connected peers
+INFO:main:Sending a at (51,5) to connected peers
+INFO:main:Sending a at (52,5) to connected peers
+INFO:main:Sending a at (53,5) to connected peers
+INFO:main:Sending a at (54,5) to connected peers
+INFO:main:Sending a at (55,5) to connected peers
+INFO:main:Sending a at (56,5) to connected peers
+INFO:main:Sending a at (57,5) to connected peers
+INFO:main:Sending a at (58,5) to connected peers
+INFO:main:Sending a at (59,5) to connected peers
+INFO:main:Sending a at (60,5) to connected peers
+INFO:main:Sending a at (61,5) to connected peers
+INFO:main:Sending a at (62,5) to connected peers
+INFO:main:Sending a at (63,5) to connected peers
+INFO:main:Sending a at (64,5) to connected peers
+INFO:main:Sending a at (65,5) to connected peers
+INFO:main:Sending a at (66,5) to connected peers
+INFO:main:Sending a at (67,5) to connected peers
+INFO:main:Sending a at (68,5) to connected peers
+DEBUG:main:started main
+INFO:main:Sending a at (7,7) to connected peers
+INFO:main:Sending a at (8,7) to connected peers
+INFO:main:Sending a at (9,7) to connected peers
+INFO:main:Sending a at (10,7) to connected peers
+INFO:main:Sending a at (11,7) to connected peers
+INFO:main:Sending a at (12,7) to connected peers
+INFO:main:Sending a at (13,7) to connected peers
+INFO:main:Sending a at (14,7) to connected peers
+INFO:main:Sending a at (15,7) to connected peers
+INFO:main:Sending a at (16,7) to connected peers
+INFO:main:Sending a at (17,7) to connected peers
+INFO:main:Sending a at (18,7) to connected peers
+INFO:main:Sending a at (19,7) to connected peers
+INFO:main:Sending a at (20,7) to connected peers
+INFO:main:Sending a at (21,7) to connected peers
+INFO:main:Sending a at (22,7) to connected peers
+INFO:main:Sending a at (23,7) to connected peers
+INFO:main:Sending a at (24,7) to connected peers
+INFO:main:Sending a at (25,7) to connected peers
+INFO:main:Sending d at (26,7) to connected peers
+INFO:main:Sending d at (27,7) to connected peers
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:cholerab-curses:backspace pressed
+INFO:main:Sending d at (6,11) to connected peers
+INFO:main:Sending s at (7,11) to connected peers
+INFO:main:Sending f at (8,10) to connected peers
+INFO:main:Sending s at (10,10) to connected peers
+INFO:main:Sending d at (11,10) to connected peers
+INFO:main:Sending f at (13,10) to connected peers
+INFO:main:Sending d at (14,9) to connected peers
+INFO:main:Sending s at (15,9) to connected peers
+INFO:main:Sending s at (17,8) to connected peers
+INFO:main:Sending f at (18,8) to connected peers
+INFO:main:Sending d at (19,8) to connected peers
+INFO:main:Sending s at (20,8) to connected peers
+INFO:main:Sending f at (22,8) to connected peers
+INFO:main:Sending s at (23,7) to connected peers
+INFO:main:Sending d at (25,7) to connected peers
+INFO:main:Sending s at (27,6) to connected peers
+INFO:main:Sending d at (28,6) to connected peers
+INFO:main:Sending d at (29,5) to connected peers
+INFO:main:Sending s at (31,4) to connected peers
+INFO:main:Sending f at (32,4) to connected peers
+INFO:main:Sending d at (34,3) to connected peers
+INFO:main:Sending s at (35,3) to connected peers
+INFO:main:Sending d at (38,2) to connected peers
+INFO:main:Sending s at (39,2) to connected peers
+INFO:main:Sending f at (40,2) to connected peers
+INFO:main:Sending f at (41,2) to connected peers
+INFO:main:Sending d at (44,0) to connected peers
+INFO:main:Sending s at (45,0) to connected peers
+INFO:main:Sending f at (46,0) to connected peers
+INFO:main:Sending d at (47,23) to connected peers
+INFO:main:Sending d at (49,22) to connected peers
+INFO:main:Sending s at (50,22) to connected peers
+INFO:main:Sending f at (51,22) to connected peers
+INFO:main:Sending d at (53,21) to connected peers
+INFO:main:Sending s at (54,21) to connected peers
+INFO:main:Sending d at (56,20) to connected peers
+INFO:main:Sending s at (57,20) to connected peers
+INFO:main:Sending f at (58,20) to connected peers
+INFO:main:Sending d at (60,19) to connected peers
+INFO:main:Sending s at (61,19) to connected peers
+INFO:main:Sending f at (62,19) to connected peers
+INFO:main:Sending f at (64,18) to connected peers
+INFO:main:Sending s at (65,18) to connected peers
+INFO:main:Sending d at (66,18) to connected peers
+INFO:main:Sending s at (68,17) to connected peers
+INFO:main:Sending f at (69,17) to connected peers
+INFO:main:Sending d at (70,17) to connected peers
+INFO:main:Sending s at (72,16) to connected peers
+INFO:main:Sending d at (73,16) to connected peers
+INFO:main:Sending f at (74,16) to connected peers
+INFO:main:Sending s at (76,16) to connected peers
+INFO:main:Sending f at (78,15) to connected peers
+INFO:main:Sending s at (0,15) to connected peers
+INFO:main:Sending f at (1,15) to connected peers
+INFO:main:Sending f at (3,14) to connected peers
+INFO:main:Sending s at (4,14) to connected peers
+INFO:main:Sending d at (5,14) to connected peers
+INFO:main:Sending s at (7,13) to connected peers
+INFO:main:Sending d at (8,13) to connected peers
+DEBUG:main:started main
+DEBUG:main:started main
+DEBUG:main:started main
+DEBUG:main:started main
+DEBUG:main:started main
+DEBUG:main:started main
+DEBUG:main:started main
+DEBUG:main:started main
+DEBUG:main:started main
+DEBUG:main:started main
+DEBUG:main:started main
+DEBUG:CholerabNet:Setting up Multicast Socket
+DEBUG:CholerabNet:Configuring for Read AND Write
+DEBUG:main:started main
+DEBUG:CholerabNet:Setting up Multicast Socket
+DEBUG:CholerabNet:Configuring for Read AND Write
+INFO:main:Sending a at (1,1) to connected peers
+INFO:main:Sending a at (2,1) to connected peers
+INFO:main:Sending d at (4,1) to connected peers
+INFO:main:Sending s at (5,1) to connected peers
+INFO:main:Sending f at (6,1) to connected peers
+INFO:main:Sending a at (7,1) to connected peers
+INFO:main:Sending a at (8,1) to connected peers
+INFO:main:Sending a at (9,1) to connected peers
+DEBUG:main:started main
+DEBUG:CholerabNet:Setting up Multicast Socket
+DEBUG:CholerabNet:Configuring for Read AND Write
+INFO:main:Sending a at (10,1) to connected peers
+INFO:main:Sending a at (0,0) to connected peers
+INFO:main:Sending s at (1,0) to connected peers
+INFO:main:Sending s at (2,0) to connected peers
+INFO:main:Sending d at (3,0) to connected peers
+INFO:main:Sending a at (4,0) to connected peers
+DEBUG:main:started main
+DEBUG:CholerabNet:Setting up Multicast Socket
+DEBUG:CholerabNet:Configuring for Read AND Write
+INFO:main:Sending a at (11,1) to connected peers
+INFO:main:Sending a at (12,1) to connected peers
+DEBUG:main:started main
+DEBUG:CholerabNet:Setting up Multicast Socket
+DEBUG:CholerabNet:Configuring for Read AND Write
+DEBUG:main:started main
+DEBUG:CholerabNet:Setting up Multicast Socket
+DEBUG:CholerabNet:Configuring for Read AND Write
+INFO:main:Sending a at (0,0) to connected peers
+INFO:main:Sending s at (1,0) to connected peers
+INFO:main:Sending d at (2,0) to connected peers
+INFO:main:Sending a at (13,1) to connected peers
+INFO:main:Sending a at (14,1) to connected peers
+INFO:main:Sending a at (15,1) to connected peers
+INFO:main:Sending s at (16,1) to connected peers
+DEBUG:main:started main
+DEBUG:CholerabNet:Setting up Multicast Socket
+DEBUG:CholerabNet:Configuring for Read AND Write
+INFO:main:Sending a at (0,0) to connected peers
+INFO:main:Sending s at (1,0) to connected peers
+INFO:main:Sending a at (3,0) to connected peers
+INFO:main:Sending s at (4,0) to connected peers
+INFO:main:Sending s at (5,0) to connected peers
+INFO:main:Sending d at (6,0) to connected peers
+INFO:main:Sending s at (7,0) to connected peers
+INFO:main:Sending a at (8,4) to connected peers
+INFO:main:Sending s at (9,4) to connected peers
+INFO:main:Sending d at (10,4) to connected peers
+INFO:main:Sending s at (11,4) to connected peers
+INFO:main:Sending d at (12,4) to connected peers
+INFO:main:Sending a at (2,0) to connected peers
+INFO:main:Sending s at (3,0) to connected peers
+INFO:main:Sending s at (4,0) to connected peers
+INFO:main:Sending a at (13,4) to connected peers
+INFO:main:Sending a at (14,4) to connected peers
+INFO:main:Sending a at (15,4) to connected peers
+INFO:main:Sending s at (16,4) to connected peers
+INFO:main:Sending d at (17,4) to connected peers
+INFO:main:Sending a at (18,4) to connected peers
+INFO:main:Sending s at (19,4) to connected peers
+INFO:main:Sending d at (20,4) to connected peers
+DEBUG:main:started main
+DEBUG:CholerabNet:Setting up Multicast Socket
+DEBUG:CholerabNet:Configuring for Read AND Write
+DEBUG:main:started main
+DEBUG:CholerabNet:Setting up Multicast Socket
+DEBUG:CholerabNet:Configuring for Read AND Write
+INFO:main:Sending s at (0,0) to connected peers
+INFO:main:Sending a at (1,0) to connected peers
+INFO:main:Sending d at (2,0) to connected peers
+DEBUG:main:started main
+DEBUG:CholerabNet:Setting up Multicast Socket
+DEBUG:CholerabNet:Configuring for Read AND Write
+INFO:main:Sending a at (0,0) to connected peers
+DEBUG:CholerabNet:Sending 'a 0 0' to 224.110.42.23:42023
+DEBUG:main:started main
+DEBUG:CholerabNet:Setting up Multicast Socket
+DEBUG:CholerabNet:Configuring for Read AND Write
+INFO:main:Sending a at (0,0) to connected peers
+DEBUG:CholerabNet:Sending 'a 0 0' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 0 0
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 0 0
+INFO:main:Sending a at (1,3) to connected peers
+DEBUG:CholerabNet:Sending 'a 1 3' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 1 3
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 1 3
+DEBUG:main:started main
+DEBUG:CholerabNet:Setting up Multicast Socket
+DEBUG:CholerabNet:Configuring for Read AND Write
+DEBUG:main:started main
+DEBUG:CholerabNet:Setting up Multicast Socket
+DEBUG:CholerabNet:Configuring for Read AND Write
+INFO:main:Sending a at (0,0) to connected peers
+DEBUG:CholerabNet:Sending 'a 0 0' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 0 0
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 0 0
+INFO:main:Sending s at (4,1) to connected peers
+DEBUG:CholerabNet:Sending 's 4 1' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 4 1
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 4 1
+DEBUG:main:started main
+DEBUG:CholerabNet:Setting up Multicast Socket
+DEBUG:CholerabNet:Configuring for Read AND Write
+DEBUG:main:started main
+DEBUG:CholerabNet:Setting up Multicast Socket
+DEBUG:CholerabNet:Configuring for Read AND Write
+INFO:main:Sending a at (0,0) to connected peers
+DEBUG:CholerabNet:Sending 'a 0 0' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 0 0
+ERROR:CholerabNet:Triggered YOU ARE MADE OF STUPID: %d format: a number is required, not str
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 0 0
+ERROR:CholerabNet:Triggered YOU ARE MADE OF STUPID: %d format: a number is required, not str
+DEBUG:main:started main
+DEBUG:CholerabNet:Setting up Multicast Socket
+DEBUG:CholerabNet:Configuring for Read AND Write
+INFO:main:Sending a at (0,0) to connected peers
+DEBUG:CholerabNet:Sending 'a 0 0' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 0 0
+ERROR:CholerabNet:Triggered YOU ARE MADE OF STUPID: %d format: a number is required, not str
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 0 0
+ERROR:CholerabNet:Triggered YOU ARE MADE OF STUPID: not enough arguments for format string
+DEBUG:main:started main
+DEBUG:CholerabNet:Setting up Multicast Socket
+DEBUG:CholerabNet:Configuring for Read AND Write
+INFO:main:Sending a at (0,0) to connected peers
+DEBUG:CholerabNet:Sending 'a 0 0' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 0 0
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 0 0
+INFO:main:Writing a at (0,0) from 42023 to view
+ERROR:CholerabNet:Triggered YOU ARE MADE OF STUPID: %d format: a number is required, not str
+ERROR:CholerabNet:Triggered YOU ARE MADE OF STUPID: write_char() takes exactly 4 arguments (5 given)
+DEBUG:main:started main
+DEBUG:CholerabNet:Setting up Multicast Socket
+DEBUG:CholerabNet:Configuring for Read AND Write
+INFO:main:Sending a at (0,0) to connected peers
+DEBUG:CholerabNet:Sending 'a 0 0' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 0 0
+ERROR:CholerabNet:Triggered YOU ARE MADE OF STUPID: %d format: a number is required, not str
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 0 0
+INFO:main:Writing a at (0,0) from 42023 to view
+DEBUG:main:started main
+DEBUG:CholerabNet:Setting up Multicast Socket
+DEBUG:CholerabNet:Configuring for Read AND Write
+INFO:main:Sending a at (3,3) to connected peers
+DEBUG:CholerabNet:Sending 'a 3 3' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 3 3
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 3 3
+INFO:main:Writing a at (3,3) from 42023 to view
+INFO:main:Writing a at (3,3) from 42023 to view
+INFO:main:Sending a at (4,4) to connected peers
+DEBUG:CholerabNet:Sending 'a 4 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 4 4
+INFO:main:Writing a at (4,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 4 4
+INFO:main:Writing a at (4,4) from 42023 to view
+INFO:main:Sending d at (5,4) to connected peers
+DEBUG:CholerabNet:Sending 'd 5 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 5 4
+INFO:main:Writing d at (5,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 5 4
+INFO:main:Writing d at (5,4) from 42023 to view
+INFO:main:Sending f at (6,4) to connected peers
+DEBUG:CholerabNet:Sending 'f 6 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 6 4
+INFO:main:Writing f at (6,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 6 4
+INFO:main:Writing f at (6,4) from 42023 to view
+INFO:main:Sending j at (7,4) to connected peers
+DEBUG:CholerabNet:Sending 'j 7 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 7 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 7 4
+INFO:main:Writing j at (7,4) from 42023 to view
+INFO:main:Writing j at (7,4) from 42023 to view
+INFO:main:Sending l at (8,4) to connected peers
+DEBUG:CholerabNet:Sending 'l 8 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data l 8 4
+INFO:main:Writing l at (8,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data l 8 4
+INFO:main:Writing l at (8,4) from 42023 to view
+INFO:main:Sending s at (9,4) to connected peers
+DEBUG:CholerabNet:Sending 's 9 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 9 4
+INFO:main:Writing s at (9,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 9 4
+INFO:main:Writing s at (9,4) from 42023 to view
+INFO:main:Sending k at (10,4) to connected peers
+DEBUG:CholerabNet:Sending 'k 10 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data k 10 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data k 10 4
+INFO:main:Writing k at (10,4) from 42023 to view
+INFO:main:Writing k at (10,4) from 42023 to view
+INFO:main:Sending a at (2,2) to connected peers
+DEBUG:CholerabNet:Sending 'a 2 2' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 2 2
+INFO:main:Writing a at (2,2) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 2 2
+INFO:main:Writing a at (2,2) from 42023 to view
+INFO:main:Sending d at (3,2) to connected peers
+DEBUG:CholerabNet:Sending 'd 3 2' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 3 2
+INFO:main:Writing d at (3,2) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 3 2
+INFO:main:Writing d at (3,2) from 42023 to view
+INFO:main:Sending s at (4,2) to connected peers
+DEBUG:CholerabNet:Sending 's 4 2' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 4 2
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 4 2
+INFO:main:Writing s at (4,2) from 42023 to view
+INFO:main:Writing s at (4,2) from 42023 to view
+INFO:main:Sending f at (5,2) to connected peers
+DEBUG:CholerabNet:Sending 'f 5 2' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 5 2
+INFO:main:Writing f at (5,2) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 5 2
+INFO:main:Writing f at (5,2) from 42023 to view
+INFO:main:Sending d at (6,2) to connected peers
+DEBUG:CholerabNet:Sending 'd 6 2' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 6 2
+INFO:main:Writing d at (6,2) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 6 2
+INFO:main:Writing d at (6,2) from 42023 to view
+INFO:main:Sending s at (7,2) to connected peers
+DEBUG:CholerabNet:Sending 's 7 2' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 7 2
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 7 2
+INFO:main:Writing s at (7,2) from 42023 to view
+INFO:main:Writing s at (7,2) from 42023 to view
+INFO:main:Sending a at (8,2) to connected peers
+DEBUG:CholerabNet:Sending 'a 8 2' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 8 2
+INFO:main:Writing a at (8,2) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 8 2
+INFO:main:Writing a at (8,2) from 42023 to view
+INFO:main:Sending s at (9,2) to connected peers
+DEBUG:CholerabNet:Sending 's 9 2' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 9 2
+INFO:main:Writing s at (9,2) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 9 2
+INFO:main:Writing s at (9,2) from 42023 to view
+INFO:main:Sending d at (10,2) to connected peers
+DEBUG:CholerabNet:Sending 'd 10 2' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 10 2
+INFO:main:Writing d at (10,2) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 10 2
+INFO:main:Writing d at (10,2) from 42023 to view
+INFO:main:Sending s at (11,2) to connected peers
+DEBUG:CholerabNet:Sending 's 11 2' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 11 2
+INFO:main:Writing s at (11,2) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 11 2
+INFO:main:Writing s at (11,2) from 42023 to view
+INFO:main:Sending f at (12,2) to connected peers
+DEBUG:CholerabNet:Sending 'f 12 2' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 12 2
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 12 2
+INFO:main:Writing f at (12,2) from 42023 to view
+INFO:main:Writing f at (12,2) from 42023 to view
+INFO:main:Sending s at (13,2) to connected peers
+DEBUG:CholerabNet:Sending 's 13 2' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 13 2
+INFO:main:Writing s at (13,2) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 13 2
+INFO:main:Writing s at (13,2) from 42023 to view
+INFO:main:Sending f at (14,2) to connected peers
+DEBUG:CholerabNet:Sending 'f 14 2' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 14 2
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 14 2
+INFO:main:Writing f at (14,2) from 42023 to view
+INFO:main:Writing f at (14,2) from 42023 to view
+INFO:main:Sending s at (15,2) to connected peers
+DEBUG:CholerabNet:Sending 's 15 2' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 15 2
+INFO:main:Writing s at (15,2) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 15 2
+INFO:main:Writing s at (15,2) from 42023 to view
+INFO:main:Sending d at (16,2) to connected peers
+DEBUG:CholerabNet:Sending 'd 16 2' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 16 2
+INFO:main:Writing d at (16,2) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 16 2
+INFO:main:Writing d at (16,2) from 42023 to view
+INFO:main:Sending s at (11,4) to connected peers
+DEBUG:CholerabNet:Sending 's 11 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 11 4
+INFO:main:Writing s at (11,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 11 4
+INFO:main:Writing s at (11,4) from 42023 to view
+INFO:main:Sending a at (12,4) to connected peers
+DEBUG:CholerabNet:Sending 'a 12 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 12 4
+INFO:main:Writing a at (12,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 12 4
+INFO:main:Writing a at (12,4) from 42023 to view
+INFO:main:Sending f at (13,4) to connected peers
+DEBUG:CholerabNet:Sending 'f 13 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 13 4
+INFO:main:Writing f at (13,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 13 4
+INFO:main:Writing f at (13,4) from 42023 to view
+INFO:main:Sending d at (14,4) to connected peers
+DEBUG:CholerabNet:Sending 'd 14 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 14 4
+INFO:main:Writing d at (14,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 14 4
+INFO:main:Writing d at (14,4) from 42023 to view
+INFO:main:Sending s at (15,4) to connected peers
+DEBUG:CholerabNet:Sending 's 15 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 15 4
+INFO:main:Writing s at (15,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 15 4
+INFO:main:Writing s at (15,4) from 42023 to view
+INFO:main:Sending a at (16,4) to connected peers
+DEBUG:CholerabNet:Sending 'a 16 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 16 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 16 4
+INFO:main:Writing a at (16,4) from 42023 to view
+INFO:main:Writing a at (16,4) from 42023 to view
+INFO:main:Sending s at (17,4) to connected peers
+DEBUG:CholerabNet:Sending 's 17 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 17 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 17 4
+INFO:main:Writing s at (17,4) from 42023 to view
+INFO:main:Writing s at (17,4) from 42023 to view
+INFO:main:Sending f at (18,4) to connected peers
+DEBUG:CholerabNet:Sending 'f 18 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 18 4
+INFO:main:Writing f at (18,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 18 4
+INFO:main:Writing f at (18,4) from 42023 to view
+INFO:main:Sending d at (19,4) to connected peers
+DEBUG:CholerabNet:Sending 'd 19 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 19 4
+INFO:main:Writing d at (19,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 19 4
+INFO:main:Writing d at (19,4) from 42023 to view
+INFO:main:Sending d at (20,4) to connected peers
+DEBUG:CholerabNet:Sending 'd 20 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 20 4
+INFO:main:Writing d at (20,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 20 4
+INFO:main:Writing d at (20,4) from 42023 to view
+INFO:main:Sending s at (21,4) to connected peers
+DEBUG:CholerabNet:Sending 's 21 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 21 4
+INFO:main:Writing s at (21,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 21 4
+INFO:main:Writing s at (21,4) from 42023 to view
+INFO:main:Sending k at (22,4) to connected peers
+DEBUG:CholerabNet:Sending 'k 22 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data k 22 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data k 22 4
+INFO:main:Writing k at (22,4) from 42023 to view
+INFO:main:Writing k at (22,4) from 42023 to view
+INFO:main:Sending f at (23,4) to connected peers
+DEBUG:CholerabNet:Sending 'f 23 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 23 4
+INFO:main:Writing f at (23,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 23 4
+INFO:main:Writing f at (23,4) from 42023 to view
+INFO:main:Sending j at (24,4) to connected peers
+DEBUG:CholerabNet:Sending 'j 24 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 24 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 24 4
+INFO:main:Writing j at (24,4) from 42023 to view
+INFO:main:Writing j at (24,4) from 42023 to view
+INFO:main:Sending s at (25,4) to connected peers
+DEBUG:CholerabNet:Sending 's 25 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 25 4
+INFO:main:Writing s at (25,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 25 4
+INFO:main:Writing s at (25,4) from 42023 to view
+INFO:main:Sending f at (26,4) to connected peers
+DEBUG:CholerabNet:Sending 'f 26 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 26 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 26 4
+INFO:main:Writing f at (26,4) from 42023 to view
+INFO:main:Writing f at (26,4) from 42023 to view
+INFO:main:Sending d at (27,4) to connected peers
+DEBUG:CholerabNet:Sending 'd 27 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 27 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 27 4
+INFO:main:Writing d at (27,4) from 42023 to view
+INFO:main:Writing d at (27,4) from 42023 to view
+INFO:main:Sending k at (28,4) to connected peers
+DEBUG:CholerabNet:Sending 'k 28 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data k 28 4
+INFO:main:Writing k at (28,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data k 28 4
+INFO:main:Writing k at (28,4) from 42023 to view
+INFO:main:Sending j at (29,4) to connected peers
+DEBUG:CholerabNet:Sending 'j 29 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 29 4
+INFO:main:Writing j at (29,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 29 4
+INFO:main:Writing j at (29,4) from 42023 to view
+INFO:main:Sending a at (30,4) to connected peers
+DEBUG:CholerabNet:Sending 'a 30 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 30 4
+INFO:main:Writing a at (30,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 30 4
+INFO:main:Writing a at (30,4) from 42023 to view
+INFO:main:Sending f at (31,4) to connected peers
+DEBUG:CholerabNet:Sending 'f 31 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 31 4
+INFO:main:Writing f at (31,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 31 4
+INFO:main:Writing f at (31,4) from 42023 to view
+INFO:main:Sending k at (32,4) to connected peers
+DEBUG:CholerabNet:Sending 'k 32 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data k 32 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data k 32 4
+INFO:main:Writing k at (32,4) from 42023 to view
+INFO:main:Writing k at (32,4) from 42023 to view
+INFO:main:Sending j at (33,4) to connected peers
+DEBUG:CholerabNet:Sending 'j 33 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 33 4
+INFO:main:Writing j at (33,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 33 4
+INFO:main:Writing j at (33,4) from 42023 to view
+INFO:main:Sending f at (34,4) to connected peers
+DEBUG:CholerabNet:Sending 'f 34 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 34 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 34 4
+INFO:main:Writing f at (34,4) from 42023 to view
+INFO:main:Writing f at (34,4) from 42023 to view
+INFO:main:Sending l at (35,4) to connected peers
+DEBUG:CholerabNet:Sending 'l 35 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data l 35 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data l 35 4
+INFO:main:Writing l at (35,4) from 42023 to view
+INFO:main:Writing l at (35,4) from 42023 to view
+INFO:main:Sending ; at (36,4) to connected peers
+DEBUG:CholerabNet:Sending '; 36 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data ; 36 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data ; 36 4
+INFO:main:Writing ; at (36,4) from 42023 to view
+INFO:main:Writing ; at (36,4) from 42023 to view
+INFO:main:Sending a at (37,4) to connected peers
+DEBUG:CholerabNet:Sending 'a 37 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 37 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 37 4
+INFO:main:Writing a at (37,4) from 42023 to view
+INFO:main:Writing a at (37,4) from 42023 to view
+INFO:main:Sending j at (38,4) to connected peers
+DEBUG:CholerabNet:Sending 'j 38 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 38 4
+INFO:main:Writing j at (38,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 38 4
+INFO:main:Writing j at (38,4) from 42023 to view
+INFO:main:Sending l at (39,4) to connected peers
+DEBUG:CholerabNet:Sending 'l 39 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data l 39 4
+INFO:main:Writing l at (39,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data l 39 4
+INFO:main:Writing l at (39,4) from 42023 to view
+INFO:main:Sending ; at (40,4) to connected peers
+DEBUG:CholerabNet:Sending '; 40 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data ; 40 4
+INFO:main:Writing ; at (40,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data ; 40 4
+INFO:main:Writing ; at (40,4) from 42023 to view
+INFO:main:Sending a at (41,4) to connected peers
+DEBUG:CholerabNet:Sending 'a 41 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 41 4
+INFO:main:Writing a at (41,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 41 4
+INFO:main:Writing a at (41,4) from 42023 to view
+INFO:main:Sending j at (42,4) to connected peers
+DEBUG:CholerabNet:Sending 'j 42 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 42 4
+INFO:main:Writing j at (42,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 42 4
+INFO:main:Writing j at (42,4) from 42023 to view
+INFO:main:Sending f at (43,4) to connected peers
+DEBUG:CholerabNet:Sending 'f 43 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 43 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 43 4
+INFO:main:Writing f at (43,4) from 42023 to view
+INFO:main:Writing f at (43,4) from 42023 to view
+INFO:main:Sending l at (44,4) to connected peers
+DEBUG:CholerabNet:Sending 'l 44 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data l 44 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data l 44 4
+INFO:main:Writing l at (44,4) from 42023 to view
+INFO:main:Writing l at (44,4) from 42023 to view
+INFO:main:Sending a at (45,4) to connected peers
+DEBUG:CholerabNet:Sending 'a 45 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 45 4
+INFO:main:Writing a at (45,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 45 4
+INFO:main:Writing a at (45,4) from 42023 to view
+INFO:main:Sending k at (46,4) to connected peers
+DEBUG:CholerabNet:Sending 'k 46 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data k 46 4
+INFO:main:Writing k at (46,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data k 46 4
+INFO:main:Writing k at (46,4) from 42023 to view
+INFO:main:Sending j at (47,4) to connected peers
+DEBUG:CholerabNet:Sending 'j 47 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 47 4
+INFO:main:Writing j at (47,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 47 4
+INFO:main:Writing j at (47,4) from 42023 to view
+INFO:main:Sending l at (48,4) to connected peers
+DEBUG:CholerabNet:Sending 'l 48 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data l 48 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data l 48 4
+INFO:main:Writing l at (48,4) from 42023 to view
+INFO:main:Writing l at (48,4) from 42023 to view
+INFO:main:Sending ; at (49,4) to connected peers
+DEBUG:CholerabNet:Sending '; 49 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data ; 49 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data ; 49 4
+INFO:main:Writing ; at (49,4) from 42023 to view
+INFO:main:Writing ; at (49,4) from 42023 to view
+INFO:main:Sending f at (50,4) to connected peers
+DEBUG:CholerabNet:Sending 'f 50 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 50 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 50 4
+INFO:main:Writing f at (50,4) from 42023 to view
+INFO:main:Writing f at (50,4) from 42023 to view
+INFO:main:Sending d at (51,4) to connected peers
+DEBUG:CholerabNet:Sending 'd 51 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 51 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 51 4
+INFO:main:Writing d at (51,4) from 42023 to view
+INFO:main:Writing d at (51,4) from 42023 to view
+INFO:main:Sending j at (52,4) to connected peers
+DEBUG:CholerabNet:Sending 'j 52 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 52 4
+INFO:main:Writing j at (52,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 52 4
+INFO:main:Writing j at (52,4) from 42023 to view
+INFO:main:Sending a at (53,4) to connected peers
+DEBUG:CholerabNet:Sending 'a 53 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 53 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 53 4
+INFO:main:Writing a at (53,4) from 42023 to view
+INFO:main:Writing a at (53,4) from 42023 to view
+INFO:main:Sending l at (54,4) to connected peers
+DEBUG:CholerabNet:Sending 'l 54 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data l 54 4
+INFO:main:Writing l at (54,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data l 54 4
+INFO:main:Writing l at (54,4) from 42023 to view
+INFO:main:Sending ; at (55,4) to connected peers
+DEBUG:CholerabNet:Sending '; 55 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data ; 55 4
+INFO:main:Writing ; at (55,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data ; 55 4
+INFO:main:Writing ; at (55,4) from 42023 to view
+INFO:main:Sending a at (56,4) to connected peers
+DEBUG:CholerabNet:Sending 'a 56 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 56 4
+INFO:main:Writing a at (56,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 56 4
+INFO:main:Writing a at (56,4) from 42023 to view
+INFO:main:Sending d at (57,4) to connected peers
+DEBUG:CholerabNet:Sending 'd 57 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 57 4
+INFO:main:Writing d at (57,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 57 4
+INFO:main:Writing d at (57,4) from 42023 to view
+INFO:main:Sending j at (58,4) to connected peers
+DEBUG:CholerabNet:Sending 'j 58 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 58 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 58 4
+INFO:main:Writing j at (58,4) from 42023 to view
+INFO:main:Writing j at (58,4) from 42023 to view
+INFO:main:Sending f at (59,4) to connected peers
+DEBUG:CholerabNet:Sending 'f 59 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 59 4
+INFO:main:Writing f at (59,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 59 4
+INFO:main:Writing f at (59,4) from 42023 to view
+INFO:main:Sending l at (60,4) to connected peers
+DEBUG:CholerabNet:Sending 'l 60 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data l 60 4
+INFO:main:Writing l at (60,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data l 60 4
+INFO:main:Writing l at (60,4) from 42023 to view
+INFO:main:Sending ; at (61,4) to connected peers
+DEBUG:CholerabNet:Sending '; 61 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data ; 61 4
+INFO:main:Writing ; at (61,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data ; 61 4
+INFO:main:Writing ; at (61,4) from 42023 to view
+INFO:main:Sending a at (62,4) to connected peers
+DEBUG:CholerabNet:Sending 'a 62 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 62 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 62 4
+INFO:main:Writing a at (62,4) from 42023 to view
+INFO:main:Writing a at (62,4) from 42023 to view
+INFO:main:Sending k at (63,4) to connected peers
+DEBUG:CholerabNet:Sending 'k 63 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data k 63 4
+INFO:main:Writing k at (63,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data k 63 4
+INFO:main:Writing k at (63,4) from 42023 to view
+INFO:main:Sending j at (64,4) to connected peers
+DEBUG:CholerabNet:Sending 'j 64 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 64 4
+INFO:main:Writing j at (64,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 64 4
+INFO:main:Writing j at (64,4) from 42023 to view
+INFO:main:Sending f at (65,4) to connected peers
+DEBUG:CholerabNet:Sending 'f 65 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 65 4
+INFO:main:Writing f at (65,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 65 4
+INFO:main:Writing f at (65,4) from 42023 to view
+INFO:main:Sending d at (66,4) to connected peers
+DEBUG:CholerabNet:Sending 'd 66 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 66 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 66 4
+INFO:main:Writing d at (66,4) from 42023 to view
+INFO:main:Writing d at (66,4) from 42023 to view
+INFO:main:Sending l at (67,4) to connected peers
+DEBUG:CholerabNet:Sending 'l 67 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data l 67 4
+INFO:main:Writing l at (67,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data l 67 4
+INFO:main:Writing l at (67,4) from 42023 to view
+INFO:main:Sending ; at (68,4) to connected peers
+DEBUG:CholerabNet:Sending '; 68 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data ; 68 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data ; 68 4
+INFO:main:Writing ; at (68,4) from 42023 to view
+INFO:main:Writing ; at (68,4) from 42023 to view
+INFO:main:Sending a at (69,4) to connected peers
+DEBUG:CholerabNet:Sending 'a 69 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 69 4
+INFO:main:Writing a at (69,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 69 4
+INFO:main:Writing a at (69,4) from 42023 to view
+INFO:main:Sending j at (70,4) to connected peers
+DEBUG:CholerabNet:Sending 'j 70 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 70 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 70 4
+INFO:main:Writing j at (70,4) from 42023 to view
+INFO:main:Writing j at (70,4) from 42023 to view
+INFO:main:Sending f at (71,4) to connected peers
+DEBUG:CholerabNet:Sending 'f 71 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 71 4
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 71 4
+INFO:main:Writing f at (71,4) from 42023 to view
+INFO:main:Writing f at (71,4) from 42023 to view
+INFO:main:Sending l at (72,4) to connected peers
+DEBUG:CholerabNet:Sending 'l 72 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data l 72 4
+INFO:main:Writing l at (72,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data l 72 4
+INFO:main:Writing l at (72,4) from 42023 to view
+INFO:main:Sending j at (73,4) to connected peers
+DEBUG:CholerabNet:Sending 'j 73 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 73 4
+INFO:main:Writing j at (73,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 73 4
+INFO:main:Writing j at (73,4) from 42023 to view
+INFO:main:Sending a at (74,4) to connected peers
+DEBUG:CholerabNet:Sending 'a 74 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 74 4
+INFO:main:Writing a at (74,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 74 4
+INFO:main:Writing a at (74,4) from 42023 to view
+INFO:main:Sending l at (75,4) to connected peers
+DEBUG:CholerabNet:Sending 'l 75 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data l 75 4
+INFO:main:Writing l at (75,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data l 75 4
+INFO:main:Writing l at (75,4) from 42023 to view
+INFO:main:Sending ; at (76,4) to connected peers
+DEBUG:CholerabNet:Sending '; 76 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data ; 76 4
+INFO:main:Writing ; at (76,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data ; 76 4
+INFO:main:Writing ; at (76,4) from 42023 to view
+INFO:main:Sending j at (77,4) to connected peers
+DEBUG:CholerabNet:Sending 'j 77 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 77 4
+INFO:main:Writing j at (77,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 77 4
+INFO:main:Writing j at (77,4) from 42023 to view
+INFO:main:Sending a at (78,4) to connected peers
+DEBUG:CholerabNet:Sending 'a 78 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 78 4
+INFO:main:Writing a at (78,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 78 4
+INFO:main:Writing a at (78,4) from 42023 to view
+INFO:main:Sending s at (79,4) to connected peers
+DEBUG:CholerabNet:Sending 's 79 4' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 79 4
+INFO:main:Writing s at (79,4) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data s 79 4
+INFO:main:Writing s at (79,4) from 42023 to view
+INFO:main:Sending f at (0,5) to connected peers
+DEBUG:CholerabNet:Sending 'f 0 5' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 0 5
+INFO:main:Writing f at (0,5) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 0 5
+INFO:main:Writing f at (0,5) from 42023 to view
+INFO:main:Sending k at (1,5) to connected peers
+DEBUG:CholerabNet:Sending 'k 1 5' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data k 1 5
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data k 1 5
+INFO:main:Writing k at (1,5) from 42023 to view
+INFO:main:Writing k at (1,5) from 42023 to view
+INFO:main:Sending j at (2,5) to connected peers
+DEBUG:CholerabNet:Sending 'j 2 5' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 2 5
+INFO:main:Writing j at (2,5) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 2 5
+INFO:main:Writing j at (2,5) from 42023 to view
+INFO:main:Sending a at (3,5) to connected peers
+DEBUG:CholerabNet:Sending 'a 3 5' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 3 5
+INFO:main:Writing a at (3,5) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 3 5
+INFO:main:Writing a at (3,5) from 42023 to view
+INFO:main:Sending l at (4,5) to connected peers
+DEBUG:CholerabNet:Sending 'l 4 5' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data l 4 5
+INFO:main:Writing l at (4,5) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data l 4 5
+INFO:main:Writing l at (4,5) from 42023 to view
+INFO:main:Sending f at (5,5) to connected peers
+DEBUG:CholerabNet:Sending 'f 5 5' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 5 5
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data f 5 5
+INFO:main:Writing f at (5,5) from 42023 to view
+INFO:main:Writing f at (5,5) from 42023 to view
+INFO:main:Sending d at (6,5) to connected peers
+DEBUG:CholerabNet:Sending 'd 6 5' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 6 5
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data d 6 5
+INFO:main:Writing d at (6,5) from 42023 to view
+INFO:main:Writing d at (6,5) from 42023 to view
+INFO:main:Sending j at (7,5) to connected peers
+DEBUG:CholerabNet:Sending 'j 7 5' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 7 5
+INFO:main:Writing j at (7,5) from 42023 to view
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data j 7 5
+INFO:main:Writing j at (7,5) from 42023 to view
+INFO:main:Sending a at (8,5) to connected peers
+DEBUG:CholerabNet:Sending 'a 8 5' to 224.110.42.23:42023
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 8 5
+DEBUG:CholerabNet:Received Data from ('10.42.1.21', 42023), data a 8 5
+INFO:main:Writing a at (8,5) from 42023 to view
+INFO:main:Writing a at (8,5) from 42023 to view
