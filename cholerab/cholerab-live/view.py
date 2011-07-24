@@ -12,7 +12,7 @@ class CursesView(threading.Thread):
     adds a char at the current cursor position
     abstraction to the curses win.addch()
     """
-    try: self.win.addch(char,2)
+    try: self.win.addch(char)
     except: pass
     self.cholerab.send_char(self.x,self.y,chr(char))
   def stop(self):
