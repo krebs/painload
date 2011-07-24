@@ -14,9 +14,9 @@ class Cholerab:
     log.info("Sending %s at (%d,%d) to connected peers" %(char,x,y))
     self.transport.send_char(x,y,char)
 
-  def write_char(self,x,y,char,user):
-    log.info("Writing %s at (%d,%d) from %d to view" %(char,x,y,user))
-    self.view.write_char(x,y,char,user)
+  def write_char(self,x,y,char):
+    log.info("Writing %s at (%d,%d) to view" %(char,x,y))
+    self.view.write_char(x,y,char,user=2)
   def stop(self):
     self.view.stop()
     self.transport.stop()

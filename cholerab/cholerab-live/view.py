@@ -12,7 +12,7 @@ class CursesView(threading.Thread):
     adds a char at the current cursor position
     abstraction to the curses win.addch()
     """
-    try: self.win.addch(char)
+    try: self.win.addch(char,2)
     except: pass
     self.cholerab.send_char(self.x,self.y,chr(char))
   def stop(self):
@@ -49,7 +49,11 @@ class CursesView(threading.Thread):
         log.info('backspace pressed')
         self.x -=1; 
         self.x,self.y = try_move(self.x,self.y)
-        self.win.addch(' ')
+        self.addch(ord(' '))
+      elif c == ord('\n'): 
+        log.info('enter pressed')
+        self.y +=1; 
+        self.x,self.y = try_move(self.x,self.y)
       else : 
         self.addch(c) 
         self.x +=1
@@ -58,7 +62,7 @@ class CursesView(threading.Thread):
 
   def write_char(self,x,y,char,user=1):
     user = user % 3 + 1
-    self.win.addch(y,x,char)
+    self.win.addch(y,x,char,color_pair(user))
     self.win.move(self.y,self.x)
     self.refresh()
   def write_str(self,x,y,string,user=1):

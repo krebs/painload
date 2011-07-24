@@ -16,14 +16,15 @@ class CholerabMulicastNet(threading.Thread):
     self.initSocket()
   def send_char(self,x,y,char):
     """ translates given params into network message """
-    self.send_mc("%s %d %d" %(str(char),x,y))
+    self.send_mc("%s %d %d" %(str(ord(char)),x,y))
   def send_mc(self,arg):
     """ Sends message via multicast"""
-
     try:
       log.debug("Sending '%s' to %s:%d" % (arg,self.group,self.port)) 
+      self.ignore_next += 1# we need this to work together correctly with reused sockets
       self.s.sendto("%s" % arg,0,(self.group,self.port))
     except Exception ,e:
+      self.ignore_next -=1
       log.error("IN send_mc:%s"%str(e))
 
   def initSocket (self,rcv=1):
@@ -41,14 +42,19 @@ class CholerabMulicastNet(threading.Thread):
       self.s.setsockopt(IPPROTO_IP,IP_ADD_MEMBERSHIP,mreq)
   def run(self):
     self.running = 1
+    self.ignore_next = 0
     while self.running:
       # break if we do not want to loop on
       ready,output,exception = select([self.s],[],[],1) # try every second
       for r in ready:
         if r == self.s:
+          log.debug(str(self.ignore_next))
           (data,addr) = self.s.recvfrom(1024)
-          log.debug("Received Data from %s, data %s"%(str(addr),str(data)))
-          self.receive_net(addr,data)
+          if not self.ignore_next:
+            log.debug("Received Data from %s, data %s"%(str(addr),str(data)))
+            self.receive_net(addr,data)
+          else:
+            self.ignore_next -= 1 
 
   def send_stupid(self,addr):
     """ sends YOU ARE MADE OF STUPID to the right host """
@@ -58,18 +64,13 @@ class CholerabMulicastNet(threading.Thread):
   def receive_net(self,addr,data):
     """ resolves which nick sent the message
     TODO handle user resolution in mulicast """
-    def decode():
-      pass #TODO implement me
-
-    #FIXME TODO using port as host identification is probably just plain wrong, fix me for real net!
     try: 
       address,port = addr
-      user = port
       arr = str(data).split()
       char = arr[0]
       x = arr[1]
       y = arr[2]
-      self.cholerab.write_char(int(x),int(y),char,user)
+      self.cholerab.write_char(int(x),int(y),chr(int(char)))
     except Exception, e:
       log.error("Triggered YOU ARE MADE OF STUPID: %s" % str(e))
       self.send_stupid(addr)
