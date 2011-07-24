@@ -40,12 +40,13 @@ class CursesView(threading.Thread):
     while self.running:
       c = self.scr.getch() #get_char(self.scr) 
                            #TODO UTF8 here, get_wch not yet implemented
+      log.debug("Pressed : %d" % c)
       if c == KEY_LEFT : self.x -=1
       elif c == KEY_RIGHT : self.x +=1
       elif c == KEY_UP : self.y -=1
       elif c == KEY_DOWN : self.y +=1
       elif c == ord('q') : self.stop()
-      elif c == 127: 
+      elif c == 127 or c == KEY_BACKSPACE: 
         log.info('backspace pressed')
         self.x -=1; 
         self.x,self.y = try_move(self.x,self.y)
