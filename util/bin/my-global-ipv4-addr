@@ -1,0 +1,51 @@
+#! /bin/sh
+#
+# usage: my-global-ipv4-addr [URL]
+#
+# if URL is provided then fetch and parse it for IPv4 addrs
+# else try all known urls
+#
+if test $# = 1; then
+  has() { type "$1" 1>/dev/null 2>/dev/null; }
+  parse() {
+    sed -rn 's/.*((1?[0-9][0-9]|2[0-5][0-9])\.(1?[0-9][0-9]|2[0-5][0-9])\.(1?[0-9][0-9]|2[0-5][0-9])\.(1?[0-9][0-9]|2[0-5][0-9])).*/\1/p' | grep .
+  }
+  get () {
+    # TODO get random valid user agent
+    if has curl; then
+      curl -m 1 -A Mozilla -sS "$1" 2>/dev/null
+    elif has wget; then
+      wget -T 1 -U Mozilla -O "$1" 2>/dev/null
+    else
+      echo 'Error 1: You are made of stupid!' >&2
+      exit 23
+    fi
+  }
+
+  #addrs="`get "$1" | parse`"
+  #echo "$1:" $addrs >&2
+  #echo "$addrs"
+  get "$1" | parse
+else
+
+  vote() {
+    sort | uniq -c | sort -r -n
+  }
+  winner() {
+    head -n 1 | awk '{print$2}'
+  }
+  
+  grep -v ^# |
+  sed -n '1,$p' |
+  xargs -P 42 -n 1 "$0" | vote | winner
+fi<<EOF
+checkip.dyndns.com
+www.whatismyip.de
+www.eigene-ip.de
+whatismyip.org
+www.ipaddressworld.com
+http://ip-check.info/?lang=de
+http://www.ip-adress.com/what_is_my_ip/
+http://www.spyber.com/
+http://www.ipchicken.com/
+EOF
