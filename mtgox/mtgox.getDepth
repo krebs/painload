@@ -1,0 +1,3 @@
+#! /bin/sh
+# get mtgox market depth
+wget -qO- http://mtgox.com/code/data/getDepth.php
