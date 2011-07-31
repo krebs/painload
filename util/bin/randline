@@ -1,5 +1,2 @@
 #! /bin/sh
-# Author: tv,makefu
-# Info: for old version see commit b9924
-
 cat | shuf | head -n 1
