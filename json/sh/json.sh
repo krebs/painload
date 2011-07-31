@@ -22,7 +22,7 @@ json_to_sh() {
     s/\{/begin_json_object;/g; s/\}/end_json_object;/g
     s/("[^"]+"):/json_set_key \1;/g
     s/;("[^"]+")/;json_set string \1;/g
-    s/;([0-9]+)/;json_set number `echo -n \1 | base64`;/g
+    s/;([0-9.]+)/;json_set number `echo -n \1 | base64`;/g
     s/;;/;/g
     s/;/\n/g
     p
