@@ -1,0 +1,4 @@
+#! /bin/sh
+# get mtgox ticker data
+set -euf
+wget -qO- http://mtgox.com/code/data/ticker.php
