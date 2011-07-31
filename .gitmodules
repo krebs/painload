@@ -1,3 +1,15 @@
 [submodule "submodules/github/visionmedia/query"]
 	path = submodules/github/visionmedia/query
 	url = https://github.com/visionmedia/query
+[submodule "submodules/github/tmpvar/jsdom"]
+	path = submodules/github/tmpvar/jsdom
+	url = https://github.com/tmpvar/jsdom
+[submodule "submodules/github/mikeal/request"]
+	path = submodules/github/mikeal/request
+	url = https://github.com/mikeal/request.git
+[submodule "submodules/github/NV/cssom"]
+	path = submodules/github/NV/cssom
+	url = https://github.com/NV/CSSOM
+[submodule "submodules/github/tautologistics/node-htmlparser"]
+	path = submodules/github/tautologistics/node-htmlparser
+	url = https://github.com/tautologistics/node-htmlparser
