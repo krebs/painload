@@ -1,4 +1,4 @@
 #! /bin/sh
 # get mtgox ticker data
 set -euf
-curl -ksS http://mtgox.com/code/data/ticker.php
+curl -ksS https://mtgox.com/code/data/ticker.php
