@@ -1,0 +1,42 @@
+#! /bin/sh
+set -euf
+
+A=Mozilla
+url=http://translate.google.com/
+
+pwd="$(dirname "$(readlink -f "$0")")"
+
+for x in \
+    "$pwd/../../submodules/github/tmpvar" \
+    "$pwd/../../submodules/github/mikeal" \
+    "$pwd/../../submodules/github/NV" \
+    "$pwd/../../submodules/github/tautologistics" \
+; do
+  export NODE_PATH="`readlink -f "$x"`${NODE_PATH+:$NODE_PATH}"
+done
+
+# ensure query is ready
+(cd "$pwd/../.." && git submodule update --init)
+
+{
+  for arg; do echo "$arg"; done | sed -rn '
+    s/^--(.*=.*)/\1/p;t
+    s/.*/text="${text+$text }&"/p;t
+  '
+  cat<<EOF
+  query() {
+    node "$(readlink -f "$pwd/../../submodules/github/visionmedia/query")" "\$@"
+  }
+  curl -sS -A "\${A-Mozilla}"  \\
+      -d "js=\${js-n}"         \\
+      -d "prev=\${prev-_t}"    \\
+      -d "hl=\${hl-en}"        \\
+      -d "layout=\${layout-2}" \\
+      -d "eotf=\${eotf-1}"     \\
+      -d "sl=\${sl-auto}"      \\
+      -d "tl=\${tl-en}"        \\
+      -d "text=\$text"         \\
+      "$url" |
+    query '#result_box' text
+EOF
+} | sh
