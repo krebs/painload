@@ -7,10 +7,10 @@ DEV='eth0'
 MAC_NAMES='mac_names.lst'
 data = []
 ret = {}
-verb = False
+quiet=False
 
-if len(sys.argv) > 1 and sys.argv[1] == 'v':
-  verb = True
+if len(sys.argv) > 1 and sys.argv[1] == 'q':
+  quiet=True
 def get_own_addr():
   data = subprocess.Popen(['/sbin/ifconfig',DEV], 
       stdout=subprocess.PIPE).communicate()[0].replace('\n','')
@@ -46,7 +46,7 @@ except Exception as e:
 
 
 for p in ret:
-  if verb:
+  if not quiet:
     print p[0] + " => " + p[1]
   if p[1] in names:
     print names[p[1]]+ " is online"
