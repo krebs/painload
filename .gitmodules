@@ -1,0 +1,3 @@
+[submodule "submodules/github/visionmedia/query"]
+	path = submodules/github/visionmedia/query
+	url = https://github.com/visionmedia/query
