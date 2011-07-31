@@ -97,7 +97,7 @@ read_json() {
 
 # TODO print_json x, print_json x ca ... to print as json
 
-read_json x
+read_json "$1"
 echo ====
 set | egrep "^(typeof_)?$json_key[A-Za-z_]*="
 echo ====
