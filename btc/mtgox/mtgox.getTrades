@@ -1,3 +1,3 @@
 #! /bin/sh
 # get mtgox last trades
-wget -qO- http://mtgox.com/code/data/getTrades.php
+$ curl -ksS https://mtgox.com/code/data/getTrades.phl

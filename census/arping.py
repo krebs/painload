@@ -27,9 +27,7 @@ try:
     return []
 
 except Exception as e:
-  log.error("Cannot load arping functions!" + str(e))
-  def arpingy(iprange='',iface=''):
-    raise Exception ('arping not available')
+  raise Exception("Cannot load arping functions!" + str(e))
 
 
 if __name__ =='__main__':
