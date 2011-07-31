@@ -1,3 +1,2 @@
 #! /bin/sh
-
 cat | shuf | head -n 1
