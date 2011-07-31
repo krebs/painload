@@ -33,6 +33,8 @@ done
       -d "hl=\${hl-en}"        \\
       -d "layout=\${layout-2}" \\
       -d "eotf=\${eotf-1}"     \\
+      -d "ie=UTF-8"            \\
+      -d "oe=UTF-8"            \\
       -d "sl=\${sl-auto}"      \\
       -d "tl=\${tl-en}"        \\
       -d "text=\$text"         \\
