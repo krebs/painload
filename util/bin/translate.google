@@ -6,6 +6,15 @@ url=http://translate.google.com/
 
 pwd="$(dirname "$(readlink -f "$0")")"
 
+for x in \
+    "$pwd/../../submodules/github/tmpvar" \
+    "$pwd/../../submodules/github/mikeal" \
+    "$pwd/../../submodules/github/NV" \
+    "$pwd/../../submodules/github/tautologistics" \
+; do
+  export NODE_PATH="`readlink -f "$x"`${NODE_PATH+:$NODE_PATH}"
+done
+
 # ensure query is ready
 (cd "$pwd/../.." && git submodule update --init)
 
@@ -22,7 +31,6 @@ pwd="$(dirname "$(readlink -f "$0")")"
       -d "js=\${js-n}"         \\
       -d "prev=\${prev-_t}"    \\
       -d "hl=\${hl-en}"        \\
-      -d "ie=\${ie-UTF-8}"     \\
       -d "layout=\${layout-2}" \\
       -d "eotf=\${eotf-1}"     \\
       -d "sl=\${sl-auto}"      \\
