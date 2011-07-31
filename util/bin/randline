@@ -1,12 +1,3 @@
 #! /bin/sh
-#
-# choose a line randomly.
-#
-set -euf
 
-lines="`cat`"
-count=`echo "$lines" | wc -l`
-random=`od -An -t u8 -N 8 /dev/urandom`
-choice=`echo "$random % $count + 1" | bc`
-
-echo "$lines" | sed -n "${choice}p"
+cat | shuf | head -n 1
