@@ -1,5 +1,5 @@
-#! /bin/sh
-HERE=`readlink -f $(dirname $0)`
+#! /bin/bash
+HERE=$(dirname $(readlink -f $0))
 URLS=`cat $HERE/stream.db`
 
 function start() {
