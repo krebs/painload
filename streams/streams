@@ -1,7 +1,6 @@
 #! /bin/sh
-URLS="http://somafm.com/groovesalad.pls groove 
-http://deepmix.ru/deepmix128.pls deepmix
-http://streams.xenim.de/radiotux.ogg radiotux"
+HERE=`readlink -f $(dirname $0)`
+URLS=`cat $HERE/stream.db`
 
 function start() {
   # start the given stream von $1
