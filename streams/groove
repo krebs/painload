@@ -1,16 +1,1 @@
-#! /bin/bash
-set -euf
-STR=$PWD/streams
-case "$1" in
-  start)
-    $STR start groove
-  stop)
-    $STR stop
-    ;;
-  restart)
-    $STR restart groove
-    ;;
-  *)
-    echo "aidsballs"
-  ;;
-esac
+stream-starter
