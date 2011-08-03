@@ -19,7 +19,7 @@ function start() {
       exit 1
     fi
   done; then
-    echo "!! Stream not found!"
+    echo "!! Stream '$REQ' not found!"
     exit 1
   fi
 }
