@@ -13,6 +13,6 @@
 [submodule "submodules/github/tautologistics/node-htmlparser"]
 	path = submodules/github/tautologistics/node-htmlparser
 	url = https://github.com/tautologistics/node-htmlparser
-[submodule "submodules/zsh/zsh"]
-	path = submodules/zsh/zsh
+[submodule "submodules/sourceforge/zsh/zsh"]
+	path = submodules/sourceforge/zsh/zsh
 	url = git://zsh.git.sourceforge.net/gitroot/zsh/zsh
