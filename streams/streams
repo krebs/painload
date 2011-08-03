@@ -1,0 +1,76 @@
+#! /bin/sh
+URLS="http://somafm.com/groovesalad.pls groove 
+http://deepmix.ru/deepmix128.pls deepmix
+http://streams.xenim.de/radiotux.ogg radiotux"
+
+function start() {
+  # start the given stream von $1
+  REQ=$1
+  tmux start-server 
+  if status; then
+    echo "!! Stream already running!"
+    exit 1
+  fi
+
+  if echo "$URLS" | while read URL NAME; do
+    if [ "$NAME" = "$REQ" ];then
+      tmux new-session -s streams -n streams -d "exec mplayer $URL"  
+      echo "** $REQ started"
+      exit 1
+    fi
+  done; then
+    echo "!! Stream not found!"
+    exit 1
+  fi
+}
+function stop()
+{
+  #stops every stream
+  tmux kill-session -t streams || echo "!! killing session failed"
+}
+
+function status()
+{
+  tmux has-session -t streams 2>/dev/null
+  RET=$?
+  tmux list-sessions  2>/dev/null
+  return $RET
+}
+function list()
+{
+  echo "$URLS" | while read URL NAME ; do
+    echo "$NAME : $URL"
+  done
+
+}
+
+
+
+
+case "$1" in
+  start)
+    start $2
+    ;;
+  stop)
+    stop
+    ;;
+  restart)
+    stop
+    start $2
+    ;;
+  status)
+    if status; then
+      echo "** stream running"
+      exit 0
+    else
+      echo "** Stream not running"
+      exit 1
+    fi
+    ;;
+  list)
+    list
+    ;;
+  *)
+    echo "aidsballs"
+  ;;
+esac
