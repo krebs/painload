@@ -1,25 +1,14 @@
 #! /bin/bash
 set -euf
-CMD="exec mplayer http://somafm.com/groovesalad.pls"
-function start() {
-  stop
-  tmux start-server 
-  tmux new-session -d "$CMD" 
-}
-function stop()
-{
-  pkill mplayer || :
-}
-
+STR=$PWD/streams
 case "$1" in
   start)
-    start
+    $STR start groove
   stop)
-    stop
+    $STR stop
     ;;
   restart)
-    stop
-    start
+    $STR restart groove
     ;;
   *)
     echo "aidsballs"
