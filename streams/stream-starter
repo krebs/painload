@@ -1,0 +1,18 @@
+#! /bin/bash
+set -euf
+STR=$PWD/streams
+NAME=`basename $0`
+case "$1" in
+  start)
+    $STR start $NAME
+    ;;
+  stop)
+    $STR stop
+    ;;
+  restart)
+    $STR restart $NAME
+    ;;
+  *)
+    echo "aidsballs"
+  ;;
+esac
