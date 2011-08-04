@@ -2,6 +2,11 @@
 HERE=$(dirname $(readlink -f $0))
 URLS=`cat $HERE/stream.db`
 
+#if [ ! `id -u` -eq "0" ]; then
+#  echo "we are going sudo..."
+#  exec sudo "$0" "$@"
+#fi
+
 function start() {
   # start the given stream von $1
   REQ=$1
@@ -43,7 +48,23 @@ function list()
 
 }
 
-
+function shorthelp()
+{
+    echo "start|stop|restart|status|list [audio stream]"
+}
+function longhelp()
+{
+  B=`basename $0`
+  echo -n "Usage: $B "
+  shorthelp
+  echo "[32;1m get all available streams with [31;1;4m'/$B list'[m
+Examples: 
+  $B list
+  $B start groove
+  $B restart deepmix
+  $B status
+  $B stop"
+}
 
 
 case "$1" in
@@ -69,7 +90,10 @@ case "$1" in
   list)
     list
     ;;
+  (--help)
+    shorthelp
+    ;;
   *)
-    echo "aidsballs"
+    longhelp
   ;;
 esac
