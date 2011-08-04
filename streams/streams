@@ -1,6 +1,10 @@
 #! /bin/bash
 HERE=$(dirname $(readlink -f $0))
 URLS=`cat $HERE/stream.db`
+CURRENT_STREAM="no stream" #will be set when calling `status`
+if [ ! `id -u` -eq "0" ]; then
+  exec sudo "$0" "$@"
+fi
 
 #if [ ! `id -u` -eq "0" ]; then
 #  echo "we are going sudo..."
@@ -11,7 +15,7 @@ function start() {
   # start the given stream von $1
   REQ=$1
   tmux start-server 
-  if status; then
+  if status &>/dev/null ; then
     echo "!! Stream already running!"
     exit 1
   fi
@@ -30,15 +34,39 @@ function start() {
 function stop()
 {
   #stops every stream
-  tmux kill-session -t streams || echo "!! killing session failed"
+  if status &>/dev/null; then
+    status | cut -d\  -f2 | xargs printf "** killing %s\n"
+    tmux kill-session -t streams 2>/dev/null || echo "!! killing session failed" 
+  else
+    echo "** no stream running"; 
+    return 1
+  fi
 }
 
 function status()
 {
-  tmux has-session -t streams 2>/dev/null
-  RET=$?
-  tmux list-sessions  2>/dev/null
-  return $RET
+  #tmux has-session -t streams 2>/dev/null
+  #RET=$?
+
+  #tmux list-sessions  2>/dev/null
+  #return $RET
+  EV="`ps -ef | grep tmux`"
+  if echo "$URLS" | while read URL NAME; do
+    if [ "`echo "$EV" | grep \"$URL\"`" ] ;then
+      echo "** $NAME running ($URL)"
+      exit 1
+    fi
+  done; then
+    echo "** no stream running"
+    return 1
+  else
+    return 0
+  fi
+}
+function current()
+{
+
+  return 1
 }
 function list()
 {
@@ -74,18 +102,13 @@ case "$1" in
   stop)
     stop
     ;;
-  restart)
+  (switch|restart)
     stop
     start $2
     ;;
   status)
-    if status; then
-      echo "** stream running"
-      exit 0
-    else
-      echo "** Stream not running"
-      exit 1
-    fi
+    status
+    exit $?
     ;;
   list)
     list
