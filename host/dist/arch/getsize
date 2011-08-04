@@ -1,0 +1,17 @@
+#! /bin/sh
+set -euf
+sed -rn '
+  /^Name/{
+    s/^Name *: *(.*)$/\1/
+    T
+    h
+  }
+  /^Installed Size/{
+    s/^Installed Size *: *(.*)$/ \1/
+    T
+    H
+    x
+    s/\n//g
+    p
+  }
+' | awk '{print$2$3" "$1}' | sort -n
