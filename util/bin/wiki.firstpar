@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 set -euf
 
 A=Mozilla
@@ -15,9 +15,9 @@ for x in \
 done
 
 # ensure query is ready
-#(cd "$pwd/../.." && git submodule update --init)
+(cd "$pwd/../.." && git submodule update --init)
 
 query() {
   node "$(readlink -f "$pwd/../../submodules/github/visionmedia/query")" "$@"
 }
-curl -sS -A "\${A-Mozilla}" "$1" | query 'p' 'first' | w3m -T text/html -dump
+curl -b redirect=seen -L -e http://de.wikipedia.org/wiki/$RANDOM -sS -A "\${A-Mozilla}" "$1" | query 'p' 'first'  |w3m -T text/html -dump| cut -c -750
