@@ -1,5 +1,6 @@
 .PHONY: infect
-INSTALL_DIR = /root/bin
+INSTALL_DIR = /root/bin/
 infect:
 		mkdir -p /tmp/kachelmann/
-		cp kachelmann ${INSTALL_DIR}
+		cp conditions  ${INSTALL_DIR}
+		chmod +x ${INSTALL_DIR}conditions
