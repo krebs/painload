@@ -29,7 +29,7 @@ done
     node "$(readlink -f "$pwd/../../submodules/github/visionmedia/query")" "\$@"
   }
   curl -sS -A "\${A-Mozilla}"  \\
-      -d "voice=\${voice-klara}" \\
+      -d "voice=\${voice-`basename "$0"`}" \\
       -d "txt=\$text" \\
       -d "downloadButton=DOWNLOAD" \\
       "$url" | 
