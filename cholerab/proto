@@ -1,0 +1,39 @@
+
+
+
+- The Good One
+  - Krebslogo
+    - /etc/issue
+    - sshd_config banner
+  - $EDITOR
+    - rm nano 
+    - install vim
+      - add the good parts into /etc/vimrc
+        - syntax highlighting
+  - install, try harder(!!)
+  - enterprise retiolum
+  - append /krebs/bin to PATH
+    - activated modules have symlinks from /krebs/bin to /krebs/...
+  - tell about krebs candidate modules
+  - krebs suggest (crowd sourcing)
+  - async krebs notifications in focus terminal
+    - krebs shell w/ rest interface
+  - cholerab live
+    - multi user combat editor
+    - peer to peer [multiunicast]
+    - origin: 1,1,0
+
+    - Protocol
+      - Space-separated vector of ascii-encoded unicode code-points
+      - otherwise you are made of stupid and you deserve to get punched from
+        anybody, anyoften with the Error punch "You are made of stupid!" <1>
+
+    - move                    meaning
+      - <>                    Taunt
+      - <0 char dim*>         Character punches
+      - <1>                   ∃rror punch
+      - <2 101 1>             Status punch; Attack; punch-how?
+      - <2 103 1 addrs+>      Status punch; Counter; i-punch addr...
+      - <3 0 addrs+>          Notification punch; these-are-fuckers addrs...
+      - <3 1 addrs+>          Notification punch; the-good-ones addrs...
+      - <23 addr reason...>   Finishing move; punch addr b/c of reason...

@@ -1,0 +1,6 @@
+
+view.py: contains view classes for cholerab
+cholerab.py: main file
+
+start with :
+python cholerab.py
