@@ -1,0 +1,8 @@
+Makefile:
+  update:
+    when hosts folder is not yet a git repository, check out
+    http://github.com/krebscode/hosts.git (no https, because this fails on old systems)
+
+Non-Root Supernodes: (makefu)
+  check out the DUP!step problem on krebsbob.no.de and krebs.no.de,
+  fix it for more profit!
