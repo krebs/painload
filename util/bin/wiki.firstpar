@@ -1,0 +1,23 @@
+#! /bin/sh
+set -euf
+
+A=Mozilla
+
+pwd="$(dirname "$(readlink -f "$0")")"
+
+for x in \
+    "$pwd/../../submodules/github/tmpvar" \
+    "$pwd/../../submodules/github/mikeal" \
+    "$pwd/../../submodules/github/NV" \
+    "$pwd/../../submodules/github/tautologistics" \
+; do
+  export NODE_PATH="`readlink -f "$x"`${NODE_PATH+:$NODE_PATH}"
+done
+
+# ensure query is ready
+#(cd "$pwd/../.." && git submodule update --init)
+
+query() {
+  node "$(readlink -f "$pwd/../../submodules/github/visionmedia/query")" "$@"
+}
+curl -sS -A "\${A-Mozilla}" "$1" | query 'p' 'first' | w3m -T text/html -dump
