@@ -1,0 +1,5 @@
+Krebs Modules Wishlist
+
+Temperature Threshold Sensor:
+  send out alarm via espeak or mail or irc or usb rocket launcher to open
+  the window when the temperature is too high
