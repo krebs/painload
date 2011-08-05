@@ -1,0 +1,72 @@
+
+~/p/krebscode/painload/infest/home
+  aggressive
+  cooperative
+  -- currently it is aggressive and stupid
+
+~/p/krebscode/painload/infest/etc
+  aggressive
+  cooperative
+  -- currently it is aggressive and stupid
+
+
+- node install script
+
+
+===
+# this is the current installation process [by example]
+<code>
+  ssh root@pornocauster -p 2222
+  git clone https://github.com/krebscode/painload.git /krebs
+  cd /krebs
+  apt-get install --yes make
+  make infest
+  shutdown -r now
+  
+  ssh -i .ssh/krebs/also.id_rsa krebs@pornocauster -p 2222
+</code>
+
+=== 
+
+- conflicting ~/.profile
+- morse: beep not found wegen rc.local
+- /etc/.vimrc legacy compat
+
+
+~/p/krebscode/painload/node/Makefile
+  ./configure --prefix=$HOME
+  and ensure that the resulting bin is in $PATH
+  which node or build
+
+
+//krebscode/painload/retiolum/scripts/tinc_setup/install.sh or something
+  should be called by painload/infest
+  and should be enterprise enough to be infested multiple times
+  -- please see how infest/bin/make-patch is generating a patch, that gets
+     applied by Makefile
+
+//krebscode/painload/noise
+  - should be infested host-specifically
+    - i.e. to start automatically at KREBS
+
+//krebscode/painload/noise
+  - NOISE-STREAMS-MODULE
+    - should have a module to allow switching of the streams
+    - should have a module to allow managing of streams
+    - is this mergable with noise/modules/stream [by chris]
+      - or can we replace noise/modules/stream
+
+//krebscode/painload/streams
+  - should be infested host-specifically
+    - i.e. to start automatically at KREBS
+    - the last stream should be playbacked
+    - should be controlable by noise [see NOISE-STREAM-MODULE]
+
+
+## merge conflicts below
+view.py: contains view classes for cholerab
+cholerab.py: main file
+
+start with :
+python cholerab.py
+
