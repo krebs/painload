@@ -5,6 +5,10 @@ A=Mozilla
 baseURL="http://192.20.225.36"
 url="$baseURL/tts/cgi-bin/nph-talk"
 
+if test -h "$0"; then
+  voice="${voice-"`basename "$0"`"}"
+fi
+
 pwd="$(dirname "$(readlink -f "$0")")"
 
 for x in \
