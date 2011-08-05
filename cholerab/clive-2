@@ -1,0 +1,45 @@
+
+# Krebs Cholerab Live Instruction Set Mark 2
+
+## Taunt
+
+    taunt : <anything>
+
+
+## Character Punch
+
+    terminal character punch : <row> <column> <utf8-character>
+
+
+# Envelope
+
+Every Krebs Cholerab Live Instruction is issued as an HTTP-JSON-RPC
+request/response as this section demonstrates.
+
+## Request
+
+    POST /namespace HTTP/1.1
+    Host: krebs:1337
+    Content-Type: application/vnd.krebs.clive-2+json
+    
+    { "method": "taunt", "params": "lol", "id": 42 }
+
+
+## Positive Response
+
+    HTTP/1.1 200 OK
+    
+    { "result": true, "id": 42 }
+
+
+## Negative Response
+Negative responses should reflect the JSON-RPC error as hard as possible.
+
+    HTTP/1.1 400 You are made of stupid!
+    
+    { "error": {
+        "code": 1,
+        "message": "You are made of stupid!"
+      },
+      "id": 42
+    }
