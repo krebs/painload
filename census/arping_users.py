@@ -46,9 +46,9 @@ def main():
   def arping_helper(dic):
     return arpingy(**dic)
 
-  for first in range(1,3):
-    for second in range(255):
-      data.append({'iprange':'10.42.'+str(first)+'.'+str(second),'iface':DEV})
+for first in range(1,4):
+  for second in range(256):
+    data.append({'iprange':'10.42.'+str(first)+'.'+str(second),'iface':DEV})
 
   try:
     p = Pool(20)
