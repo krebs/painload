@@ -8,10 +8,19 @@ fi
 
 if=eth2
 
+rc() {
+  for x in /etc/init.d/$1 /etc/rc.d/$1; do
+    if test -x $x; then
+      $x restart
+      break
+    fi
+  done
+}
+
 if ! ifconfig $if | grep -q 'inet addr'; then
   beep -l 50 -f 2500; ifconfig $if 0.0.0.0 down || :
   beep -l 50 -f 2500; ifconfig $if 23.0.0.1/8 up || :
-  beep -l 50 -f 2500; /etc/init.d/dnsmasq restart
+  beep -l 50 -f 2500; rc dnsmasq restart
   beep -l 50 -f 2500; iptables -t nat -A POSTROUTING -o wlan0 -j MASQUERADE
   beep -l 50 -f 2500; iptables -t nat -A POSTROUTING -o eth2 -j MASQUERADE
   if ifconfig $if | grep -q 'inet addr'; then
