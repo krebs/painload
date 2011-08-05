@@ -50,7 +50,7 @@ function status()
 
   #tmux list-sessions  2>/dev/null
   #return $RET
-  EV="`ps -ef | grep tmux`"
+  EV="`ps -ef | grep mplayer`"
   if echo "$URLS" | while read URL NAME; do
     if [ "`echo "$EV" | grep \"$URL\"`" ] ;then
       echo "** $NAME running ($URL)"

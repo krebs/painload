@@ -1,0 +1,2 @@
+#!/bin/sh
+./wiki.firstpar http://de.m.wikipedia.org/wiki/::Random | xargs ./naturalvoices.att 
