@@ -61,3 +61,12 @@
     - i.e. to start automatically at KREBS
     - the last stream should be playbacked
     - should be controlable by noise [see NOISE-STREAM-MODULE]
+
+
+## merge conflicts below
+view.py: contains view classes for cholerab
+cholerab.py: main file
+
+start with :
+python cholerab.py
+
