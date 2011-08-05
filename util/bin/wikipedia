@@ -1,0 +1,5 @@
+#! /bin/sh
+set -euf
+for w in "$@"; do
+  dig +short txt "$w.wp.dg.cx"
+done
