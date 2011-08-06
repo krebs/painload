@@ -1,0 +1,48 @@
+#! /bin/sh
+#
+# usage: git-clone-into repository directory
+#
+set -euf
+
+tempdir() {
+  set -- `tempnam $1`
+  mkdir $1
+  echo $1
+}
+
+## [prefix] -> tempnam
+tempnam() {
+  until set -- $1 ${1-}`candnam` && ! test -e $2; do :; done
+  echo $2
+}
+
+candnam() {
+  uuidgen 2>/dev/null || date +%s%N
+}
+
+
+
+  tmp_remote=`candnam`
+  tmp_branch=`candnam`
+
+  subdir=$2
+  if test -e $subdir; then
+    echo 'You are made of stupid!' >&2
+    exit 23
+  fi
+  tmpdir=`tempdir /tmp/tempdir-`
+  #trap "test -d $tmpdir && rm -vfR $tmpdir" EXIT
+  trap "test -d $tmpdir && rm -fR $tmpdir" EXIT
+  repository="${1-$repository}"
+  git clone "$repository" $tmpdir
+  (cd $tmpdir
+  subdir="$subdir" git filter-branch --tree-filter '
+    if ! test -d $subdir; then
+      mkdir -p $subdir
+      git ls-tree -z --name-only $GIT_COMMIT | xargs -I. --null mv . $subdir
+    fi
+  '
+  git checkout -b $tmp_branch)
+  git remote add $tmp_remote $tmpdir
+  git fetch $tmp_remote
+  git merge $tmp_remote/$tmp_branch # TODO configurable branch
