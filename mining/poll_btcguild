@@ -1,0 +1,2 @@
+API_KEY=
+curl http://www.btcguild.com/api.php\?api_key\=${API_KEY} | python -mjson.tool
