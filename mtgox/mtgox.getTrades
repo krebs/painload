@@ -1,0 +1,3 @@
+#! /bin/sh
+# get mtgox last trades
+$ curl -ksS https://mtgox.com/code/data/getTrades.phl
