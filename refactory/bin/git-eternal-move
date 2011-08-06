@@ -1,6 +1,6 @@
 #! /bin/sh
 #
-# git-eternal-move FROM TO
+# git-eternal-move FROM TO-DIRECTORY
 #
 set -euf
 if test $# -ne 2; then
@@ -10,5 +10,6 @@ fi
 exec git filter-branch --tree-filter "
   set -euf
   if test -e '$1'; then
+    mkdir -p '$2'
     mv '$1' '$2'
   fi"
