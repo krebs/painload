@@ -1,6 +1,0 @@
-[Desktop Entry]
-Name=LXDE Autostart
-Exec=/home/user/startup.sh
-Terminal=true
-Type=Application
-Categories=Configuration
