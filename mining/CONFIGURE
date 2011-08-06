@@ -1,0 +1,8 @@
+How to Configure
+===============
+
+1. change the mining-url in ~/startup.sh
+2. in KDE - 'AMDOverdriveCtrl - configure profile
+3. in KDE-Autostart - activate the startup script
+2. sudo /etc/init.d/gdm restart
+
