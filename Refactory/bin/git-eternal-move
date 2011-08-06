@@ -1,0 +1,11 @@
+#! /bin/sh
+#
+# git-eternal-move FROM TO
+#
+set -euf
+git filter-branch --tree-filter "
+  set -euf
+  if test -e '$1'; then
+    mkdir -p '`dirname "$2"`'
+    mv '$1' '$2'
+  fi"
