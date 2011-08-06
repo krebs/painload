@@ -1,3 +1,0 @@
-#! /bin/sh
-# get mtgox market depth
-$ curl -ksS https://mtgox.com/code/data/getDepth.php
