@@ -22,7 +22,7 @@ function start() {
 
   if echo "$URLS" | while read URL NAME; do
     if [ "$NAME" = "$REQ" ];then
-      tmux new-session -s streams -n streams -d "exec mplayer $URL"  
+      tmux new-session -s streams -n streams -d "while sleep 1;do mplayer $URL;done"  
       echo "** $REQ started"
       exit 1
     fi
