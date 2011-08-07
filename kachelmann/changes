@@ -1,0 +1,31 @@
+#!/usr/bin/perl
+use XML::Simple;
+my $xml = new XML::Simple;
+my $data_new = undef;
+my $data_old = undef;
+
+
+&startup;
+while (true) {
+    if($status_new != $status_old){
+        system("espeak -v de \"Das Wetter hat sich von $status_old in $status_new verändert\"");
+    }
+    sleep(300);
+    &get_status;
+}
+
+
+# The startup sub is used to get the first weather state. it should only be used on startup. sorry.
+sub startup(){
+    system("w3m -dump \"http://www.google.com/ig/api?weather=70327-stuttgart&hl=de\" > /tmp/kachelmann/weather.xml");
+    $data_new = $xml->XMLin("/tmp/kachelmann/weather.xml");
+    $data_new = $data_new->{weather}->{current_conditions}->{condition}->{data};
+}
+
+# The get_status sub moves the current data to $data_old and then gets a new one from Googles API
+sub get_status(){
+    system("w3m -dump \"http://www.google.com/ig/api?weather=70327-stuttgart&hl=de\" > /tmp/kachelmann/weather.xml");
+    $data_old = $data_new;
+    $data_new = $xml->XMLin("/tmp/kachelmann/weather.xml");
+    $data_new = $data_new->{weather}->{current_conditions}->{condition}->{data};
+}
