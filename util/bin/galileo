@@ -1,2 +1,3 @@
 #!/bin/sh
-./wiki.firstpar http://de.m.wikipedia.org/wiki/::Random | xargs ./naturalvoices.att 
+export voice=klara
+./wiki.firstpar http://de.m.wikipedia.org/wiki/::Random | xargs  ./naturalvoices.att 
