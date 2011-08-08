@@ -57,6 +57,7 @@ def write_node(k,v):
   node +="\""
   if v['external-ip'] == "MYSELF":
     node += ",fillcolor=steelblue1"
+  node +=",group="+v['external-ip'].replace(".","")+""
   node += "]"
   print node
 
