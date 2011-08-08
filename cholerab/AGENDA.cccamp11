@@ -1,0 +1,42 @@
+
+- krebs
+  - krebs.no.de/hosts.tar automatic via github POST hook
+    - same for supernode updates [vs. cron]
+    - krebscode/painload/supernode/foo 
+
+  - overall
+    - PATH-able bin/
+
+  - natural voices
+    - unify with translate.google
+      - differences:
+        - url
+        - form data
+        - query args
+    - make-based installer for voice-symlinks
+
+  - ttycnser
+    - server component
+      - JSON-RPC [spec and implementation]
+
+  - krebs rebootstrapping
+    - curl painload.retiolum | sh
+      [- git clone https://github.com/kreingbscode/painload /krebs]
+      [- /krebs/boot]
+
+  - Enterprisename for serious business
+    - kcpl [pronounce: krepel]
+
+  - p wie punani "hard-install"
+
+  - gitolite module
+    - ein richtiges /krebs sollte alle peers als remotes haben, sodass
+      man csay makefu: git pull also/blah etc. machen kann.
+
+  - git hooks
+    - Error 1: "Keyword-ratio below 9k"
+      - keyword file
+
+  - default configuration for $EDITOR & co.
+
+  - Refactort git-eternal-move: use find instead of mv
