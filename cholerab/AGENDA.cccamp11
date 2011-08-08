@@ -40,3 +40,12 @@
   - default configuration for $EDITOR & co.
 
   - Refactort git-eternal-move: use find instead of mv
+
+  - NetworkEngineer
+    - kill and replace NetworkManager
+    - mimic NetworkManager but discard all inputs and do the right thing
+      - stay connected to retiolum by any means necessary
+    - keywords:
+      - rpc: irc, cholerab, espeak / beep
+      - iptables
+
