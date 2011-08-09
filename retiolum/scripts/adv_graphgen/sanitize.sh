@@ -1,7 +1,7 @@
 GRAPH_SETTER1=dot
 GRAPH_SETTER2=circo
-GRAPH_SETTER3=neato
-GRAPH_SETTER3=sfdp
+GRAPH_SETTER3='neato -Goverlap=prism '
+GRAPH_SETTER4=sfdp
 LOG_FILE=/var/log/everything.log
 OPENER=/bin/true
 
@@ -14,4 +14,4 @@ $GRAPH_SETTER2 -Tpng -o $1retiolum_2.png retiolum.dot
 $GRAPH_SETTER3 -Tpng -o $1retiolum_3.png retiolum.dot
 $GRAPH_SETTER4 -Tpng -o $1retiolum_4.png retiolum.dot
 $OPENER retiolum_1.png &>/dev/null 
-#rm retiolum.dot
+rm retiolum.dot
