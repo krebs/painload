@@ -23,11 +23,41 @@
     - curl painload.retiolum | sh
       [- git clone https://github.com/kreingbscode/painload /krebs]
       [- /krebs/boot]
+      (makefu)
+    - server, der ein shellscript [wenn User-Agent: curl/wget ist] ausgibt] (tv)
+    - painload/{component}/krebs.manifest
+      - welche kategorie: gutartig, boesartig, optional
+      - interactive-foo, der am Anfang durchgespielt werden muss
+        - danach darf er nciht mehr sucken, und muss das richtige tun
+      - initiale config file via $EDITOR
+
+  - gutartiger Krebs
+    - retiolum
+      - tinc Installation (via punani)
+      - tinc Konfiguration
+        - update-hosts magic
+        - keys und shit
+        - autostart
+      - Kooperativer NetworkEngineer (rtjure)
+      - retiolumd refactoren
+        - wenn lokale, direkte Verbindung moeglich, dann die nutzen
+    - [cholerab]
+    - CI
+      - issue, issue.tail [etc?] [bku der alten issue]
+      - ftp MOTD
+    - append to PATH
+    - morse (makefu)
+      - beep installieren und shit [spaeter kuebelwagen, wenn beep defekt]
+
+  [- boesartiger Krebs]
+    - public keys installieren
+      - public keys updaten [via github]
 
   - Enterprisename for serious business
     - kcpl [pronounce: krepel]
 
   - p wie punani "hard-install"
+    - merge painload/host
 
   - gitolite module
     - ein richtiges /krebs sollte alle peers als remotes haben, sodass
@@ -49,3 +79,4 @@
       - rpc: irc, cholerab, espeak / beep
       - iptables
 
+  - thinkabout: util/bin vs {component-like-webcams}
