@@ -4,7 +4,7 @@
 #and
 #<IfModule mod_exec.c>
 #    ExecEngine on
-#    ExecOnConnect "/krebs/filebitch/connect_narf.pl"
+#    ExecOnExit "/krebs/filebitch/disconnect_narf.pl"
 #</IfModule>
 
 #$ip = system("tail -n 1 /var/log/proftpd/ftp_auth.log");
