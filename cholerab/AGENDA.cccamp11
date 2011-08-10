@@ -45,6 +45,7 @@
     - CI
       - issue, issue.tail [etc?] [bku der alten issue]
       - ftp MOTD
+      - sound theme [see beeps below]
     - append to PATH
     - morse (makefu)
       - beep installieren und shit [spaeter kuebelwagen, wenn beep defekt]
@@ -80,3 +81,6 @@
       - iptables
 
   - thinkabout: util/bin vs {component-like-webcams}
+
+  - beeps
+    - on ssh activity
