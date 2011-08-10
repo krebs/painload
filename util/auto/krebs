@@ -1,0 +1,59 @@
+#! /bin/sh
+# krebs autoinstall script
+set -euf
+# see punanin docs
+
+function bailout()
+{
+  exit 1
+}
+function punani()
+{
+  return 0
+}
+
+function generate_config()
+{
+  # $1 - 
+  [ -e $1 ] && exit 0
+  cat >$1 <<EOF
+#Uncomment this line to start ,otherwise the installer will bail out
+#I_AM_WILLING_TO_LET_KREBS_TAKE_OVER_MY_SYSTEM_MY_LIFE_AND_ALL_OF_MY_CHILDREN="Totally sure"
+
+# 1 - will do you no harm. this is what you want
+VERKREBSUNGSLEVEL=kindergarten 
+# 2 - will verkrebs your computer, hard
+#VERKREBSUNGSLEVEL=aggressiv
+# 3 - will definitly fuck up something of value, be aware
+#VERKREBSUNGSLEVEL=auftoeteneingestellt
+
+#Optional Modules to activate
+# Choose from :
+# $(find  $(dirname $1) -type d -mindepth 1 -maxdepth 1)
+# OPTIONAL_MODULES=""
+EOF
+  
+}
+
+function edit_config()
+{
+  # $1 - krebsdir
+  CONF=$1/krebs_config
+  generate_config $CONF
+  $EDITOR $CONF
+
+  source $CONF
+  if [ ! -n "${I_AM_WILLING_TO_LET_KREBS_TAKE_OVER_MY_SYSTEM_MY_LIFE_AND_ALL_OF_MY_CHILDREN+x}" ];
+  then
+    printf "So you are not willing to give krebs all the necessary rights\n"
+    printf "Cannot continue...\n"
+    rm $CONF
+    printf "I hate you by the way..."
+    bailout
+}
+punani -Ei git make
+KREBSDIR=${1-/krebs}
+[ ! -e $KREBSDIR ] && git clone https://github.com/krebscode/painload ${KREBSDIR}|| printf "painload already deployed\n"
+
+edit_config ${KREBSDIR}
+make -C ${KREBSDIR}
