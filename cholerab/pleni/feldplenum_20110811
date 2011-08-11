@@ -1,0 +1,115 @@
+Feldplenum CCCamp
+================
+===== Beginn: 2011-08-11T15:20:00 =====
+
+0) Meet And Greet
+--------
+
+tv: hat alle seine computer kaputt gehen sehen in einer woche, schraubt grad an seinem laptop
+kh-2030: Hat seinen server lauffaehig gemacht
+lassulus: Hat seine r0ket zerstoert, kann sie nicht mehr richtig flashen
+sascha: hat die voyager gesteuert, wuerde gerne mal opium konsumieren (aber gibt es natuerlich nicht auf dem camp)
+pfleidi: hat gelernt auf der autobahn zu fahren, ist dabei seine r0ket kaputt zu machen, hat geschlafen.
+Felix: ist seit dem fuehrerschein wieder das erste mal auto gefahren, spielt mit mesh networking von r0ket rum.
+MrPi: Hat wasser umgeworfen und geburtstag gefeiert, zieht sich alle Server
+Ronny: Nach berlin gefahren, seine nichte erschreckt
+Ulrich: Ich war auf n camp. Strom gefixxt >9000 mal in regen und sturm
+Phillip: Ist neu dabei! Hat geschafft seine rakete kaputt zu machen.
+Moritz: Camp gefahren, hat versucht mit r0ket kram gemacht mit licht und so, Hat felix ueberredet die voyager zu fliegen
+Olli: Moechte seinen Mitgliedsantrag unterschreiben. *Applaus*.
+Marco: Campen, hatte urlaub in bremen.
+Momo: hat sich gestern mit dan kaminsky besoffen, ist bei CCC filmcrew/orga.
+
+Wanderpokal
+-----------
+auf dem Krebs drauf
+
+Lessons learned
+--------------
+
+tv: wasser soll nicht im zelt unbeaufsichtigt gelassen werden
+    voyager ist super angenehm zu reisen
+    auf github ist kein verlass - dezentralisieren!
+    jeder kann ein plenum machen
+    beepen ist cool - mehr beepen
+    Enterprise Rebuild belebt computer wieder
+    Niederlaender sind die Masters of Camping
+    cherry coke n ganzen kasten geht garnicht pfleidi: apfelsaft ist sozial besser akzeptiert
+    plastikweinglaeser sind super gut - mehr plastikglaeser
+    Passwoerter muessen auch nach der aenderung gebackupt werden
+    Mailfilter sollten nicht nur den spam in seperate mails filtern sondern auch die echten mails einsortieren
+pfleidi: Camptag nummer 1 - Zelt wird zur opiatenhoehle
+         Ulrich ist der master elektriker
+         Fucking riesige volvik wasserkanister haben keinen abschraubbaren verschluss
+         im bundeswehrzelt ist alles schwarz rot. 
+         dixiklo benutzen im licht einer r0ket gestaltet sich als schwierig
+         haare toeten vor camp = maximaler gewinn
+kh-2030: mehr beschluesse fuer den gewinn
+    stuttgart braucht mehr hackerspaces
+    lessons learned ist fuer den gewinn
+lassulus: Gleiches Camp naechstes jahr in Stuttgart, tv: im park einfach campen weil da sind eh grad.
+sascha: You cannot bring enough stuff to the camp
+felix: grosses armeezelt haelt den staerksten wind und regen aus -> gewinn
+
+Agenda
+------
+===== 15:45:00 Essenspause ======
+===== 16:00:00 Pause Beendet ======
+===== 16:06:00  JOIN Ronny,Ulrich,MrPI, =====
+===== 16:17:00 Pause um T-Shirts zu kaufen ====
+===== 17:55:00 Pause Beendet====
+
+1) Server-Lan Party (pfleidi)
+pfleidi: erster punkt sharing is caring, zweiter punkt social backup
+         jeder bringt seinen fileserver mit und stellt daten ueber $protokolle zur verfuegung
+         gewonnen mit meisten ausgehenden traffic
+         gewinner ist "sharing koenig" (Scheren-Koenig) - Preis tbd
+         Kuemmerer: Pfleidi
+         Infrasturktur: switches,netzwerkkabel
+         Datum: tbd - ein wochenende
+         Soll sowas gemacht werden?
+******   Beschluss durch Konsens - Ja.
+         TODO: SNMP reset ports und bits zaehlen
+1.1) Capture the Flag (kh-2030)
+         Eigene Kiste muss beschuetzt werden, Es werden von der jury verschiedene ports abgefragt, wenn port nicht erreichbar ist gibt es minuspunkte. https://www.swisscyberstorm.com/program/wargames.html
+         Details tbd.
+         Kuemmerer: kh-2030
+         Sollen wir sowas machen?
+*****    Beschluss durch konsens - wir wollen sowas machen
+2) Optionsraeume 
+         Muell rauswerfen und/oder sinnvoll nutzen
+         Naechsten Sonntag (21.08.2011) ist optionsraeumeausraeumrage
+         Sortieren in wichtig und nicht wichtig,
+         vor die optionsraeume ausgeraeumt und in den gang geraeumt.
+******   Beschluss durch Konsens - JA,
+         naechsten Sonntag ist der Rage, alle die dort sind muessen mitmachen
+3) Transparenz der Finanzen (tv)
+         Wir haben keinen Cash-Master.
+         wir nehmen geld ein und geben geld aus. Es waere cool welche finanzen da sind.
+         Am besten real-time auf ner wand.
+         Wir muessen eh sagen wo unser geld her kommt und wo es hin kommt.
+         Es gibt zur zeit niemand. Ggf muss es outgesourced werden, leute im shack sollen mithelfen.
+         Ronny wuerde auch mithelfen.
+         Momo: es suckt die beitraege zu erhoehen und nicht mal die alten beitraege einziehen
+         Es muss gezeigt werden 
+******   AP Ronny,kh-2030,sascha: wir wollen hinkriegen, dass jeder die buchhaltung sehen kann.
+         tv: gegen willkuerliche erhoehung ohne zu wissen was der aktuelle stand ist.
+         mrpi: pruefung ob berechtigt fuer ermaessigter beitrag. momo: ein wenig grundvertrauen ist wichtig, nicht notwendig.
+******   tv,mrpi : wuerde sich bereit erklaeren zettel in digitale form umzuwandeln
+         Beschluss: Implementierung vollstaendige moegliche Tranzparenz (unter einhaltung des datenschutzes)
+
+4) Keymember-liste (ronny):
+        findet es scheisse dass leute die nicht zahlen keymember sind.
+        nur mitglieder die 3 monate gezahlt haben sind berechtigt fuer schluessel.
+5) Vereinsapp (momo)
+        Konten ob man bezahlt hat, jeder soll problemlos an seine mitglieds-id kommen.
+        Planung hier im Camp, brainstorming.
+        Definition, was wann passieren soll. 
+        Platform tbd.vorstellung im naechsten plenum.
+        Dokumente Oeffentlich http://piratepad.net/Bwb7nZ4k6x
+
+OT: Pfleidi findet Pr0n im internet.
+OT: Momo bittet darum, dass das plenum ordentlich von statten geht und nicht in 19 sekunden durchgefuehrt wird.
+
+
+==== Ende Plenum 18:42 ====
