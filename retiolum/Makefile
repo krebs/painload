@@ -1,22 +1,27 @@
-.phony: update it all so install
+RETIOLUM_HOSTS = /etc/tinc/retiolum/hosts
 
-all: 
-	cat Makefile
+.PHONY: update it all so install
+
+all: update links 
+
+links: 
+	ln -sf $$PWD/bin/update_tinc_hosts ../bin/update_tinc_hosts
+	ln -sf $$PWD/bin/fillxx ../bin/fillxx
 
 it: so
 so: it
 
-/etc/tinc/retiolum/hosts:
-	cd $(dir $@) && git clone https://github.com/krebscode/hosts
+hosts/:
+	@echo "Writing new copy of hosts"
+	[ -e $(RETIOLUM_HOSTS) ] || mkdir -p $(RETIOLUM_HOSTS)
+	cp -r hosts/* $(RETIOLUM_HOSTS)/
 
-#TODO conflicting 
-update: /etc/tinc/retiolum/hosts
-	cd $< && git pull
 
-install: 
+install: autohosts
+	@# will not run automatically
 	scripts/tinc_setup/install.sh
 
-autohosts: 
+update: hosts/
 	@echo creating Magic
 	bin/update_tinc_hosts "create magic" || true
 	@echo adding hosts
