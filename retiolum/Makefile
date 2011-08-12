@@ -17,7 +17,7 @@ hosts/:
 	cp -r hosts/* $(RETIOLUM_HOSTS)/
 
 
-install: autohosts
+install: update
 	@# will not run automatically
 	scripts/tinc_setup/install.sh
 
