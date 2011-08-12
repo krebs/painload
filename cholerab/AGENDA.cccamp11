@@ -5,7 +5,8 @@
     - krebscode/painload/supernode/foo 
 
   - overall
-    - PATH-able bin/
+    DONE - PATH-able bin/ 
+    - bin at the end of PATH
 
   - natural voices
     - unify with translate.google
@@ -20,7 +21,7 @@
       - JSON-RPC [spec and implementation]
 
   - krebs rebootstrapping
-    - curl painload.retiolum | sh
+    DONE - curl painload.retiolum | sh
       [- git clone https://github.com/kreingbscode/painload /krebs]
       [- /krebs/boot]
       (makefu)
@@ -30,6 +31,8 @@
       - interactive-foo, der am Anfang durchgespielt werden muss
         - danach darf er nciht mehr sucken, und muss das richtige tun
       - initiale config file via $EDITOR
+        DONE - config am anfang des skriptes oeffnen
+        - config auswerten
 
   - gutartiger Krebs
     - retiolum
