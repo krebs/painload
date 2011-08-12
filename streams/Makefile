@@ -9,3 +9,4 @@ all: $(streams)
 $(streams):
 	@test -L $(INITD)$@ || test ! -e $(INITD)$@ && \
 	ln -n -s -f $$PWD/stream-starter $(INITD)$@ && echo "writing $@ to $(INITD)"
+	ln -sf $$PWD/streams ../bin/streams
