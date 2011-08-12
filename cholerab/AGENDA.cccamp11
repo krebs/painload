@@ -3,6 +3,8 @@
   - krebs.no.de/hosts.tar automatic via github POST hook
     - same for supernode updates [vs. cron]
     - krebscode/painload/supernode/foo 
+  DONE - hosts in krebs/retiolum
+    DONE - update hosts from painload via `make -C retiolum`
 
   - overall
     DONE - PATH-able bin/ 
@@ -50,8 +52,8 @@
       - ftp MOTD
       - sound theme [see beeps below]
     - append to PATH
-    - morse (makefu)
-      - beep installieren und shit [spaeter kuebelwagen, wenn beep defekt]
+    DONE - morse (makefu)
+      DONE - beep installieren und shit [spaeter kuebelwagen, wenn beep defekt]
 
   [- boesartiger Krebs]
     - public keys installieren
