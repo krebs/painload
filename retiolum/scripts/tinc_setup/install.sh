@@ -1,5 +1,12 @@
 #! /bin/sh
 # USE WITH GREAT CAUTION
+set -euf
+
+if test "${nosudo-false}" != true -a `id -u` != 0; then
+  echo "we're going sudo..." >&2
+  exec sudo "$0" "$@"
+  exit 23 # go to hell
+fi
 
 #make -C ../../ update
 set -e
