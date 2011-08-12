@@ -1,27 +1,21 @@
-RETIOLUM_HOSTS = /etc/tinc/retiolum/hosts
+.PHONY: update all install hosts
 
-.PHONY: update it all so install
+EXES := update_tinc_hosts fillxx update-retiolum-hosts
 
 all: update links 
 
-links: 
-	ln -sf $$PWD/bin/update_tinc_hosts ../bin/update_tinc_hosts
-	ln -sf $$PWD/bin/fillxx ../bin/fillxx
+links:
+	for x in $(EXES); do ln -vsnf ../retiolum/bin/$$x ../bin; done
 
-it: so
-so: it
-
-hosts/:
-	@echo "Writing new copy of hosts"
-	[ -e $(RETIOLUM_HOSTS) ] || mkdir -p $(RETIOLUM_HOSTS)
-	cp -r hosts/* $(RETIOLUM_HOSTS)/
-
+hosts:
+	bin/update-retiolum-hosts
 
 install: update
 	@# will not run automatically
 	scripts/tinc_setup/install.sh
+	scripts/autostart/create-startup.sh
 
-update: hosts/
+update: hosts
 	@echo creating Magic
 	bin/update_tinc_hosts "create magic" || true
 	@echo adding hosts
