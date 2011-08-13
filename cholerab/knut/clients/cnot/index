@@ -1,6 +1,8 @@
 #! /bin/sh
 #
+# cnot - cholerab live command line notification client, bitch!
 #
+# usage: cnot hostname message...
 #
 set -euf
 
