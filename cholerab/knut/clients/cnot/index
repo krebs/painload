@@ -2,7 +2,7 @@
 #
 # cnot - cholerab live command line notification client, bitch!
 #
-# usage: cnot hostname message...
+# usage: [verbose=yes] cnot hostname [message...]
 #
 set -euf
 
@@ -11,6 +11,12 @@ port=42101
 
 params="$*"
 
-exec curl -vsS -X PUT --data-binary @- "http://$host:$port" <<EOF
+flags=-sS
+
+if test "${verbose-no}" != no; then
+  flags="${flags+$flags }-v"
+fi
+
+exec curl $flags -X PUT --data-binary @- "http://$host:$port" <<EOF
 {"method":"clive","params":"$params","id":null}
 EOF
