@@ -15,10 +15,6 @@
         - query args
     - make-based installer for voice-symlinks
 
-  - ttycnser
-    - server component
-      - JSON-RPC [spec and implementation]
-
   - krebs rebootstrapping
     - server, der ein shellscript [wenn User-Agent: curl/wget ist] ausgibt] (tv)
     - painload/{component}/krebs.manifest
