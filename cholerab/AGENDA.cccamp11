@@ -75,3 +75,6 @@
 
   - beeps
     - on ssh activity
+
+  - POSIX-sh krebs harder
+    - http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html
