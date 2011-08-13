@@ -78,3 +78,8 @@
 
   - POSIX-sh krebs harder
     - http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html
+
+  - clive
+    - ccat from [what...] - receive a message from (vs. cget)
+    - cput (vs. cnot)
+    - cping, cpong
