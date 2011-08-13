@@ -21,16 +21,19 @@
   - ttycnser
     - server component
       - JSON-RPC [spec and implementation]
+    - client component
+      - ttycnser (makefu)
+      DONE - Python Notification (makefu)
+      - growl (pfleidi)
 
   - krebs rebootstrapping
     DONE - curl painload.retiolum | sh
       [- git clone https://github.com/kreingbscode/painload /krebs]
-      [- /krebs/boot]
-      (makefu)
+      [- /krebs/boot] (makefu)
     - server, der ein shellscript [wenn User-Agent: curl/wget ist] ausgibt] (tv)
     - painload/{component}/krebs.manifest
-      - welche kategorie: gutartig, boesartig, optional
-      - interactive-foo, der am Anfang durchgespielt werden muss
+      - welche kategorie: gutartig, boesartig,auf toeten eingestellt, optional
+      DONE - interactive-foo, der am Anfang durchgespielt werden muss
         - danach darf er nciht mehr sucken, und muss das richtige tun
       - initiale config file via $EDITOR
         DONE - config am anfang des skriptes oeffnen
@@ -72,10 +75,12 @@
   - git hooks
     - Error 1: "Keyword-ratio below 9k"
       - keyword file
+    - <-- tinc tar file updaten
 
   - default configuration for $EDITOR & co.
 
   - Refactort git-eternal-move: use find instead of mv
+    - make it not suck, e.g. do the right thing (currently NOT)
 
   - NetworkEngineer
     - kill and replace NetworkManager
