@@ -1,0 +1,14 @@
+#! /bin/sh
+#
+#
+#
+set -euf
+
+host="$1"; shift
+port=42101
+
+params="$*"
+
+exec curl -vsS -X PUT --data-binary @- "http://$host:$port" <<EOF
+{"method":"clive","params":"$params","id":null}
+EOF
