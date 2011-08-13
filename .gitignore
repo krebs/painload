@@ -1,3 +1,5 @@
 a.out
 *.pyc
 /bin/
+/node/src
+/node/out

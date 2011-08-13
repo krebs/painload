@@ -1,24 +1,46 @@
 
+ifndef version
+	version := $(shell \
+		curl -sS http://nodejs.org/ | \
+			../util/bin/hrefs | \
+			sed -rn 's:.*node-(v[0-9.]+)\.tar\.gz:\1:p' | \
+			sort | \
+			tail -n 1)
+endif
+
+export CPPFLAGS := -Wno-unused-but-set-variable
 
 .PHONY: all build install
 
 all:
 	@echo "You are made of stupid!"; exit 23
 
-build: node node/build/default/node
-	cd node && ./configure && make
+build: out/node-$(version)
 
-install: build
-	cd node && make install
+install: out/node-$(version)
+	ln -vsnf ../node/$</bin/node ../bin/node
 
-node: node-git
-	ln -vsnf $< $@
+out/node-%: src/node-%
+	cd $< && ./configure --prefix=$(PWD)/$@
+	make -C $<
+	make -C $< install
 
-node-git:
-	git clone https://github.com/joyent/node node-git
+../bin/node: out/
 
-node-%: /usr/bin/curl
-	curl http://nodejs.org/dist/$@.tar.gz | tar zx
+src/node-git: src
+	cd src && \
+		git clone https://github.com/joyent/node node-git
+
+src/node-%: src/node-%.tar.gz
+	cd src && tar xf node-$*.tar.gz
+
+.PRECIOUS: src/node-%.tar.gz
+src/node-%.tar.gz: /usr/bin/curl src
+	{ curl -o $@ http://nodejs.org/dist/node-$*.tar.gz && gzip -t $@; } || \
+		{ curl -o $@ http://nodejs.org/dist/$*/node-$*.tar.gz && gzip -t $@; }
 
 /usr/bin/curl:
 	apt-get install --yes curl
+
+src:
+	mkdir -v -p $@
