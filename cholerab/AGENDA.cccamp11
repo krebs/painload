@@ -3,12 +3,9 @@
   - krebs.no.de/hosts.tar automatic via github POST hook
     - same for supernode updates [vs. cron]
     - krebscode/painload/supernode/foo 
-  DONE - hosts in krebs/retiolum
-    DONE - update hosts from painload via `make -C retiolum`
 
   - overall
-    DONE - PATH-able bin/ 
-    - bin at the end of PATH
+    - krebs/bin at the end of PATH
 
   - natural voices
     - unify with translate.google
@@ -23,17 +20,12 @@
       - JSON-RPC [spec and implementation]
 
   - krebs rebootstrapping
-    DONE - curl painload.retiolum | sh
-      [- git clone https://github.com/kreingbscode/painload /krebs]
-      [- /krebs/boot]
-      (makefu)
     - server, der ein shellscript [wenn User-Agent: curl/wget ist] ausgibt] (tv)
     - painload/{component}/krebs.manifest
       - welche kategorie: gutartig, boesartig, optional
       - interactive-foo, der am Anfang durchgespielt werden muss
         - danach darf er nciht mehr sucken, und muss das richtige tun
       - initiale config file via $EDITOR
-        DONE - config am anfang des skriptes oeffnen
         - config auswerten
 
   - gutartiger Krebs
@@ -52,8 +44,6 @@
       - ftp MOTD
       - sound theme [see beeps below]
     - append to PATH
-    DONE - morse (makefu)
-      DONE - beep installieren und shit [spaeter kuebelwagen, wenn beep defekt]
 
   [- boesartiger Krebs]
     - public keys installieren
