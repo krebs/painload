@@ -10,6 +10,7 @@ install: \
 	../../bin/cnot \
 	../../bin/clive-knut \
 	../../bin/ttycnser-login
+	../../punani/bin/punani -Ei python python-notify
 
 ../../bin/cnot: clients/cnot/index
 	ln -vsnf ../cholerab/knut/$< $@
