@@ -1,0 +1,4 @@
+#! /bin/sh
+set -euf
+pipe="/tmp/krebscode.painload.cholerab.ttycnser.${LOGNAME}"
+echo -n "7[2;1H[2K[33;1m>>>> ${params}8" > "${pipe}"

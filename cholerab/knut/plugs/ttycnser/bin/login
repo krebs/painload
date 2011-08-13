@@ -1,0 +1,4 @@
+#! /bin/sh
+set -euf
+pipe="/tmp/krebscode.painload.cholerab.ttycnser.${LOGNAME}"
+ln -snf "`tty`" "$pipe"
