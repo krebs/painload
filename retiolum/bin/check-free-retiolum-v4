@@ -1,0 +1,22 @@
+#! /bin/sh
+set -x
+netname=retiolum
+myipv4=${1-10.7.7.-1}
+v4num=${myipv4##*.}
+printf "Retard check: "
+if [ "$v4num" -gt 0 -a "$v4num" -lt "256" ];
+then 
+  printf "No retard detected\n"
+  cd /etc/tinc/$netname/hosts
+  printf "Check if ip is still free: "
+  for i in `ls -1`; do
+    if grep $myipv4 $i &>/dev/null ;then
+      echo "Host IP already taken by $i! "
+      exit 1
+    fi
+  done
+  printf "Passed"
+else
+  printf "you are made of stupid. bailing out\n" 
+  exit 1
+fi

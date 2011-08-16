@@ -5,7 +5,7 @@
     - krebscode/painload/supernode/foo 
 
   - overall
-    - PATH-able bin/
+    - krebs/bin at the end of PATH
 
   - natural voices
     - unify with translate.google
@@ -18,18 +18,23 @@
   - ttycnser
     - server component
       - JSON-RPC [spec and implementation]
+    - client component
+      - ttycnser (makefu)
+      DONE - Python Notification (makefu)
+      - growl (pfleidi)
 
   - krebs rebootstrapping
-    - curl painload.retiolum | sh
+    DONE - curl painload.retiolum | sh
       [- git clone https://github.com/kreingbscode/painload /krebs]
-      [- /krebs/boot]
-      (makefu)
+      [- /krebs/boot] (makefu)
+  - krebs rebootstrapping
     - server, der ein shellscript [wenn User-Agent: curl/wget ist] ausgibt] (tv)
     - painload/{component}/krebs.manifest
-      - welche kategorie: gutartig, boesartig, optional
-      - interactive-foo, der am Anfang durchgespielt werden muss
+      - welche kategorie: gutartig, boesartig,auf toeten eingestellt, optional
+      DONE - interactive-foo, der am Anfang durchgespielt werden muss
         - danach darf er nciht mehr sucken, und muss das richtige tun
       - initiale config file via $EDITOR
+        - config auswerten
 
   - gutartiger Krebs
     - retiolum
@@ -47,8 +52,6 @@
       - ftp MOTD
       - sound theme [see beeps below]
     - append to PATH
-    - morse (makefu)
-      - beep installieren und shit [spaeter kuebelwagen, wenn beep defekt]
 
   [- boesartiger Krebs]
     - public keys installieren
@@ -67,10 +70,12 @@
   - git hooks
     - Error 1: "Keyword-ratio below 9k"
       - keyword file
+    - <-- tinc tar file updaten
 
   - default configuration for $EDITOR & co.
 
   - Refactort git-eternal-move: use find instead of mv
+    - make it not suck, e.g. do the right thing (currently NOT)
 
   - NetworkEngineer
     - kill and replace NetworkManager
@@ -84,3 +89,13 @@
 
   - beeps
     - on ssh activity
+
+  - POSIX-sh krebs harder
+    - http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html
+
+  - clive
+    - ccat from [what...] - receive a message from (vs. cget)
+    - cput (vs. cnot)
+    - cping, cpong
+
+  - recursiv make

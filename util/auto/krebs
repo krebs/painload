@@ -50,6 +50,8 @@ function edit_config()
     rm $CONF
     printf "I hate you by the way..."
     bailout
+  fi
+  make -C $1
 }
 punani -Ei git make
 KREBSDIR=${1-/krebs}

@@ -1,0 +1,13 @@
+#! /bin/sh
+set -eu
+
+if test "${nosudo-false}" != true -a `id -u` != 0; then
+  echo "we're going sudo..." >&2
+  exec sudo "$0" "$@"
+  exit 23 # go to hell
+fi
+
+mkdir -v -p /etc/tinc/retiolum/hosts
+cp -v -r hosts/* /etc/tinc/retiolum/hosts
+pkill -HUP tincd
+pkill -ALRM tincd
