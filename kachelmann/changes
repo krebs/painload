@@ -13,7 +13,7 @@ while (1) {
     $data_old = $data_new;
     $data_new = $condition_store;
     if($data_new ne $data_old){
-        system("espeak \"Das Wetter hat sich von $data_old in $data_new verändert\n\");
+        system("espeak \"Das Wetter hat sich von $data_old in $data_new verändert\n\"");
     }
     sleep 300;
 }
