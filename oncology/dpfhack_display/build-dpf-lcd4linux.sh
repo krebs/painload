@@ -46,7 +46,7 @@ if [ -e Makefile ]; then
 else
 	./bootstrap
 	# Feel free to configure this differently:
-	./configure --with-drivers=DPF
+	./configure --with-drivers=DPF --with-plugins=all --prefix=/usr
 fi
 
 make
