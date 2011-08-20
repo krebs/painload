@@ -1,0 +1,166 @@
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+
+# $Id$
+# $URL$
+
+
+# LCD4Linux autoconf script
+#
+# Copyright (C) 1999, 2000, 2001, 2002, 2003 Michael Reinelt <michael@reinelt.co.at>
+# Copyright (C) 2004, 2005, 2006, 2007 The LCD4Linux Team <lcd4linux-devel@users.sourceforge.net>
+#
+# This file is part of LCD4Linux.
+#
+# LCD4Linux is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+#
+# LCD4Linux is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+AC_PREREQ(2.59)
+AC_INIT([LCD4Linux],[0.11.0-SVN],[lcd4linux-users@lists.sourceforge.net])
+AC_CONFIG_SRCDIR([lcd4linux.c])
+AM_INIT_AUTOMAKE([lcd4linux],0.11.0-SVN)
+AM_CONFIG_HEADER(config.h)
+
+# Checks for programs.
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
+PKG_PROG_PKG_CONFIG
+
+# dmalloc
+AM_WITH_DMALLOC
+
+# Checks for libraries.
+AC_CHECK_LIB(m, log)
+
+# curses
+sinclude(curses.m4)
+AC_CHECK_CURSES
+
+# Checks for X11
+AC_PATH_X
+AC_PATH_XTRA
+# double-check for X11
+if test "$no_x" != "yes"; then
+   AC_CHECK_HEADERS(X11/Xlib.h X11/Xutil.h, [no_x="$no_x"], [no_x="yes"])
+   if test "$no_x" = "yes"; then
+      AC_MSG_WARN([configure thinks X11 is available while it is *not*])
+      AC_MSG_WARN([maybe someone wants to fix autoconf's AC PATH XTRA])
+   fi
+fi
+
+# check for gd.h
+AC_CHECK_HEADERS(gd/gd.h gd.h, [has_gd="true"; break], [has_gd="false"])
+
+# check for sys/io.h (RouterBoard driver)
+AC_CHECK_HEADERS(sys/io.h, [has_io_h="true"], [has_io_h="false"])
+
+# check for usb.h
+AC_CHECK_HEADERS(usb.h, [has_usb="true"], [has_usb="false"])
+
+# check for luise.h
+AC_CHECK_HEADERS(luise.h, [has_luise="true"], [has_luise="false"])
+
+# check for serdisplib
+AC_CHECK_HEADERS(serdisplib/serdisp.h, [has_serdisplib="true"], [has_serdisplib="false"])
+
+# check for st2205 libs
+AC_CHECK_HEADERS(st2205.h, [has_st2205="true"], [has_st2205="false"])
+
+# check for vncserver libs
+AC_CHECK_HEADERS(rfb/rfb.h, [has_vncserverlib="true"], [has_vncserverlib="false"])
+
+# check for LCD-Linux
+AC_CHECK_HEADERS(linux/lcd-linux.h linux/hd44780.h, [has_lcd_linux="true"], [has_lcd_linux="false"; break])
+
+# check for ftdi.h (ULA200)
+AC_CHECK_HEADERS(ftdi.h, [has_ftdi="true"], [has_ftdi="false"; break])
+
+# check for python
+AC_MSG_CHECKING(if python support is wanted)
+AC_ARG_WITH(python,
+[  --with-python           enable python support [[default=no]]],
+[AC_MSG_RESULT($withval)], [AC_MSG_RESULT(no)])
+
+if test "$with_python" = "yes"; then
+    sinclude(ax_python_devel.m4)
+    AC_PYTHON_DEVEL
+fi
+
+# check for parport
+#AC_CHECK_HEADERS(asm/io.h)
+AC_CHECK_HEADERS([asm/io.h] [linux/parport.h linux/ppdev.h], [has_parport="true"], [has_parport="false"])
+
+# drivers
+sinclude(drivers.m4)
+
+# plugins
+sinclude(plugins.m4)
+
+# Checks for header files.
+AC_HEADER_DIRENT
+AC_HEADER_STDC
+AC_CHECK_HEADERS([arpa/inet.h fcntl.h netdb.h netinet/in.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h sys/vfs.h syslog.h termios.h unistd.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_C_INLINE
+AC_TYPE_OFF_T
+AC_TYPE_PID_T
+AC_TYPE_SIZE_T
+AC_TYPE_SSIZE_T
+AC_HEADER_TIME
+AC_TYPE_UID_T
+
+
+# Checks for library functions.
+AC_FUNC_CLOSEDIR_VOID
+AC_FUNC_ERROR_AT_LINE
+AC_FUNC_FORK
+
+# uClibc has no getloadavg()
+# AC_FUNC_GETLOADAVG sounds promising, but does not really work
+#AC_FUNC_GETLOADAVG
+
+AC_PROG_GCC_TRADITIONAL
+
+# removed for uClibc compatibility
+#AC_FUNC_MALLOC
+#AC_FUNC_REALLOC
+
+AC_FUNC_SELECT_ARGTYPES
+AC_TYPE_SIGNAL
+AC_FUNC_STAT
+AC_FUNC_STRFTIME
+AC_FUNC_STRTOD
+AC_CHECK_FUNCS([dup2 floor gethostbyname gettimeofday memmove memset pow putenv regcomp select socket sqrt strcasecmp strchr strcspn strdup strerror strncasecmp strndup strpbrk strrchr strstr strtol strtoul uname])
+
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT
+
+AC_MSG_RESULT(
+[-----------------------------------------]
+[including drivers:]
+[  $DRIVERS]
+[-----------------------------------------]
+[including plugins:]
+[  $PLUGINS]
+[-----------------------------------------]
+)
+
+AC_CONFIG_MACRO_DIR([m4])
+LT_INIT
