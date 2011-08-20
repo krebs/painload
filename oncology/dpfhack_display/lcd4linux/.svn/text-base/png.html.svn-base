@@ -1,8 +1,0 @@
-<html><head>
-<title>PNG Test</title>
-</head>
-<body>
-<h1>PNG test</h1>
-<img src=/cgi-bin/nph-png>
-</body>
-</html>

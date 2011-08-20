@@ -1,9 +1,0 @@
-K 12
-svn:keywords
-V 10
-Id URL Rev
-K 13
-svn:mergeinfo
-V 84
-/branches/volker_dev/lcd4linux.c:815,817-819,821,823,826-828,834-835,837-839,846-847
-END
