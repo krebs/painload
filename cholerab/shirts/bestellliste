@@ -1,5 +1,6 @@
-tv:       2 M
-          1 S
+                GEZ
+tv:       2 M   j
+          1 S   j
 ulrich:   1 M
 felix:    2 M
           1 S
@@ -7,8 +8,8 @@ Lassulus: 2 M
 Pfleidi:  1 L
 Tensai:   1 L
 Momo:     1 XXL
-hadez:    1 L
-          1 M
+hadez:    1 L   j
+          1 M   j
 Phil:     1 S
 Lukas:    1 M
 Jan:      1 2XL
@@ -18,6 +19,6 @@ Lotho:    1 XL
 Sascha:   1 XL
 Moritz:   1 M
 RIPE:     1 XL
-kh:       1 L
+kh:       1 L   j
 miefda:   1 L
           1 XL
