@@ -3,6 +3,8 @@
 from os import environ
 from os.path import dirname, realpath
 from SOAPpy import WSDL
+from sys import argv, stdin
+from string import join
 from json import dumps, JSONEncoder
 
 def default(o):
@@ -20,9 +22,11 @@ soap = WSDL.Proxy(wsdl)
 username = environ['KREBS_OVH_USER']
 password = environ['KREBS_OVH_PASS']
 
-session = soap.login(username, password, 'de', 0)
+zone = join(stdin.readlines(),'')
 
-result = soap.domainList(session)
-print dumps(result, sort_keys=True, indent=2, default=default)
+session = soap.login(username, password, 'en', 0)
+
+result = soap.zoneImport(session, 'krebsco.de', zone)
+print result
 
 soap.logout(session)

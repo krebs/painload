@@ -1,24 +1,28 @@
 #!/usr/bin/python
 
 from os import environ
-import pprint
+from os.path import dirname, realpath
 from SOAPpy import WSDL
+from json import dumps, JSONEncoder
 
-soap = WSDL.Proxy('https://www.ovh.com/soapi/soapi-re-1.24.wsdl')
+def default(o):
+   try:
+       iterable = iter(o)
+   except TypeError:
+       pass
+   else:
+       return list(iterable)
+   return JSONEncoder.default(o)
+
+wsdl = dirname(realpath(__file__)) + '/soapi-re-1.24.wsdl'
+soap = WSDL.Proxy(wsdl)
 
 username = environ['KREBS_OVH_USER']
 password = environ['KREBS_OVH_PASS']
 
-#login
 session = soap.login(username, password, 'de', 0)
-print "login successfull"
 
-#domainCapabilities
 result = soap.domainCapabilities(session, 'krebsco.de')
-print "domainCapabilities successfull"
-pp = pprint.PrettyPrinter(indent=4)
-pp.pprint(result) # your code here ...
+print dumps(result, sort_keys=True, indent=2, default=default)
 
-#logout
 soap.logout(session)
-print "logout successfull"
