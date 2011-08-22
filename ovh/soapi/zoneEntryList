@@ -1,0 +1,24 @@
+#!/usr/bin/python
+
+from os import environ
+import pprint
+from SOAPpy import WSDL
+
+soap = WSDL.Proxy('https://www.ovh.com/soapi/soapi-re-1.24.wsdl')
+
+username = environ['KREBS_OVH_USER']
+password = environ['KREBS_OVH_PASS']
+
+#login
+session = soap.login(username, password, 'de', 0)
+print "login successfull"
+
+#zoneEntryList
+result = soap.zoneEntryList(session, 'krebsco.de')
+print "zoneEntryList successfull"
+pp = pprint.PrettyPrinter(indent=4)
+pp.pprint(result) # your code here ...
+
+#logout
+soap.logout(session)
+print "logout successfull"
