@@ -9,7 +9,7 @@ target_exes := $(addprefix ../../bin/,$(exes))
 install: $(target_exes)
 
 ../../bin/%: % SOAPpy
-		ln -vsnf ../ovh/soapi/$* $@
+		ln -snf ../ovh/soapi/$* $@
 
 src:
 	mkdir $@
