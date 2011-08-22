@@ -3,3 +3,5 @@ a.out
 /bin/
 /node/src
 /node/out
+/ovh/soapi/src
+/ovh/soapi/SOAPpy
