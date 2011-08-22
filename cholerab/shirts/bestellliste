@@ -1,17 +1,17 @@
-                GEZ
+                GEZ ERH
 tv:       2 M   j
           1 S   j
 ulrich:   1 M
-felix:    2 M
-          1 S
-Lassulus: 2 M
+felix:    2 M   j   j
+          1 S   j   j
+Lassulus: 2 M   j   j
 Pfleidi:  1 L
 Tensai:   1 L
 Momo:     1 XXL
-hadez:    1 L   j
-          1 M   j
+hadez:    1 L   j   j
+          1 M   j   j
 Phil:     1 S
-Lukas:    1 M
+Lukas:    1 M   v   j
 Jan:      1 2XL
 Ronny:    1 M
 Marc:     1 L
@@ -20,5 +20,5 @@ Sascha:   1 XL
 Moritz:   1 M
 RIPE:     1 XL
 kh:       1 L   j
-miefda:   1 L
-          1 XL
+miefda:   1 L   j   j
+          1 XL  j   j

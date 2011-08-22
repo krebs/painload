@@ -22,7 +22,7 @@ password = environ['KREBS_OVH_PASS']
 
 session = soap.login(username, password, 'de', 0)
 
-result = soap.domainList(session)
-print dumps(result, sort_keys=True, indent=2, default=default)
+result = soap.zoneExport(session, 'krebsco.de')
+print result
 
 soap.logout(session)
