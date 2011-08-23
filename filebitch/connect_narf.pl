@@ -4,12 +4,15 @@
 #and
 #<IfModule mod_exec.c>
 #    ExecEngine on
-#    ExecOnConnect "/krebs/filebitch/connect_narf.pl"
+#    ExecOnConnect "/krebs/filebitch/connect_narf.pli %a"
 #</IfModule>
 
-#$ip = system("tail -n 1 /var/log/proftpd/ftp_auth.log");
+$ip = $ARGV[0];
 #I'm very sorry for this regex, but i only wanted it to get _real_ IPv4 Adresses of the log file, not any kind of timestamp bullshit
-#$ip =~ s/\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b//g;
+$ip =~ s/\b(25[0-5]|2[0-4][0-9]|[1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[1]?[0-9][0-9]?)\b//g;
 #getting some guys sitting next to the Server pissed :)
-my $ip = "USER";
-system("beep -l 42 -f 2000 -D 42 -n -l 42 -f 3337");
+system("morse -l 42 -f 2000 $ip");
+system("morse -l 42 -f 3000 \"connected\"");
+
+# Uncomment the beep below to play the enterprise connect sound
+# system("beep -l 42 -f 2000 -D 42 -n -l 42 -f 3337");
