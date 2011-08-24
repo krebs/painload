@@ -1,0 +1,20 @@
+#? /bin/sh
+set -euf
+
+# install ovh soapi
+
+cd /path/to/krebscode/painload
+
+make -C ovh/soapi install
+
+# edit the zone
+
+export PATH="$PWD/bin${PATH+:$PATH}"
+export KREBS_OVH_USER=...
+export KREBS_OVH_PASS=...
+
+zoneExport > /tmp/foo
+$EDITOR /tmp/foo
+zoneImport < /tmp/foo
+
+# Have a nice day!^_^
