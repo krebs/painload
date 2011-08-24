@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-var host = process.env.host || '0.0.0.0';
+var host = process.env.host || '127.0.0.1';
 var port = Number(process.env.port) || 42101;
 
 var pipe = '/tmp/krebscode.painload.cholerab.ttycnser.' + process.env.LOGNAME;
