@@ -1,0 +1,15 @@
+#!/bin/bash
+LAMPE=`echo $1 | sed -n '/^[1-2]*[0-9]*[0-9]$/p' | xargs echo "obase=16;" | bc` 
+TOGGLE=`echo $2 | sed -n '/^[0-1]$/p'` 
+if ! [ "$LAMPE" -a "$TOGGLE" ];then
+  echo "you are made of stupid"
+  exit 1
+fi
+STRING="\xA5\x5A\x$LAMPE\x$TOGGLE"
+if [ $# != 2 ]
+then
+    echo -ne "Usage: licht <lampe> <0/1>"
+else
+    echo "$LAMPE$TOGGLE" 
+    echo -ne "$STRING" | nc -u -w1 licht.shack 1337
+fi
