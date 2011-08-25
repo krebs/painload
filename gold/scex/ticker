@@ -1,0 +1,2 @@
+#! /bin/sh
+exec curl -ksS http://scexchange.bitparking.com:8080/api/ticker
