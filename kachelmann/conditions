@@ -1,6 +1,0 @@
-#!/usr/bin/perl
-use XML::Simple;
-my $result = `w3m -dump "http://www.google.com/ig/api?weather=70327-stuttgart&hl=de"`;
-my $xml = new XML::Simple;
-my $data = $xml->XMLin($result);
-print ("Die Wetterkondition ist: $data->{weather}->{current_conditions}->{condition}->{data}\n bei $data->{weather}->{current_conditions}->{temp_c}->{data} Grad Zelsius\n");
