@@ -1,0 +1,14 @@
+# Krebs News Issue #1 (2011-08-24)
+## 0. godmode im shack
+der Krebs steuert jetzt die Photonenwerfer im shack. 
+//god/licht ist hierfür verantwortlich.
+
+Um das Licht anzumachen einfach per Telnet auf krebs.shack:
+  $ rlwrap krebs.shack 23
+und dort mit /licht <Lampe> <0/1> das licht an/ausschalten
+
+Die Lampen sind von Fensterseite richtung Innenhof durchnummeriert(0-3)
+
+Dieser Kot wurde auf Anrfrage von Ulrich produziert. 
+
+Momo
