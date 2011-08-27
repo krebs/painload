@@ -1,0 +1,90 @@
+#!/usr/bin/env python
+#
+#
+
+""" Convore Bot. """
+
+
+import warnings
+warnings.simplefilter("ignore")
+
+## bootstrap
+
+import os, sys
+sys.path.insert(0, os.getcwd())
+
+from jsb.version import getversion
+
+print getversion('CONVORE')
+
+## command line parsing
+from jsb.utils.opts import makeconvoreopts
+opts = makeconvoreopts()
+
+if opts.datadir:
+    if not os.path.isdir(opts.datadir): os.mkdir(opts.datadir)
+    from jsb.lib.datadir import setdatadir
+    setdatadir(opts.datadir)
+
+## make config from cmndline options
+
+from jsb.lib.config import getmainconfig
+from jsb.utils.log import setloglevel
+mainconfig = getmainconfig()
+setloglevel(opts.loglevel or mainconfig.loglevel or "warning", opts.colors)
+if opts.loglevel: mainconfig.loglevel = opts.loglevel ; mainconfig.save()
+
+from jsb.lib.boot import boot
+boot(opts.datadir)
+
+## jsb imports
+
+from jsb.utils.generic import waitforqueue, waitevents
+from jsb.drivers.convore.bot import ConvoreBot
+from jsb.lib.config import Config
+from jsb.lib.errors import NoOwnerSet
+from jsb.lib.commands import cmnds
+from jsb.lib.eventhandler import mainhandler
+from jsb.lib.threads import start_new_thread
+from jsb.lib.fleet import getfleet
+
+## basic imports
+
+import time
+import logging
+
+## start the bot
+
+name = opts.name or "default-convore"
+cfg = Config("fleet" + os.sep + name + os.sep + 'config')
+
+if opts.owner:
+    userid = "CONVORE_USER_%s" % opts.owner
+    if not userid in cfg.owner: cfg.owner.append(userid) ; cfg.save()
+    from jsb.lib.users import users_boot
+    u = users_boot()
+    u.make_owner(opts.owner)
+
+logging.warn("owner is %s" % cfg.owner)
+
+if opts.password: cfg.password = opts.password ; cfg.save()
+if opts.username: cfg.username = opts.username ; cfg.save()
+if not cfg.password: print "password is not set .. use -p" ; os._exit(1)
+if not cfg.username: print "username is not set .. use -u" ; os._exit(1)
+
+try:
+    bot = ConvoreBot(cfg)
+except NoOwnerSet:
+    print "the owner is not set in %s" % cfg.cfile
+    os._exit(1)
+
+if opts.channel and not opts.channel in bot.state['joinedchannels']:
+    bot.state['joinedchannels'].append(opts.channel)
+    bot.state.save()
+
+bot.start(join=False)
+
+fleet = getfleet(opts.datadir)
+fleet.addbot(bot)
+
+mainhandler.runforever()

@@ -1,0 +1,344 @@
+#!/usr/bin/env python
+#
+#
+
+""" jsb tornado dispatch handler.  dispatches remote commands.  """
+
+import warnings
+warnings.simplefilter("ignore")
+
+## bootstrap
+
+import os, sys
+sys.path.insert(0, os.getcwd())
+
+
+from jsb.version import getversion
+
+## command line parsing
+
+from optparse import OptionParser
+parser = OptionParser(usage='usage: %prog [options] <appid>', version='%prog ' + getversion())
+parser.add_option('', '-r', type='string', default=False, dest='doresume',  metavar='PATH', help="resume the bot from the folder specified")
+parser.add_option('-o', '--owner', type='string', default=False, dest='owner',  help="owner of the bot")
+parser.add_option('-d', '--datadir', type='string', default=False, dest='datadir', help="datadir to use")
+parser.add_option('-l', '--loglevel', type='string', default=False, dest='loglevel', help="logging level")
+parser.add_option('-p', '--port', type='string', default=False, dest='port', help="servers listening port")
+parser.add_option('-f', '--fleet', action="store_true", default=False, dest='fleet', help="enable the fleet")
+parser.add_option('', '--colors', action="store_true", default=False, dest='colors', help="enable the use of colors in logging")
+parser.add_option('', '--ssl', action="store_true", default=False, dest='ssl', help="enable ssl on the server")
+opts, args = parser.parse_args()
+opts.args = args
+
+if opts.datadir:
+    if not os.path.isdir(opts.datadir): os.mkdir(opts.datadir)
+    from jsb.lib.datadir import setdatadir
+    setdatadir(opts.datadir)
+
+from jsb.lib.datadir import getdatadir
+
+if opts.ssl:
+    if os.path.exists(os.getcwd() + os.sep + "jsb.crt"):
+        ssl_options={
+            "certfile": os.getcwd() + os.sep + "jsb.crt",
+            "keyfile": os.getcwd() + os.sep + "jsb.key",
+        }
+    elif os.path.exists(getdatadir() + os.sep + "jsb.crt"):
+        ssl_options={
+            "certfile": getdatadir() + os.sep + "jsb.crt",
+            "keyfile": getdatadir() + os.sep + "jsb.key",
+        }
+    else: print "can't find jsb.crt and jsb.key file - run jsb-makecert <hostname> first." ; os._exit(1)
+
+print getversion('TORNADO')
+
+from jsb.utils.log import setloglevel
+setloglevel(opts.loglevel or "warn", opts.colors)
+
+## boot
+
+from jsb.lib.boot import boot
+boot()
+
+if opts.owner:
+    from jsb.lib.users import users_boot
+    u = users_boot()
+    u.make_owner(opts.owner)
+
+## jsb imports
+
+from jsb.utils.generic import fromenc, toenc
+from jsb.version import getversion
+from jsb.utils.xmpp import stripped
+from jsb.utils.url import getpostdata, useragent
+from jsb.lib.plugins import plugs
+from jsb.lib.persist import Persist
+from jsb.utils.exception import handle_exception, exceptionmsg
+from jsb.lib.fleet import getfleet
+from jsb.lib.errors import NoSuchCommand
+from jsb.utils.lazydict import LazyDict
+from jsb.lib.config import getmainconfig
+from jsb.lib.threads import start_new_thread
+from jsb.drivers.tornado.bot import TornadoBot
+from jsb.drivers.tornado.event import TornadoEvent
+from jsb.lib.datadir import getdatadir
+from jsb.imports import gettornado
+from jsb.lib.config import getmainconfig
+from jsb.utils.source import getsource
+from jsb.lib.partyline import partyline
+from jsb.lib.exit import globalshutdown
+
+tornado = gettornado()
+fleet = getfleet()
+
+## tornado import
+
+import tornado.web
+import tornado.ioloop
+import tornado.auth
+import tornado.httpserver
+import tornado.websocket
+
+## basic imports
+
+import sys
+import time
+import types
+import os
+import logging
+import urlparse
+import urllib
+import socket
+import ssl
+import select
+
+bot = TornadoBot(botname="tornado-bot")
+
+if os.path.isdir(os.getcwd() + os.sep + "jsb"): ddir = os.getcwd() + os.sep + "jsb" + os.sep + "data"
+else: ddir = getsource("jsb.data")
+if not ddir and os.path.isdir(getdatadir() + os.sep + "data" + os.sep + "templates"): ddir = getdatadir() + os.sep + "data"
+if not ddir: logging.warn("can't find jsb.data dir") ; os._exit(1)
+else: logging.warn("jsb.data is at %s" % ddir)
+
+bot.start(connect=False)
+
+## jsb specific ioloop
+
+class JSBLoop(tornado.ioloop.IOLoop):
+
+    def __init__(self, *args):
+        tornado.ioloop.IOLoop.__init__(self, tornado.ioloop._Select())
+        
+## server part
+
+class TornadoServer(tornado.httpserver.HTTPServer):
+
+    pass
+
+## web socket
+
+class WebSocket(tornado.websocket.WebSocketHandler):
+
+    def get_current_user(self):
+        user = self.get_secure_cookie("user")
+        if not user: user = "demouser" + "@" + self.request.remote_ip
+        return user
+
+    @tornado.web.asynchronous
+    def open(self):
+        user = self.current_user
+        logging.warn("opening channel for %s" % user)
+        if not bot.websockets.has_key(user): bot.websockets[user] = []
+        if not self in bot.websockets[user]: bot.websockets[user].append(self)
+        logging.warn("websocket open - %s" % user)
+
+    def on_message(self, message):
+        try:
+            user = self.current_user
+            if not user: return
+            logging.warn("%s - %s - %s" % (user, message, self.request.remote_ip))
+            event = TornadoEvent(bot=bot)
+            event.parsesocket(self, message)
+            bot.gatekeeper.allow(event.userhost)
+            event.bind(bot)
+            time.sleep(0.01)
+            bot.put(event)
+        except Exception, ex:
+            handle_exception()
+
+    @tornado.web.asynchronous
+    def on_close(self):
+        user = self.current_user
+        try: bot.websockets[user].remove(self) ; logging.warn("websocket closed")
+        except (KeyError, ValueError): logging.warn("no user %s found in websockets" % user)
+
+## handlers
+
+class GoogleHandler(tornado.web.RequestHandler, tornado.auth.GoogleMixin):
+
+    @tornado.web.asynchronous
+    def get(self):
+        if self.get_argument("openid.mode", None):
+            self.get_authenticated_user(self.async_callback(self._on_auth))
+            #self.get_authenticated_user(self._on_auth)
+            return
+        self.authenticate_redirect()
+
+    @tornado.web.asynchronous
+    def _on_auth(self, user):
+        logging.warn(str(user))
+        if not user: raise tornado.web.HTTPError(500, "Google auth failed")
+        self.set_secure_cookie("user", user['email'])
+        self.redirect("/")
+
+class BaseHandler(tornado.web.RequestHandler):
+
+    @tornado.web.asynchronous
+    def get_current_user(self):
+        user  = self.get_secure_cookie("user")
+        if not user: user = "demouser" + "@" + self.request.remote_ip
+        if user: return tornado.escape.xhtml_escape(user)
+
+class LoginHandler(BaseHandler):
+
+    def get(self):
+        host = self.request.host
+        if 'localhost' in host: url = "https://%s" % host
+        else: url = "https://%s" % host
+        t = {'url': url, 'appname': "JSONBOT", 'version': getversion(), 'who': "not logged in yet", 'host': host, 'color': "#4b7cc6", "logouturl": 'logout', "loginurl": "login"}
+        logging.warn(t)
+        self.render(ddir + os.sep + "templates" + os.sep + "login.html", title="JSONBOT", **t)
+
+class LogoutHandler(BaseHandler):
+
+    def get(self):
+        self.clear_cookie("user")
+        host = self.request.host
+        if 'localhost' in host: url = "https://%s" % host
+        else: url = "https://%s" % host
+        t = {'url': url, 'appname': "JSONBOT", 'version': getversion(), 'who': "not logged in yet", 'host': host, 'color': "#4b7cc6", "logouturl": 'logout', "loginurl": "login"}
+        logging.warn(t)
+        self.render(ddir + os.sep + "templates" + os.sep + "login.html", title="JSONBOT", **t)
+
+
+class DispatchHandler(BaseHandler):
+
+    """ the bots remote command dispatcher. """
+
+    @tornado.web.authenticated
+    def get(self):
+        """ show basic page. """
+        try:
+            if not self.current_user:
+                self.redirect("/login")
+                return
+            user = tornado.escape.xhtml_escape(self.current_user)
+            if not user: self.redirect("/login") ; return
+            host = self.request.host
+            if user:
+                if opts.ssl: url = "wss://%s/websocket" % host
+                else: url = "ws://%s/websocket" % host
+                logging.warn("using url %s" % url)
+                t = {'url': url, 'appname': "JSONBOT", 'version': getversion(), 'who': user, 'host': host, 'color': "#4b7cc6", "logouturl": "/logout", "loginurl": "/login"}
+                self.render(ddir + os.sep + "templates" + os.sep + "console.html", title="JSONBOT", **t)
+        except Exception, ex:
+            handle_exception()
+
+    @tornado.web.authenticated
+    def post(self):
+        """ this is where the command get disaptched. """
+        try:
+            logging.warn("DISPATCH incoming: %s - %s" % (self.request.get('content'), self.request.remote_addr))
+            if not self.current_user:
+                logging.warn("denied access for %s - %s" % (self.request.remote_addr, self.request.get('content')))
+                self.response.out.write("acess denied .. plz login")
+                self.response.set_status(400)
+                return
+            event = TornadoEvent(bot=bot)
+            event.parsesocket(self, message)
+            bot.gatekeeper.allow(event.userhost)
+            event.bind(bot)
+            bot.put(event)
+        except NoSuchCommand: 
+            self.response.out.write("no such command: %s" % event.usercmnd)
+        except Exception, ex:
+            self.response.out.write("the command had an eror: %s" % exceptionmsg())
+            handle_exception()
+
+class DemoHandler(BaseHandler):
+
+    """ the bots remote command dispatcher. """
+
+    @tornado.web.authenticated
+    def get(self):
+        """ show basic page. """
+        try:
+            #if not self.current_user:
+            #    self.redirect("/login")
+            #    return
+            user = tornado.escape.xhtml_escape(self.current_user)
+            if not user: self.redirect("/login") ; return
+            user = self.current_user
+            host = self.request.host
+            if user:
+                url = "https://%s" % host
+                t = {"url": url, 'appname': "JSONBOT DEMO", 'version': getversion(), 'who': user, 'host': host, 'color': "#4b7cc6", "logouturl": 'logout', "loginurl": "login"}
+                self.render(ddir + os.sep + "templates" + os.sep + "console.html", title="JSONBOT", **t)
+        except Exception, ex:
+            handle_exception()
+
+
+## the application 
+
+settings = {
+    "static_path": ddir + os.sep + "static",
+    "cookie_secret": "661oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o/Vo=",
+    "login_url": "/login",
+}
+
+
+application = tornado.web.Application([(r"/", DispatchHandler),
+                                       (r"/demo", DemoHandler),
+                                       (r'/login_required', GoogleHandler),
+                                       (r"/login", LoginHandler),
+                                       (r"/logout", LogoutHandler),
+                                       (r"/websocket", WebSocket),
+                                       (r"(/static/.*)", tornado.web.StaticFileHandler, dict(path=settings['static_path'])),], **settings)
+
+## runtime
+
+if opts.ssl: server = TornadoServer(application, ssl_options=ssl_options)
+else: server = TornadoServer(application)
+
+def main(dofleet=True):
+    global bot
+    bot.server = server
+    if opts.fleet and dofleet:
+        fleetbots = fleet.loadall(opts.args)
+        start_new_thread(fleet.startall, (fleetbots, ))
+    if not bot in fleet.bots: fleet.addbot(bot)
+
+if __name__ == "__main__":
+    if opts.doresume and os.path.isfile(opts.doresume):
+        main(False)
+        if opts.fleet:
+            logging.warn("resuming from %s" % opts.doresume)
+            fleet = getfleet()
+            fleet.resume(opts.doresume, exclude=["tornado"])
+            fleet.startok.wait()
+            partyline.resume(opts.doresume)
+            os.unlink(opts.doresume)
+    else: main(opts.fleet)
+    try:
+         if not opts.ssl:
+             bot.server.bind(int(opts.port) or 10102)
+             logging.warn("starting tornando server on port %s" % (opts.port or 10102))
+         else:
+             bot.server.bind(int(opts.port) or 10103)
+             logging.warn("starting tornando server on port %s" % (opts.port or 10103))
+             logging.warn(ssl_options)
+         bot.server.start(1)
+         bot.server.io_loop.start()
+    except KeyboardInterrupt: globalshutdown()
+    except Exception, ex: handle_exception() ; os._exit(1)
+    else: globalshutdown()

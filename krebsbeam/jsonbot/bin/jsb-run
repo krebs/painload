@@ -1,0 +1,53 @@
+#!/usr/bin/env python
+#
+#
+
+""" upload all instances in ~/jsonreg/ """
+
+import sys, os
+
+os.environ['PATH'] = os.getcwd() + os.sep + 'bin:' + os.environ['PATH']
+sys.path.insert(0, os.getcwd())
+sys.path.insert(0, "~/google_appengine/google")
+
+## jsb imports
+
+from jsb.utils.popen import gozerpopen
+from jsb.lib.datadir import getdatadir
+from jsb.version import getversion
+
+## basic imports
+
+from subprocess import Popen, PIPE
+import os
+import sys
+
+print getversion("RUN")
+
+## options
+
+from optparse import OptionParser
+parser = OptionParser(usage='usage: %prog [options] <appid>', version='%prog ' + getversion())
+parser.add_option('-d', '--datadir', type='string', default=False, dest='datadir', help="datadir to use")
+opts, args = parser.parse_args()
+opts.args = args
+
+ddir = opts.datadir or getdatadir()
+homedir = os.path.expanduser("~")
+try: target = opts.args[0]
+except IndexError:
+    print "jsb-run <botname>"
+    os._exit(1)
+
+if os.path.isfile('jsb-release'): execstring = './jsb-release %s -d%s' % (target, ddir)
+else: execstring = 'jsb-release %s -d%s' % (target, ddir)
+print execstring
+proc = Popen(execstring.split())
+proc.wait()
+print "STARTING %s" % target
+try: 
+    execstring = '%s/google_appengine/dev_appserver.py %s%sreleases%s%s' % (homedir, ddir, os.sep, os.sep, target)
+    proc = Popen(execstring.split())
+    proc.wait()
+except: print """ google_appengine is not installed in your home dir. \
+see http://code.google.com/appengine/downloads.html """

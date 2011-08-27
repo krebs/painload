@@ -1,0 +1,46 @@
+JSONBOT API DEFINITION
+=======================
+
+This document defines the API of JSONBOT. Still to be developed
+
+/dispatch
+
+    Dispatches an command into the callback handlers.
+
+/event
+
+    Entrypoint for events occured on another jsonbot. event gets inserted
+    into the callback handlers.
+
+/learn/<item>
+
+    Descriptions of a item that has been learned
+
+
+/karma/<item>
+
+    Karma of an item
+
+/quote/<nr>
+
+    Quote by quotenr
+
+/quote/random
+
+    Random quote
+
+/quote/last
+
+    Last quote 
+
+/log/<channelname>
+
+    Return log of the current day
+
+/log/<channelname>/all
+
+    Return log of all the days available
+
+/say/<botname>/<channel>
+
+    Say something in <channel> on <botname>

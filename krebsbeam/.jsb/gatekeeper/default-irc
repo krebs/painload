@@ -1,0 +1,6 @@
+{
+ "whitelist": [
+  "localhost", 
+  "irc.freenode.net"
+ ]
+}

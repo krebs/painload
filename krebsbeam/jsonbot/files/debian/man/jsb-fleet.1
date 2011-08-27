@@ -1,0 +1,56 @@
+.TH JSONBOT 1 "7 Nov 2010" "Debian GNU/Linux" "jsb manual"
+.SH NAME
+.B jsb-fleet \- The JSONBOT fleet program
+.SH SYNOPSIS
+JSONBOT is a remote event-driven framework for building bots that talk JSON
+to each other over XMPP. 
+.B jsb-fleet 
+is the program where you can combine IRC bots and XMPP bots into one
+program. 
+.B 
+.SH "DESCRIPTION"
+.P
+When you want to forward IRC to other bots you need an XMPP bot to let it
+communicate with these bots. The
+.B jsb-fleet
+progam lets you combine IRC bots and XMPP bots to forward events to other
+bots with a XMPP component running. Communication to GAE bots is also done
+through XMPP.
+
+.PP
+.SH USAGE
+.P
+First run your bots with
+.B jsb-irc
+and
+.B jsb-xmpp
+, make sure they work. After
+this you can run them all by starting 
+.B jsb-fleet.
+.P
+.B Usage: jsb-fleet [options] [list of bot names]
+
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  -a, --all             show available fleet bots
+  -d DATADIR, --datadir=DATADIR
+                        datadir of the bot
+  -l LOGLEVEL, --loglevel=LOGLEVEL
+                        loglevel of the bot
+  -o OWNER, --owner=OWNER
+                        owner of the bot
+  -r PATH               resume the bot from the folder specified
+
+.SH "DOCUMENTATION"
+See http://jsonbot.org or http://jsonbot.appspot.com/docs for more documentation
+
+.SH "SEE ALSO"
+jsb(1), jsb-irc(1), jsb-xmpp(1), jsb-stop(1), jsb-udp(1)
+
+
+.SH "SEE ALSO"
+The program is documented fully on http://jsonbot.appspot.com/docs
+.SH AUTHOR
+This manual page was written by Bart Thate <bthate@gmail.com>,
+for the Debian GNU/Linux system (but may be used by others).

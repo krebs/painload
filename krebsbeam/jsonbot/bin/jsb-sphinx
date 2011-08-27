@@ -1,0 +1,7 @@
+# do the sphinx build
+#
+#
+
+sphinx-build -N docs docs/html
+#cd docs/html
+#tar zcvf ~/docs.tar.gz .

@@ -1,0 +1,59 @@
+.TH JSONBOT 1 "7 Nov 2010" "Debian GNU/Linux" "jsb manual"
+.SH NAME
+JSONBOT \- The JSON everywhere bot!
+.SH SYNOPSIS
+JSONBOT is a remote event-driven framework for building bots that talk JSON
+to each other over XMPP. This manual page documents briefly the
+.B jsb
+distribution..
+.P
+.B 
+.SH "DESCRIPTION"
+.P
+This distribution provides bots built on this framework for console, IRC,
+XMPP for the shell and WWW and XMPP for the Google Application engine.
+
+jsb is all of the following:
+
+    * a shell console bot
+    * a shell IRC bot
+    * a shell XMPP bot
+    * a Web bot running on Google Application Engine
+    * a XMPP bot running on Google Application Engine
+    * a Google Wave bot running op Google Application Engine
+    * the XMPP bots are used to communicate between bots
+    * plugin infrastructure to write your own functionality
+    * event driven framework by the use of callbacks
+
+.B
+See http://jsonbot.googlecode.com
+.PP
+.SH USAGE
+JSONBOT uses command line options to configure a bot. See the --help option to get more help on a command
+options or see the corresponding man page.
+.PP
+
+JSONBOT provides the following programs:
+
+    * jsb - console version of jsb (shell)
+    * jsb-irc - IRC version of jsb (shell)
+    * jsb-xmpp - XMPP version of jsb (shell)
+    * jsb-fleet - mix IRC and XMPP bots (shell)
+    * jsb-release - create a new release directory (appengine)
+    * jsb-rollback - rollback a release (appengine)
+    * jsb-run - run a release in the GAE dev_appserver
+    * jsb-stop - stop a running bot (shell)
+    * jsb-upload - upload a release to the GAE
+.P
+For appengine related commands you need google_appengine installed in your home dir
+.PP
+.SH "SEE ALSO"
+The program is documented fully on http://jsonbot.org or http://jsonbot.appspot.com/docs
+
+.SH "SEE ALSO"
+jsb-irc(1), jsb-xmpp(1), jsb-fleet(1), jsb-release(1), jsb-run(1),
+jsb-rollback(1), jsb-stop(1), jsb-upload(1), jsb-uploadall(1), jsb-udp(1)
+
+.SH AUTHOR
+This manual page was written by Bart Thate <bthate@gmail.com>,
+for the Debian GNU/Linux system (but may be used by others).

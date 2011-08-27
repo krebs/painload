@@ -1,0 +1,150 @@
+<style type="text/css"> 
+
+/*  page layout */
+
+body {
+    font-family: sans-serif;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    padding: 0 0 0 0px;
+    border: 0 0 0 0px;
+    background-image: url("/static/jsonlogo128.png");
+    margin: 0px;
+    align: center;
+}
+
+/* divs */
+
+div.bodywrapper {
+    font-family: sans-serif;
+    height: 80%;
+    width: 100%;
+    position: fixed;
+    margin-left: 0px;
+    align: center;
+}
+
+div.bottom {
+    font-family: sans-serif;
+    bottom: 0;
+    align: center;
+    font-weight: bold;
+    position: fixed;
+    width: 100%;
+    margin-left: 0px;
+}
+
+div.output {
+    font-family: sans-serif;
+    overflow: auto;
+    align: center;
+    height: 50%;
+    top: 30%;
+}
+
+div.screen {
+    font-family: sans-serif;
+    position: fixed;
+    bottom: 0;
+    align: center;
+    width: 90%
+}
+
+div.footer {
+    font-family: sans-serif;
+    color: #ffffff;
+    align: center;
+    font-height: 80%;
+}
+
+div.footer a {
+    color: red;
+    text-decoration: underline;
+}
+
+
+div.related {
+    font-family: sans-serif;
+    background-color: #111111;
+    color: #000000;
+    text-align: left;  
+    border
+    line-height: 30px;
+}
+
+div.related a {
+    color: #ffffff;
+    text-align: left;
+}
+
+div.related a:hover {
+    text-decoration: underline;
+    color: red;
+}
+
+div.related ul {
+    padding 0 0 0 10px
+    list-style: none;
+}
+
+div.related li {
+    display: inline;
+    align: left;
+}
+
+div.related li.right {
+    float: right;
+    margin-right: 5px;
+}
+
+div.related h3 {  
+    display: none;
+}
+
+/* headerlinks */
+
+a.headerlink {
+    visibility: hidden;
+}
+
+h1:hover > a.headerlink,
+h2:hover > a.headerlink,
+h3:hover > a.headerlink,
+h4:hover > a.headerlink,
+h5:hover > a.headerlink,
+h6:hover > a.headerlink,
+dt:hover > a.headerlink {
+    visibility: visible;
+}
+
+/* body styles */
+
+div.body {
+    margin-top: 0;
+    color: #000000;  
+    overflow: auto;
+    align: center;
+    font-family: sans-serif;
+}
+
+div.body h1 { margin-top: 0; font-size: 320%; color: #FFFFFF; background-color: #C54848; }
+div.body h2 { font-size: 180%; }
+div.body h3 { font-size: 160%; }
+div.body h4 { font-size: 140%; }
+div.body h5 { font-size: 120%; }
+div.body h6 { font-size: 100%; }
+
+a.headerlink {
+    color: #ffffff;
+    font-size: 0.8em;
+    text-decoration: none;
+}
+
+a.headerlink:hover {
+    background-color: #c60f0f;
+    color: red;
+}
+
+</style>
+

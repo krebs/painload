@@ -1,0 +1,48 @@
+# ===========================================================
+#
+# JSONBOT CONFIGURATION FILE - /krebs/krebsbeam/.jsb/config/plugs/jsb.plugs.socket.ops
+#
+# last changed on Sat Aug 27 20:34:53 2011
+#
+# This file contains configration data for the JSONBOT.
+# Variables are defined by "name = json value" pairs.
+# Make sure to use " in strings.
+#
+# The bot can edit this file!.
+#
+# ===========================================================
+
+hide = []
+
+# - owner of the bot.
+owner = []
+
+plugname = "ops"
+
+# ============================================================
+#
+# bot generated stuff.
+#
+# ============================================================
+
+# - filename of this config file. edit this when you move this file.
+cfile = "/krebs/krebsbeam/.jsb/config/plugs/jsb.plugs.socket.ops"
+
+# - function that created this config file. bot generated
+createdfrom = "jsb.lib.config:79"
+
+# - directory to store bot data in.
+datadir = "/krebs/krebsbeam/.jsb"
+
+# - directory in which this config file lives.
+dir = "/krebs/krebsbeam/.jsb/config"
+
+# - filename of this config file.
+filename = "plugs/jsb.plugs.socket.ops"
+
+# - whether this config file lives in the database and not on file.
+isdb = false
+
+# - bot generated uuid for this config file.
+uuid = "cf7efaac-dd4c-46c7-a5d3-7886db9a0138"
+

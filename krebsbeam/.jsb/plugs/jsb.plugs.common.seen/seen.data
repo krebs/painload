@@ -1,0 +1,26 @@
+{
+ "cmile": {
+  "what": "saying", 
+  "text": "!apro chan", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314470859.2074699, 
+  "channel": "~smile@c-base/crew/smile"
+ }, 
+ "krebsbeam": {
+  "what": "joining #shackspace", 
+  "text": "", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314470856.709101, 
+  "channel": "#shackspace"
+ }, 
+ "momorientes": {
+  "what": "saying", 
+  "text": "!chan-silent", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314470991.137958, 
+  "channel": "#shackspace"
+ }
+}

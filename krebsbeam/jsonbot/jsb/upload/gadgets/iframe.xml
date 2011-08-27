@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<ModulePrefs title="jsonbot iframe" 
+       height="450"
+       author="Bart Thate"
+       author_email = "bthate@gmail.com"
+       description = "an IRC like command bot"
+       screenshot = 'http://jsonbot.appspot.com/assets/screenshot.png'
+       thumbnail = 'http://jsonbot.appspot.com/assets/favicon.png'>
+</ModulePrefs>
+<Content type="html">
+<![CDATA[
+  <div style="border: 0px; padding: 0px;">
+    <iframe id="jsb_frame" height="450px" width="100%" frameborder="0" border="0" src="https://jsonbot.appspot.com/"></iframe>
+  </div>
+  ]]>
+  </Content>
+</Module>

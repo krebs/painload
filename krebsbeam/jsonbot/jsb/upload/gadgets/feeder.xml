@@ -1,0 +1,13 @@
+<extension
+    name="JSONBOT"
+    thumbnailUrl="http://jsonbot.appspot.com/assets/favicon.png"
+    description="monitor feeds in your wave.">
+  <author name="Bart Thate" email="bthate@gmail.com"/>
+  <menuHook location="newwavemenu" 
+      text="JSONBOT" 
+      iconUrl="http://jsonbot.appspot.com/assets/favicon.png">
+      <createNewWave>
+          <participant id="jsb@appspot.com" />
+      </createNewWave>
+  </menuHook>
+</extension>

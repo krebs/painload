@@ -1,0 +1,91 @@
+#!/usr/bin/env python
+#
+#
+
+""" edit jsb config files. """
+
+
+## basic imports
+
+import logging
+
+## bootstrap
+
+import warnings  
+warnings.simplefilter("ignore")
+
+import os, sys
+sys.path.insert(0, os.getcwd())
+
+## command line parsing
+
+from jsb.version import getversion, version
+
+from optparse import OptionParser
+parser = OptionParser(usage='usage: %prog [options] <appid>', version='%prog ' + version)
+parser.add_option('-d', '--datadir', type='string', default=False, dest='datadir', help="datadir to use")
+parser.add_option('-l', '--loglevel', type='string', default=False, dest='loglevel', help="logging level")
+parser.add_option('', '--colors', action="store_true", default=False, dest='colors', help="enable the use of colors")
+parser.add_option('', '--show', action="store_true", default=False, dest='show', help="show the config file on stdout")
+opts, args = parser.parse_args()
+opts.args = args
+
+if opts.datadir:
+    if not os.path.isdir(opts.datadir): os.mkdir(opts.datadir)
+    from jsb.lib.datadir import setdatadir
+    setdatadir(opts.datadir)
+
+## make config from cmndline options
+
+from jsb.utils.log import setloglevel   
+from jsb.lib.config import getmainconfig
+mainconfig = getmainconfig()
+setloglevel(opts.loglevel or "error", opts.colors)
+
+print getversion('CONFIG')
+
+from jsb.utils.log import setloglevel
+setloglevel("error")
+
+if len(opts.args) == 0:
+    print "you can choose one of the following:\n\t"
+    from jsb.lib.datadir import getdatadir
+    for botname in os.listdir(getdatadir() + os.sep + 'config' + os.sep + 'fleet'):
+        print "\t%s" % botname
+    print "jsb-config <botname>"   
+    os._exit(1)
+
+## json imports
+
+from jsb.imports import getjson
+json = getjson()
+
+## edit the config file
+
+from jsb.lib.datadir import getdatadir
+
+botname = opts.args[0]
+fleetname = "fleet" + os.sep + botname + os.sep + "config"
+configfile = getdatadir() + os.sep + "config" + os.sep + fleetname
+ 
+try:
+    from jsb.lib.config import Config
+    cfg = Config(fleetname)
+except Exception, ex:
+    print "can't make config from file %s - %s" % (configfile, str(ex))
+    os._exit(1)
+
+try:
+    attr = opts.args[1].strip()
+    value = opts.args[2].strip()
+    cfg[attr] = json.loads(value)
+except IndexError, ex: print "\nno values to set.\n"
+except (TypeError, json.decoder.JSONDecodeError), ex:
+    print u"can't parse %s - %s." % (unicode(value), unicode(ex))
+    os._exit(1)
+else:
+    cfg.save()
+    print "\n%s of %s set to %s.\n\n" % (attr, configfile, value)
+
+if opts.show: cfg.tofile(stdout=True)
+

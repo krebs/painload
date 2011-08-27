@@ -1,0 +1,54 @@
+PLUGINLIST
+==========
+
+JSONBOT 0.1 contains the following plugins:
+
+  * 8b - eight ball
+  * admin - administator related commands
+  * alias - keep aliases (per user)
+  * ask - plugin for asking "experts" a question
+  * choice - choice out of a list .. used in pipelines
+  * controlchar - set the control character of a channel
+  * forward - forward events of a channel to another bot
+  * clone - clone waves into new ones
+  * core - core bot commands
+  * count - count the numbers in a result .. used in pipelines
+  * data - provide data dumps of channels, bots, events
+  * fleet - support multiple bots in a running instance (list of bots)
+  * gae - provide GAE commands like flush cache or cache stats
+  * gadget - wave gadget support
+  * gcalc - use google to calculate
+  * grep - grep the result .. used in pipelines
+  * hubbub - pubsubhubbub plugin providing subscribe functionality
+  * ipcalc - ipcalculator
+  * irc - IRC related commands
+  * jsondata - enable/disable sharing of files through the jsonserver (not enabled right now)
+  * kickban - channel control commands for IRC
+  * misc - other commands
+  * more - do a more on buffered output
+  * nickcapture - retake nick (IRC)
+  * nickserv - nickserver support (IRC)
+  * not - negated grep .. used in pipelines
+  * outputcache - show outputcache data
+  * rss - provide RSS and Atom pollers
+  * relay - relay to other waves/xmpp account
+  * reload - reloading of plugins
+  * restserver - provide REST functionality to the bot
+  * reverse - reverse the result .. also used in pipelines
+  * seen - keep track of users
+  * shop - keep shopping lists
+  * sort - sort the result .. used in pipelines
+  * tail - tail the result .. used in pipelines
+  * test - test commands
+  * tinyurl - get a tinyurl
+  * todo - keep a todo list
+  * underauth - undernet auth support (IRC)
+  * uniq - make the result unique .. used in pipelines
+  * user - user management
+  * userstate - userstate management
+  * watcher - watch channels that get forwarded to the bot. Wave <-> IRC, Wave <-> XMPP, IRC <-> XMPP
+  * wave - wave related commands
+  * weather - show weather in a city
+  * welcome - welcome messages shown in the gadget
+  * wikipedia - query wikipedia
+  * xmpp - xmpp related functions

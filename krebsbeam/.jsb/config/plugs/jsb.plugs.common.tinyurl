@@ -1,0 +1,48 @@
+# ===========================================================
+#
+# JSONBOT CONFIGURATION FILE - /krebs/krebsbeam/.jsb/config/plugs/jsb.plugs.common.tinyurl
+#
+# last changed on Sat Aug 27 20:34:52 2011
+#
+# This file contains configration data for the JSONBOT.
+# Variables are defined by "name = json value" pairs.
+# Make sure to use " in strings.
+#
+# The bot can edit this file!.
+#
+# ===========================================================
+
+hide = []
+
+# - owner of the bot.
+owner = []
+
+plugname = "tinyurl"
+
+# ============================================================
+#
+# bot generated stuff.
+#
+# ============================================================
+
+# - filename of this config file. edit this when you move this file.
+cfile = "/krebs/krebsbeam/.jsb/config/plugs/jsb.plugs.common.tinyurl"
+
+# - function that created this config file. bot generated
+createdfrom = "jsb.lib.config:79"
+
+# - directory to store bot data in.
+datadir = "/krebs/krebsbeam/.jsb"
+
+# - directory in which this config file lives.
+dir = "/krebs/krebsbeam/.jsb/config"
+
+# - filename of this config file.
+filename = "plugs/jsb.plugs.common.tinyurl"
+
+# - whether this config file lives in the database and not on file.
+isdb = false
+
+# - bot generated uuid for this config file.
+uuid = "ee0be7a8-30a0-42a0-854e-6f5e83471a4a"
+

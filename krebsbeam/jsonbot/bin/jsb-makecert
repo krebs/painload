@@ -1,0 +1,2 @@
+echo "using $1"
+openssl req -x509 -days 3650 -nodes -subj "/O=jsonbot.org/OU=webconsole/C=NL/ST=NoordHolland/L=Heerhugowaard/CN=$1" -newkey rsa:1024 -keyout jsb.key -out jsb.crt

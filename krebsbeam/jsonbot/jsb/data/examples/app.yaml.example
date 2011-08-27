@@ -1,0 +1,95 @@
+# JSONBOT application file
+#
+#
+
+application: jsonbot
+version: 1
+runtime: python
+api_version: 1
+
+default_expiration: "1s"
+
+handlers:
+
+- url: /_ah/warmup
+  script: handler_warmup.py
+
+- url: /
+  script: handler_web.py
+  secure: always
+  login: required
+
+- url: /_ah/assets/(.*)
+  static_files: assets/\1
+  upload: assets/(.*)
+
+- url: /_ah/login.*
+  script: handler_openid.py
+
+- url: /_ah/queue/deferred
+  script: $PYTHON_LIB/google/appengine/ext/deferred/deferred.py
+  login: admin
+
+- url: /_ah/channel/.*
+  script: handler_channel.py
+  login: admin
+
+- url: /stats.*
+  script: $PYTHON_LIB/google/appengine/ext/appstats/ui.py
+  login: admin
+
+- url: /tasks.*
+  script: handler_task.py
+  login: admin
+  secure: always
+
+- url: /assets/(.*)
+  static_files: assets/\1
+  upload: assets/(.*)
+
+- url: /_wave.*
+  script: handler_wave.py
+
+- url: /_ah/xmpp/.*
+  script: handler_xmpp.py
+
+- url: /hubbub(.*)
+  script: handler_hubbub.py
+
+- url: /assets/(.*)
+  static_dir: /assets/
+
+- url: /dispatch.*
+  script: handler_dispatch.py
+  login: required
+
+- url: /demo.*
+  script: handler_demo.py
+
+- url: /feeds.*
+  script: handler_web.py
+
+- url: /docs/html/(.*)
+  static_files: docs/html/\1
+  upload: docs/html/(.*)
+
+- url: /docs.*
+  script: handler_docs.py
+
+- url: /(.*\.xml)  
+  static_files: gadgets/\1
+  upload: gadgets/(.*\.xml)
+
+- url: /_static/(.*)
+  static_files: assets/\1
+  upload: assets/(.*)
+
+- url: /favicon.ico
+  static_files: assets/favicon.ico
+  upload: assets/favicon.ico
+
+
+inbound_services:
+- warmup
+- xmpp_message   
+- channel_presence

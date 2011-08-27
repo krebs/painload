@@ -1,0 +1,27 @@
+# jsb config
+#
+#
+# TAKE NOTE THAT FORMAT IS IN JSON NOW SO USE " not '
+
+## DOMAIN 
+
+domain = "googlewave.com"
+
+## APPLICATION NAME
+
+appname = "JSONBOT"
+app_id = "jsonbot"
+
+## GLOBAL OWNER .. example: owner = ["~bart@127.0.0.1"] (include ident if needed)
+
+owner = []
+
+# enable debugging
+debug = 0
+
+# auto register new users 
+
+auto_register = 0
+guestasuser = 0
+
+#color = "#123456"

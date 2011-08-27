@@ -1,0 +1,126 @@
+CONFIGURATION
+=============
+
+JSONBOT uses files under the <datadir>/config dir which consists of var =
+"jsonstring" lines. An example of a config file:
+
+::
+
+    bart@monster:~/work/first$ cat ~/.jsb/config/fleet/default-ConsoleBot/config 
+    botname = "default-ConsoleBot"
+
+    cfile = "/home/bart/.jsb/config/fleet/default-ConsoleBot/config"
+
+    createdfrom = "jsb.lib.config:78"
+
+    # directory to store bot data in.
+    datadir = "/home/bart/.jsb"
+
+    dir = "/home/bart/.jsb/config"
+
+    filename = "fleet/default-ConsoleBot/config"
+
+    # who to follow on the bot .. bot maintains this list.
+    followlist = []
+
+    isdb = false
+
+    # the name of the bot.
+    name = "default-ConsoleBot"
+
+    # owner of the bot.
+    owner = []
+
+    # the bot's type.
+    type = "console"
+
+    # bot generated uuid for this config file.
+    uuid = "94b0e351-0c2f-4e4e-8edf-2a49a790892f"
+    
+lefthand side is the name of the config variable, right hand side is a
+jsonstring that contains the value.
+
+Config dirs
+~~~~~~~~~~~
+
+Config files are stored in the <datadir>/config directory:
+
+the mainconfig file contains main configuration for bot, the files under the
+fleet directory contain configurations for the bots (jsonbot can support
+multiple bots running in 1 instance) and plugin configuration is stored in
+the plugs subdir.
+
+Programmically
+~~~~~~~~~~~~~~
+
+The Configuration class is defined in :ref:`jsb.lib.config`. This module
+contains also the mainconfiguration object which can be retrieved with the
+getmainconfig() function. The configation variables can be queries with the
+. notation, so if you do 
+
+::
+
+    cfg = getmainconfig()
+    print cfg.owner
+
+it will print the owner as defined in the <datadir>/config/mainconfig file.
+
+Configuration files are writable by the bot by calling the .save() function:
+
+:: 
+
+    bot.cfg.server = "jsonbot.org"
+    bot.save()
+
+as you can see the bot specific configuration is stored as bot.cfg (config
+taken from <datadir>/config/fleet/<botname>/config).
+
+Plugin configuration is done with the :ref:`jsb.lib.persistconfig` class
+that allows for commands to configure them online.
+
+For example the defintion of the udp plugin is done in code:
+
+::
+
+    cfg = PersistConfig()
+    cfg.define('udp', 0) # set to 0 to disnable
+    cfg.define('udpparty', 0)
+    cfg.define('udpipv6', 0)
+    cfg.define('udpmasks', ['192.168*', ])
+    cfg.define('udphost', "localhost")
+    cfg.define('udpport', 5500)
+    cfg.define('udpallow', ["127.0.0.1", ])
+    cfg.define('udpallowednicks', ["#dunkbots", "#jsb", "dunk_"])
+    cfg.define('udppassword', "mekker", exposed=False)
+    cfg.define('udpseed', "blablablablablaz", exposed=False) # needs to be 16 chars wide
+    cfg.define('udpstrip', 1) # strip all chars < char(32)
+    cfg.define('udpsleep', 0) # sleep in sendloop .. can be used to delay pack
+    cfg.define('udpdblog', 0)
+    cfg.define('udpbots', [cfg['udpbot'] or 'default-irc', ])
+
+The user can set these defined variable with the !udp-cfg commands:
+
+::
+
+    usage:
+    !plug-cfg                   ->      shows list of all config
+    !plug-cfg key value         ->      sets value to key
+    !plug-cfg key               ->      shows list of key
+    !plug-cfg key add value     ->      adds value to list
+    !plug-cfg key remove value  ->      removes value from list
+    !plug-cfg key clear         ->      clears entire list
+    !plug-cfgsave               ->      force save configuration to disk
+    
+File creation
+~~~~~~~~~~~~~
+
+JSONBOT uses commandline options to generate the config files needed, but if
+you prefer to edit the configuration files you can run jsb-init that will
+create example irc and xmpp files into <datadir>/config/fleet/default-irc
+and default-sxmpp dirs. If you want more irc bots or xmpp bots you can copy
+the directories to new ones, but make sure to change the name variable of
+each config file (dir name needs to be the same as the name var in the
+config file).
+
+For plugin configuration files, the are only created by running the
+!<plugin>-cfgsave command. So for the udp plugin it would be !udp-cfgsave.

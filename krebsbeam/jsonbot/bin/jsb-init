@@ -1,0 +1,43 @@
+#!/usr/bin/env python
+#
+#
+
+import warnings
+warnings.simplefilter("ignore")
+
+## bootstrap
+
+import os, sys
+sys.path.insert(0, os.getcwd())
+sys.path.insert(0, "/usr/lib/python2.6/dist-packages")
+from jsb.utils.generic import isdebian, botuser
+from jsb.version import getversion
+
+from optparse import OptionParser
+parser = OptionParser(usage='usage: %prog [options', version=getversion("INIT"))
+parser.add_option('-d', '--datadir', type='string', default=False, dest='datadir')
+parser.add_option('-l', '--loglevel', type='string', default=False, dest='loglevel')
+opts, args = parser.parse_args()
+opts.args = args
+
+from jsb.lib.datadir import makedirs, getdatadir, setdatadir
+if opts.datadir: setdatadir(opts.datadir)
+
+from jsb.utils.log import setloglevel
+setloglevel(opts.loglevel or "error")
+
+import logging
+logging.warn(getversion("INIT"))
+
+ddir = opts.datadir or getdatadir()
+try:
+    makedirs(ddir)
+except Exception, ex: print str(ex) ; os._exit(1)
+from jsb.lib.config import makedefaultconfig
+from jsb.lib.fleet import getfleet
+from jsb.lib.boot import boot
+makedefaultconfig('irc', ddir)
+getfleet().addnametype("default-irc", "irc")
+makedefaultconfig('sxmpp', ddir)
+getfleet().addnametype("default-sxmpp", "sxmpp")
+boot(force=True)

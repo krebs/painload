@@ -1,0 +1,48 @@
+#!/usr/bin/env python
+#
+#
+
+## defines
+
+dirstoget = ['user', 'state', 'plugs', 'fleet', 'config']
+
+## booot
+
+import os
+import sys
+
+sys.path.insert(0, os.getcwd())
+
+## lib imports
+
+from jsb.utils.generic import stringsed, copyfile
+
+## scandir function
+
+def dodir(origdir, todir):
+    """ move a datadir over. """    
+    ddir = origdir
+    for d in os.listdir(origdir):
+        dd = ddir + os.sep + d
+        if os.path.isdir(dd):
+            if 'releases' in dd: continue
+            if 'botlogs' in dd: continue
+            if 'run' in dd: continue
+            dodir(dd, todir)
+            continue
+        ddd = stringsed(dd, "s/%s/%s/" % (".jsonbot", ".jsb"))
+        if os.path.isfile(ddd): continue
+        ddd = stringsed(ddd, "s/waveplugs/jsb.plugs.wave/")
+        ddd = stringsed(ddd, "s/gozerlib\.plugs/jsb.plugs.core/")
+        ddd = stringsed(ddd, "s/commonplugs/jsb.plugs.common/")
+        ddd = stringsed(ddd, "s/socketplugs/jsb.plugs.socket/")
+        ddd = stringsed(ddd, "s/gaeplugs/jsb.plugs.gae/")
+        print "copying to %s" % ddd
+        copyfile(dd, ddd)
+
+try: origdir = sys.argv[1]
+except IndexError: origdir = os.path.expanduser("~") + os.sep + ".jsonbot"
+try: todir = sys.argv[1]
+except IndexError: todir = os.path.expanduser("~") + os.sep + ".jsb"
+
+dodir(origdir, todir)

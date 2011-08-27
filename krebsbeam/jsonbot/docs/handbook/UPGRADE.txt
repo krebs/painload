@@ -1,0 +1,78 @@
+UPGRADE
+=======
+
+From 0.4 to 0.5
+---------------
+
+A number of changes went into JSONBOT.
+
+First i needed to change the stripname() function to make used filename
+compatible with appengine. This means that most json data lives under a
+different filename. To fix this i made a !chan-upgrade command which tries
+to find the old filename and merge the data of that into the new file.
+
+Second: I needed to make the bot debian compatible so we needed to be able
+to start the bot from a different datadir (currently the local gozerdata
+dir). This was a big rewrite as access to the datadir var in
+jsb/datadir needed to be moved from import time to runtime as it can be
+set in the using program now .. use the -d option to set a different datadir
+as opposed to the default which is ~/.jsb now
+
+Third: forwarding was a bit too open so i added a allowwatch attribute that
+determines to what channel a forwarded event can be send. This way the
+sending side can control to whom the events may go. Use !chan-allowwatch to
+add remote channel to the allowlist.
+
+to recap:
+
+    1) move your data dir into ~/.jsb or use -d gozerdata 
+    2) run !chan-upgrade to update you channel data
+    3) use !chan-allowwatch on the sending side to allow channels on the receiving side if you use forwarding
+
+From 0.5 to 0.6
+---------------
+
+The bot got refactored beyond sanity, so seperate upgrade scripts and
+programs are provided to upgrade to 0.6
+
+* on shell
+    
+use the ./bin/jsb-upgrade program, this will copy your data from ~/.jsonbot to ~/.jsb
+
+* on GAE
+
+copy over the files from ~/jsonregs to ~/jsbregs (cp -Ra)
+
+Best is to upload the new bot into its own version (edit ~/jsbregs/<appid>/app.yaml)
+
+Run the !admin-upgrade command, you may need to run this multiple
+times until the bot says it's done upgrading, check if everything is still
+working and switch to the new version.
+
+
+you might need to run !chan-upgrade to update your channel.
+
+From 0.6 to 0.7
+---------------
+
+in 0.7 a number of things changed, most of them relating to how programmers
+use the bot code. 
+
+First: bot/event classes were move into there own new namespace namely
+jsb.drivers. So now you need to access for examples jsb.drivers.irc.bot etc.
+
+Second: jsb.lib.version is now jsb.version
+
+Third: the bot was rewritten to use the config variables directly. Instead
+of doing bot.name = bot.cfg.name you should now use the bot.cfg.name. This 
+is so changes to the config can be reloaded on runtime (i'm working on the config 
+reload code).
+
+4th: the ~/.jsb/myplugs dir got seperate into multiplie subdirs namely:
+myplugs.socket (shell), myplugs.common (both), myplugs.gae (GAE). You need to move 
+your plugins into one of those.
+
+Thats it ! No changes needed to the filesystem so no !upgrade command to
+run. It might be possible that a bot's config file (see ~/.jsb/config/fleet)
+is not set, if so add it to the config file and restart.
+

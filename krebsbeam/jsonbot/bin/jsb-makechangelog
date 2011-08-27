@@ -1,0 +1,29 @@
+#!/usr/bin/env python
+#
+#
+
+import sys
+import os
+import re
+
+data = os.popen('hg log').readlines()
+rev = ""
+summary = ""
+date = ""
+counter = 0
+go = 0
+for a in data:
+    i = a.strip()
+    if not i: continue
+    counter += 1
+    if i.startswith('changeset'):
+        rev = i.split()[1].split(':')[0].strip()
+    if i.startswith('date'):
+        date = ' '.join(i.split(' ', 1)[1].split()[1:5])
+    if i.startswith('summary'):
+        summary = i[10:]
+        if 'Added tag' in summary:
+            print '\n%s' % summary.split()[2]
+            print '~' * len(summary.split()[2]) + '\n\n'
+        print "%s %s .. %s\n" % (rev, date, summary)
+        date = rev = summary = ""

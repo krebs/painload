@@ -1,0 +1,94 @@
+#!/usr/bin/env python
+#
+#
+
+## bootstrap
+
+import warnings
+warnings.simplefilter("ignore")
+
+import os, sys
+sys.path.insert(0, os.getcwd())
+
+## options parser
+
+from jsb.utils.opts import makeircconfig, makeircopts
+from jsb.lib.datadir import setdatadir
+
+opts = makeircopts()
+if opts.datadir: setdatadir(opts.datadir)
+
+## print version
+
+from jsb.version import getversion
+print getversion('IRC')
+
+## jsb imports
+
+from jsb.utils.exception import handle_exception
+from jsb.lib.partyline import partyline
+from jsb.drivers.irc.bot import IRCBot
+from jsb.lib.boot import plugin_packages, boot
+from jsb.utils.log import setloglevel
+from jsb.lib.config import Config, getmainconfig
+from jsb.lib.errors import NoOwnerSet
+from jsb.lib.fleet import getfleet
+from jsb.utils.mainloop import mainloop
+from jsb.lib.threads import start_new_thread
+from jsb.lib.eventhandler import mainhandler
+import jsb.lib.users as users
+import jsb
+
+## basic imports
+
+import logging
+import time
+import os
+
+## config stuff 
+
+cfg = makeircconfig(opts)
+cfg.save()
+
+mainconfig = getmainconfig()
+setloglevel(opts.loglevel or mainconfig.loglevel or "warning", opts.colors, opts.datadir)
+if opts.loglevel: mainconfig.loglevel = opts.loglevel ; mainconfig.save()
+
+## boot
+
+boot(opts.datadir)
+
+## runtime
+
+if opts.owner:
+    u = users.users_boot()
+    u.make_owner(opts.owner)
+
+if opts.name: cfg.name = opts.name
+else: cfg.name = "default-irc"
+
+## resume or start the bot
+
+if opts.doresume and os.path.isfile(opts.doresume):
+    logging.warn("irc - resuming from %s" % opts.doresume)
+    if True:
+        fleet = getfleet()
+        fleet.resume(opts.doresume)
+        fleet.startok.wait()
+    partyline.resume(opts.doresume)
+    os.unlink(opts.doresume)
+else:
+    try:
+        bot = IRCBot(cfg)
+    except NoOwnerSet, ex:
+        print "owner is not set in %s - use the -o option" % str(ex)
+        os._exit(1)
+    if opts.channel and not opts.channel in bot.state['joinedchannels']:
+        bot.state['joinedchannels'].append(opts.channel)
+        bot.state.save()
+    fleet = getfleet(opts.datadir)
+    fleet.addbot(bot)
+    start_new_thread(bot.reconnect, ())
+
+
+mainloop()

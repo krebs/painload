@@ -1,0 +1,29 @@
+UPLOAD
+======
+
+JSONBOT uses a directory in your home in that contains all the site specific
+files such as app.yaml, credentials.py and mainconfig. These files are
+expected in the ~/jsbregs/<botname> directory. When runnng
+./bin/jsb-release for the first time these files will be created and can then be
+edited. JSONBOT needs the google_appengine package installed in your home dir as well.
+
+you need an account on the Google Application Engine. see http://appengine.google.com/
+
+you also need to enable openid authentication (federated login) on your app, it's in
+Applcation Settings in your admin console.
+
+1) run jsb-uploadall <yourbotname> - this will create a uploadable dir and upload it to the
+   GAE, enabling web and xmpp. For wave you need to do the following:
+
+2) go to https://wave.google.com/wave/robot/register and register your bot
+3) edit ~/regs/<yourbotname>/ dir and copy the verification token and secret to the credentials.py file
+4) run jsb-uploadall <yourbotname>
+5) once its uploaded click the "verify" button
+6) copy the consumer key and secret to the credentials.py file en run jsb-upload again
+7) done !
+
+now you should be able to do the following:
+
+1) visit the website at http://<yourbotname>.appspot.com
+2) add the bot as Jabber buddy at <yourbotname>@appspot.com
+3) the same as wave bot

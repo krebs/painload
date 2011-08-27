@@ -1,0 +1,5 @@
+include           MANIFEST.in
+include           Changelog
+include           jsb/contrib/tornado/ca-certificates.crt
+recursive-include files *
+recursive-include jsb/data *

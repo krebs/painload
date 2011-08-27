@@ -1,0 +1,43 @@
+.TH JSONBOT 1 "7 Nov 2010" "Debian GNU/Linux" "jsb manual"
+.SH NAME
+.B jsb-release \- The JSONBOT release program
+.SH SYNOPSIS
+JSONBOT is a remote event-driven framework for building bots that talk JSON
+to each other over XMPP. 
+.B jsb-release
+is the program that you can use to create a directory ready for uploading to
+the GAE (Google Application Engine).  
+.B 
+.SH "DESCRIPTION"
+.P
+The bot can also run in the Google cloud (GAE) and for this to work a
+directory needs to be created with all the files needed to run properly on
+the GAE. The directory is created in <datadir>/releases/<appid>, default
+datadir is ~/.jsb. Use the
+.B jsb-upload
+program to upload the bot to the GAE
+.PP
+.SH REQUIREMENTS
+This program need google_appengine installed in your homedir. See
+http://appengine.google.com
+
+.SH USAGE
+.P
+.B Usage: jsb-release [options] <appid>
+
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  -b, --backup          keep backup dir
+  -d DATADIR, --datadir=DATADIR
+                        datadir to use
+
+.SH "DOCUMENTATION"
+See http://jsonbot.org or http://jsonbot.appspot.com/docs for more documentation
+
+.SH "SEE ALSO"
+jsb-run(1), jsb-rollback(1), jsb-upload(1), jsb-uploadall(1) 
+
+.SH AUTHOR
+This manual page was written by Bart Thate <bthate@gmail.com>,
+for the Debian GNU/Linux system (but may be used by others).

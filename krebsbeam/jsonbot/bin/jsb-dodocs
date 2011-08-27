@@ -1,0 +1,9 @@
+# do the documentation generation cycle
+#
+#
+
+cd docs
+rm -fR jsb
+cd ..
+./bin/jsb-makedocs
+sphinx-build -N docs docs/html

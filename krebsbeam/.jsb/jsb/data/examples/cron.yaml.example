@@ -1,0 +1,8 @@
+# gozbot cron file
+#
+#
+
+cron:
+- description: rss beat
+  url: /tasks/rss
+  schedule: every 1 minutes

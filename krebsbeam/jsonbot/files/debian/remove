@@ -1,0 +1,6 @@
+rm -fR /var/run/jsb
+rm -fR /var/log/jsb
+rm -fR /usr/lib/jsb
+rm -fR /var/cache/jsb
+rm -fR /etc/jsb
+rm -fR /usr/local/lib/python2.6/dist-packages/jsb

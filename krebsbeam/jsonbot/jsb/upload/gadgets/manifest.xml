@@ -1,0 +1,13 @@
+<extension
+    name="JSONBOT"
+    thumbnailUrl="http://jsonbot.appspot.com/assets/favicon.png"
+    description="add JSONBOT to the wave">
+  <author name="Bart Thate" email="bthate@gmail.com"/> 
+  <menuHook location="toolbar" text="add JSONBOT to the wave" 
+      iconUrl="http://jsonbot.appspot.com/assets/favicon.png">
+      <insertGadget url="http://jsonbot.appspot.com/iframe.xml"/> 
+          <addParticipants>
+              <participant id="jsb@appspot.com" />
+          </addParticipants>
+  </menuHook>
+</extension>

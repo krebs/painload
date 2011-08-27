@@ -1,0 +1,100 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          jsb
+# Required-Start:    $local_fs $remote_fs $network $named
+# Required-Stop:     $local_fs $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: JSONBOT 
+# Description:       The JSON everywhere bot!
+### END INIT INFO
+
+NAME=jsb-fleet
+DESC="JSONBOT"
+DATADIR=/var/cache/jsb
+PIDFILE=/var/run/jsb/jsb.pid
+PID=`cat $PIDFILE` 2>/dev/null
+
+# Include gozerbot defaults if available
+if [ -f /etc/default/jsb ] ; then
+    . /etc/default/jsb
+fi
+
+if [ "$RUN" != "yes" ] ; then
+    echo "$NAME disabled; edit /etc/default/jsb"
+    exit 0
+fi
+
+if [ -n "$RUNUSER" ] ; then
+    RUNUSER=jsb
+fi
+
+status()
+{
+	test -n "$PID" && ps auxw | grep -v grep | grep jsb-fleet | grep -q -s " $PID " && return 0
+        return 1
+}
+
+stop()
+{
+	if status
+	then
+		kill -TERM $PID
+	fi
+}
+
+start()
+{
+	status && exit 1 # already running
+        if [ -f "/etc/jsb/config/mainconfig" ]		
+        then
+        	su $RUNUSER -c "$NAME -d $DATADIR $ARGSTRING 2>/dev/null &"
+	else
+                su $RUNUSER -c "jsb-init -d $DATADIR"
+        	rm -rf /etc/jsb/config
+		ln -s /var/cache/jsb/config /etc/jsb/config
+		su $RUNUSER -c "$NAME -d $DATADIR $ARGSTRING 2>/dev/null &"
+	fi
+	su $RUNUSER -c "$NAME -d $DATADIR -a 2>/dev/null"
+}
+
+case "$1" in
+start)
+	echo -n "Starting $DESC: $NAME "
+	start
+	case "$?" in
+		0) echo "." ; exit 0 ;;
+		1) echo " (already running)." ; exit 0 ;;
+		*) echo " (failed)." ; exit 1 ;;
+	esac
+	;;
+stop)
+	echo -n "Stopping $DESC: $NAME"
+	stop
+	case "$?" in
+		0) echo "." ; exit 0 ;;
+		1) echo " (not running)." ; exit 0 ;;
+		*) echo " (failed)." ; exit 1 ;;
+	esac
+	;;
+restart|force-reload|reload)
+	echo -n "Restarting $DESC: $NAME"
+	stop
+	start
+	;;
+status)
+	echo -n "Status of $DESC service: "
+	status
+	case "$?" in
+		0) echo "running." ; exit 0 ;;
+		1) echo "not running." ; exit 3 ;;
+	esac
+	;;
+*)
+	echo "Usage: /etc/init.d/jsb {start|stop|reload|force-reload|restart|status}" >&2
+	exit 1
+	;;
+esac
+
+*t

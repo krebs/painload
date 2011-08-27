@@ -1,0 +1,38 @@
+.TH JSONBOT 1 "7 Nov 2010" "Debian GNU/Linux" "jsb manual"
+.SH NAME
+.B jsb-rollback \- The JSONBOT rollback program
+.SH SYNOPSIS
+JSONBOT is a remote event-driven framework for building bots that talk JSON
+to each other over XMPP. 
+.B jsb-rollback
+is used to rollback a release.  
+.B 
+.SH "DESCRIPTION"
+.P
+When the uploading of a release to the GAE goes wrong, the upload needs to
+be rolled back into a state where it can be uploaded again.
+.B jsb-rollback
+does this.
+.SH REQUIREMENTS
+This program needs google_appengine installed in your home dir. See
+http://appengine.google.com
+.PP
+.SH USAGE
+.P
+.B Usage: jsb-rollback [options] <appid>
+
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  -d DATADIR, --datadir=DATADIR
+                        datadir to use
+
+.SH "DOCUMENTATION"
+See http://jsonbot.org or http://jsonbot.appspot.com/docs for more documentation
+
+.SH "SEE ALSO"
+jsb-release(1), jsb-run(1), jsb-upload(1), jsb-uploadall(1) 
+
+.SH AUTHOR
+This manual page was written by Bart Thate <bthate@gmail.com>,
+for the Debian GNU/Linux system (but may be used by others).

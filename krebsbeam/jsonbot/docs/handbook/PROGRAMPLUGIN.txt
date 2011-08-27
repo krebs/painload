@@ -1,0 +1,184 @@
+PROGRAMPLUGIN
+=============
+
+::
+
+    For Annemiek, Kirsten, Danny and Doscha ;]
+
+Intro
+~~~~~
+
+This document is here to help you program JSONBOT plugins. JSONBOT plugins
+are python files that contain commands and callbacks handlers that receive a
+bot and a event as arguments and can act upon these. 
+
+First you must know that plugins you write yourself should be placed in one
+of the ~/.jsb/myplugs subdirs. The bot will detect if code has changed in
+these directories: use "gae" for GAE specific plugins, "socket" for plugins that
+run on shell bots and "common" for both.
+
+Second thing to remember is to call the !admin-boot command if you add new
+commands or callbacks so the bot can recreate its command and callback
+indexes (used to load a plugin on demand).
+
+
+Example
+~~~~~~~
+
+Very basic example of a JSONBOT command handler is:
+
+::
+
+    from jsb.lib.commands import cmnds
+
+    def handle_demo(bot, event):
+        """ do the command. """
+        event.reply("This is a demo text.")
+
+    cmnds.add("demo", handle_demo, "GUEST")
+
+This example implements a command !demo which just gives a reply. The
+jsb.plugs.core.dispatch plugin termines whether a event triggers a command
+or not. Basically that plugin checks for the cc (control char) in the
+event.txt attribute and if it does, it will check permissions and call the
+handle_demo function with the bot and event paramaters passed along.
+
+To let a plugin react on events, you can add a same kind of handler to the
+callbacks object, and have it called when a particular event takes place on
+the bot. Example:
+
+::
+
+    from jsb.lib.callbacks import callbacks
+
+    def handle_democb(bot, event):
+        bot.say(event.channel, "%s joined the channel." % event.nick)
+
+    callbacks.add("JOIN", handle_democb)
+
+The callback implemented here is registered on JOIN events and thus gets
+called on JOIN received by the bot (JOIN is a IRC message) with both bot and
+the JOIN event passed on as arguments. I used bot.say() here to show that
+the bot can be used for push operations as well (where as reply() always
+responds to the event in question. The handler also shows that the event
+contains data about the event that took place (event.nick, event.channel).
+
+Data Flow
+~~~~~~~~~
+
+So plugin are about handler and handlers are about combining bot and events
+together. Basically the data flow is like this:
+
+::
+
+    * bot connects to server
+    * bot gets data back (most of the times this is a string)
+    * bot creates an event from the data received
+    * bot calls the handler with itself and the event as arguments
+    * handler does something with the event and sends a response back
+    * bot can also push data to a channel, think RSS feeds
+
+For every network that JSONBOT supports there need to be both bot and event
+classes that support the connecting to the network and the contruction of
+the events based upon the data that is received. These classed are in
+JSONBOT 0.7 moved into there own sub package: :ref:`jsb.drivers`, so writing
+new bot-event combinations becomes easier.
+
+Using Events
+~~~~~~~~~~~~
+
+So events are at the core of the JSONBOT handlers that you can write for
+your plugin. The basic interface of these events are defined in
+:ref:`jsb.lib.eventbase`, i will summ up the most important method and
+atributes:
+
+methods:
+
+:: 
+
+    
+    def reply(self, txt, result=[], event=None, origin="", dot=u", ",
+              nr=375, extend=0, *args, **kwargs):
+        """ 
+            use this to reply to the event with some text. the result list
+            can be pipelined to other commands and uses the dot paramater to 
+            concat the result list into the string send back to the user. If 
+            you want to use the result of the plugin be sure to pass on the 
+            event with the event parameter as results are aggregated in the 
+            event itself.
+
+            examples: 
+
+            1) event.reply("demo text")
+            2) event.reply("results: ", resultlist)
+            3) event.reply("results: ", resultlist, dot=" | ")
+            4) event.reply("results: ", resultdict)
+            5) event.reply("results: ", resultlist, event=self)
+
+        """
+
+::
+
+    def missing(self, txt):
+        """
+            use this if the input from the user is not correct. 
+
+            example: event.missing("<nick>")
+
+        """
+
+::
+
+    def done(self):
+        """ this just prints "done - command. """ 
+
+::
+
+    def iscmnd(self):
+        """ checks whether an event is a command. returns comandstring. """
+
+::
+
+    def bind(self, bot=None, user=None, chan=None):
+        """ 
+            use this to bind bot, user and channel object into the event. 
+            note that you dont have to provide arguments but you can if you
+            have these objects already available.
+
+        """
+
+::
+
+    def ready(self, finish=True):
+        """ 
+            use this when you are finished handling the event. JSONBOT tried
+            to automatically do this for you, but sometimes you need to do this
+            yourself.
+
+        """
+
+attributes:
+
+::
+
+        self.stop = False # set this if you want any processing of the
+                             # events stopped
+
+        self.bonded = False # check this to see if EventBase.bind() is
+                            # already called
+
+after bind():
+
+::
+
+        # the channel object containing data relataed to the channel
+        self.chan = ChannelBase(self.channel, bot.cfg.name)
+
+        # the user of the bot giving the command
+        self.user = user or bot.users.getuser(target)
+
+
+There are more methods defined on the EventBase class but these are the most
+common used by plugin programmers. The bot will only execute commands when
+the event has bind() called on it so the user and chan attributes will be
+properly set.

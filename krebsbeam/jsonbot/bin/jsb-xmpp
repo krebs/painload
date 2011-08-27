@@ -1,0 +1,79 @@
+#!/usr/bin/env python
+#
+#
+
+## bootstrap
+
+import warnings
+warnings.simplefilter("ignore")
+
+import os, sys
+sys.path.insert(0, os.getcwd())
+
+
+## jsb impors
+
+from jsb.drivers.xmpp.bot import SXMPPBot
+from jsb.lib.boot import plugin_packages, boot
+from jsb.utils.log import setloglevel
+from jsb.lib.config import Config, getmainconfig
+from jsb.lib.errors import NoOwnerSet
+from jsb.lib.fleet import getfleet
+from jsb.utils.mainloop import mainloop
+from jsb.utils.opts import makesxmppopts, makesxmppconfig
+from jsb.lib.datadir import setdatadir
+from jsb.lib.exit import globalshutdown
+from jsb.utils.exception import handle_exception
+import jsb.lib.users as users
+import jsb
+
+## basic imports
+
+import logging
+import time
+import os
+
+## options parser
+
+
+opts = makesxmppopts()
+if opts.datadir: setdatadir(opts.datadir) 
+from jsb.version import getversion
+print getversion('SXMPP')
+
+
+cfg = makesxmppconfig(opts)
+if opts.nick: cfg.nick = opts.nick ; cfg.save()
+if opts.port: cfg.port = opts.port ; cfg.save()
+
+## loglevel
+
+mainconfig = getmainconfig()
+from jsb.utils.log import setloglevel
+setloglevel(opts.loglevel or mainconfig.loglevel or "warn", opts.colors)
+if opts.loglevel: mainconfig.loglevel = opts.loglevel ; mainconfig.save()
+
+if cfg.disabled: cfg.disabled = 0 ; cfg.save()
+
+## start bot
+
+boot(opts.datadir)
+
+try:
+    bot = SXMPPBot(cfg)
+except NoOwnerSet, ex:
+    print "owner is not set in %s - use the -o option" % str(ex)
+    os._exit(1)
+
+if opts.channel and not opts.channel in bot.state['joinedchannels']:
+    bot.state['joinedchannels'].append(opts.channel)
+    bot.state.save()
+
+fleet = getfleet(opts.datadir, new=True)
+fleet.addbot(bot)
+try:
+    bot.reconnect()
+    mainloop()
+except KeyboardInterrupt: globalshutdown()
+except: handle_exception() ; globalshutdown()
+else: globalshutdown()

@@ -1,0 +1,10 @@
+# Defaults for the gozerbot initscript
+
+# Set to yes to start a system-wide instance of gozerbot
+RUN=yes
+
+# Set to the user gozerbot should run as
+RUNUSER=jsb
+
+# arguments to jsb-fleet
+ARGSTRING=""

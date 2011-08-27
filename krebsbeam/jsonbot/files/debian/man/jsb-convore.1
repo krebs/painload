@@ -1,0 +1,49 @@
+.TH JSONBOT 1 "7 Nov 2010" "Debian GNU/Linux" "jsb manual"
+.SH NAME
+.B jsb-convore \- The JSONBOT Convore program
+.SH SYNOPSIS
+JSONBOT is a remote event-driven framework for building bots that talk JSON
+to each other over XMPP. 
+.B jsb-convore
+is a shell interface for the Convore group chat network built on this framework.
+.P
+
+.B 
+.SH "DESCRIPTION"
+.P
+.B jsb-convore 
+connects to a Convore group in much the same way as jsb-irc
+connects to an IRC channel.
+.PP
+.SH USAGE
+.P
+.B Usage: jsb-convore [options]
+
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  -d DATADIR, --datadir=DATADIR
+                        datadir of the bot
+  -o OWNER, --owner=OWNER
+                        owner of the bot
+  -l LOGLEVEL, --loglevel=LOGLEVEL
+                        loglevel of the bot
+  -p PASSWORD, --password=PASSWORD
+                        set password used to connect to the server
+  -c CHANNEL, --channel=CHANNEL
+                        channel to join
+  --name=NAME           bot's name
+  -u USERNAME, --username=USERNAME
+                        username of the bot
+
+.SH "DOCUMENTATION"
+See http://jsonbot.org or http://jsonbot.appspot.com/docs for more documentation
+
+.SH "SEE ALSO"
+jsb(1), jsb-irc(1), jsb-xmpp(1), jsb-fleet(1), jsb-release(1), jsb-run(1),
+jsb-rollback(1), jsb-stop(1), jsb-upload(1), jsb-uploadall(1), jsb-udp(1)
+
+
+.SH AUTHOR
+This manual page was written by Jeremy Malcolm <terminus@debian.org>,
+for the Debian GNU/Linux system (but may be used by others).

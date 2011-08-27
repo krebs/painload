@@ -1,0 +1,107 @@
+0.7 RELEASE NOTES
+=================
+
+Hello world, greetings to all and everybody on this little planet ;]
+
+Today I am releasing version 0.7 of JSONBOT, hope you like it.
+
+I want to dedicate this release to Annemiek, Kirsten, Danny and Doscha, i would not have a live without you.
+
+changes in this release
+-----------------------
+
+* we got jsonbot.org running .. see http://jsonbot.org ;]
+* convore support
+* refactored core
+* reloadable config files
+* revamped web console
+* resource files (contain commands the bot can execute)
+* file change detection for myplugs plugins
+* rebooting is fixed
+* fixed relaying in jabber conference rooms
+* added color.py plugin to color certain words
+* added geo.py, googletranslate.py and imdb.py (thnx melmoth)
+* chatlog plugin now uses the logging module .. log file rotates every day
+* many other bugfixes
+
+If you have programmed your own plugin see
+http://jsonbot.org/handbook/UPGRADE.html for upgrade notes.
+
+Todo
+----
+
+1) fix runtime setting of loglevel
+2) add flood control
+3) docs docs docs docs docs
+4) fix bugs
+
+see http://code.google.com/p/jsonbot/issues/list
+
+Source
+------
+
+* tarball - http://jsonbot.googlecode.com
+* mercurial - http://jsonbot.googlecode.com/hg
+* github - https://github.com/jsonbot
+
+Demo
+----
+
+* webconsole - http://jsonbot.appspot.com
+* xmpp - jsonbot@jsonbot.org (shell) and jsonbot@appspot.com (GAE)
+* IRC - jsonbot on irc.freenode.net
+* Convore - https://convore.com/convore-8/welcome-to-convore/ relaying with #convore on irc.freenode.net
+
+Docs
+----
+
+* new jsonbot.org site .. http://jsonbot.org
+* GAE backup docs .. http://jsonbot.appspot.com/docs
+
+Contact
+-------
+
+* twitter: https://twitter.com/#!/jsonbot
+* facebook: http://tinyurl.com/jsonbot
+* email: bthate@gmail.com
+* IRC: dunker in channel #dunkbots / irc.freenode.net
+* xmpp: bthate@gmail.com and bart@jsonbot.org
+
+About
+-----
+
+JSONBOT is a remote event-driven framework for building bots that talk JSON
+to each other over XMPP.
+
+This distribution provides bots built on this framework for console, IRC,
+XMPP and Convore for the shell and WWW and XMPP for the Google Application engine.
+
+JSONBOT is all of the following:
+
+    * a shell console bot
+    * a shell IRC bot
+    * a shell XMPP bot
+    * a shell Convore bot
+    * a Web bot running on Google Application Engine 
+    * a XMPP bot running on Google Application Engine
+    * a Google Wave bot running op Google Application Engine
+    * the XMPP bots are used to communicate between bots   
+    * plugin infrastructure to write your own functionality
+    * event driven framework by the use of callbacks
+
+Install
+-------
+
+You dont need to run the bot on GAE when you just want to use the shell bots of JSONBOT.
+JSONBOT can best be run from the bot dir, the bot is self contained and has all the dependancies that are needed:
+
+    * "hg clone http://jsonbot.googlecode.com/hg mybot" or download and untar the tarball.
+    * cd into the bot dir and run "./bin/jsb" .. if the bot is working correctly you will get the console version of JSONBOT
+    * same can be done for "./bin/jsb-xmpp", "./bin/jsb-convore" etc. .. check the bin dir for programs you can start
+    * try the --help option to a program to see what command line options are available. 
+    * you DONT need root for this
+
+Ofcourse you can always run "python setup.py install" or "easy_install -U jsb" when you do want to install the bot globaly.
+Debian packages are on their way, but might still take time as the ftpmeisters need to approve ;]
+
+Thats it ! hope like this version of JSONBOT and dont forget to have fun with it ;]

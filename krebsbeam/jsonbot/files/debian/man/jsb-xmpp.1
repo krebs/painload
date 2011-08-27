@@ -1,0 +1,53 @@
+.TH JSONBOT 1 "7 Nov 2010" "Debian GNU/Linux" "jsb manual"
+.SH NAME
+.B jsb-xmpp \- The JSONBOT XMPP (Jabber) program
+.SH SYNOPSIS
+JSONBOT is a remote event-driven framework for building bots that talk JSON
+to each other over XMPP. 
+.B jsb-xmpp
+is the shell XMPP program build on this framework
+.P
+
+.B 
+.SH "DESCRIPTION"
+.P
+.B jsb-xmpp
+can connect to Jabber servers, join a conference and react on /msg. It uses
+TLS to connect to these servers on the default 5222 port.
+.PP
+.SH USAGE
+.P
+Usage: jsb-xmpp [options]
+
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  -r PATH               resume the bot from the folder specified
+  -d DATADIR, --datadir=DATADIR
+                        datadir of the bot
+  -u USER, --user=USER  JID of the bot
+  -o OWNER, --owner=OWNER
+                        owner of the bot
+  -s SERVER, --server=SERVER
+                        server to connect to (irc)
+  -c CHANNEL, --channel=CHANNEL
+                        channel to join
+  -l LOGLEVEL, --loglevel=LOGLEVEL
+                        loglevel of the bot
+  -p PASSWORD, --password=PASSWORD
+                        set password used to connect to the server
+  --name=NAME           bot's name
+  --port=PORT           set port of server to connect to
+  --save                save to config file
+  -n NICK, --nick=NICK  nick of the bot
+
+.SH "DOCUMENTATION"
+See http://jsonbot.org or http://jsonbot.appspot.com/docs for more documentation
+
+.SH "SEE ALSO"
+jsb-irc(1), jsb-xmpp(1), jsb-fleet(1), jsb-stop(1), jsb-udp(1)
+
+
+.SH AUTHOR
+This manual page was written by Bart Thate <bthate@gmail.com>,
+for the Debian GNU/Linux system (but may be used by others).

@@ -1,0 +1,335 @@
+<html>
+<head>
+    <link rel="stylesheet" href="/assets/style.css" type="text/css"/>
+    <script src='https://talkgadget.google.com/talkgadget/channel.js'></script>
+    <script type="text/javascript">
+      // vars
+      var host = "{{ host }}";
+      var hostname = window.location.hostname;
+      var incomingurl = document.URL;
+      var port = window.location.port;
+      var url = "{{ url }}";
+      var starttime = new Date();
+      var interval_id;
+      var lastpolled = new Date();
+      var lpdate = lastpolled.getTime();
+      var sleeptime = 180000;
+      var host = "";
+      var viewer = "";
+      var hostid = "";
+      var viewerid = "";
+      var parameters = "";
+      var identtime = new Date();
+      var diskname = host + identtime.toString();
+      var consoletxt = '<div style="font-size: 120%"><br><form><b>&lt;-</b><input style="font-size: 100%;" size="33" type="text" name="cmnd" onKeyDown="return doexec(this.form, event);" /><b>-&gt;</b></form></div><div class="related"><div align="center" id="status_div" style="background-color: #C54848;"><b>JSONBOT PRESENT!<b></div></div>';
+      var log = new Array();
+      var cmndlog = new Array();
+      var disk = {};
+      var topperlist = new Array();
+      
+      function scrollToBottom(elm_id) {
+	var elm = document.getElementById(elm_id);
+        var f = document.createElement("input");
+        if (f.setAttribute) f.setAttribute("type","text")
+        if (elm.appendChild) elm.appendChild(f);
+        f.style.width = "0px";
+        f.style.height = "0px";
+        if (f.focus) f.focus();
+        if (elm.removeChild) elm.removeChild(f);
+      }
+
+      // output functions
+
+      function output(text) {
+          var element = document.getElementById("content_div");
+          element.innerHTML += text;
+          scrollToBottom("content_div");
+          document.forms[0].cmnd.focus();
+      }
+
+
+      function dooutput(text, div, how) {
+          var element = document.getElementById(div);
+          if (!element) {
+              return true;
+          }
+          else if (how == "background") {
+              element.innerHTML = text;
+          }
+          else {
+              element.innerHTML += text;
+              scrollToBottom(div);
+              document.forms[0].cmnd.focus();
+          }
+      }
+
+      function topper(text) {
+        var html = '<marquee align="center" behavior="slide" scroll-delay="20" direction="left">';
+        html += text;
+        html += "</marquee>";
+        var element = document.getElementById("topper_div");  
+        element.innerHTML = html;
+      }
+
+      function topperpush(text) {
+        topperlist.unshift(text);
+      }
+
+      function doscreen(screentxt) {
+        var element = document.getElementById("screen_div");  
+        element.innerHTML = screentxt;
+      }
+
+      // clear div
+
+      function clear(divname) {
+        var element = document.getElementById(divname);  
+        element.innerHTML = "<b>[!]</b>";
+      }
+
+      // utils functions
+
+      function elapsed() {
+        last = new Date();
+        diff = last.getTime() - starttime.getTime();
+        starttime = last;
+        return diff;
+      }
+
+      // mainloop
+
+      function update() {
+          dooutput("updating", "status2_div", "background");
+      }
+
+      function updateloop() {
+        update();
+      }
+
+      function outputloop() {
+        var show = topperlist.pop();
+        if (show) {
+          topper(show);
+        }
+      }        
+
+      // time loop
+
+      function timeloop() {
+        var now = new Date();
+        dooutput("<b>" + now.toTimeString() + "</b>", "uber_div", "background");
+      }
+
+      // clear div
+
+      function clear(divname) {
+        var element = document.getElementById(divname);  
+        element.innerHTML = "<b>[!]</b>";
+      }
+
+      // channel stuff
+
+      function renewtoken(obj) {
+           dooutput(obj.readyState, "topper_div", "background");
+           if (obj.readyState==4) {
+               dooutput(obj.status, "topper_div", "background");
+               if (obj.status==200) {
+                   var token = obj.responseText;
+                   openChannel(token);
+                   dooutput("token renewed", "info_div", "background");
+              }
+          }
+      }
+
+      onOpened = function() {
+        var t = new Date();
+        dooutput("channel openend on " + t.toTimeString() + "<br>", "info_div", "background");
+      }
+
+      onClose = function() {
+        var tt = new Date();
+        dooutput("channel closed on " + tt.toTimeString(), "info_div", "background");
+        doCmnd('!chan-token', renewtoken, 'info_div', 'background');
+        return false;
+      }
+
+      onMessage = function(m) {
+          handlesocket(m.data);
+          return false;
+      }
+
+      onError = function(m) {
+        var tt = new Date();
+        dooutput(m.data, "status_div", "background");
+        return false;
+      }
+
+      openChannel = function(token) {
+        dooutput("opening channel on " + "{{ host }}", "info_div", "background");
+        dooutput(" - iframe", "status_div", "normal");
+        thediv = document.getElementById("wcs_iframe");
+        if (thediv) {
+            document.removeChild(thediv);
+        }
+        dooutput(" - channel", "status_div", "normal");
+        var channel = new goog.appengine.Channel(token);
+        dooutput(" - socket - ", "status_div", "normal");
+        var socket = channel.open();
+        socket.onopen = onOpened;
+        socket.onmessage = onMessage;
+        socket.onerror = onError;
+        socket.onclose = onClose;
+        dooutput("SEND", "status_div", "normal");
+        return socket;
+      }
+
+      // INIT
+
+      function start() {
+          // update();
+          setTimeout("doSocket('!statusline', 'info_div', 'background');", 10000);
+          setTimeout("doSocket('!topper', 'info_div', 'background');", 20000);
+          setTimeout("doSocket('!welcome', 'content_div', 'channel');", 1000);
+          setTimeout("doSocket('!today', 'content_div', 'channel');", 2500);
+          setTimeout("doSocket('!shop', 'content_div', 'channel');", 3000);
+          setInterval("timeloop();", 1000);
+          setInterval("outputloop();", 30000);
+          setTimeout("outputloop();", 1000);
+      }
+
+
+      function init() {
+        setTimeout("consolestart();", 150);
+      }
+
+      function consolestart() {
+          doconsole();
+          dooutput("<b>BOOTING</b>", "status_div", "background");
+          doCmnd('!chan-token',renewtoken,'info_div','background');
+          setTimeout("start();", 500);
+      }
+
+      function doconsole() {
+        doscreen(consoletxt);
+        document.forms[0].cmnd.focus();
+      }
+
+
+      // function to launch on enter in the command box
+
+      function doexec(form, e) {
+        var keycode;
+        var othercmnd;
+        if (window.event) keycode = window.event.keyCode;
+           else if (e) keycode = e.which;
+        else return true;
+        if (keycode == 13) {
+            var cmnd = form.cmnd.value;
+            doSocket(cmnd, "content_div", "channel");
+            form.cmnd.value = "";
+            form.focus();
+            return false;
+        }
+        else {
+          return true;
+        }
+      }
+
+      // handler function
+
+      function handlesocket(message) {
+          var data = JSON.parse(message);
+          var target = data["target"];
+          var how = data["how"];
+          var result = data["result"];
+          dooutput(result, target, how);
+          dooutput("OK", "status_div", "background"); 
+      }
+
+      // XHR
+      
+      function response(obj) {
+          dooutput(obj.readyState, "topper_div", "background");
+          if (obj.readyState==4){
+              dooutput(obj.status, "topper_div", "background");
+              if (obj.status==200) {
+                   handlesocket(obj.responseText);
+              }
+              else {
+                   dooutput(obj.status, "content_div", "channel");
+              }
+          }
+      }
+
+      // write command over the socket
+
+      function doSocket(cmnd, target, how) {
+          doCmnd(cmnd, response, target, how);
+          return false;
+      }
+
+      function doCmnd(cmnd, resp, target, how) {
+          var data = {"cmnd": cmnd, "how": how, "target": target };
+          var jsondata = JSON.stringify(data);
+          var request = false;
+          if (window.XMLHttpRequest) {
+              request = new XMLHttpRequest();
+          }
+          else if (window.ActiveXObject) { 
+              try {
+                  request = new ActiveXObject("Msxml2.XMLHTTP");
+              } catch (e) {
+                  try {
+                      request = new ActiveXObject("Microsoft.XMLHTTP");
+                  } catch (e) {}
+              }
+          }
+          if (!request) {
+              dooutput("can't make connection to server", "topper_div", "background");
+              return false;
+          }
+
+          request.onreadystatechange = function () {
+              resp(request);
+          }
+          dooutput(url, "status_div", "background");
+          request.open("POST", url, true);
+          request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          request.setRequestHeader("Content-Length", parameters.length);
+          request.setRequestHeader("Cache-Control", "no-cache");
+          request.send(jsondata);
+          dooutput(" - " + cmnd, "status_div", "channel");
+          return false;
+      }
+   </script>
+</head>
+<body>
+  <title>JSONBOT</title>
+  <div align="center" class="document" style="font-size: 80%">
+    <div class="related" style="font-size: 80%">
+      <ul>
+        <li class="right" style="margin-right: 10px;">
+          <a href="{{ logouturl }}" title="logout">logout</i></a></li>
+        <li class="right" style="margin-right: 10px;">{{ who }}<b> - </b></li>
+        <li><a href="http://jsonbot.org/index.html" onclick='window.open("http://jsonbot.org/index.html"); return false'><b>DOCS</b></a></li>
+        <li>-</li>
+        <li><a href="" title="console" onclick='doconsole(); return false;'><b>console</b></a></li>
+      </ul>
+    </div>
+    <div align="center" id="uber_div" style="font-size: 100%; background-color: white; color: black;">Morning !!</div>
+    <div class="body" align="center"><h1 style="background-color: #C54848; color: white;"><b>{{ appname }}</b></h1>
+      <div style="width: 100%; font-size: 100%; font-weight: bold; color: {{ color }};" align="center" id="topper_div">[] [] []</div><br><br>
+        <div class="output" align="center" style="height: 60%; position: float;">
+          <div style="width: 90%; font-size: 100%" scroll="auto" align="center" id="content_div"></div>
+        </div>
+      </div>
+      </div>
+      <div class="bottom" style="width: 100%; font-size: 80%; font-weight: bold;" align="center">
+        <div class="footer" style="font-size: 100%; font-height: 80%; color: #C54848;" align="center" id="info_div">[] [] []</div><br>
+        <div style="font-size: 100%; width: 100%; background-color: {{ color }}; color: white;" position="fixed" bottom="0""  id="screen_div"></div>
+      </div>
+    </div>
+  </div>
+</body>
+<body onLoad="init();" />
+</html>

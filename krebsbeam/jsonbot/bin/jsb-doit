@@ -1,0 +1,7 @@
+# create a jsonnest .. standalone distro based on eggs
+#
+#
+
+export PATH="./bin:.:$PATH"
+python setup.py sdist
+jsb-nest -f dist/jsb-0.8b1.tar.gz

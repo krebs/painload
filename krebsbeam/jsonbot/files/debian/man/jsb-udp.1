@@ -1,0 +1,41 @@
+.TH JSONBOT 1 "7 Nov 2010" "Debian GNU/Linux" "jsb manual"
+.SH NAME
+.B jsb-udp \- The JSONBOT udp program
+.SH SYNOPSIS
+JSONBOT is a remote event-driven framework for building bots that talk JSON
+to each other over XMPP. 
+.B jsb-udp 
+can send txt in a udp packet to the bot which in his/her turn sends it to a channel.
+.B 
+.SH "DESCRIPTION"
+.P
+Sometimes you want to have the output of a program send to a channel or
+conference the bot is participating in, for example logfiles (if they dont
+accumulate too fast). JSONBOT provides a plugin that can do this with the
+use of UDP packets send to the bot. This program is the client part and can
+be used to send txt pipelined into it to a UDP port on the listening bot.
+This bot will then forward the txt to the channel provided with the -p,
+--printto option.
+.PP
+.SH USAGE
+.P
+.B Usage: jsb-udp [options]
+
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  -p PATH, --printto=PATH
+                        channel/user to print to
+  -c CONFIGNAME, --config=CONFIGNAME
+                        Specify a config file
+  -s, --save            save to config file
+
+.SH "DOCUMENTATION"
+See http://jsonbot.org or http://jsonbot.appspot.com/docs for more documentation
+
+.SH "SEE ALSO"
+jsb-irc(1), jsb-xmpp(1), jsb-fleet(1), jsb-stop(1)
+
+.SH AUTHOR
+This manual page was written by Bart Thate <bthate@gmail.com>,
+for the Debian GNU/Linux system (but may be used by others).

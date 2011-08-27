@@ -1,0 +1,49 @@
+.TH JSONBOT 1 "7 Nov 2010" "Debian GNU/Linux" "jsb manual"
+.SH NAME
+.B jsb \- The JSONBOT console app
+.SH SYNOPSIS
+JSONBOT is a remote event-driven framework for building bots that talk JSON
+to each other over XMPP. 
+.B jsb
+is the console app build on this framework
+.P
+
+.B 
+.SH "DESCRIPTION"
+.P
+The jsb program provides a console interface to the JSONBOT framework. 
+.B jsb
+is mainly used to quickly debug new written plugins, so you can test them
+without having to run a network connected bot. For testing GAE bots you need
+to run your code in the dev_appserver, see 
+.B jsb-run 
+for that.
+.PP
+.SH USAGE
+.P
+.B Usage: jsb [options] <appid>
+
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  -d DATADIR, --datadir=DATADIR
+                        datadir to use
+  -x COMMAND, --execute=COMMAND
+                        command to execute
+  -c CHANNEL, --channel=CHANNEL
+                        channel to operate on
+  -n NAME, --name=NAME  name of the console bot
+  -l LOGLEVEL, --loglevel=LOGLEVEL
+                        logging level
+
+
+.SH "DOCUMENTATION"
+See http://jsonbot.org or http://jsonbot.appspot.com/docs for more documentation
+
+.SH "SEE ALSO"
+jsb-irc(1), jsb-xmpp(1), jsb-fleet(1), jsb-release(1), jsb-run(1),
+jsb-rollback(1), jsb-stop(1), jsb-upload(1), jsb-uploadall(1) 
+
+.SH AUTHOR
+This manual page was written by Bart Thate <bthate@gmail.com>,
+for the Debian GNU/Linux system (but may be used by others).

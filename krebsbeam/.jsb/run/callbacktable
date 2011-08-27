@@ -1,0 +1,160 @@
+{
+ "NOTICE": [
+  "jsb.plugs.core.underauth", 
+  "jsb.plugs.socket.chatlog"
+ ], 
+ "PART": [
+  "jsb.plugs.common.forward", 
+  "jsb.plugs.common.watcher", 
+  "jsb.plugs.common.seen", 
+  "jsb.plugs.socket.chatlog"
+ ], 
+ "TICK": [
+  "jsb.lib.runner", 
+  "jsb.lib.periodical"
+ ], 
+ "PRESENCE": [
+  "jsb.plugs.socket.chatlog"
+ ], 
+ "DCC": [
+  "jsb.plugs.core.dispatch"
+ ], 
+ "MODE": [
+  "jsb.plugs.core.chan", 
+  "jsb.plugs.socket.kickban", 
+  "jsb.plugs.socket.ops"
+ ], 
+ "367": [
+  "jsb.plugs.socket.kickban"
+ ], 
+ "WEB": [
+  "jsb.plugs.common.forward", 
+  "jsb.plugs.common.relay", 
+  "jsb.plugs.common.watcher", 
+  "jsb.plugs.common.remind", 
+  "jsb.plugs.common.ask", 
+  "jsb.plugs.common.idle", 
+  "jsb.plugs.core.dispatch"
+ ], 
+ "CONSOLE": [
+  "jsb.plugs.common.forward", 
+  "jsb.plugs.common.watcher", 
+  "jsb.plugs.common.learn", 
+  "jsb.plugs.common.karma", 
+  "jsb.plugs.common.urlinfo", 
+  "jsb.plugs.common.idle", 
+  "jsb.plugs.socket.chatlog", 
+  "jsb.plugs.core.dispatch"
+ ], 
+ "CMND": [
+  "jsb.plugs.common.learn", 
+  "jsb.plugs.core.dispatch"
+ ], 
+ "EXEC": [
+  "jsb.plugs.common.relay"
+ ], 
+ "DISPATCH": [
+  "jsb.plugs.common.forward", 
+  "jsb.plugs.common.watcher", 
+  "jsb.plugs.common.learn", 
+  "jsb.plugs.common.urlinfo", 
+  "jsb.plugs.common.ask", 
+  "jsb.plugs.common.idle", 
+  "jsb.plugs.core.dispatch"
+ ], 
+ "START": [
+  "jsb.plugs.common.colors", 
+  "jsb.plugs.socket.udp", 
+  "jsb.plugs.common.rss"
+ ], 
+ "001": [
+  "jsb.plugs.core.nickserv"
+ ], 
+ "PRIVMSG": [
+  "jsb.plugs.common.forward", 
+  "jsb.plugs.common.relay", 
+  "jsb.plugs.common.watcher", 
+  "jsb.plugs.common.learn", 
+  "jsb.plugs.common.url", 
+  "jsb.plugs.common.seen", 
+  "jsb.plugs.common.remind", 
+  "jsb.plugs.common.karma", 
+  "jsb.plugs.common.urlinfo", 
+  "jsb.plugs.common.ask", 
+  "jsb.plugs.common.idle", 
+  "jsb.plugs.socket.chatlog", 
+  "jsb.plugs.core.dispatch"
+ ], 
+ "CONVORE": [
+  "jsb.plugs.common.relay", 
+  "jsb.plugs.common.learn", 
+  "jsb.plugs.common.karma", 
+  "jsb.plugs.common.ask", 
+  "jsb.plugs.socket.chatlog", 
+  "jsb.plugs.core.dispatch"
+ ], 
+ "QUIT": [
+  "jsb.plugs.common.forward", 
+  "jsb.plugs.common.watcher", 
+  "jsb.plugs.core.nickcapture", 
+  "jsb.plugs.common.seen", 
+  "jsb.plugs.socket.chatlog"
+ ], 
+ "JOIN": [
+  "jsb.plugs.common.forward", 
+  "jsb.plugs.common.watcher", 
+  "jsb.plugs.common.seen", 
+  "jsb.plugs.common.remind", 
+  "jsb.plugs.socket.chatlog", 
+  "jsb.plugs.socket.ops", 
+  "jsb.plugs.socket.geo"
+ ], 
+ "TORNADO": [
+  "jsb.plugs.common.forward", 
+  "jsb.plugs.common.relay", 
+  "jsb.plugs.common.watcher", 
+  "jsb.plugs.common.learn", 
+  "jsb.plugs.common.url", 
+  "jsb.plugs.common.remind", 
+  "jsb.plugs.common.karma", 
+  "jsb.plugs.common.urlinfo", 
+  "jsb.plugs.core.dispatch"
+ ], 
+ "BLIP_SUBMITTED": [
+  "jsb.plugs.common.forward", 
+  "jsb.plugs.common.relay", 
+  "jsb.plugs.common.watcher", 
+  "jsb.plugs.common.learn", 
+  "jsb.plugs.core.dispatch"
+ ], 
+ "NICK": [
+  "jsb.plugs.common.forward", 
+  "jsb.plugs.common.watcher", 
+  "jsb.plugs.socket.chatlog"
+ ], 
+ "TICK60": [
+  "jsb.lib.persist", 
+  "jsb.plugs.common.rss"
+ ], 
+ "OUTPUT": [
+  "jsb.plugs.common.forward", 
+  "jsb.plugs.common.relay", 
+  "jsb.plugs.common.watcher", 
+  "jsb.plugs.socket.chatlog"
+ ], 
+ "MESSAGE": [
+  "jsb.plugs.common.forward", 
+  "jsb.plugs.common.relay", 
+  "jsb.plugs.common.watcher", 
+  "jsb.plugs.common.learn", 
+  "jsb.plugs.common.url", 
+  "jsb.plugs.common.remind", 
+  "jsb.plugs.common.karma", 
+  "jsb.plugs.common.urlinfo", 
+  "jsb.plugs.common.ask", 
+  "jsb.plugs.common.idle", 
+  "jsb.plugs.socket.chatlog", 
+  "jsb.plugs.core.dispatch", 
+  "jsb.plugs.core.remotecallbacks"
+ ]
+}

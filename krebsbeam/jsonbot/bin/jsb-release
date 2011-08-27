@@ -1,0 +1,171 @@
+#!/usr/bin/env python
+#
+#
+
+""" install the GAE upload dir so it can be uploaded. """
+
+## bootstrap
+
+#import warnings
+#warnings.simplefilter("ignore")
+
+## imports
+
+import sys
+import os
+import shutil
+import time
+
+os.environ['PATH'] = os.getcwd() + os.sep + 'bin:' + os.environ['PATH']
+sys.path.insert(0, os.getcwd())
+
+from jsb.utils.log import setloglevel
+setloglevel("warn")
+
+## jsb imports
+
+from jsb.utils.generic import gethighest, dosed, isdebian, botuser
+from jsb.utils.source import getsource
+from jsb.version import getversion
+from jsb.lib.datadir import getdatadir
+from jsb.lib.config import getmainconfig
+
+print getversion("RELEASE")
+
+## options
+
+from optparse import OptionParser
+parser = OptionParser(usage='usage: %prog [options] <appid>', version='%prog ' + getversion())
+parser.add_option('-b', '--backup', action='store_true', default=False, dest='backup', help="keep backup dir")
+parser.add_option('-d', '--datadir', type='string', default=False, dest='datadir', help="datadir to use")
+opts, args = parser.parse_args()
+opts.args = args
+
+if opts.datadir and not os.path.isdir(opts.datadir): os.mkdir(opts.datadir)
+if not os.path.isdir(getdatadir()): os.mkdir(getdatadir())
+
+if opts.args:
+     ddir = opts.datadir or getdatadir()
+     if not os.path.isdir(ddir + os.sep + 'releases'):
+         os.mkdir(ddir + os.sep + 'releases')
+     release = ddir + os.sep + 'releases' + os.sep + opts.args[0]
+     if not os.path.isdir(release):
+         os.mkdir(release)
+     targetin = opts.args[0]
+else:
+     release = opts.datadir or getdatadir() + os.sep + "releases" + os.sep + 'jsb'
+     targetin = 'jsb'
+
+ddir = opts.datadir or getdatadir()
+ddir = ddir + os.sep + "releases"
+
+if os.path.isdir(release + '.old'):
+    backup = ddir + os.sep + gethighest(ddir, targetin + '.old')
+else:
+    backup = release + '.old'
+
+if os.path.isdir(release):
+    print "MOVING %s TO %s" % (release, backup)
+    os.rename(release, backup)
+
+## define
+
+orig = 'jsonbot'
+homedir = os.path.abspath(os.path.expanduser("~"))
+
+## functions
+
+def copyover(source, target, silent=True):
+    if os.path.exists(source + os.sep + "NOGAE"): print "IGNORE %s" % source ; return
+    print "COPYING RESULTS TO %s" % target
+    shutil.copytree(source, target, False)
+    if len(sys.argv) > 1:
+        sed(source, target)
+  
+def sed(source, target, silent=True):
+    print "== source: %s target: %s" % (source, target)
+
+    for f in os.listdir(target):
+        if f.startswith('..'):
+            continue
+        if f.endswith(".pyc"):
+            continue
+        if f.endswith("~"):
+            continue
+        if os.path.isdir(target + os.sep + f):
+            sed(source + os.sep + f, target + os.sep + f)
+            continue
+        else:
+            if not silent: print "sedding %s (%s) - %s" % (f, orig, targetin)
+            dosed(target + os.sep + f, 's/%s/%s/' % (orig, targetin))
+            dosed(target + os.sep + f, 's/%s/%s/' % (orig.upper(), targetin.upper()))
+
+
+## doit
+
+def install():
+    source = getsource("jsb.upload")
+    copyover(source, release)
+    source = getsource("jsb.data")
+    copyover(source, release + os.sep + "data")
+    if os.path.isdir(getdatadir() + os.sep + 'myplugs'): source = getdatadir() + os.sep + "myplugs"
+    elif os.path.isdir("jsb/plugs/myplugs"): source = "jsb/plugs/myplugs"
+    else: source = getsource("myplugs")
+    if source: copyover(source, release + os.sep + "myplugs")
+    else: print "can't find myplugs directory".upper()
+    source = getsource("jsb")
+    copyover(source, release + os.sep + 'jsb')
+
+    try:
+        shutil.move(os.path.join(release, 'data', 'config'), os.path.join(release, 'data', 'config.bck'))
+    except IOError, ex:
+        print "TAKE NOTE ! no %s dir available" % os.path.join(release, "data", "config")
+
+    if not os.path.isdir(homedir + os.sep + 'jsbregs'):
+        os.mkdir(homedir + os.sep + 'jsbregs')
+        copyregs()
+
+def copyregs():
+    try:
+        copyover(os.path.join(homedir, 'jsbregs', targetin), os.path.join(release, 'data', 'config'))
+        shutil.copy(os.path.join(homedir, "jsbregs", targetin, 'app.yaml'), release + os.sep + 'app.yaml')
+        shutil.copy(os.path.join(homedir, "jsbregs" , targetin,'cron.yaml'), release + os.sep + 'cron.yaml')
+        shutil.copy(os.path.join(homedir, "jsbregs", targetin, 'queue.yaml'), release + os.sep + 'queue.yaml')
+    except (OSError, IOError), ex:
+        print "TAKE NOTE: %s" % str(ex)
+
+def installregs():
+    try:
+        copyover(os.path.join(release, 'data', 'examples'), os.path.join(homedir , 'jsbregs', targetin))
+        print "\n\nplease edit ~/jsbregs/%s/ dir and rerun this program.\n\n" % (targetin,)
+    except:
+        try:
+            copyover(os.path.join('/usr', 'local', 'jsb', 'data', 'examples'), os.path.join(homedir, 'jsbregs', targetin))
+            print "\n\nplease edit ~/jsbregs/%s/ dir and rerun this program.\n\n" % (targetin,)
+        except: 
+            try:
+                source = getsource("jsb.data.examples")
+                copyover(os.path.join(source), os.path.join(homedir, 'jsbregs', targetin))
+            except Exception, ex: print "ERROR: can't copy files to ~/jsbregs %s" % str(ex) 
+
+install()
+installregs()
+
+if not os.path.exists(os.path.join(homedir, "jsbregs", targetin, 'app.yaml')):
+    print "copying examples to workable files .. "
+    shutil.copy(os.path.join(homedir, "jsbregs", targetin, 'app.yaml.example'), os.path.join(homedir, "jsbregs", targetin, 'app.yaml'))
+    shutil.copy(os.path.join(homedir, "jsbregs", targetin, 'cron.yaml.example'), os.path.join(homedir, "jsbregs", targetin, 'cron.yaml'))
+    shutil.copy(os.path.join(homedir, "jsbregs", targetin, 'queue.yaml.example'), os.path.join(homedir, "jsbregs", targetin, 'queue.yaml'))
+    shutil.copy(os.path.join(homedir, "jsbregs", targetin, 'mainconfig.example'), os.path.join(homedir, "jsbregs", targetin, 'mainconfig'))
+    shutil.copy(os.path.join(homedir, "jsbregs", targetin, 'credentials.py.example'), os.path.join(homedir, "jsbregs", targetin, 'credentials.py'))
+
+copyregs()
+
+if os.path.isdir('docs'):
+    copyover('docs', release + os.sep + 'docs')
+
+if not opts.backup:
+    print "REMOVING BACKUP"
+    shutil.rmtree(backup)
+else:
+    print "CREATED BACKUP %s" % backup

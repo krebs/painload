@@ -1,0 +1,858 @@
+# ===========================================================
+#
+# JSONBOT CONFIGURATION FILE - /krebs/krebsbeam/.jsb/config/cmndperms
+#
+# last changed on Sat Aug 27 20:34:53 2011
+#
+# This file contains configration data for the JSONBOT.
+# Variables are defined by "name = json value" pairs.
+# Make sure to use " in strings.
+#
+# The bot can edit this file!.
+#
+# ===========================================================
+
+8b = ["OPER", "USER", "GUEST"]
+
+action = ["ACTION", "OPER"]
+
+admin-boot = ["OPER"]
+
+admin-callbacks = ["OPER"]
+
+admin-commands = ["OPER"]
+
+admin-debugoff = ["OPER"]
+
+admin-debugon = ["OPER"]
+
+admin-exceptions = ["OPER"]
+
+admin-loadall = ["OPER"]
+
+admin-makebot = ["OPER"]
+
+admin-mc = ["OPER"]
+
+admin-reloadconfig = ["OPER"]
+
+admin-setstatus = ["STATUS", "OPER"]
+
+admin-stop = ["OPER"]
+
+admin-upgrade = ["OPER"]
+
+admin-userhostscache = ["OPER"]
+
+alarm = ["USER"]
+
+alarm-del = ["OPER"]
+
+alarm-list = ["OPER"]
+
+alarm-mylist = ["USER"]
+
+alias = ["USER"]
+
+alias-del = ["USER"]
+
+alias-get = ["OPER"]
+
+alias-makeglobal = ["OPER"]
+
+alias-search = ["USER"]
+
+all = ["OPER", "USER", "GUEST"]
+
+apro = ["USER", "GUEST"]
+
+ask = ["OPER", "USER", "GUEST"]
+
+ask-experts = ["OPER", "USER", "GUEST"]
+
+ask-join = ["OPER", "USER", "GUEST"]
+
+ask-list = ["OPER", "USER", "GUEST"]
+
+ask-part = ["OPER", "USER", "GUEST"]
+
+ask-stop = ["OPER", "USER", "GUEST"]
+
+ask-subjects = ["OPER", "USER", "GUEST"]
+
+ban-add = ["OPER"]
+
+ban-kickban = ["OPER"]
+
+ban-list = ["OPER"]
+
+ban-remove = ["OPER"]
+
+beledig = ["USER"]
+
+bier = ["USER"]
+
+broadcast = ["OPER"]
+
+cc = ["USER"]
+
+cc-add = ["OPER"]
+
+cc-del = ["OPER"]
+
+chan-allowcommand = ["OPER"]
+
+chan-allowplug = ["OPER"]
+
+chan-allowwatch = ["OPER"]
+
+chan-cycle = ["OPER"]
+
+chan-del = ["OPER"]
+
+chan-delwatch = ["OPER"]
+
+chan-denyplug = ["OPER"]
+
+chan-disable = ["OPER", "USER"]
+
+chan-enable = ["OPER", "USER"]
+
+chan-join = ["OPER", "JOIN"]
+
+chan-list = ["USER", "GUEST"]
+
+chan-loud = ["OPER"]
+
+chan-loudcommand = ["OPER"]
+
+chan-mode = ["OPER"]
+
+chan-part = ["OPER"]
+
+chan-removecommand = ["OPER"]
+
+chan-silent = ["OPER"]
+
+chan-silentcommand = ["OPER"]
+
+chan-token = ["OPER", "USER", "GUEST"]
+
+chan-upgrade = ["OPER"]
+
+chan-withnotice = ["OPER"]
+
+chan-withprivmsg = ["OPER"]
+
+chatlog-cfg = ["OPER"]
+
+chatlog-cfgsave = ["OPER"]
+
+chatlog-off = ["OPER"]
+
+chatlog-on = ["OPER"]
+
+chatlog-search = ["OPER", "USER", "GUEST"]
+
+chatlog-stats = ["OPER", "USER", "GUEST"]
+
+chips = ["USER"]
+
+choice = ["OPER", "USER", "GUEST"]
+
+color-add = ["OPER"]
+
+color-del = ["OPER"]
+
+color-list = ["OPER"]
+
+commands = ["USER", "GUEST"]
+
+count = ["OPER", "USER", "GUEST"]
+
+data-bot = ["OPER"]
+
+data-chan = ["OPER"]
+
+data-event = ["OPER"]
+
+descriptions = ["USER", "GUEST"]
+
+dns = ["OPER", "USER", "GUEST"]
+
+echo = ["OPER", "USER"]
+
+encoding = ["USER", "GUEST"]
+
+feedback = ["OPER", "USER", "GUEST"]
+
+fleet-add = ["OPER"]
+
+fleet-avail = ["OPER"]
+
+fleet-cmnd = ["OPER"]
+
+fleet-connect = ["OPER"]
+
+fleet-del = ["OPER"]
+
+fleet-disable = ["OPER"]
+
+fleet-disconnect = ["OPER"]
+
+fleet-enable = ["OPER"]
+
+fleet-list = ["OPER", "USER", "GUEST"]
+
+forget = ["OPER", "USER"]
+
+forward = ["OPER"]
+
+forward-add = ["OPER"]
+
+forward-allow = ["OPER"]
+
+forward-del = ["OPER"]
+
+forward-list = ["OPER"]
+
+forward-stop = ["OPER"]
+
+fris = ["USER"]
+
+gatekeeper-allow = ["OPER"]
+
+gatekeeper-deny = ["OPER"]
+
+gcalc = ["OPER", "USER", "GUEST"]
+
+geo = ["OPER", "GEO"]
+
+geo-off = ["OPER"]
+
+geo-on = ["OPER"]
+
+get = ["OPER", "USER", "GUEST"]
+
+got = ["USER", "GUEST"]
+
+grep = ["OPER", "USER", "GUEST"]
+
+hb-add = ["USER"]
+
+hb-addchannel = ["OPER"]
+
+hb-additem = ["GUEST", "USER"]
+
+hb-addmarkup = ["GUEST", "USER"]
+
+hb-channels = ["OPER"]
+
+hb-clone = ["USER"]
+
+hb-cloneurl = ["OPER"]
+
+hb-delchannel = ["OPER"]
+
+hb-delitem = ["GUEST", "USER"]
+
+hb-delmarkup = ["GUEST", "USER"]
+
+hb-feeds = ["USER", "GUEST"]
+
+hb-get = ["HUBBUB", "USER"]
+
+hb-itemslist = ["GUEST", "USER"]
+
+hb-list = ["GUEST", "USER"]
+
+hb-markup = ["GUEST", "USER"]
+
+hb-markuplist = ["USER", "GUEST"]
+
+hb-register = ["USER", "GUEST"]
+
+hb-running = ["HUBBUB", "USER"]
+
+hb-scan = ["USER", "GUEST"]
+
+hb-setitems = ["GUEST", "USER"]
+
+hb-start = ["USER", "GUEST"]
+
+hb-stop = ["USER", "GUEST"]
+
+hb-stopall = ["HUBBUB", "OPER"]
+
+hb-stopwatch = ["OPER"]
+
+hb-subscribe = ["USER"]
+
+hb-url = ["OPER"]
+
+hb-watch = ["USER"]
+
+help = ["OPER", "USER", "GUEST"]
+
+help-plug = ["USER", "GUEST"]
+
+help-site = ["OPER", "USER", "GUEST"]
+
+idle = ["OPER", "USER", "GUEST"]
+
+ignore = ["OPER", "IGNORE"]
+
+imdb = ["OPER", "USER", "GUEST"]
+
+ipcalc = ["OPER", "USER", "GUEST"]
+
+items = ["OPER", "USER", "GUEST"]
+
+join = ["OPER", "JOIN"]
+
+jump = ["OPER"]
+
+karma = ["OPER", "USER", "GUEST"]
+
+karma-cfg = ["OPER"]
+
+karma-cfgsave = ["OPER"]
+
+karma-whodown = ["OPER", "USER", "GUEST"]
+
+karma-whoup = ["OPER", "USER", "GUEST"]
+
+karma-whydown = ["OPER", "USER", "GUEST"]
+
+karma-whyup = ["OPER", "USER", "GUEST"]
+
+koek = ["USER"]
+
+koekje = ["USER"]
+
+koffie = ["USER"]
+
+learn = ["OPER", "USER", "GUEST"]
+
+list = ["USER", "GUEST"]
+
+loaded = ["USER", "GUEST"]
+
+loglevel = ["OPER"]
+
+more = ["USER", "GUEST"]
+
+mpd = ["USER"]
+
+mpd-add = ["MPD"]
+
+mpd-cfg = ["OPER"]
+
+mpd-cfgsave = ["OPER"]
+
+mpd-clear = ["MPD"]
+
+mpd-consume = ["MPD"]
+
+mpd-crop = ["MPD"]
+
+mpd-crossfade = ["MPD"]
+
+mpd-current = ["USER"]
+
+mpd-del = ["MPD"]
+
+mpd-disable = ["MPD"]
+
+mpd-enable = ["MPD"]
+
+mpd-find = ["MPD"]
+
+mpd-jump = ["MPD"]
+
+mpd-load = ["MPD"]
+
+mpd-lsplaylists = ["USER"]
+
+mpd-next = ["MPD"]
+
+mpd-np = ["USER"]
+
+mpd-outputs = ["MPD"]
+
+mpd-pause = ["MPD"]
+
+mpd-play = ["MPD"]
+
+mpd-playlist = ["USER"]
+
+mpd-prev = ["MPD"]
+
+mpd-queue = ["MPD"]
+
+mpd-random = ["MPD"]
+
+mpd-repeat = ["MPD"]
+
+mpd-rm = ["MPD"]
+
+mpd-save = ["MPD"]
+
+mpd-shuffle = ["MPD"]
+
+mpd-single = ["MPD"]
+
+mpd-stats = ["USER"]
+
+mpd-stop = ["MPD"]
+
+mpd-toggle = ["MPD"]
+
+mpd-volume = ["MPD"]
+
+mpd-watch-list = ["MPD"]
+
+mpd-watch-start = ["MPD"]
+
+mpd-watch-stop = ["MPD"]
+
+# - the bot's nick.
+nick = ["OPER"]
+
+nicks = ["OPER", "USER"]
+
+not = ["OPER", "USER", "GUEST"]
+
+ns-add = ["OPER"]
+
+ns-auth = ["OPER"]
+
+ns-del = ["OPER"]
+
+ns-list = ["OPER"]
+
+ns-send = ["OPER"]
+
+op = ["USER"]
+
+ops-cfg = ["OPER"]
+
+ops-cfgsave = ["OPER"]
+
+ops-disable = ["OPER"]
+
+ops-enable = ["OPER"]
+
+ops-list = ["OPER"]
+
+outputcache = ["OPER", "USER", "GUEST"]
+
+outputcache-clear = ["OPER", "USER", "GUEST"]
+
+# - owner of the bot.
+owner = []
+
+part = ["OPER"]
+
+perm = ["USER", "GUEST"]
+
+plug-disable = ["OPER"]
+
+plug-enable = ["OPER"]
+
+plug-reload = ["OPER"]
+
+pre = null
+
+quit = ["OPER"]
+
+quote = ["USER", "GUEST"]
+
+quote-add = ["USER", "GUEST"]
+
+rc = ["OPER"]
+
+reboot = ["OPER"]
+
+reconnect = ["OPER"]
+
+relay = ["OPER"]
+
+relay-block = ["OPER", "USER"]
+
+relay-blocklist = ["OPER", "USER"]
+
+relay-clear = ["OPER"]
+
+relay-list = ["OPER", "USER"]
+
+relay-stop = ["OPER", " USER"]
+
+relay-unblock = ["OPER", "USER"]
+
+remind = ["OPER", "USER", "GUEST"]
+
+rest-start = ["OPER"]
+
+rest-stop = ["OPER"]
+
+restserver-cfg = ["OPER"]
+
+restserver-cfgsave = ["OPER"]
+
+reverse = ["OPER", "USER", "GUEST"]
+
+roken = ["USER"]
+
+rss-add = ["USER"]
+
+rss-addchannel = ["OPER"]
+
+rss-additem = ["RSS", "USER"]
+
+rss-addmarkup = ["RSS", "USER"]
+
+rss-all = ["RSS", "USER"]
+
+rss-channels = ["OPER"]
+
+rss-clone = ["USER"]
+
+rss-cloneurl = ["OPER"]
+
+rss-del = ["USER"]
+
+rss-delchannel = ["OPER"]
+
+rss-delitem = ["RSS", "USER"]
+
+rss-delmarkup = ["RSS", "USER"]
+
+rss-description = ["RSS", "USER"]
+
+rss-feeds = ["USER", "RSS"]
+
+rss-get = ["RSS", "USER"]
+
+rss-import = ["OPER"]
+
+rss-itemslist = ["RSS", "USER"]
+
+rss-link = ["RSS", "USER"]
+
+rss-list = ["RSS", "USER"]
+
+rss-markup = ["RSS", "USER"]
+
+rss-markuplist = ["USER"]
+
+rss-register = ["USER"]
+
+rss-running = ["RSS", "USER"]
+
+rss-scan = ["USER"]
+
+rss-search = ["RSS", "USER"]
+
+rss-setitems = ["RSS", "USER"]
+
+rss-setsleeptime = ["USER"]
+
+rss-seturl = ["USER"]
+
+rss-sleeptime = ["USER"]
+
+rss-start = ["RSS", "USER"]
+
+rss-stop = ["RSS", "USER"]
+
+rss-stopall = ["RSS", "OPER"]
+
+rss-stopwatch = ["OPER"]
+
+rss-sync = ["OPER"]
+
+rss-url = ["OPER"]
+
+rss-watch = ["USER"]
+
+running = ["USER", "GUEST"]
+
+say = ["SAY", "OPER"]
+
+searchitems = ["OPER", "USER", "GUEST"]
+
+seen = ["OPER", "USER", "GUEST"]
+
+seen-cfg = ["OPER"]
+
+seen-cfgsave = ["OPER"]
+
+sendraw = ["OPER", "SENDRAW"]
+
+# - server to connect to (only when different from users host).
+server = ["OPER"]
+
+set = ["OPER", "USER", "GUEST"]
+
+sex = ["USER"]
+
+shop = ["OPER", "USER", "GUEST"]
+
+soep = ["USER"]
+
+sort = ["OPER", "USER", "GUEST"]
+
+source = ["USER", "GUEST"]
+
+splitted = ["OPER"]
+
+splitted-clear = ["OPER"]
+
+statusline = ["USER", "GUEST"]
+
+taart = ["USER"]
+
+tail = ["OPER", "USER", "GUEST"]
+
+test = ["USER", "GUEST"]
+
+test-deadline = ["TEST"]
+
+test-docmnd = ["TEST"]
+
+test-forcedexception = ["TEST"]
+
+test-forcedreconnect = ["TEST"]
+
+test-html = ["TEST"]
+
+test-options = ["TEST"]
+
+test-plugs = ["TEST"]
+
+test-say = ["TEST"]
+
+test-threaded = ["TEST"]
+
+test-unicode = ["TEST"]
+
+test-uuid = ["TEST"]
+
+test-wrongxml = ["TEST"]
+
+thee = ["USER"]
+
+threads = ["USER", "GUEST"]
+
+tinyurl = ["OPER", "USER", "GUEST"]
+
+tinyurl-cfg = ["OPER"]
+
+tinyurl-cfgsave = ["OPER"]
+
+to = ["OPER", "USER", "TO"]
+
+todo = ["USER", "GUEST"]
+
+todo-done = ["USER", "GUEST"]
+
+todo-getprio = ["USER", "GUEST"]
+
+todo-setprio = ["USER", "GUEST"]
+
+todo-settime = ["USER", "GUEST"]
+
+todo-time = ["USER", "GUEST"]
+
+todo-today = ["USER", "GUEST"]
+
+todo-tomorrow = ["USER", "GUEST"]
+
+todo-week = ["USER", "GUEST"]
+
+topic = ["USER"]
+
+topic-add = ["USER"]
+
+topic-del = ["USER"]
+
+topic-listadd = ["USER"]
+
+topic-listdel = ["USER"]
+
+topic-move = ["USER"]
+
+topic-set = ["USER"]
+
+topper = ["USER", "GUEST"]
+
+tour = ["OPER", "USER", "GUEST"]
+
+translate = ["OPER", "USER", "GUEST"]
+
+twitter = ["USER", "GUEST"]
+
+twitter-auth = ["OPER", "USER", "GUEST"]
+
+twitter-cmnd = ["OPER"]
+
+twitter-confirm = ["OPER", "USER", "GUEST"]
+
+twitter-friends = ["OPER", "USER", "GUEST"]
+
+udp-cfg = ["OPER"]
+
+udp-cfgsave = ["OPER"]
+
+unignore = ["OPER", "IGNORE"]
+
+uniq = ["OPER", "USER", "GUEST"]
+
+unset = ["USER", "GUEST"]
+
+uptime = ["USER", "GUEST"]
+
+url-search = ["OPER", "USER", "GUEST"]
+
+url-searchall = ["OPER", "USER", "GUEST"]
+
+url-size = ["OPER"]
+
+urlinfo-disable = ["OPER"]
+
+urlinfo-enable = ["OPER"]
+
+urlinfo-list = ["OPER"]
+
+user-add = ["OPER"]
+
+user-addperm = ["OPER"]
+
+user-addpermit = ["USER", "GUEST"]
+
+user-addstatus = ["OPER"]
+
+user-adduserhost = ["OPER"]
+
+user-allperm = ["OPER"]
+
+user-allstatus = ["OPER"]
+
+user-check = ["OPER"]
+
+user-del = ["OPER"]
+
+user-delemail = ["OPER"]
+
+user-delperm = ["OPER"]
+
+user-delpermit = ["USER", "GUEST"]
+
+user-delstatus = ["OPER"]
+
+user-deluserhost = ["OPER"]
+
+user-email = ["USER", "GUEST"]
+
+user-getemail = ["USER"]
+
+user-getname = ["USER", "GUEST"]
+
+user-getperms = ["OPER"]
+
+user-getstatus = ["OPER"]
+
+user-getuserhosts = ["OPER"]
+
+user-import = ["IMPORT", "OPER"]
+
+user-match = ["OPER"]
+
+user-meet = ["OPER", "MEET"]
+
+user-merge = ["OPER", "MEET"]
+
+user-name = ["USER", "GUEST"]
+
+user-names = ["OPER"]
+
+user-permit = ["USER", "GUEST"]
+
+user-perms = ["USER", "GUEST"]
+
+user-scan = ["OPER"]
+
+user-search = ["OPER"]
+
+user-setemail = ["OPER"]
+
+user-show = ["OPER"]
+
+user-status = ["USER", "GUEST"]
+
+user-userhosts = ["USER", "GUEST"]
+
+user-whoami = ["OPER", "USER", "GUEST"]
+
+version = ["USER", "GUEST"]
+
+versions = ["USER", "GUEST"]
+
+voice = ["OPER"]
+
+watch = ["USER"]
+
+watcher-list = ["OPER", "USER", "GUEST"]
+
+watcher-reset = ["OPER"]
+
+watcher-start = ["OPER"]
+
+watcher-stop = ["OPER"]
+
+watcher-subscribers = ["OPER", "USER", "GUEST"]
+
+weather = ["OPER", "USER", "GUEST"]
+
+welcome = ["OPER", "USER", "GUEST"]
+
+whatcommands = ["USER", "GUEST"]
+
+whatis = ["OPER", "USER", "GUEST"]
+
+whereis = ["USER", "GUEST"]
+
+wijn = ["USER"]
+
+wikipedia = ["USER", "GUEST"]
+
+xmpp-invite = ["OPER"]
+
+# ============================================================
+#
+# bot generated stuff.
+#
+# ============================================================
+
+# - filename of this config file. edit this when you move this file.
+cfile = "/krebs/krebsbeam/.jsb/config/cmndperms"
+
+# - function that created this config file. bot generated
+createdfrom = "jsb.lib.config:79"
+
+# - directory to store bot data in.
+datadir = "/krebs/krebsbeam/.jsb"
+
+# - directory in which this config file lives.
+dir = "/krebs/krebsbeam/.jsb/config"
+
+# - filename of this config file.
+filename = "cmndperms"
+
+# - whether this config file lives in the database and not on file.
+isdb = false
+
+# - bot generated uuid for this config file.
+uuid = "84c0c384-f5e2-47ec-85f4-8ea697097947"
+

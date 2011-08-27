@@ -1,0 +1,5 @@
+#!/bin/sh
+#
+#
+
+hg tip | grep changeset | awk '{ print $2 }'      

@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "default-irc+aeb6f042-ad39-4e76-ae33-859039c9fc3f", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "default-irc@aeb6f042-ad39-4e76-ae33-859039c9fc3f"
+ ], 
+ "email": []
+}

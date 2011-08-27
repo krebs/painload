@@ -1,0 +1,102 @@
+#!/usr/bin/env python
+#
+#
+
+""" Console Bot. """
+
+
+import warnings
+warnings.simplefilter("ignore")
+
+## bootstrap
+
+import os, sys
+sys.path.insert(0, os.getcwd())
+
+from jsb.version import getversion
+
+## command line parsing
+
+from optparse import OptionParser
+parser = OptionParser(usage='usage: %prog [options] <appid>', version='%prog ' + getversion())
+parser.add_option('-d', '--datadir', type='string', default=False, dest='datadir', help="datadir to use")
+parser.add_option('-c', '--channel', type='string', default=False, dest='channel', help="channel to operate on")
+parser.add_option('-n', '--name', type='string', default=False, dest='name', help="name of the console bot")
+parser.add_option('-l', '--loglevel', type='string', default=False, dest='loglevel', help="logging level")
+parser.add_option('-f', '--fast', action="store_true", default=False, dest='fast', help="boot fast (dont load myplugs)")
+parser.add_option('', '--colors', action="store_true", default=False, dest='colors', help="enable the use of colors")
+parser.add_option('', '--fleet', action="store_true", default=False, dest='fleet', help="start the fleet")
+opts, args = parser.parse_args()
+opts.args = args
+
+if not opts.args: print getversion('CONSOLE')
+if opts.datadir:
+    if not os.path.isdir(opts.datadir): os.mkdir(opts.datadir)
+    from jsb.lib.datadir import setdatadir
+    setdatadir(opts.datadir)
+
+## make config from cmndline options
+
+from jsb.utils.log import setloglevel
+from jsb.lib.config import getmainconfig
+mainconfig = getmainconfig()
+setloglevel(opts.loglevel or "error", opts.colors)
+
+from jsb.lib.boot import boot
+if opts.fast: boot(opts.datadir, fast=True)
+else: boot(opts.datadir)
+
+## jsb imports
+
+from jsb.utils.generic import waitforqueue, waitevents
+from jsb.drivers.console.bot import ConsoleBot
+from jsb.lib.config import Config
+from jsb.lib.errors import NoOwnerSet
+from jsb.lib.commands import cmnds
+from jsb.lib.exit import globalshutdown
+from jsb.lib.fleet import getfleet
+from jsb.lib.threads import start_new_thread
+
+## basic imports
+
+import getpass
+import time
+import logging
+
+## start the bot
+name = opts.name or "default-console"
+cfg = Config("fleet" + os.sep + name + os.sep + 'config')
+userid = getpass.getuser() + '@' + cfg.uuid
+
+if userid not in cfg.owner: cfg.owner.append(userid)
+
+try:
+    bot = ConsoleBot(cfg)
+except NoOwnerSet:
+    print "the owner is not set in %s" % cfg.cfile
+    os._exit(1)
+
+if opts.args:
+    cmndstring = ""
+    for cmnd in opts.args:
+        if "|" in cmnd: break
+        cmndstring += u" %s" % unicode(cmnd)
+    bot.start(False)
+    cmndstring = "!%s" % cmndstring.strip()
+    event = bot.putevent(userid, opts.channel or userid, cmndstring, wait=1, showall=True)
+    #if 'feedback' in cmndstring: time.sleep(30)
+    waitforqueue(event.resqueue, 15000)
+    time.sleep(0.1)
+    try:
+        sys.stdout.close()
+    except: pass
+    os._exit(0)
+
+if opts.fleet:
+    fleet = getfleet()
+    bots = fleet.loadall()
+    logging.error("starting fleet %s" % fleet.list())
+    start_new_thread(fleet.startall, ())
+
+bot.startshell()
+globalshutdown()

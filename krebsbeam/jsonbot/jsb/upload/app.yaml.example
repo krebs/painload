@@ -1,0 +1,66 @@
+# JSONBOT application file
+#
+#
+
+application: jsb
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+
+- url: /_ah/queue/deferred
+  script: $PYTHON_LIB/google/appengine/ext/deferred/deferred.py
+  login: admin
+
+- url: /tasks.*
+  script: handler_task.py
+  login: admin
+
+- url: /_wave/.*
+  script: handler_wave.py
+
+- url: /_ah/xmpp/.*
+  script: handler_xmpp.py
+
+- url: /hubbub?(.*)
+  script: handler_hubbub.py
+
+- url: /hubbub(.*)
+  script: handler_hubbub.py
+
+- url: /(.*\.xml)
+  static_files: gadgets/\1
+  upload: gadgets/(.*\.xml)
+
+- url: /assets/(.*)
+  static_files: assets/\1
+  upload: /1
+
+- url: /_static/(.*)
+  static_files: assets/\1
+  upload: assets//1
+
+- url: /dispatch/
+  script: handler_dispatch.py
+
+- url: /dispatch/_static/(.*\.(gif|png|jpg|ico|css|js))
+  static_files: assets/\1
+  upload: assets/(.*\.(gif|png|jpg|ico|css|js))
+
+- url: /
+  script: handler_web.py
+
+- url: /feeds/
+  script: handler_web.py
+
+- url: /(.*\.(gif|png|jpg|ico|css|js))
+  static_files: assets/\1
+  upload: assets/(.*\.(gif|png|jpg|ico|css|js))
+
+- url: /.*
+  script: handler_wave.py
+
+inbound_services:
+
+- xmpp_message   

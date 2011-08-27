@@ -1,0 +1,7 @@
+# release and upload cycle
+#
+#
+
+export PATH="./bin:.:$PATH"
+jsb-release $1
+jsb-upload $1

@@ -1,0 +1,124 @@
+JSONBOT README
+==============
+
+JSONBOT is a remote event-driven framework for building bots that talk JSON
+to each other over XMPP. 
+
+This distribution provides bots built on this framework for console, IRC,
+XMPP and Convore for the shell and WWW and XMPP for the Google Application engine.
+
+JSONBOT is all of the following:
+
+    * a shell console bot
+    * a shell IRC bot
+    * a shell XMPP bot
+    * a shell Convore bot
+    * a Web bot running on Google Application Engine
+    * a XMPP bot running on Google Application Engine
+    * a Google Wave bot running op Google Application Engine
+    * the XMPP bots are used to communicate between bots
+    * plugin infrastructure to write your own functionality
+    * event driven framework by the use of callbacks
+
+
+see http://jsonbot.googlecode.com
+running demo at http://jsonbot.org:10102
+documentation is at http://jsonbot.org
+
+if you want to upload this bot to the GAE you need "google_appengine" installed in your home dir.
+
+see docs/UPLOAD on how to upload your own bot.
+
+programs
+~~~~~~~~
+
+jsb provides the following programs:
+
+    * jsb - console version of jsb
+    * jsb-import - import data from another bot
+    * jsb-installplug - install remote plugins
+    * jsb-irc - IRC version of jsb (socket)
+    * jsb-xmpp - XMPP version of jsb (socket)
+    * jsb-fleet - mix IRC and XMPP bots
+    * jsb-release - create a new release directory
+    * jsb-rollback - rollback a release
+    * jsb-run - run a release in the GAE dev_appserver
+    * jsb-stop - stop a running bot
+    * jsb-upload - upload a release to the GAE
+
+
+running a development version of the bot
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+first checkout the main bot from the mercurial repository
+
+``hg clone http://jsonbot.googlecode.com/hg``
+
+now you can run the programs in the bin directory with the
+``./bin/<program>``  command. try ./bin/jsb for the console app
+
+
+contact the developer
+~~~~~~~~~~~~~~~~~~~~~
+
+* email: bthate@gmail.com
+
+You can reach me by joining #jsb on FreeNode.
+
+plugins
+~~~~~~~
+
+jsb provides the following plugins:
+
+  * 8b - eight ball
+  * admin - administator related commands
+  * alias - keep aliases (per user)
+  * ask - plugin for asking "experts" a question
+  * choice - choice out of a list .. used in pipelines
+  * controlchar - set the control character of a channel
+  * forward - forward events of a channel to another bot
+  * clone - clone waves into new ones
+  * core - core bot commands
+  * count - count the numbers in a result .. used in pipelines
+  * data - provide data dumps of channels, bots, events
+  * fleet - support multiple bots in a running instance (list of bots)
+  * gae - provide GAE commands like flush cache or cache stats
+  * gadget - wave gadget support
+  * gcalc - use google to calculate
+  * grep - grep the result .. used in pipelines
+  * hubbub - pubsubhubbub plugin providing subscribe functionality
+  * ipcalc - ipcalculator
+  * irc - IRC related commands
+  * jsondata - enable/disable sharing of files through the jsonserver (not
+  * enabled right now)
+  * kickban - channel control commands for IRC
+  * misc - other commands
+  * more - do a more on buffered output
+  * nickcapture - retake nick (IRC)
+  * nickserv - nickserver support (IRC)
+  * not - negated grep .. used in pipelines
+  * outputcache - show outputcache data
+  * rss - provide RSS and Atom pollers
+  * relay - relay to other waves/xmpp account
+  * reload - reloading of plugins
+  * restserver - provide REST functionality to the bot
+  * reverse - reverse the result .. also used in pipelines
+  * seen - keep track of users
+  * shop - keep shopping lists
+  * sort - sort the result .. used in pipelines
+  * tail - tail the result .. used in pipelines
+  * test - test commands
+  * tinyurl - get a tinyurl
+  * todo - keep a todo list
+  * twitter - twitter plugin using oauth
+  * underauth - undernet auth support (IRC)
+  * uniq - make the result unique .. used in pipelines
+  * user - user management
+  * userstate - userstate management
+  * watcher - watch channels that get forwarded to the bot. Wave <-> IRC,
+  * Wave <-> XMPP, IRC <-> XMPP
+  * wave - wave related commands
+  * weather - show weather in a city
+  * welcome - welcome messages shown in the gadget
+  * wikipedia - query wikipedia
+  * xmpp - xmpp related functions

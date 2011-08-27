@@ -1,0 +1,517 @@
+<html>
+  <head>
+    <style type="text/css"> 
+
+      /*  page layout */
+
+      body {
+        font-family: sans-serif;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        padding: 0 0 0 0px;
+        border: 0 0 0 0px;
+        margin: 0px;
+        align: center;
+      }
+
+      /* divs */
+
+      div.bodywrapper {   
+        font-family: sans-serif;
+        height: 80%;
+        width: 100%;
+        position: fixed;
+        margin-left: 0px;
+        align: center;
+      }
+
+      div.bottom {
+        font-family: sans-serif;
+        bottom: 0;   
+        align: center;
+        font-weight: bold;
+        position: fixed;
+        width: 100%;
+        margin-left: 0px;
+      }
+
+      div.news {
+        font-family: sans-serif;
+        overflow: auto;
+        align: center; 
+        height: 50%;   
+        top: 30%;
+      }
+
+      div.output {
+        font-family: sans-serif;
+        overflow: auto;
+        align: center; 
+        height: 50%;   
+        top: 30%;
+      }
+ 
+      div.screen {
+        font-family: sans-serif;
+        position: fixed;
+        bottom: 0;
+        align: center;
+        width: 90%;
+      }
+
+      div.footer {
+        font-family: sans-serif;
+        color: #ffffff;
+        align: center; 
+        font-height: 80%;
+      }
+ 
+      div.footer a {
+        color: red;
+        text-decoration: underline;
+      }
+ 
+      div.related {
+        font-family: sans-serif;
+        text-align: left;
+        line-height: 30px;
+        background-color: black;
+        color: white;
+      }
+
+      div.related a {
+        color: #ffffff;  
+        text-align: left;
+      }
+
+      div.related a:hover {
+        text-decoration: underline;
+        color: red;
+      }
+ 
+      div.related ul {
+        padding 0 0 0 10px
+        list-style: none; 
+      }
+ 
+      div.related li {
+        display: inline;
+        align: left;
+      }
+ 
+      div.related li.right {
+        float: right;
+        margin-right: 5px;
+      }
+
+      div.scroll {
+        height: 200px;
+        width: 90%;
+        overflow: auto;
+        align: center;
+      }
+
+      /* body styles */
+
+      div.body {
+        margin-top: 0;
+        color: #000000;  
+        overflow: auto;
+        align: center;
+        font-family: sans-serif;
+      }
+
+      body h1 { margin-top: 0; font-size: 320%; color: #FFFFFF; background-color: #C54848; }
+      body h2 { font-size: 180%; }
+      body h3 { font-size: 160%; }
+      body h4 { font-size: 140%; }
+      body h5 { font-size: 120%; }
+      body h6 { font-size: 100%; }
+
+    </style>
+    <script type="text/javascript">
+      // vars
+      var host = "{{ host }}";
+      var hostname = window.location.host;
+      var incomingurl = document.URL;
+      var port = window.location.port;
+      var url = "{{ url }}";
+      var starttime = new Date();
+      var interval_id;
+      var lastpolled = new Date();
+      var lpdate = lastpolled.getTime();
+      var sleeptime = 180000;
+      var host = "";
+      var viewer = "";
+      var hostid = "";
+      var viewerid = "";
+      var parameters = "";
+      var identtime = new Date();
+      var diskname = host + identtime.toString();
+      var log = [];
+      var Cmndlog = [];
+      var cmndindex = Cmndlog.length;
+      var History = [];
+      var historyindex = History.length;
+      var debug = false;
+      var lastseen = 0;
+
+      function scrollToBottom(elm_id) {
+	var elm = document.getElementById(elm_id);
+        var f = document.createElement("input");
+        if (f.setAttribute) f.setAttribute("type","text")
+        if (elm.appendChild) elm.appendChild(f);
+        f.style.width = "0px";
+        f.style.height = "0px";
+        if (f.focus) f.focus();
+        if (elm.removeChild) elm.removeChild(f);
+      }
+
+      // output functions
+
+      function dooutput(text, div, how) {
+          var element = document.getElementById(div);
+          if (!element) {
+              return true;
+          }
+          if (div == "news_div") {
+              text = "<i>" + text + "</i>";
+          }
+          if (how == "marquee") {
+              var t = '<marquee behaviour="slide" direction="left">' + text + "</marquee>";
+              element.innerHTML = t;
+          }
+          else if (how == "overwrite"){
+              element.innerHTML = text;
+          }
+          else if( how == "background") {
+              element.innerHTML = text;
+          }
+          else if (how == "add") {
+              element.innerHTML += text;
+              scrollToBottom(div);
+          }
+          else {
+              element.innerHTML = text;
+              //scrollToBottom(div);
+          }
+          document.forms[0].cmnd.focus();
+      }
+
+      // clear div
+
+      function clear(divname) {
+        var element = document.getElementById(divname);  
+        element.innerHTML = "<b>[!]</b>";
+      }
+
+      // utils functions
+
+      function elapsed() {
+        last = new Date();
+        diff = last.getTime() - starttime.getTime();
+        starttime = last;
+        return diff;
+      }
+
+      // mainloop
+
+      function updateloop() {
+        update();
+      }
+
+      // time loop
+
+      function timeloop() {
+        var now = new Date();
+        dooutput("<b>" + now.toTimeString() + "</b>", "uber_div", "overwrite");
+      }
+
+      // websocket 
+
+      function createsocket() {
+          var ws = new WebSocket(url);
+          ws.onopen = function () {
+              var t = new Date();
+              dooutput("channel openend on " + t.toTimeString(), "status_div", "overwrite");
+              dooutput("channel openend on " + t.toTimeString(), "info_div", "overwrite");
+              dosocket("", "", "");
+          }
+          ws.onmessage = function (evt) {
+              var data = JSON.parse(evt.data);
+              var event = JSON.parse(data['payload']);
+              if (event['how'] != "background") {
+                  History.push(evt.data);
+                  dooutput("current: " + historyindex + " new: " + (History.length-lastseen-1) + " last: " + (History.length-1), "topper_div", "overwrite");
+              }
+              if (event['execstr']) {
+                  handlesocket(evt.data);
+              }
+              if (event['headlines']) {
+                  dooutput(event['txt'], "news_div", "overwrite");
+              }
+              if (!event['debug']) {
+                  dooutput("", "json_div", "overwrite");
+              }
+          }
+          ws.onclose = function (evt) {
+              var tt = new Date();
+              dooutput("channel closed on " + tt.toTimeString(), "status_div", "overwrite");
+              setTimeout("ws = createsocket();", 5000);
+          }
+          return ws;
+      }
+
+      // INIT
+
+
+      function start() {
+          ws = createsocket();
+          setTimeout("doSocket('!version', 'content_div', 'overwrite');", 100);
+          setTimeout("doSocket('!topper', 'info_div', 'background');", 200);
+          setTimeout("doSocket('!statusline', 'topper_div', 'background');", 1000);
+          setTimeout('setInterval("timeloop();", 1000);', 5000);
+      }
+
+      function init() {
+        setTimeout("consolestart();", 50);
+      }
+
+      function consolestart() {
+          dooutput("<b>WELCOME</b>", "uber_div", "overwrite");
+          setTimeout("start();", 100);
+      }
+
+      function dohistory(index) {
+          var i = index * 1;
+          if (i <= 0) { 
+              historyindex = 0;
+              i = 0;
+          }
+          else if (i > History.length-1) {
+              historyindex = History.length-1;
+              i = historyindex;
+          }
+          var res = History[i];
+          if (res) {
+              handlesocket(res);
+          }
+          if (historyindex > lastseen) {
+              lastseen = historyindex;
+          }
+          return false;
+      }
+
+      function showcmnd(index) {
+          var i = index * 1;
+          if (i < 0) { 
+              cmndindex = Cmndlog.length-1;
+              i = cmndindex;
+              return false;
+          }
+          else if (i > Cmndlog.length-1) {
+              cmndindex = 0;
+              i = cmndindex;  
+              document.forms[0].cmnd.value = "";
+              return false;
+          }
+          var cmnd = Cmndlog[i];
+          if (cmnd) {
+              document.forms[0].cmnd.value = cmnd;
+              dooutput("(" + i + ")" + " " + cmnd, "status_div", "overwrite");
+          }
+          return false;
+      }
+
+      // handler function
+
+      function handlesocket(message) {
+          var data = JSON.parse(message);
+          var event = JSON.parse(data['payload']);
+          if (historyindex > lastseen) {
+              lastseen = historyindex;
+          }
+          dooutput("(" + event['nick'] + ") " + event['userhost'] + " on channel " + event['origin'], "channel_div", "overwrite");
+          var curtime = new Date();
+          var offset = curtime.getTimezoneOffset(); 
+          var ctime = event['ctime'];
+          var t = new Date(ctime*1000);
+          dooutput(t.toDateString() + " " + t.toTimeString(), "date_div", "overwrite");
+          dooutput("current: " + historyindex + " new: " + (History.length-lastseen-1) + " last: " + (History.length-1), "topper_div", "overwrite");
+          dooutput("OK", "status_div", "background"); 
+          if (event['how'] == "background") {
+             dooutput(event['txt'], event['div'], "background");
+             return false;
+          }
+          if (event["debug"]) {
+              dooutput(message, "json_div", "overwrite");
+          }
+          else {
+              dooutput("", "json_div", "overwrite");
+          }
+          if (!event['div']) {
+              dooutput(event['txt'], "content_div", "overwrite");
+          }
+          if (event['execstr']) {
+              dooutput("command: " + event['execstr'] + "<br><br>", 'cmnd_div', 'overwrite');
+          }
+          else {
+              dooutput("", 'cmnd_div', 'overwrite');
+          }
+          dooutput(event['txt'], event['div'], event['how']);
+          return false;
+      }
+      
+      // write command over the socket
+
+      function doSocket(cmnd, target, how) {
+          dooutput("sending to " + url, "status_div", "background"); 
+          var data = {"cmnd": cmnd, "how": how, "target": target };
+          Cmndlog.push(cmnd);
+          ws.send(JSON.stringify(data));
+          return false;
+      }
+
+      // function to launch on enter in the command box
+
+      function doexec(e) {
+        var form = document.forms[0];
+        var keycode;
+        if (window.event) keycode = window.event.keyCode;
+           else if (e) keycode = e.which;
+        else return true;
+        dooutput(keycode, "status_div", "overwrite");
+        if (keycode == 13) {
+            var cmnd = form.cmnd.value;
+            doSocket(cmnd, "content_div", "overwrite");
+            form.cmnd.value = "";
+            form.focus();
+            historyindex = History.length;
+            return false;
+        }
+        else if (keycode == 35) {
+            historyindex = History.length;
+            dohistory(historyindex);
+            return false;
+        }
+        else if (keycode == 36) {
+            historyindex = 0;
+            dohistory(historyindex);
+            return false;
+        }
+        else if (keycode == 40) {
+            cmndindex += 1;
+            showcmnd(cmndindex);
+            return false;
+        }
+        else if (keycode == 38) {
+            cmndindex -= 1;
+            showcmnd(cmndindex);
+            return false;
+        }
+        else if (keycode == 34) {
+            historyindex -= 1;   
+            dohistory(historyindex);
+            return false;
+        }
+        else if (keycode == 33) {
+            historyindex += 1;   
+            dohistory(historyindex);
+            return false;
+        }
+        else if (keycode == 45) {
+            doSocket("!more", "content_div", "overwrite");
+            return false;
+        }
+        else {
+          return true;
+        }
+      }
+
+      // XHR
+      
+      function response(obj) {
+          dooutput(obj.readyState, "status_div", "background");
+          if (obj.readyState==4){
+              dooutput(obj.status, "status_div", "background");
+              if (obj.status==200) {
+                   dooutput(obj.responseText, "content_div", "overwrite");
+              }
+              else {
+                   dooutput(obj.status, "content_div", "overwrite");
+              }
+          }
+      }
+
+      function doCmnd(cmnd, resp, how) {
+          var request = false;
+          if (window.XMLHttpRequest) {
+              request = new XMLHttpRequest();
+          }
+          else if (window.ActiveXObject) { 
+              try {
+                  request = new ActiveXObject("Msxml2.XMLHTTP");
+              } catch (e) {
+                  try {
+                      request = new ActiveXObject("Microsoft.XMLHTTP");
+                  } catch (e) {}
+              }
+          }
+          if (!request) {
+              dooutput("can't make connection to server", "topper_div", "background");
+              return false;
+          }
+          request.cmnd = cmnd;
+          request.how = how;
+          request.onreadystatechange = function () {
+              resp(request);
+          }
+          dooutput(url, "status_div", "background");
+          request.open("POST", url, true);
+          request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          request.setRequestHeader("Content-Length", parameters.length);
+          request.setRequestHeader("Cache-Control", "no-cache");
+          parameters="content="+encodeURIComponent(cmnd) + "&how=" + encodeURIComponent(how);
+          starttime = new Date();
+          request.send(parameters);
+          dooutput(" - " + cmnd, "status_div", "channel");
+          return true;
+      }
+   </script>
+</head>
+<body style="margin: 0px; background-color; white color: black;" align="center" onLoad="init();" >
+   <title>{{ host }}</title>
+      <div class="related">
+        <ul>
+          <li class="right">
+            <a href="{{ logouturl }}" title="logout">logout</i></a></li>
+          <li class="right" style="color: white; margin-right: 5px;">{{ who }}<b> - </b></li>
+          <li><a href="http://jsonbot.org/index.html" onclick='window.open("http://jsonbot.org/index.html"); return false'><b>DOCS</b></a></li>
+        </ul>
+      </div>
+      <div class="body" align="center">
+        <div align="center" id="uber_div">Morning !!</div>
+        <div align="center"><h1><b>{{ appname }}</b></h1></div>
+        <span class="body" style="font-size: 120%; color: {{ color }};" id="topper_div"></span><br><br>
+        <span class="center" style="font-size: 110%; font-weight: bold; align: center;" id="news_div">RSS feeds etc. appear here</span>
+        <table id="grant_table">
+          <br><br>
+          <span class="output" style="font-size: 120%; font-weight: bold; align: center;" id="channel_div"></span>
+          <br><br><i>
+          <span class="output" style="font-size: 100%; align: center;" id="date_div"></span>
+          </i><br><br>
+          <span class="output" style="background-color: {{ color }}; color: white; font-size: 120%; align: center;" id="cmnd_div"></span>
+          <br>
+          <div class="scroll"><span class="output" style="font-size: 140%; align: center;" id="content_div"></span></div>
+          <br><br>
+          <span class="output" style="align: center;" id="json_div"></span>
+        </table>
+        <div class="bottom" style="font-size: 100%; color: #C54848;  font-weight: italic;">
+          <div  id="info_div"></div><br>
+          <div class="footer" style="background-color: {{ color }}; font-size:
+          120%;"><i></i><br><form><b>&lt;-</b><input style="font-size: 100%;" size="33" type="text" name="cmnd" onKeyDown="return doexec(event);"/><b>-&gt;</b></form>
+          <div class="footer" id="status_div" style="border-top: 2; font-size: 100%; background-color: #C54848;"><b>JSONBOT PRESENT!<b></div>
+     </div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+#!/usr/bin/env python
+#
+#
+
+""" stop a running bot """
+
+## jsb imports
+
+import os, sys
+sys.path.insert(0, os.getcwd())
+sys.path.insert(0, os.getcwd() + os.sep + "..")
+
+os.environ['PATH'] = os.getcwd() + os.sep + 'bin:' + os.environ['PATH']
+
+from jsb.utils.popen import gozerpopen
+from jsb.lib.datadir import getdatadir
+from jsb.version import getversion
+
+print getversion("STOP")
+
+## basic imports
+
+from subprocess import Popen, PIPE
+import os
+import sys
+
+
+## options parser
+
+from optparse import OptionParser
+parser = OptionParser(usage='usage: %prog [options] [list of appids]', version='%prog ' + getversion())
+parser.add_option('-d', '--datadir', type='string', default=False, dest='datadir', help="datadir to use")
+opts, args = parser.parse_args()
+opts.args = args
+
+if opts.datadir and not os.path.isdir(opts.datadir): os.mkdir(opts.datadir)
+
+ddir = opts.datadir or getdatadir()
+PID = open("%s/run/jsb.pid" % ddir, 'r').read()
+print "PID is %s" % PID
+execstring = "kill -s TERM %s" % PID
+print execstring
+proc = Popen(execstring.split())
+proc.wait()

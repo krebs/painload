@@ -1,0 +1,8 @@
+rm -fr jsb-env
+mkdir jsb-env
+cp files/buildout/* jsb-env
+cd jsb-env
+mkdir etc
+cp ../files/buildout/etc/* etc
+python bootstrap.py
+./bin/buildout 

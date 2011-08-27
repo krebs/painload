@@ -1,0 +1,15 @@
+{
+ "status": [], 
+ "name": "owner", 
+ "permits": [], 
+ "perms": [
+  "USER", 
+  "OPER", 
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "momorientes@mo2-systems.com"
+ ], 
+ "email": []
+}

@@ -1,0 +1,276 @@
+<style type="text/css"> 
+
+@import url("default.css");
+
+
+/* -- main layout ----------------------------------------------------------- */
+
+div.clearer {
+    clear: both;
+}
+
+/* -- relbar ---------------------------------------------------------------- */
+
+div.related {   
+    background-color: #000000;
+    line-height: 50px;
+    color: #ffffff;
+    text-align: left;
+} 
+
+div.related h3 {
+    display: none;
+}
+
+div.related ul {
+    padding: 0 0 0 10px;
+    list-style: none;
+}
+
+div.related li {
+    display: inline;
+    text-align: left;
+}
+
+div.related li.right {
+    float: right;
+    margin-right: 5px;
+}
+
+/* -- general body styles --------------------------------------------------- */
+
+a.headerlink {
+    visibility: hidden;
+}
+
+h1:hover > a.headerlink,
+h2:hover > a.headerlink,
+h3:hover > a.headerlink,
+h4:hover > a.headerlink,
+h5:hover > a.headerlink,
+h6:hover > a.headerlink,
+dt:hover > a.headerlink {
+    visibility: visible;
+}
+
+div.body p.caption {
+    text-align: inherit;
+    align: border;
+}
+
+div.body td {
+    text-align: left;
+}
+
+.field-list ul {
+    padding-left: 1em;
+}
+
+.first {
+    margin-top: 0 !important;
+}
+
+
+/* -- other body styles ----------------------------------------------------- */
+
+dl {
+    margin-bottom: 15px;
+}
+
+dd p {
+    margin-top: 10px;
+}
+
+dd ul, dd table {
+    margin-bottom: 10px;
+}
+
+dd {
+    margin-top: 3px;
+    margin-bottom: 10px;
+    margin-left: 30px;
+}
+
+dt:target, .highlight {
+    background-color: #fffff;
+}
+
+dl.glossary dt {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.field-list ul {
+    margin: 0;
+    padding-left: 1em;
+}
+
+.field-list p {
+    margin: 0;
+}
+
+.refcount {
+    color: #060;
+}
+
+.optional {
+    font-size: 1.3em;
+}
+
+.versionmodified {
+    font-style: italic;
+}
+
+.system-message {
+    background-color: #fda;
+    padding: 5px;
+    border: 3px solid red;
+}
+
+.footnote:target  {
+    background-color: #ffa
+}
+
+
+/* -- page layout ----------------------------------------------------------- */
+
+body {
+    font-family: sans-serif;
+    background-color: #1c4e63;
+    color: #000;
+    margin: 0px;
+    padding: 0;
+    text-align: center;
+}
+
+div.document {
+    background-color: #1c4e63;
+    text-align: center;
+    font-size: 100%;
+}
+
+div.documentwrapper {
+    float: center;
+}
+
+div.bodywrapper {
+    margin: 0 0 0 230px;
+    float: center;
+}
+
+div.body {
+    background-color: #1c4e63;
+    color: #ffffff;
+    padding: 0 20px 30px 20px;
+    overflow: hidden;
+}
+
+div.footer {
+    color: #ffffff;
+    text-align: center;
+}
+
+div.footer a {
+    color: red;
+    text-decoration: underline;
+}
+
+div.related {
+    background-color: #000000;
+    color: #ffffff;
+    text-align: left;
+    font-size: 100%;
+}
+
+div.related a {
+    color: #ffffff;
+    text-align: left;
+}
+
+/* -- body styles ----------------------------------------------------------- */
+
+a {
+    color: #355f7c;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+div.body p, div.body dd, div.body li {
+    text-align: justify;
+}
+
+div.body h1,
+div.body h2,
+div.body h3,
+div.body h4,
+div.body h5,
+div.body h6 {
+    font-family: 'Trebuchet MS', sans-serif;
+    background-color: #f2f2f2;
+    font-weight: normal;
+    color: #20435c;
+    border-bottom: 1px solid #ccc;
+    margin: 20px -20px 10px -20px;
+    padding: 3px 0 3px 10px;
+}
+
+div.body h1 { margin-top: 0; font-size: 300%; }
+div.body h2 { font-size: 160%; }
+div.body h3 { font-size: 140%; }
+div.body h4 { font-size: 120%; }
+div.body h5 { font-size: 110%; }
+div.body h6 { font-size: 100%; }
+
+a.headerlink {
+    color: #c60f0f;
+    font-size: 0.8em;
+    padding: 0 4px 0 4px;
+    text-decoration: none;
+}
+
+a.headerlink:hover {
+    background-color: #c60f0f;
+    color: white;
+}
+
+
+div.body dd, div.body li {
+    text-align: align;
+}
+
+div.body p {
+    text-align: center;
+}
+
+pre {
+    padding: 5px;
+    background-color: #eeffcc;
+    color: #333333;
+    border: 1px solid #ac9;
+    border-left: none;
+    border-right: none;
+}
+
+tt {
+    background-color: #ecf0f3;
+    padding: 0 1px 0 1px;
+    font-size: 0.95em;
+}
+
+/* -- printout stylesheet --------------------------------------------------- */
+
+@media print {
+    div.document,
+    div.documentwrapper,
+    div.bodywrapper {
+        margin: 0;
+        width: 100%;
+        overflow: auto;
+    }
+    div.related,
+}
+</style>
+

@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "-126smile+c-base+crew+smile", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "~smile@c-base/crew/smile"
+ ], 
+ "email": []
+}

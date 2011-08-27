@@ -1,0 +1,40 @@
+.TH JSONBOT 1 "7 Nov 2010" "Debian GNU/Linux" "jsb manual"
+.SH NAME
+.B jsb-run \- The JSONBOT run program
+.SH SYNOPSIS
+JSONBOT is a remote event-driven framework for building bots that talk JSON
+to each other over XMPP. 
+.B jsb-run
+can be used to run an GAE bot locally.
+.B 
+.SH "DESCRIPTION"
+.P
+For testing purposes
+.B jsb-run 
+can be used to start a GAE bot local on your own box. This
+program first creates a new release directory and then runs dev_appserver
+(the appengine program to run a GAE program) on this directory.
+
+.SH REQUIREMENTS
+This program needs google_appengine installed in your home dir. See
+http://appengine.google.com
+.PP
+.SH USAGE
+.P
+.B Usage: jsb-run [options] <appid>
+
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  -d DATADIR, --datadir=DATADIR
+                        datadir to use
+
+.SH "DOCUMENTATION"
+See http://jsonbot.org or http://jsonbot.appspot.com/docs for more documentation
+
+.SH "SEE ALSO"
+jsb-release(1), jsb-rollback(1), jsb-upload(1), jsb-uploadall(1) 
+
+.SH AUTHOR
+This manual page was written by Bart Thate <bthate@gmail.com>,
+for the Debian GNU/Linux system (but may be used by others).

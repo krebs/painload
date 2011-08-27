@@ -1,0 +1,127 @@
+#!/usr/bin/env python
+#
+#
+
+""" test the GAE cmndtest bot by sending POST request to the bot. """
+
+## EDIT THIS
+
+import sys, os
+
+sys.path.insert(0, os.getcwd())
+
+try:
+    url = sys.argv[1]
+except IndexError:
+    url = "http://jsonbot.appspot.com/dispatch/"
+
+threaded = False
+
+##
+
+import os
+import sys
+import time
+import urlparse
+import httplib
+import types
+import urllib
+import logging
+import re
+
+starttime = time.time()
+
+from jsb.utils.lazydict import LazyDict
+from jsb.lib.threads import start_new_thread
+from jsb.utils.exception import handle_exception, exceptionevents, exceptionlist
+from jsb.utils.url import useragent, striphtml
+from jsb.lib.admin import plugin_packages
+from jsb.utils.log import setloglevel
+from jsb.lib.version import getversion
+
+setloglevel("error")
+
+opts = LazyDict()
+opts.threaded = threaded
+
+def showexceptions():
+    teller = 0
+
+    for ex in exceptionevents:
+        teller += 1
+        print "EXCEPTION NR %s" % teller
+        print ex[1]
+        print "command: "  + ex[0].txt
+        print "options: " + str(ex[0].options)
+
+    print "total of %s exceptions" % teller
+    return exceptionlist
+
+
+def posturl(url, myheaders, postdata, keyfile=None, certfile="",port=80):
+    """ very basic HTTP POST url retriever """
+    # build headers
+    headers = {'Content-Type': 'application/x-www-form-urlencoded', \
+'Accept': 'text/plain; text/html', 'User-Agent': useragent()}
+    headers.update(myheaders)
+    # parse URL components
+    urlparts = urlparse.urlparse(url)
+    # set up HTTP connection
+    if keyfile:
+        connection = httplib.HTTPSConnection(urlparts[1], port, keyfile, \
+certfile)
+    else:
+        connection = httplib.HTTPConnection(urlparts[1])
+    # make the request
+    if type(postdata) == types.DictType:
+        postdata = urllib.urlencode(postdata)
+    logging.info('fetching %s' % url)
+    connection.request('POST', urlparts[2], postdata, headers)
+    # read the response and clean up 
+    return connection.getresponse()
+
+
+print getversion()
+print "loading plugins ..."
+
+from jsb.lib.examples import examples
+from jsb.lib.plugins import plugs
+plugs.loadall(plugin_packages)
+
+print "done"
+
+def do(url, example):
+    print "==============="
+    print url, example
+    res =  posturl(url, {}, {'content': example})
+    result = striphtml(res.read())
+    result = re.sub("\s+", " ", result)
+    try:
+        r = result.split("command:")[1]
+    except IndexError:
+        r = result
+    print "%s: %s" % (res.status, r.split('|')[-1])
+    #time.sleep(5)
+
+try:
+    threads = []
+    for example in examples.getexamples():
+        if opts.threaded:
+            t = start_new_thread(do, (url, example))
+            threads.append(t)
+        else:
+            do(url, example)
+
+    if opts.threaded:
+        for tt in threads:
+            tt.join()
+
+except KeyboardInterrupt:
+    showexceptions()
+except Exception, ex:
+    handle_exception()
+    showexceptions()
+    sys.stdout.flush()
+    time.sleep(0.01)
+    os._exit(1)
+

@@ -1,0 +1,91 @@
+#!/usr/bin/env python
+#
+#
+
+""" run multiple bot instances in 1 program. """
+
+## bootstrap
+
+import warnings
+warnings.simplefilter("ignore")
+
+import os, sys, logging
+sys.path.insert(0, os.getcwd())
+
+## basic imports
+
+import logging
+import time
+import signal
+
+## options parser
+
+from jsb.utils.opts import makefleetopts
+
+opts = makefleetopts()
+
+from jsb.lib.datadir import setdatadir
+if opts.datadir: setdatadir(opts.datadir)
+
+from jsb.version import getversion
+print getversion('FLEET')
+
+## jsb imports
+
+from jsb.lib.partyline import partyline
+from jsb.lib.datadir import makedirs
+from jsb.lib.boot import boot
+from jsb.lib.exit import globalshutdown
+from jsb.utils.mainloop import mainloop
+from jsb.lib.users import users_boot
+from jsb.lib.threads import start_new_thread
+import jsb
+
+from jsb.lib.fleet import getfleet
+fleet = getfleet(opts.datadir)
+if opts.all or opts.show:
+    avail = fleet.avail()
+    if avail: sys.stdout.write("available bots: " + ", ".join(avail) + ".")
+    else: sys.stdout.write("no bots available.")
+
+if opts.all: print "" ; os._exit(0)
+
+# provide sigterm support
+def dostop(a, b):
+    """ sig handler """
+    globalshutdown()
+
+signal.signal(signal.SIGTERM, dostop)
+
+if not fleet.avail(): logging.error("fleet - no bots found.") ; os._exit(1)
+
+## loglevel
+
+from jsb.lib.config import getmainconfig
+mainconfig = getmainconfig()
+from jsb.utils.log import setloglevel
+setloglevel(opts.loglevel or mainconfig.loglevel or "warn", opts.colors) 
+if opts.loglevel: mainconfig.loglevel = opts.loglevel ; mainconfig.save()
+
+## start the fleet
+
+boot(opts.datadir)
+
+if opts.owner:
+    users = users_boot()
+    users.make_owner(opts.owner)
+
+bots = fleet.loadall(opts.args)
+
+if opts.doresume:
+    try:
+        fleet.resume(opts.doresume)
+        fleet.startok.wait()
+        partyline.resume(opts.doresume)
+        time.sleep(1)
+        os.unlink(opts.doresume)
+    except: handle_exception()
+else:
+    start_new_thread(fleet.startall, (bots, ))
+
+mainloop()

@@ -1,0 +1,21 @@
+queue:
+- name: default
+  rate: 1/s
+- name: queue0
+  rate: 100/s
+- name: queue1
+  rate: 80/s
+- name: queue2
+  rate: 60/s
+- name: queue3
+  rate: 40/s
+- name: queue4
+  rate: 20/s
+- name: queue5
+  rate: 10/s
+- name: queue6
+  rate: 5/s
+- name: queue7
+  rate: 2/s
+- name: queue8
+  rate: 1/s

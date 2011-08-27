@@ -1,0 +1,39 @@
+<html>
+<head>
+    <link rel="stylesheet" href="/assets/style.css" type="text/css" />
+    <script src='/_ah/channel/jsapi'></script>
+    <script type="text/javascript" src="assets/console.js" /></script>
+</head>
+<body>
+    <title>{{ host }}</title>
+    <div class="related">
+      <ul> 
+        <li class="right" style="margin-right: 10px">
+          <a href="{{ logouturl }}" title="logout">logout</i></a></li>
+        <li class="right" style="margin-right: 10px">{{ loginurl }} - {{ who }}</i></a> |</li>
+        <li><a href="http://jsonbot.appspot.com/docs/html/index.html" onclick='window.open("http://jsonbot.appspot.com/docs/html/index.html"); return false'><b>DOCS</b></a></li>
+        <li>-</li>
+        <li><a href="" title="console" onclick='doconsole(); return false;'><b>console</b></a></li>
+        <li>-</li>
+        <li><a href="" title="feeds" onclick='dofeeds(); return false;'><i>feeds</i></a></li>
+      </ul>
+    </div> 
+    <div align="center" class="footer" id="status_div"></div>
+    <div class="footer" id="info_div"></div>
+    <div align="center">
+    <div class="body"><h1><b>{{ appname }}</b></h1><div><br>
+    <div id="topper_div"></div><br>
+    <div style="position: relative; width: 90%; height: 80px; background-color: {{ color }};" id="screen_div"></div>
+    </div></div>
+    <br><br>
+    <div class="related" id="status_div2">
+      <ul align="center">
+        <li><b>outputcache<b></li>
+      </ul>
+    </div>
+    <div align="left" class="footer" id="bottom_div"></div>
+    <div id="down_div"><i>running on {{ host }}</i></div>
+    <br>
+</body>
+<body onLoad="init();" />
+</html>

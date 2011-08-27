@@ -1,0 +1,3 @@
+cd docs/html
+cp -Ra * /var/www
+tar zcvf ~/docs.tar.gz .

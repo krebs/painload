@@ -1,0 +1,48 @@
+#!/usr/bin/env python
+#
+#
+
+""" upload all instances in ~/jsonreg/ """
+
+
+import os
+import sys
+
+sys.path.insert(0, os.getcwd())
+
+from jsb.utils.log import setloglevel
+setloglevel("error")
+
+## jsb imports
+
+from jsb.version import getversion
+from jsb.utils.popen import gozerpopen
+from jsb.lib.datadir import getdatadir
+
+## basic imports
+
+from subprocess import Popen, PIPE
+import os
+import sys
+
+print getversion("ROLLBACK")
+
+## options
+
+from optparse import OptionParser
+parser = OptionParser(usage='usage: %prog [options] <appid>', version='%prog ' + getversion())
+parser.add_option('-d', '--datadir', type='string', default=False, dest='datadir', help="datadir to use")
+opts, args = parser.parse_args()
+opts.args = args
+
+ddir = opts.datadir or getdatadir()
+homedir = os.path.expanduser("~")
+target = opts.args or os.listdir(homedir + os.sep + 'jsbregs')
+
+## upload all instances in ~/jsbregs/
+
+for item in target:
+    print "ROLLING BACK %s" % item
+    execstring = '%s/google_appengine/appcfg.py rollback %s%sreleases%s%s' % (homedir, ddir, os.sep, os.sep, item)
+    proc = Popen(execstring.split())
+    proc.wait()

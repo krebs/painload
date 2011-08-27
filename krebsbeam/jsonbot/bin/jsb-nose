@@ -1,0 +1,9 @@
+if [ $1 ]
+then
+  TARGET=$1
+else
+  TARGET="jsonbot"
+fi
+
+export PYTHONPATH="$PYTHONPATH:$TARGET:."
+nosetests -v -w releases/$TARGET/tests --gae-lib-root ~/google_appengine --gae-application releases/$TARGET --with-gae --debug-log debug.log

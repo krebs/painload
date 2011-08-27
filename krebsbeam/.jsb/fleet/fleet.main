@@ -1,0 +1,8 @@
+{
+ "names": [
+  "default-irc"
+ ], 
+ "types": {
+  "default-irc": "irc"
+ }
+}

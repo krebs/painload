@@ -1,0 +1,92 @@
+# ===========================================================
+#
+# JSONBOT CONFIGURATION FILE - /krebs/krebsbeam/.jsb/config/mainconfig
+#
+# last changed on Sat Aug 27 20:50:55 2011
+#
+# This file contains configration data for the JSONBOT.
+# Variables are defined by "name = json value" pairs.
+# Make sure to use " in strings.
+#
+# The bot can edit this file!.
+#
+# ===========================================================
+
+# - application id used by appengine.
+app_id = "jsonbot"
+
+# - application name as used by the bot.
+appname = "JSONBOT"
+
+# - enable automatic registration of new users.
+auto_register = 1
+
+# - color used in the webconsole.
+color = ""
+
+# - enable colors in logging.
+colors = ""
+
+# - domain .. used for WAVE.
+domain = ""
+
+# - characters to used as seperator.
+dotchars = ", "
+
+# - whether the bot is allowed to flood.
+floodallow = 0
+
+# - enable this to give new users the USER permission besides GUEST.
+guestasuser = 0
+
+# - loadlist .. not used yet.
+loadlist = []
+
+# - loglevel of all bots
+loglevel = "info"
+
+# - loglist .. maintained by the bot.
+loglist = []
+
+# - enable memcached.
+memcached = 0
+
+# - owner of the bot.
+owner = []
+
+# - message to send on quit
+quitmsg = "http://jsonbot.googlecode.com"
+
+# ============================================================
+#
+# bot generated stuff.
+#
+# ============================================================
+
+# - blacklist used to deny ips .. bot maintains this
+blacklist = []
+
+# - filename of this config file. edit this when you move this file.
+cfile = "/krebs/krebsbeam/.jsb/config/mainconfig"
+
+# - function that created this config file. bot generated
+createdfrom = "jsb.lib.config:79"
+
+# - directory to store bot data in.
+datadir = "/krebs/krebsbeam/.jsb"
+
+# - directory in which this config file lives.
+dir = "/krebs/krebsbeam/.jsb/config"
+
+# - filename of this config file.
+filename = "mainconfig"
+
+# - whether this config file lives in the database and not on file.
+isdb = false
+
+# - bot generated uuid for this config file.
+uuid = "cf0bd849-c331-419f-b8ff-f9ec87f71c6b"
+
+# - whitelist used to allow ips .. bot maintains this
+whitelist = []
+

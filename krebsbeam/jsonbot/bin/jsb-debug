@@ -1,0 +1,7 @@
+# run the release - run in dev_appserver cycle
+#
+#
+
+export PATH="./bin:.:$PATH"
+jsb-release $1
+jsb-run $1

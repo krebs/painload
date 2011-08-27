@@ -1,0 +1,20 @@
+{
+ "tokens": [], 
+ "enable": false, 
+ "key": "", 
+ "forwards": [], 
+ "nick": "jsb", 
+ "allowcommands": [], 
+ "createdfrom": "jsb.lib.eventbase:109", 
+ "denyplug": [], 
+ "cacheindex": 0, 
+ "cc": "!", 
+ "passwords": {}, 
+ "allowwatch": [], 
+ "webchannels": [], 
+ "watched": [], 
+ "feeds": [], 
+ "silentcommands": [], 
+ "id": "#shackspace", 
+ "silent": true
+}

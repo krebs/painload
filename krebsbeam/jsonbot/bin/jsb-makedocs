@@ -1,0 +1,389 @@
+#!/usr/bin/env python
+#
+#
+
+""" jsb documentation generator. """
+
+## boot
+
+import os
+import sys
+sys.path.insert(0, "..")
+sys.path.insert(0, os.getcwd())
+sys.path.append(os.path.join(os.path.abspath("~"), 'google_appengine'))
+sys.path.append(os.path.join(os.path.abspath("~"), 'google_appengine', 'google'))
+sys.path.append(os.path.join(os.path.abspath("~"), 'google_appengine', 'google', 'appengine'))
+sys.path.append(os.getcwd() + os.sep + 'jsb')
+sys.path.append(os.path.join(os.getcwd(), 'jsb', 'plugs', 'core'))
+sys.path.append(os.path.join(os.getcwd(), 'jsb', 'plugs', 'common'))
+sys.path.append(os.path.join(os.getcwd(), 'jsb', 'plugs', 'wave'))
+sys.path.append(os.path.join(os.getcwd(), 'jsb', 'plugs', 'socket'))
+sys.path.append(os.path.join(os.getcwd(), 'jsb', 'plugs', 'gae'))
+
+## jsb imports
+
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import toascii, splittxt, strippedtxt, waitforqueue, waitevents
+from jsb.lib.plugins import plugs, Plugins
+from jsb.lib.examples import examples
+from jsb.lib.users import Users
+from jsb.lib.commands import cmnds
+from jsb.lib.threads import start_new_thread
+from jsb.lib.boot import boot, plugin_packages
+from jsb.lib.botbase import BotBase
+from jsb.utils.exception import exceptionlist
+
+## basic imports
+
+import os
+import re
+import time
+import sys
+import logging
+
+## defines
+
+try: boot(sys.argv[2], force=True)
+except IndexError: boot(force=True)
+
+donot = ['test-plugs', 'admin-boot', 'admin-reloadall', 'reconnect', 'stop', 'quit', 'rss-peek' , 'rss-register', 'rss-get', 'hb-register', 'reboot', 'admin-stop']
+#donot = ['admin-stop', 'reboot', 'quit', 'admin-reloadall', 'reconnect']
+
+bot = BotBase(botname="testbot")
+bot.allowall = True
+bot.start(False)
+
+users = Users()
+
+try:
+    users.add('test', ['test@test', ], ['OPER', 'USER', 'QUOTE', 'MAIL', 'GUEST'])
+except Exception, ex:
+    pass
+
+try:
+    users.setemail('test', 'bthate@gmail.com')
+except Exception, ex:
+    pass
+
+noresult = []
+
+## functions
+
+def gendoc(m, f, output):
+    thefile = m.replace(".", os.sep)
+    thefile = thefile + os.sep + f
+    mod = m.replace(os.sep, '.')
+    base = os.path.abspath(f).split(os.sep)[-1].replace('.py','')
+    plugin = mod + '.' + base
+    output.write('.. _plugin:%s:\n\n' % base)
+    output.write('=' * (len(base)) + '\n')
+    output.write('%s' % base.upper() + '\n')
+    output.write('=' * (len(base)) + '\n')
+    print "USING %s" % plugin
+    if not plugin in plugs:
+        output.write("\nERROR: no %s plugin found\n\n" % base)
+        output.flush()
+        output.close()
+        return
+    output.write("| \n" + '\n')
+    output.write("about" + '\n')
+    output.write("-----" + '\n')
+    output.write("| \n" + '\n')
+    try:
+        author = plugs[plugin].__author__
+        output.write(":author:  %s" % author.strip() + '\n')
+    except AttributeError:
+        output.write(":author:  Bart Thate <bthate@gmail.com>" + '\n')
+    output.write(":contact: IRCNET/#dunkbots" + '\n')
+    output.write(':distribution: core' + '\n')
+    try:
+        license = plugs[plugin].__license__
+        output.write(":license:  %s" % license.strip() + '\n\n')
+    except AttributeError:
+        output.write(":license: MIT" + '\n\n')
+    output.write("| \n" + '\n')
+    data = {'author': 'unknown', 'description': '', 'commands': [], 'examples': {}, 'descriptions': {}, 'callbacks': {}, 'aliases': {}, 'permissions': {}, 'options': {}}
+    data['description'] = plugs[plugin].__doc__
+    cmndlist = []
+    for j, z in cmnds.iteritems():
+        try:
+            if z.plugname == base:
+                cmndlist.append(j)
+            if not data['descriptions'].has_key(j): data['descriptions'][j] = []
+            if z.func.__doc__: data['descriptions'][j] = z.func.__doc__ 
+        except AttributeError:
+            pass
+    for command in cmndlist:
+        data['commands'].append(command)
+        try:
+            ex = examples[command]
+        except Exception, exx:
+            continue
+        try:
+            data['permissions'][command] = cmnds.perms(command)
+        except: 
+            pass
+        if not data['examples'].has_key(command): data['examples'][command] = []
+        exampleslist = re.split('\d\)', ex.example)
+        for e in exampleslist:
+            data['examples'][command].append(e.strip())
+        if not data['descriptions'].has_key(command): data['descriptions'][command] = ex.descr
+    if data.has_key('description'):
+        output.write("description" + '\n')
+        output.write( "-----------" + '\n')
+        output.write( "| \n\n")
+        output.write((data['description'] or 'none') + '\n\n')
+        output.write("\n\n| \n" + '\n')
+    output.write('commands' + '\n')
+    output.write("--------" + '\n')
+    output.write("| \n" + '\n')
+    output.write("\n    :commands in this plugin: %s\n\n" % ' .. '.join(cmndlist))
+    output.write("| \n" + '\n')
+    teller = 1
+    waiting = []
+    c = data['commands']
+    c.sort()
+    for command in c:
+        try:
+            funcname = cmnds[command].func.func_name
+        except AttributeError:
+            funcname = 'none'
+        if data['aliases'].has_key(command):
+            output.write('%s) *%s (%s) .. [%s]*' % (teller, command, data['aliases'][command], funcname) + '\n')
+        else:
+            output.write('%s) *%s .. [%s]*' % (teller, command, funcname) + '\n')
+        if data['descriptions'].has_key(command):
+            output.write('\n    :description: %s' % data['descriptions'][command] + '\n')
+        if data['permissions'].has_key(command):
+            output.write('\n    :permissions: %s' % ' .. '.join(data['permissions'][command]) + '\n')
+        if data['options'].has_key(command):
+            output.write("\n    :options: %s\n" % data['options'][command])
+        if data['examples'].has_key(command):
+            output.write("\n    :code: :ref:`%s-%s`.\n" % (thefile, command))
+        if command not in donot and command in data['examples']:
+            output.write('\n    :examples:' + '\n')
+            for i in data['examples'][command]:
+                if not i:
+                     continue
+                cmnd = "!%s" % i.strip()
+                output.write('\n    ::\n\n        <user> %s' % cmnd + '\n')
+                out = None
+                try:
+                    print "\nDOING %s\n" % cmnd
+                    if 'deadline' in i: continue
+                    e = bot.putevent("test@test", "#test", cmnd, wait=0)
+                    if not e: logging.warn("can't execute %s" % cmnd) ; continue
+                    res = waitforqueue(e.resqueue)
+                    print res
+                    if not res:
+                        output.write("        <output> none" + '\n')
+                        noresult.append(cmnd)
+                        print "======"
+                        print "NO RESULT - %s" % cmnd
+                        print "------" 
+                        continue
+                    result = ""
+                    for r in res:
+                        output.write('        <output> %s\n' % bot.normalize(r))
+                    output.write("\n\n")
+                except Exception, ex:
+                    handle_exception(txt=i)
+        teller += 1
+    if not data['commands']:
+        output.write("no commands in this plugin" + '\n')
+    
+    output.flush()
+    output.close()
+    print "DONE %s" % f 
+
+def doindexfile(file):
+    mod = file.replace(os.sep, '.')
+    depth = mod.count(".") - 1
+    txt = """
+%s
+%s
+
+.. toctree::
+    :maxdepth: %s
+    :glob:
+
+    *
+""" % (mod, "=" * (len(mod)), depth or 1)
+    return txt
+
+def domodfile(module, dir):
+    module = module.replace(os.sep, '.')
+    dd = [] 
+    for d in dir.split(os.sep):
+        dd.append(d)
+        z = os.sep.join(dd)
+        if not os.path.isdir('docs' + os.sep + z):
+            os.mkdir('docs' + os.sep + z)
+    plugin = dir.split(os.sep)[-1]
+    print "writing %s" % plugin
+    if True:
+        if module not in ["jsb", "jsb.drivers", "jsb.utils", "jsb.lib"]:
+            f = open('docs' + os.sep + dir + os.sep + 'index.txt', 'w')
+            f.write(doindexfile(dir))
+            f.flush()
+            f.close()
+        for mod in os.listdir(dir):
+            if '__init__' in mod or mod.endswith('.pyc') or mod.endswith('~'): continue
+            m = mod.split(os.sep)[-1]
+            z = mod[:-3]
+            thedir = dir + os.sep + mod
+            mm = module + '.' + m
+            if os.path.isdir(thedir):
+                domodfile(mm, thedir)
+                continue
+            elif "contrib" not in thedir:
+                n = mod[:-3]
+                p = module + '.' + n
+                predir = '..' + os.sep
+                mfile = '..' + os.sep + predir * p.count('.') + thedir 
+                if not os.path.isdir('docs' + os.sep + dir):
+                    os.mkdir('docs' + os.sep + dir)
+                f = open('docs' + os.sep + thedir[:-3] + '.txt', 'w')
+                f.write(".. _%s:\n\n" % p)
+                f.write("%s\n%s\n\n" % (p, '~' * len(p)))
+                f.write(".. automodule:: %s\n        :show-inheritance:\n        :members:\n        :undoc-members:\n\n" % p)
+                data = ""
+                prevline = ""
+                f.write("CODE\n----\n\n    ::\n\n")
+                for line in open(thedir, 'r'):
+                    if line.startswith("##"):
+                        f.write(".. _%s-%s:\n\n" % (thedir, line.split()[1]))
+                        f.write(line[3:].strip() + u"\n")
+                        f.write(u"-" * (len(line.strip())-3) + u"\n")
+                        f.write(u"\n    ::\n\n")
+                    else:
+                        f.write("        " + line)
+                f.flush()
+                f.close() 
+
+        sys.stdout.write(" .. done\n")
+
+def domods(dir):
+    d = dir 
+    d.replace(os.sep, '.')
+    domodfile(d, dir)
+
+if __name__ == '__main__':
+    threads = []
+    try: boot(sys.argv[2])
+    except IndexError: boot()
+    import shutil
+    import os.path
+    from jsb.utils.generic import touch
+    from jsb.utils.exception import handle_exception
+    try:
+        shutil.copyfile(os.path.join(os.path.expanduser("~"), 'jsbregs', 'jsb', 'credentials.py'), os.path.join(os.getcwd(), 'jsb', 'data', 'config', 'credentials.py'))
+        touch(os.path.join(os.getcwd(), 'jsb', 'data', 'config', '__init__.py'))
+    except IOError:
+        print "CAN'T COPY OVER ~/jsbregs/jsb/credentials.py"
+    except:
+        handle_exception()
+    from jsb.utils.log import setloglevel
+    setloglevel("error")
+    try:
+         os.mkdir('docs' + os.sep + 'plugins')
+         os.mkdir('docs' + os.sep + 'plugins' + os.sep + 'core') 
+         os.mkdir('docs' + os.sep + 'plugins' + os.sep + 'wave') 
+         os.mkdir('docs' + os.sep + 'plugins' + os.sep + 'socket')
+         os.mkdir('docs' + os.sep + 'plugins' + os.sep + 'common')
+         os.mkdir('docs' + os.sep + 'plugins' + os.sep + 'gae')
+         os.mkdir('docs' + os.sep + 'plugins' + os.sep + 'myplugs') 
+         os.mkdir('docs' + os.sep + 'jsb')
+         os.mkdir('docs' + os.sep + 'jsb' + os.sep + 'plugs')
+         os.mkdir(os.path.join('docs', 'jsb', 'lib'))
+         os.mkdir(os.path.join('docs', 'jsb', 'lib', 'gae'))
+         os.mkdir(os.path.join('docs', 'jsb', 'lib', 'rest'))
+         os.mkdir(os.path.join('docs', 'jsb', 'utils'))
+         os.mkdir(os.path.join('docs', 'jsb', 'utils', 'gae'))
+         os.mkdir(os.path.join('docs', 'jsb', 'drivers'))
+         os.mkdir(os.path.join('docs', 'jsb', 'drivers', 'console'))
+         os.mkdir(os.path.join('docs', 'jsb', 'drivers', 'convore'))
+         os.mkdir(os.path.join('docs', 'jsb', 'drivers', 'gae'))
+         os.mkdir(os.path.join('docs', 'jsb', 'drivers', 'irc'))
+         os.mkdir(os.path.join('docs', 'jsb', 'drivers', 'xmpp'))
+         os.mkdir(os.path.join('docs', 'jsb', 'plugs', 'core'))
+         os.mkdir(os.path.join('docs', 'jsb', 'plugs', 'common'))
+         os.mkdir(os.path.join('docs', 'jsb', 'plugs', 'socket'))
+         os.mkdir(os.path.join('docs', 'jsb', 'plugs', 'wave'))
+         os.mkdir(os.path.join('docs', 'jsb', 'plugs', 'gae'))
+         os.mkdir(os.path.join('docs', 'jsb', 'plugs', 'myplugs'))
+    except: pass
+
+    domods(os.path.join('jsb', 'lib'))
+    domods(os.path.join('jsb', 'lib', 'gae'))
+    domods(os.path.join('jsb', 'lib', 'rest'))
+    domods(os.path.join('jsb', 'utils'))
+    domods(os.path.join('jsb', 'utils', 'gae'))
+    domods(os.path.join('jsb', 'drivers'))
+    domods(os.path.join('jsb', 'drivers', 'gae'))
+    domods(os.path.join('jsb', 'drivers', 'console'))
+    domods(os.path.join('jsb', 'drivers', 'convore'))
+    domods(os.path.join('jsb', 'drivers', 'irc'))
+    domods(os.path.join('jsb', 'drivers', 'xmpp'))
+    domods(os.path.join('jsb','plugs'))
+    domods(os.path.join('jsb','plugs', 'core'))
+    domods(os.path.join('jsb','plugs', 'common'))
+    domods(os.path.join('jsb','plugs', 'wave'))
+    domods(os.path.join('jsb','plugs', 'socket'))
+    domods(os.path.join('jsb','plugs', 'gae'))
+
+    shutil.copyfile(os.path.join(os.getcwd(), 'docs', 'jsbindex.txt'), os.path.join('docs', 'jsb', 'index.txt'))
+    shutil.copyfile(os.path.join(os.getcwd(), 'docs', 'lindex.txt'), os.path.join('docs', 'jsb', 'lib', 'index.txt'))
+    shutil.copyfile(os.path.join(os.getcwd(), 'docs', 'dindex.txt'), os.path.join('docs', 'jsb', 'drivers', 'index.txt'))
+    shutil.copyfile(os.path.join(os.getcwd(), 'docs', 'uindex.txt'), os.path.join('docs', 'jsb', 'utils', 'index.txt'))
+    shutil.copyfile(os.path.join(os.getcwd(), 'docs', 'plugsdocindex.txt'), os.path.join('docs', 'plugins', 'index.txt'))
+    try:
+        shutil.copyfile(os.path.join(os.path.expanduser("~"), 'jsbregs', 'jsb', 'credentials.py'), os.path.join(os.getcwd(), 'jsb', 'data', 'config', 'credentials.py'))
+        touch(os.path.join(os.getcwd(), 'jsb', 'data', 'config', '__init__.py'))
+    except IOError:
+        print "CAN'T COPY OVER ~/jsbregs/jsb/credentials.py"
+    except:
+        handle_exception()
+
+    print "sleeping 5 seconds."
+    time.sleep(5)
+
+    if True:
+        for file in os.listdir(os.path.join('jsb', 'plugs', 'core')):
+            if not file.endswith('.py') or '__init__' in file:
+                continue
+            f = open(os.path.join('docs', 'plugins', 'core', file[:-3] + '.txt'), 'w')
+            threads.append(start_new_thread(gendoc, ('jsb.plugs.core', file, f)))
+            #gendoc('jsb.plugs.core', file, f)
+        for file in os.listdir(os.path.join('jsb', 'plugs', 'common')):
+            if not file.endswith('.py') or '__init__' in file:
+                continue
+            f = open(os.path.join('docs', 'plugins', 'common', file[:-3] + '.txt'), 'w')
+            threads.append(start_new_thread(gendoc, ('jsb.plugs.common', file, f)))
+            #gendoc('jsb.plugs.common', file, f)
+        for file in os.listdir(os.path.join('jsb', 'plugs', 'wave')):
+            if not file.endswith('.py') or '__init__' in file:
+                continue
+            f = open(os.path.join('docs', 'plugins', 'wave', file[:-3] + '.txt'), 'w')
+            threads.append(start_new_thread(gendoc, ('jsb.plugs.wave', file, f)))
+            #gendoc('jsb.plugs.wave', file, f)
+        for file in os.listdir(os.path.join('jsb', 'plugs', 'socket')):
+            if not file.endswith('.py') or '__init__' in file:
+                continue
+            f = open(os.path.join('docs', 'plugins', 'socket', file[:-3] + '.txt'), 'w')
+            threads.append(start_new_thread(gendoc, ('jsb.plugs.socket', file, f)))
+            #gendoc('jsb.plugs.socket', file, f)
+        for file in os.listdir(os.path.join('jsb', 'plugs', 'gae')):
+            if not file.endswith('.py') or '__init__' in file:
+                continue
+            f = open(os.path.join('docs', 'plugins', 'gae', file[:-3] + '.txt'), 'w')
+            threads.append(start_new_thread(gendoc, ('jsb.plugs.gae', file, f)))
+            #gendoc('jsb.plugs.gae', file, f)
+
+        for t in threads:
+            t.join(30)
+
+    for ex in exceptionlist:
+        print ex
+
+    print noresult

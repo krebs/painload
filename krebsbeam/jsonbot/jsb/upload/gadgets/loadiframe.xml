@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<ModulePrefs title="jsb iframe" 
+       height="400"
+       author="Bart Thate"
+       author_email = "bthate@gmail.com"
+       description = "an IRC like command bot"
+       screenshot = 'http://jsonbot.appspot.com/assets/screenshot.png'
+       thumbnail = 'http://jsonbot.appspot.com/assets/favicon.png'>
+</ModulePrefs>
+<Content type="html">
+<![CDATA[
+  <script type="text/javascript">
+
+    var urlin = unescape(window.location.search.substring(1));
+    var splitted = urlin.split("&");
+    var last = splitted[6];
+    var url = last.split("=")[1];
+
+     function output(text) {
+        var html = "<p>";
+        html += text;
+        html += "</p>";
+
+        var element = document.getElementById('iframe_div');  
+        element.innerHTML = html;
+      }
+
+
+    function dourl() {
+      document.write('<div id="iframe_div" style="border: 0px; padding: 0px;"><iframe id="jsb_frame" height="400px" width="100%" frameborder="0" border="0" src="' + url + '"' + '></iframe></div>')
+      gadgets.window.adjustHeight();
+    }
+
+    gadgets.util.registerOnLoadHandler(dourl);
+  </script>
+  ]]>
+  </Content>
+</Module>
