@@ -1,0 +1,32 @@
+Krebs News 2011-08-24
+======================
+0. urkrebs hat ein usb-relais 
+-----------------------
+
+in /krebs/claws ist der code um das relais anzusteuern, "make install"
+sollte das richtige tun, danach steht ein tool names "rcontrol" im
+/krebs/bin ordner zur verfuegung.
+
+1. neuer supernode
+------------------
+seit heut eingerichtet ist ein neuer Supernode fuers Tinc : EUcancER
+
+auch das updaten wurde vereinfacht!
+cd /krebs
+git pull 
+make -C retiolum update
+
+und danach in /etc/tinc/retiolum/tinc.conf:
+ConnectTo = EUcancER
+
+die kisten von EUserv sind wohl serioes und recht stable
+
+fuer interessenten:
+http://hoohead.hoohost.org/2011/08/kostenloser-vserver/
+
+ich hab uebrigens die kiste schon seit 2 jahren (und seit dem total
+vergessen), ist genauso eine beta kiste.
+
+Gruesse,
+
+Felix
