@@ -14,5 +14,5 @@ $ip =~ s/\b(25[0-5]|2[0-4][0-9]|[1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[1]?[0-9]
 system("morse -l 42 -f 2000 $ip");
 system("morse -l 42 -f 3000 \"connected\"");
 
-# my $ip = "USER";
+# Uncomment the beep below to play the enterprise connect sound
 # system("beep -l 42 -f 2000 -D 42 -n -l 42 -f 3337");

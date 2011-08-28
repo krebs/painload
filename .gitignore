@@ -1,5 +1,10 @@
 a.out
 *.pyc
+*.o
+*.a
+.svn/
 /bin/
 /node/src
 /node/out
+/ovh/soapi/src
+/ovh/soapi/SOAPpy
