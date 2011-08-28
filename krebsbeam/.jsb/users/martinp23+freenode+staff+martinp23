@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "martinp23+freenode+staff+martinp23", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "martinp23@freenode/staff/martinp23"
+ ], 
+ "email": []
+}

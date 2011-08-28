@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "-126stefang+stefan.boerde.de", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "~StefanG@stefan.boerde.de"
+ ], 
+ "email": []
+}

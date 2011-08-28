@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "-126quassel+cl-959.dus-01.de.sixxs.net", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "~quassel@cl-959.dus-01.de.sixxs.net"
+ ], 
+ "email": []
+}

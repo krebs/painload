@@ -1,0 +1,10 @@
+{
+ "urls": {
+  "default-irc": {
+   "#shackspace": [
+    "http://scy.github.com/javascript-talk/", 
+    "https://github.com/krebscode/painload/tree/master/census)"
+   ]
+  }
+ }
+}

@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "-126pfleidi+roothausen.de", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "~pfleidi@roothausen.de"
+ ], 
+ "email": []
+}

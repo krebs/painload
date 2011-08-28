@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "-126cwennrich+ip-109-43-0-17.web.vodafone.de", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "~cwennrich@ip-109-43-0-17.web.vodafone.de"
+ ], 
+ "email": []
+}

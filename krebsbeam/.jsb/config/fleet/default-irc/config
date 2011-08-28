@@ -2,7 +2,7 @@
 #
 # JSONBOT CONFIGURATION FILE - /krebs/krebsbeam/.jsb/config/fleet/default-irc/config
 #
-# last changed on Sat Aug 27 20:50:56 2011
+# last changed on Sun Aug 28 18:27:13 2011
 #
 # This file contains configration data for the JSONBOT.
 # Variables are defined by "name = json value" pairs.
@@ -11,6 +11,9 @@
 # The bot can edit this file!.
 #
 # ===========================================================
+
+# ===========================================================
+botname = "default-irc"
 
 # - channels to join.
 channels = ["#shackspace"]

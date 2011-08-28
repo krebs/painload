@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "andreas+lacht.ueber.gattinnen-im-netz.de", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "andreas@lacht.ueber.gattinnen-im-netz.de"
+ ], 
+ "email": []
+}

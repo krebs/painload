@@ -7,10 +7,27 @@
 
 # hlsearch on (H) or off (h):
 ~h
+# Last Search Pattern:
+~MSle0~/server
+
 # Command Line History (newest to oldest):
+:wq
+:5
+:w
 :q
+:q!
 
 # Search String History (newest to oldest):
+?/server
+? \<userlist\>
+?/\.add
+?/remove
+? \<cleanup\>
+?/logout
+?/an b
+?/tts
+?/c_out
+?/c_ut
 
 # Expression History (newest to oldest):
 
@@ -22,149 +39,228 @@
 "0	LINE	0
 	  "momorientes@mo2-systems.com": "owner"
 ""1	LINE	0
-	  "momorientes@mo2-systems.com": "owner", 
+	            users.append(user)
 "2	LINE	0
+	    
+"3	LINE	0
+	sorted(os.listdir(userdir))
+"4	LINE	0
+	    print users
+"5	LINE	0
+	  "momorientes@mo2-systems.com": "owner", 
+"6	LINE	0
 	  "~momorientes@mo2-systems.com": "owner", 
+"-	CHAR	0
+	 
 
 # File marks:
-'0  86  40  ~/c-beam/plugins/userlist.py
-'1  20  0  ~/c-beam/plugins/userlist_messages_c-base
-'2  3  37  ~/.jsb/mainusers
-'3  44  0  ~/.jsb/config/mainconfig
-'4  4  3  ~/.jsb/mainusers
-'5  37  10  ~/.jsb/config/fleet/default-irc/config
-'6  34  0  ~/.jsb/config/fleet/default-irc/config
+'0  5  12  ~/.jsb/usermap
+'1  1  0  ~/.jsb/userlist_messages
+'2  1  9  ~/krebsbeam.data
+'3  1  0  ~/krebsbeam.
+'4  60  0  ~/c-beam/c-beamd/c-beamd.py
+'5  1  0  ../c-
+'6  263  8  ~/c-beam/c-beamd/c-beamd.py
+'7  285  12  ~/c-beam/c-beamd/c-beamd.py
+'8  284  23  ~/c-beam/c-beamd/c-beamd.py
+'9  287  4  ~/c-beam/c-beamd/c-beamd.py
 
 # Jumplist (newest first):
--'  86  40  ~/c-beam/plugins/userlist.py
+-'  5  12  ~/.jsb/usermap
+-'  1  0  ~/.jsb/usermap
+-'  1  0  ~/.jsb/userlist_messages
+-'  1  9  ~/krebsbeam.data
+-'  1  0  ~/krebsbeam.
+-'  60  0  ~/c-beam/c-beamd/c-beamd.py
+-'  341  8  ~/c-beam/c-beamd/c-beamd.py
+-'  1  0  ~/c-beam/c-beamd/c-beamd.py
+-'  1  0  ../c-
+-'  263  8  ~/c-beam/c-beamd/c-beamd.py
+-'  285  12  ~/c-beam/c-beamd/c-beamd.py
+-'  252  18  ~/c-beam/c-beamd/c-beamd.py
+-'  284  23  ~/c-beam/c-beamd/c-beamd.py
+-'  48  6  ~/c-beam/c-beamd/c-beamd.py
+-'  287  4  ~/c-beam/c-beamd/c-beamd.py
+-'  283  31  ~/c-beam/c-beamd/c-beamd.py
+-'  352  6  ~/c-beam/c-beamd/c-beamd.py
+-'  365  20  ~/c-beam/c-beamd/c-beamd.py
+-'  395  24  ~/c-beam/c-beamd/c-beamd.py
+-'  456  20  ~/c-beam/c-beamd/c-beamd.py
+-'  486  6  ~/c-beam/c-beamd/c-beamd.py
+-'  500  6  ~/c-beam/c-beamd/c-beamd.py
+-'  505  6  ~/c-beam/c-beamd/c-beamd.py
+-'  510  16  ~/c-beam/c-beamd/c-beamd.py
+-'  512  6  ~/c-beam/c-beamd/c-beamd.py
+-'  519  6  ~/c-beam/c-beamd/c-beamd.py
+-'  527  19  ~/c-beam/c-beamd/c-beamd.py
+-'  542  0  ~/c-beam/c-beamd/c-beamd.py
+-'  177  20  ~/c-beam/c-beamd/c-beamd.py
+-'  224  6  ~/c-beam/c-beamd/c-beamd.py
+-'  256  6  ~/c-beam/c-beamd/c-beamd.py
+-'  261  6  ~/c-beam/c-beamd/c-beamd.py
+-'  266  15  ~/c-beam/c-beamd/c-beamd.py
+-'  268  6  ~/c-beam/c-beamd/c-beamd.py
+-'  275  6  ~/c-beam/c-beamd/c-beamd.py
+-'  282  28  ~/c-beam/c-beamd/c-beamd.py
+-'  91  39  ~/c-beam/c-beamd/c-beamd.py
+-'  64  4  ~/c-beam/c-beamd/c-beamd.py
+-'  536  4  ~/c-beam/c-beamd/c-beamd.py
+-'  531  4  ~/c-beam/c-beamd/c-beamd.py
+-'  295  4  ~/c-beam/c-beamd/c-beamd.py
+-'  290  8  ~/c-beam/c-beamd/c-beamd.py
+-'  188  8  ~/c-beam/c-beamd/c-beamd.py
+-'  3  26  ~/.jsb/userlist_messages
+-'  22  275  ~/.jsb/userlist_messages
+-'  1  0  ~/.jsb/user_messages
+-'  22  36  ~/c-beam/c-beamd/c-beamd.py
+-'  18  33  ~/c-beam/c-beamd/c-beamd.py
+-'  125  8  ~/c-beam/c-beamd/c-beamd.py
+-'  130  10  ~/c-beam/c-beamd/c-beamd.py
+-'  131  63  ~/c-beam/c-beamd/c-beamd.py
+-'  140  4  ~/c-beam/c-beamd/c-beamd.py
+-'  418  4  ~/c-beam/c-beamd/c-beamd.py
+-'  400  8  ~/c-beam/c-beamd/c-beamd.py
+-'  423  21  ~/c-beam/c-beamd/c-beamd.py
+-'  422  24  ~/c-beam/c-beamd/c-beamd.py
+-'  421  35  ~/c-beam/c-beamd/c-beamd.py
+-'  420  27  ~/c-beam/c-beamd/c-beamd.py
+-'  419  23  ~/c-beam/c-beamd/c-beamd.py
+-'  417  37  ~/c-beam/c-beamd/c-beamd.py
+-'  100  37  ~/c-beam/c-beamd/c-beamd.py
+-'  14  0  ~/c-beam/c-beamd/c-beamd.py
+-'  426  27  ~/c-beam/c-beamd/c-beamd.py
+-'  425  27  ~/c-beam/c-beamd/c-beamd.py
+-'  424  21  ~/c-beam/c-beamd/c-beamd.py
+-'  109  8  ~/c-beam/c-beamd/c-beamd.py
+-'  105  44  ~/c-beam/plugins/userlist.py
+-'  156  8  ~/c-beam/plugins/userlist.py
+-'  869  0  ~/c-beam/plugins/userlist.py
+-'  325  4  ~/c-beam/plugins/userlist.py
 -'  1  0  ~/c-beam/plugins/userlist.py
--'  20  0  ~/c-beam/plugins/userlist_messages_c-base
+-'  9  35  ~/.jsb/mainusers
+-'  1  0  ~/.jsb/mainusers
+-'  2  27  ~/.jsb/usermap
+-'  39  0  ~/.jsb/myplugs/common/userlist.py
+-'  1  0  ~/.jsb/myplugs/common/userlist.py
 -'  1  0  ~/c-beam/plugins/userlist_messages_c-base
--'  3  37  ~/.jsb/mainusers
--'  1  0  ~/.jsb/mainusers
--'  44  0  ~/.jsb/config/mainconfig
--'  1  0  ~/.jsb/config/mainconfig
--'  4  3  ~/.jsb/mainusers
--'  37  10  ~/.jsb/config/fleet/default-irc/config
+-'  37  0  ~/.jsb/config/fleet/default-irc/config
 -'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
--'  37  10  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
--'  37  10  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
--'  37  10  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
--'  44  0  ~/.jsb/config/mainconfig
--'  1  0  ~/.jsb/config/mainconfig
--'  37  10  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
--'  37  10  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
--'  37  10  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
--'  37  10  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
--'  3  37  ~/.jsb/mainusers
--'  1  0  ~/.jsb/mainusers
--'  44  0  ~/.jsb/config/mainconfig
--'  1  0  ~/.jsb/config/mainconfig
--'  4  3  ~/.jsb/mainusers
--'  37  10  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
--'  37  10  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
--'  37  10  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
--'  37  10  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
--'  44  0  ~/.jsb/config/mainconfig
--'  1  0  ~/.jsb/config/mainconfig
--'  37  10  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
--'  37  10  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
--'  37  10  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
--'  37  10  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
+-'  4  0  ~/.jsb/mainusers
+-'  86  40  ~/c-beam/plugins/userlist.py
 -'  20  0  ~/c-beam/plugins/userlist_messages_c-base
--'  1  0  ~/c-beam/plugins/userlist_messages_c-base
 -'  3  37  ~/.jsb/mainusers
--'  1  0  ~/.jsb/mainusers
 -'  44  0  ~/.jsb/config/mainconfig
 -'  1  0  ~/.jsb/config/mainconfig
--'  4  3  ~/.jsb/mainusers
--'  37  10  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
--'  37  10  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
--'  37  10  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
--'  37  10  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
 -'  34  0  ~/.jsb/config/fleet/default-irc/config
 -'  44  0  ~/.jsb/config/mainconfig
 -'  1  0  ~/.jsb/config/mainconfig
--'  37  10  ~/.jsb/config/fleet/default-irc/config
+-'  44  0  ~/.jsb/config/mainconfig
+-'  1  0  ~/.jsb/config/mainconfig
+-'  44  0  ~/.jsb/config/mainconfig
+-'  1  0  ~/.jsb/config/mainconfig
+-'  44  0  ~/.jsb/config/mainconfig
+-'  1  0  ~/.jsb/config/mainconfig
+-'  44  0  ~/.jsb/config/mainconfig
+-'  1  0  ~/.jsb/config/mainconfig
+-'  37  0  ~/.jsb/config/fleet/default-irc/config
 -'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
--'  37  10  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
--'  37  10  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
--'  37  10  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
--'  34  0  ~/.jsb/config/fleet/default-irc/config
 
 # History of marks within files (newest to oldest):
 
+> ~/.jsb/usermap
+	"	5	12
+	^	5	13
+	.	5	12
+	+	3	0
+	+	1	0
+	+	2	28
+	+	5	12
+
+> ~/.jsb/userlist_messages
+	"	1	0
+	^	3	27
+	.	3	27
+	+	6	71
+	+	22	127
+	+	22	340
+	+	3	27
+
+> ~/krebsbeam.data
+	"	1	9
+
+> ~/krebsbeam.
+	"	1	0
+
+> ~/c-beam/c-beamd/c-beamd.py
+	"	60	0
+	^	285	13
+	.	285	12
+	+	140	4
+	+	121	4
+	+	122	8
+	+	123	4
+	+	124	8
+	+	16	22
+	+	17	13
+	+	18	34
+	+	22	37
+	+	283	31
+	+	281	0
+	+	287	3
+	+	287	17
+	+	280	12
+	+	281	0
+	+	281	23
+	+	282	0
+	+	281	43
+	+	280	13
+	+	284	21
+	+	287	0
+	+	284	0
+	+	286	0
+	+	285	12
+
+> ../c-
+	"	1	0
+
+> ~/.jsb/user_messages
+	"	1	0
+
 > ~/c-beam/plugins/userlist.py
-	"	86	40
-	^	86	41
-	.	86	35
+	"	105	44
+	^	105	45
+	.	105	45
 	+	85	35
 	+	86	35
-
-> ~/c-beam/plugins/userlist_messages_c-base
-	"	20	0
+	+	153	7
+	+	157	7
+	+	156	13
+	+	105	45
 
 > ~/.jsb/mainusers
-	"	3	37
-	^	3	38
-	.	3	37
+	"	9	35
+	^	9	36
+	.	9	35
 	+	4	0
 	+	3	40
 	+	4	0
 	+	3	37
+	+	9	35
+
+> ~/.jsb/myplugs/common/userlist.py
+	"	39	0
+
+> ~/c-beam/plugins/userlist_messages_c-base
+	"	1	0
+
+> ~/.jsb/config/fleet/default-irc/config
+	"	37	0
+	^	37	11
+	.	37	10
+	+	37	10
 
 > ~/.jsb/config/mainconfig
 	"	44	0
 	^	44	0
 	.	22	16
 	+	22	16
-
-> ~/.jsb/config/fleet/default-irc/config
-	"	37	10
-	^	37	11
-	.	37	10
-	+	37	10

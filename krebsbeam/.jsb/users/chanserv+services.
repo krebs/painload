@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "chanserv+services.", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "ChanServ@services."
+ ], 
+ "email": []
+}

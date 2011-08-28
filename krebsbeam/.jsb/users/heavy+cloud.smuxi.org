@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "heavy+cloud.smuxi.org", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "heavy@cloud.smuxi.org"
+ ], 
+ "email": []
+}

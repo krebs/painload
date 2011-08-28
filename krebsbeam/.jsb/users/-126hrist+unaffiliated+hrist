@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "-126hrist+unaffiliated+hrist", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "~hrist@unaffiliated/hrist"
+ ], 
+ "email": []
+}

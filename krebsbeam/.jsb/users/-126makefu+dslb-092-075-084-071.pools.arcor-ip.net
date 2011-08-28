@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "-126makefu+dslb-092-075-084-071.pools.arcor-ip.net", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "~makefu@dslb-092-075-084-071.pools.arcor-ip.net"
+ ], 
+ "email": []
+}

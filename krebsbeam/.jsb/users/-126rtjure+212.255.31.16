@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "-126rtjure+212.255.31.16", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "~rtjure@212.255.31.16"
+ ], 
+ "email": []
+}

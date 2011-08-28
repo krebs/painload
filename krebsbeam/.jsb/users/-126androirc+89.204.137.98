@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "-126androirc+89.204.137.98", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "~androirc@89.204.137.98"
+ ], 
+ "email": []
+}

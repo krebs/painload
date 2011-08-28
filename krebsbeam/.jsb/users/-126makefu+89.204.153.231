@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "-126makefu+89.204.153.231", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "~makefu@89.204.153.231"
+ ], 
+ "email": []
+}

@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "-126housetier+pdpc+supporter+professional+housetier", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "~housetier@pdpc/supporter/professional/housetier"
+ ], 
+ "email": []
+}

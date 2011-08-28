@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "548b7221+gateway+web+freenode+ip.84.139.114.33", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "548b7221@gateway/web/freenode/ip.84.139.114.33"
+ ], 
+ "email": []
+}

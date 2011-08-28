@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "-126rooms+81.213.104.175", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "~rooms@81.213.104.175"
+ ], 
+ "email": []
+}

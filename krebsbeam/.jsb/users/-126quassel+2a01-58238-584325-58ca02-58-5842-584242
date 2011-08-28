@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "-126quassel+2a01-58238-584325-58ca02-58-5842-584242", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "~quassel@2a01:238:4325:ca02::42:4242"
+ ], 
+ "email": []
+}

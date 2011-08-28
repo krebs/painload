@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "-126twaldmann+shell.moinmo.in", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "~twaldmann@shell.moinmo.in"
+ ], 
+ "email": []
+}

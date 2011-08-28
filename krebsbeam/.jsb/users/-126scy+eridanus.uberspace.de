@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "-126scy+eridanus.uberspace.de", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "~scy@eridanus.uberspace.de"
+ ], 
+ "email": []
+}

@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "tv+vril.marway.org", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "tv@vril.marway.org"
+ ], 
+ "email": []
+}

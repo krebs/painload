@@ -1,0 +1,17 @@
+{
+ "arrivesubs": [], 
+ "name": "eta", 
+ "etas": {
+  "smile": "2342"
+ }, 
+ "etds": {}, 
+ "etatimestamps": {
+  "smile": 20110828010225
+ }, 
+ "opensubs": [], 
+ "etdtimestamps": {}, 
+ "logintimeouts": {}, 
+ "etasubs": [
+  "~smile@c-base/crew/smile"
+ ]
+}
