@@ -12,6 +12,16 @@ var spawn = require('child_process').spawn;
 
 var plugs = process.argv.slice(2);
 
+if (plugs.length === 0) {
+  console.error('Error 1: You are made of stupid!'
+      + '\nPro-Tip: [32m'
+      + require('path').basename(process.argv[1]) + ' [31;1mPLUG[m'
+      + ' # PLUG ∈ {'
+      + require('fs').readdirSync(__dirname + '/plugs').join(',')
+      + '}^n, n ≥ 1');
+  process.exit(23);
+};
+
 http.createServer(function (req, res) {
   return slurp(req, function (data) {
     try {
