@@ -1,0 +1,62 @@
+# Krebs News Issue #1 (2011-08-24)
+## 0. krebsco.de & ovh soapi
+
+Krebs hat jetzt ein offizielles Zuhause im Internet.  Das Ministerium
+dankt KM momo, dass er die Domain geclaimt und das erste Jahr gesponsort
+hat!
+
+Die Zone kann momentan wie in [`//ovh/README`][0.1] beschrieben bearbeitet
+werden.  Wenn ihr das nicht koennt oder wollt, aber dennoch eine Maschine unter
+`krebsco.de` erreichbar haben moechtet, dann schickt eine Bewerbung an uns und
+es wird, wie immer, das Richtige passieren.
+
+Niob: Sehr relevante und awesome [`Graphen`][0.2].
+
+[0.1]: https://github.com/krebscode/painload/tree/master/ovh
+[0.2]: http://euer.krebsco.de/graphs
+
+## 1. SC ist das neue BTC
+
+Zumindest sind chinaman und bergwerk umgestiegen und bringen nun ueber
+100% mehr Gewinn ein, wenn unsere Prognosen stimmen sollten...`^_-`
+
+Die passenden Ticker und Tracer sind unter [`//gold/scex`][1.1] zu
+finden:
+
+    $ //gold/scex/ticker_text.sh # bzw.
+    $ node //gold/scex/tracer
+
+Installer kommen ASAP oder auch nicht.`^_^`
+
+[1.1]: https://github.com/krebscode/painload/tree/master/gold/scex
+
+## 2. Knights
+
+Eine neue Kaste ist entstanden: die Cancer Knights.  Sie arbeiten fuer
+uns und fuehlen sich besser, weil sie ueber den Crab People stehen.  Sie
+stellen Ressourcen wie Hardware und Arbeitskraft bereit, haben keine
+Rechte.  Sobald drei Cancer Knights zusammen kommen haben sie die Chance
+Krebsminister werden. Bevor dies geschieht muessen sie geschossen zu drei
+Krebsministern in der Realen Welt gehen und werden dann in einem noch zu 
+definierenden Ritual zu Krebsministern ernannt. Ab dann koennen sie zum 
+punchen aufgefordern werden bzw.automatisch punchen bzw. autopunchen.
+
+Infin aus Hannover wird der erste Cancer Knight.  Er hat die
+Krebsanimation sowie den 3D-Krebs auf dem CCCAMP11 gemacht.  
+Danke Infin, du verdienst den Titel, trage ihn mit Wuerde!
+
+## 3. Thesauron
+
+Wie allgemein gueltig unterliegen alle Sprachen dem staetigen Wandel.
+Um spaeter zu wissen woher wir kamen und die Linguisten unter uns zu
+befriedigen wurde der Grundstein zur Dokumentation der Relevanten
+Sprache, ihrer Entwicklung, etc. gelegt.
+
+Die ersten Schritte sind in [`//cholerab/thesauron`][3.1] zu finden und
+auch _du_ fuehlst dich angesprochen diese zu erweitern!  Entweder direkt
+via GitHub's fork & pull request, durch eine formlose Mail an [die Krebs
+Mailingliste][3.2] oder auf einem der anderen, zahllosen Wege, auf dem
+ihr uns errreichen koennt.
+
+[3.1]: https://github.com/krebscode/painload/tree/master/gold/scex
+[3.2]: mailto:krebs@syntax-fehler.de
