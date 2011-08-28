@@ -1,0 +1,23 @@
+apt-get update
+apt-get upgrade
+apt-get install curl git-core vim make
+curl https://raw.github.com/krebscode/painload/master/util/auto/krebs
+
+KREBSDIR=${1-/krebs}
+[ ! -e $KREBSDIR ] && git clone https://github.com/krebscode/painload ${KREBSDIR}|| printf "painload already deployed\n" 
+cp /krebs/infest/skel/etc/profile /etc/profile
+# not copying rc.local
+cp /krebs/infest/skel/home /root
+# not copying .ssh
+cp /krebs/infest/skel/etc/motd.tail /etc/motd.tail
+cp /krebs/infest/skel/etc/motd.tail /etc/motd
+
+# retiolum
+apt-get install python
+# fix matcher script
+# fix makefile
+
+# fix fuer vhosts die tun haben aber noch nicht eingerichtet
+mkdir /dev/net
+mknod /dev/net/tun c 10 200
+mknod /dev/tap0 c 36 16

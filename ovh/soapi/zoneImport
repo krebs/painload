@@ -1,0 +1,32 @@
+#!/usr/bin/python
+
+from os import environ
+from os.path import dirname, realpath
+from SOAPpy import WSDL
+from sys import argv, stdin
+from string import join
+from json import dumps, JSONEncoder
+
+def default(o):
+   try:
+       iterable = iter(o)
+   except TypeError:
+       pass
+   else:
+       return list(iterable)
+   return JSONEncoder.default(o)
+
+wsdl = dirname(realpath(__file__)) + '/soapi-re-1.24.wsdl'
+soap = WSDL.Proxy(wsdl)
+
+username = environ['KREBS_OVH_USER']
+password = environ['KREBS_OVH_PASS']
+
+zone = join(stdin.readlines(),'')
+
+session = soap.login(username, password, 'en', 0)
+
+result = soap.zoneImport(session, 'krebsco.de', zone)
+print result
+
+soap.logout(session)
