@@ -16,3 +16,6 @@
 [submodule "krebsbeam/c-beam"]
 	path = krebsbeam/c-beam
 	url = git://dev.c-base.org/c-beam/c-beam.git
+[submodule "submodules/github/makefu/dpfhack_display"]
+	path = submodules/github/makefu/dpfhack_display
+	url = https://github.com/makefu/dpfhack_pearl
