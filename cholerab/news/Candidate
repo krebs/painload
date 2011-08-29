@@ -1,0 +1,49 @@
+# Krebs News Issue #1 (2011-08-24)
+## Ante Scriptum
+Wer noch kein Krebs hat kann es ganz einfach mit git aus github[-1.1]
+auschecken.
+
+Alle Pfade in den Krebs News beginnend mit `//` bezeichnen das root 
+verzeichnis des ausgecheckten krebs ordners ( optimaler weise in `/krebs`).
+
+## 0. godmode im shack
+Der Urkrebs steuert ab heute die Photonenwerfer im shack. 
+[`//god/licht`][0.1] ist hierfür verantwortlich.
+
+Um das Licht anzumachen einfach per Telnet auf krebs.shack:
+
+  $ rlwrap nc krebs.shack 23
+
+und dort mit `/licht <Lampe> <0/1>` das licht an/ausschalten.
+Die Lampen sind von Fensterseite richtung Innenhof durchnummeriert(0-3).
+
+Das MoC bedankt sich sehr herzlich bei Ulrich, der auf anfrage die 
+Lichsteuerung mit Ethernet ausgestattet und sie fuer die Benutzung zur
+verfuegung gestellt hat.
+
+[0.1]: https://github.com/krebscode/painload/tree/master/god
+
+## 1. Tinc Retiolum updates
+Das retiolum Darknet ueber tinc als vermaschtes VPN ist ein integraler 
+Bestandteil der Krebs Infrastruktur. Umso wichtiger ist es, dass die 
+installation ueberall imer genau das richtige macht. 
+
+KM Pfleidi hat sich gestern (26.08.2011) Retiolum angenommen um es 
+sauber auf OSX (und ggf. weiteren Unixartigen OSen) zum laufen zu
+bringen. Ziel ist es die Installation auf ein einfaches 
+  $ make -C //retiolum install
+zu beschraenken.
+
+Die Host-Dateien, welche von tinc verwendet werden koennen mit
+  $ make -C //retiolum update
+geupdatet werden. Alle update skripte muessen auf das neue updateverfahren 
+ggf. umgestellt werden.
+
+In diesem Kontext sind unter anderem Skript fuer das erraten des richtigen 
+Tinc-Konfigurationsordners [1.1] entstanden. Eine aehnliche funktionalitaet
+kann nun fuer verschiedenste weitere module, welche Plattformunabhaengigkeit
+gewaehrleisten sollen verwendet werden.
+
+[1.1] : https://github.com/krebscode/painload/tree/master/retiolum/bin/get-tinc-dir
+
+## 2. KNUT - Die Krebs Notification Utility Toolchain
