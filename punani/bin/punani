@@ -6,7 +6,7 @@
 # -E -i spec    insert a package to the target filesystem
 # -E -r spec    remove a package
 #
-
+set -euf
 godmode() {
   if test "${nosudo-false}" != true -a `id -u` != 0; then
     echo "Warning: we require god mode..." >&2
@@ -15,44 +15,44 @@ godmode() {
   fi
 }
 
-if pacman --version 2>/dev/null | fgrep -q Pacman; then
-  system="${system+$system, }arch-like"
-fi
+# return the 'system' variable
+# currently be:
+# arch-like
+# debian-like
+guess_system()
+{
+  if [ -f "/etc/arch-release" ] ;then
+    system="${system+$system, }arch-like"
+  fi
+  if [ -f "/etc/lsb-release" -o -f "/etc/debian_version" ] ;then
+    system="${system+$system, }debian-like"
+  fi
 
-case "$system" in
-  (*arch-like*)
-    punani_Engineer_insert() {
-      pacman -Sy "$1"
-    }
-    punani_Engineer_remove() {
-      pacman -Rcs "$1"
-    }
-  ;;
-  (*)
-    email='krebs@syntax-fehler.de'
-    irc_host='irc.freenode.org'
-    irc_channel='#tincspasm'
-    cat>&2<<EOF
-Error 2: Your System Will Be Supported ASAP
-1. send us a bug report
-1.1 your operating system's name and version
-1.2 this message: $0 $*
-1.3 mailto:$email
-2. join the relevant IRC channel
-2.1 /connect $irc_host
-2.2 /join $irc_channel
-EOF
-    exit 23
-esac
+}
+arch_aur_helper()
+{
+  manager="yaourt clyde packer bauerbill tupac pacaur paktahn pbfetch aurget aurora cower powaur"
+  for i in $manager;do
+    mgr=`which $i`
+    if [ "$mgr" ] ;then
+      echo $mgr
+      return 0
+    fi
+  done
+  echo "!! no aur helper found"
+  echo "!! To be Implemented"
+  return 1
+}
 
-punani() {
+punani (){
   ns=punani
   role=undefined
-  while getopts 'fhvSopEir' OPT; do
+  while getopts 'dfhvSopEir' OPT; do
     case $OPT in
       (f) force=true; continue;;
       (h) hard=true; continue;;
       (v) verbose=true; continue;;
+      (d) dryrun=true; continue;; 
     esac
     case ${role-Manager} in
       (Engineer)
@@ -78,13 +78,101 @@ punani() {
     esac
   done
 }
-
-punani "$@"
-shift `echo $OPTIND-1 | bc`
+punani $@
 
 case $role in
-  (Engineer) godmode;;
+  (Engineer) godmode $@;;
 esac
+
+shift `echo $OPTIND-1 | bc`
+guess_system
+
+
+case "$system" in
+  (*arch-like*)
+    # get dependencies :
+    # we need pkgfile 
+    if [ "${dryrun-}" ];then
+      pacman () { echo  "pacman $@" ; }
+      pkgfile () { echo "pkgfile $@"; }
+      yaourt () { echo  "yaourt $@" ; }
+    fi
+    if ! [ `which pkgfile` ] ; then
+      pacman -S --noconfirm pkgtools 
+      pkgfile -u
+    fi
+    punani_Scientist_update() {
+      pacman -Sy
+      pkgtool -u
+    }
+
+    punani_Engineer_insert() {
+      # punani under archlinux first tries to load the packages with the given file name
+      # it needs pkgfile for that
+      #
+      # when trying harder it tries to load the package with the given name directly via yaourt
+      echo "** trying to find package with given file"
+      if pacman -Sy `pkgfile $1`; then
+        echo "++ finished"
+        exit 0
+      else
+        echo "!! nothing found in base repos"
+        if [ "${hard-}" ] ; then
+          echo "** trying harder"
+          echo "** trying yaourt directly with given package"
+          mgr=`arch_aur_helper`
+          if  $mgr -S $1 ;then
+            echo "++ finished"
+            exit 0
+          else
+            echo "!! giving up...i am sorry"
+            exit 1
+          fi
+          echo
+        else
+          echo "?? When in doubt try $0 -Ei --hard $1 "
+        fi
+      fi
+    }
+    punani_Engineer_remove() {
+      pacman -Rcs "`pacman -Ql | grep $1$ | awk '{print $1}'`" 
+      if [ "${hard-}" ] ; then
+        echo "trying harder"
+        echo "** directly delete given package name"
+        pacman -Rcs "$1"
+      fi
+    }
+  ;;
+  (*debian-like*)
+    if [ "${dryrun-}" ]; then
+      apt-file () { echo $@; }
+      apt-get () { echo $@; }
+    fi
+    [ `which apt-file` ] || apt-get install --yes apt-file && apt-file update
+    punani_Scientist_update() {
+      apt-get update
+      apt-file update
+    }
+
+  ;;
+  (*)
+    email='krebs@syntax-fehler.de'
+    irc_host='irc.freenode.org'
+    irc_channel='#tincspasm'
+    cat>&2<<EOF
+Error 2: Your System Will Be Supported ASAP
+1. send us a bug report
+1.1 your operating system's name and version
+1.2 this message: $0 $*
+1.3 mailto:$email
+2. join the relevant IRC channel
+2.1 /connect $irc_host
+2.2 /join $irc_channel
+EOF
+    exit 23
+esac
+
+command="${ns}_Engineer_insert"
 for name; do
   "$command" "$name"
 done
