@@ -15,6 +15,7 @@ install:  /usr/bin/lcd4linux /etc/lcd4linux.conf lcd4linux_autostart
 	# TODO this is debian only
 
 update: /etc/lcd4linux.conf
+	service lcd4linux force-reload
 
 /etc/lcd4linux.conf: lcd4linux.conf
 	chown krebs:krebs lcd4linux.conf
