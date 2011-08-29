@@ -7,92 +7,44 @@
   "time": 1314528052.0668681, 
   "channel": "#shackspace"
  }, 
- "jomat": {
-  "what": "joining #shackspace", 
-  "text": "", 
-  "bot": "default-irc", 
-  "server": "irc.freenode.net", 
-  "time": 1314527830.231648, 
-  "channel": "#shackspace"
- }, 
- "booiiing": {
-  "what": "joining #shackspace", 
-  "text": "", 
-  "bot": "default-irc", 
-  "server": "irc.freenode.net", 
-  "time": 1314527829.4196711, 
-  "channel": "#shackspace"
- }, 
  "tv\\d": {
   "what": "joining #shackspace", 
   "text": "", 
   "bot": "default-irc", 
   "server": "irc.freenode.net", 
-  "time": 1314534709.4835529, 
+  "time": 1314568513.1978309, 
   "channel": "#shackspace"
  }, 
- "stefang": {
+ "honschu": {
+  "what": "quitting", 
+  "text": "Ping timeout: 260 seconds", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314550059.669035, 
+  "channel": null
+ }, 
+ "kh-2030_": {
+  "what": "quitting", 
+  "text": "Ping timeout: 258 seconds", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314569937.0983729, 
+  "channel": null
+ }, 
+ "kh-2030": {
   "what": "joining #shackspace", 
   "text": "", 
   "bot": "default-irc", 
   "server": "irc.freenode.net", 
-  "time": 1314527829.9271259, 
+  "time": 1314569741.712291, 
   "channel": "#shackspace"
- }, 
- "miefda": {
-  "what": "saying", 
-  "text": "!who", 
-  "bot": "default-irc", 
-  "server": "irc.freenode.net", 
-  "time": 1314536954.7892759, 
-  "channel": "~miefda@miefda.org"
- }, 
- "kh-2030_": {
-  "what": "saying", 
-  "text": "!eta", 
-  "bot": "default-irc", 
-  "server": "irc.freenode.net", 
-  "time": 1314541956.250551, 
-  "channel": "~home@pD9542D02.dip.t-dialin.net"
- }, 
- "scytale": {
-  "what": "saying", 
-  "text": "!mumu", 
-  "bot": "default-irc", 
-  "server": "irc.freenode.net", 
-  "time": 1314541682.420239, 
-  "channel": "#shackspace"
- }, 
- "kh-2030": {
-  "what": "quitting", 
-  "text": "Ping timeout: 240 seconds", 
-  "bot": "default-irc", 
-  "server": "irc.freenode.net", 
-  "time": 1314483499.568182, 
-  "channel": null
  }, 
  "momorientes": {
   "what": "saying", 
-  "text": "!who", 
+  "text": "war gechillt", 
   "bot": "default-irc", 
   "server": "irc.freenode.net", 
-  "time": 1314540073.4219539, 
-  "channel": "~momorient@mo2-systems.com"
- }, 
- "blubser": {
-  "what": "parting #shackspace", 
-  "text": "#shackspace", 
-  "bot": "default-irc", 
-  "server": "irc.freenode.net", 
-  "time": 1314535707.8331871, 
-  "channel": "#shackspace"
- }, 
- "chanserv": {
-  "what": "joining #shackspace", 
-  "text": "", 
-  "bot": "default-irc", 
-  "server": "irc.freenode.net", 
-  "time": 1314527829.5211151, 
+  "time": 1314568683.463191, 
   "channel": "#shackspace"
  }, 
  "alex1": {
@@ -103,28 +55,12 @@
   "time": 1314528204.236928, 
   "channel": "#shackspace"
  }, 
- "cwennrichs": {
+ "ttb_shack": {
   "what": "quitting", 
-  "text": "Quit: Colloquy for iPhone - http://colloquy.mobi", 
+  "text": "Quit: Verlassend", 
   "bot": "default-irc", 
   "server": "irc.freenode.net", 
-  "time": 1314518953.6603589, 
-  "channel": null
- }, 
- "pfleidi": {
-  "what": "joining #shackspace", 
-  "text": "", 
-  "bot": "default-irc", 
-  "server": "irc.freenode.net", 
-  "time": 1314527829.3180771, 
-  "channel": "#shackspace"
- }, 
- "honschu": {
-  "what": "quitting", 
-  "text": "Ping timeout: 240 seconds", 
-  "bot": "default-irc", 
-  "server": "irc.freenode.net", 
-  "time": 1314482725.3456271, 
+  "time": 1314552537.5984759, 
   "channel": null
  }, 
  "thomaswaldmann": {
@@ -135,68 +71,12 @@
   "time": 1314527828.6040821, 
   "channel": "#shackspace"
  }, 
- "tensai_": {
-  "what": "saying", 
-  "text": "filebitch is lahm", 
-  "bot": "default-irc", 
-  "server": "irc.freenode.net", 
-  "time": 1314540152.3555989, 
-  "channel": "5de79bd2@gateway/web/freenode/ip.93.231.155.210"
- }, 
- "no5251": {
-  "what": "joining #shackspace", 
-  "text": "", 
-  "bot": "default-irc", 
-  "server": "irc.freenode.net", 
-  "time": 1314527829.825547, 
-  "channel": "#shackspace"
- }, 
- "ttb_shack": {
-  "what": "saying", 
-  "text": "!login", 
-  "bot": "default-irc", 
-  "server": "irc.freenode.net", 
-  "time": 1314542301.3421199, 
-  "channel": "#shackspace"
- }, 
- "sc0pe": {
-  "what": "quitting", 
-  "text": "Quit: sc0pe", 
-  "bot": "default-irc", 
-  "server": "irc.freenode.net", 
-  "time": 1314480960.3592269, 
-  "channel": null
- }, 
- "rtjure": {
-  "what": "quitting", 
-  "text": "", 
-  "bot": "default-irc", 
-  "server": "irc.freenode.net", 
-  "time": 1314522271.1450601, 
-  "channel": null
- }, 
- "joern_": {
-  "what": "joining #shackspace", 
-  "text": "", 
-  "bot": "default-irc", 
-  "server": "irc.freenode.net", 
-  "time": 1314527829.0126569, 
-  "channel": "#shackspace"
- }, 
- "riddl": {
-  "what": "quitting", 
-  "text": "Quit: riddl", 
-  "bot": "default-irc", 
-  "server": "irc.freenode.net", 
-  "time": 1314481804.6961081, 
-  "channel": null
- }, 
  "honschu_": {
   "what": "joining #shackspace", 
   "text": "", 
   "bot": "default-irc", 
   "server": "irc.freenode.net", 
-  "time": 1314482552.908771, 
+  "time": 1314549863.395577, 
   "channel": "#shackspace"
  }, 
  "lassulus": {
@@ -215,21 +95,13 @@
   "time": 1314543995.0534091, 
   "channel": "#shackspace"
  }, 
- "gammos": {
-  "what": "joining #shackspace", 
-  "text": "", 
+ "albi_keller": {
+  "what": "quitting", 
+  "text": "Ping timeout: 240 seconds", 
   "bot": "default-irc", 
   "server": "irc.freenode.net", 
-  "time": 1314527828.7057619, 
-  "channel": "#shackspace"
- }, 
- "krebsbeam": {
-  "what": "joining #shackspace", 
-  "text": "", 
-  "bot": "default-irc", 
-  "server": "irc.freenode.net", 
-  "time": 1314494531.5494649, 
-  "channel": "#shackspace"
+  "time": 1314573249.0490761, 
+  "channel": null
  }, 
  "tv___": {
   "what": "joining #shackspace", 
@@ -247,13 +119,13 @@
   "time": 1314528052.168678, 
   "channel": "#shackspace"
  }, 
- "makefu|mobile": {
-  "what": "joining #shackspace", 
-  "text": "", 
+ "miefda": {
+  "what": "saying", 
+  "text": "!who", 
   "bot": "default-irc", 
   "server": "irc.freenode.net", 
-  "time": 1314541760.5373099, 
-  "channel": "#shackspace"
+  "time": 1314536954.7892759, 
+  "channel": "~miefda@miefda.org"
  }, 
  "housetier": {
   "what": "saying", 
@@ -272,52 +144,44 @@
   "channel": "#shackspace"
  }, 
  "hrist": {
-  "what": "saying", 
-  "text": "der bot mag mir net", 
+  "what": "joining #shackspace", 
+  "text": "", 
   "bot": "default-irc", 
   "server": "irc.freenode.net", 
-  "time": 1314541710.9606969, 
+  "time": 1314573761.8270249, 
   "channel": "#shackspace"
+ }, 
+ "no5251": {
+  "what": "joining #shackspace", 
+  "text": "", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314527829.825547, 
+  "channel": "#shackspace"
+ }, 
+ "makefu": {
+  "what": "quitting", 
+  "text": "Ping timeout: 240 seconds", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314566768.7135501, 
+  "channel": null
  }, 
  "cwennrich": {
   "what": "quitting", 
-  "text": "Ping timeout: 246 seconds", 
+  "text": "Ping timeout: 258 seconds", 
   "bot": "default-irc", 
   "server": "irc.freenode.net", 
-  "time": 1314526746.7111881, 
+  "time": 1314551424.2738349, 
   "channel": null
  }, 
- "makefu": {
-  "what": "saying", 
-  "text": "wie sieht es aus, evtl kann fuer das login zeug auch //census (https://github.com/krebscode/painload/tree/master/census) nehmen", 
-  "bot": "default-irc", 
-  "server": "irc.freenode.net", 
-  "time": 1314544069.1647079, 
-  "channel": "#shackspace"
- }, 
- "ixs": {
-  "what": "joining #shackspace", 
-  "text": "", 
-  "bot": "default-irc", 
-  "server": "irc.freenode.net", 
-  "time": 1314527947.0004549, 
-  "channel": "#shackspace"
- }, 
  "mknittig": {
-  "what": "joining #shackspace", 
-  "text": "", 
+  "what": "quitting", 
+  "text": "Quit: Leaving.", 
   "bot": "default-irc", 
   "server": "irc.freenode.net", 
-  "time": 1314532368.68046, 
-  "channel": "#shackspace"
- }, 
- "albi_keller": {
-  "what": "joining #shackspace", 
-  "text": "", 
-  "bot": "default-irc", 
-  "server": "irc.freenode.net", 
-  "time": 1314542627.559334, 
-  "channel": "#shackspace"
+  "time": 1314565779.342015, 
+  "channel": null
  }, 
  "_are_": {
   "what": "joining #shackspace", 
@@ -325,6 +189,150 @@
   "bot": "default-irc", 
   "server": "irc.freenode.net", 
   "time": 1314527835.502948, 
+  "channel": "#shackspace"
+ }, 
+ "jomat": {
+  "what": "joining #shackspace", 
+  "text": "", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314527830.231648, 
+  "channel": "#shackspace"
+ }, 
+ "booiiing": {
+  "what": "joining #shackspace", 
+  "text": "", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314527829.4196711, 
+  "channel": "#shackspace"
+ }, 
+ "stefang": {
+  "what": "joining #shackspace", 
+  "text": "", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314527829.9271259, 
+  "channel": "#shackspace"
+ }, 
+ "makefu|mobile": {
+  "what": "joining #shackspace", 
+  "text": "", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314541760.5373099, 
+  "channel": "#shackspace"
+ }, 
+ "scytale": {
+  "what": "saying", 
+  "text": "!mumu", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314541682.420239, 
+  "channel": "#shackspace"
+ }, 
+ "cwennrichs": {
+  "what": "quitting", 
+  "text": "Quit: Colloquy for iPhone - http://colloquy.mobi", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314518953.6603589, 
+  "channel": null
+ }, 
+ "pfleidi": {
+  "what": "joining #shackspace", 
+  "text": "", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314527829.3180771, 
+  "channel": "#shackspace"
+ }, 
+ "ixs": {
+  "what": "saying", 
+  "text": "wie war's noch?", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314568446.9252679, 
+  "channel": "#shackspace"
+ }, 
+ "chanserv": {
+  "what": "joining #shackspace", 
+  "text": "", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314527829.5211151, 
+  "channel": "#shackspace"
+ }, 
+ "tensai_": {
+  "what": "saying", 
+  "text": "filebitch is lahm", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314540152.3555989, 
+  "channel": "5de79bd2@gateway/web/freenode/ip.93.231.155.210"
+ }, 
+ "sc0pe": {
+  "what": "quitting", 
+  "text": "Quit: sc0pe", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314480960.3592269, 
+  "channel": null
+ }, 
+ "rtjure": {
+  "what": "quitting", 
+  "text": "", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314522271.1450601, 
+  "channel": null
+ }, 
+ "joern_": {
+  "what": "quitting", 
+  "text": "Ping timeout: 252 seconds", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314573200.1522999, 
+  "channel": null
+ }, 
+ "riddl": {
+  "what": "quitting", 
+  "text": "Quit: riddl", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314481804.6961081, 
+  "channel": null
+ }, 
+ "gammos": {
+  "what": "joining #shackspace", 
+  "text": "", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314527828.7057619, 
+  "channel": "#shackspace"
+ }, 
+ "krebsbeam": {
+  "what": "joining #shackspace", 
+  "text": "", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314548354.514143, 
+  "channel": "#shackspace"
+ }, 
+ "blubser": {
+  "what": "parting #shackspace", 
+  "text": "#shackspace", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314535707.8331871, 
+  "channel": "#shackspace"
+ }, 
+ "thexception": {
+  "what": "parting #shackspace", 
+  "text": "\"Once you know what it is you want to be true, instinct is a very useful device for enabling you to know that it is\"", 
+  "bot": "default-irc", 
+  "server": "irc.freenode.net", 
+  "time": 1314570647.1854241, 
   "channel": "#shackspace"
  }
 }

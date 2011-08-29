@@ -1,0 +1,13 @@
+{
+ "status": [], 
+ "name": "-126krebsbeam+p5de7a801.dip.t-dialin.net", 
+ "permits": [], 
+ "perms": [
+  "GUEST"
+ ], 
+ "datadir": "/krebs/krebsbeam/.jsb", 
+ "userhosts": [
+  "~krebsbeam@p5DE7A801.dip.t-dialin.net"
+ ], 
+ "email": []
+}

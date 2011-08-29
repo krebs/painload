@@ -54,20 +54,21 @@
 	 
 
 # File marks:
-'0  5  12  ~/.jsb/usermap
-'1  1  0  ~/.jsb/userlist_messages
-'2  1  9  ~/krebsbeam.data
-'3  1  0  ~/krebsbeam.
-'4  60  0  ~/c-beam/c-beamd/c-beamd.py
-'5  1  0  ../c-
-'6  263  8  ~/c-beam/c-beamd/c-beamd.py
-'7  285  12  ~/c-beam/c-beamd/c-beamd.py
-'8  284  23  ~/c-beam/c-beamd/c-beamd.py
-'9  287  4  ~/c-beam/c-beamd/c-beamd.py
+'0  7  14  ~/.jsb/usermap
+'1  5  12  ~/.jsb/usermap
+'2  1  0  ~/.jsb/userlist_messages
+'3  1  9  ~/krebsbeam.data
+'4  1  0  ~/krebsbeam.
+'5  60  0  ~/c-beam/c-beamd/c-beamd.py
+'6  1  0  ../c-
+'7  263  8  ~/c-beam/c-beamd/c-beamd.py
+'8  285  12  ~/c-beam/c-beamd/c-beamd.py
+'9  284  23  ~/c-beam/c-beamd/c-beamd.py
 
 # Jumplist (newest first):
--'  5  12  ~/.jsb/usermap
+-'  7  14  ~/.jsb/usermap
 -'  1  0  ~/.jsb/usermap
+-'  5  12  ~/.jsb/usermap
 -'  1  0  ~/.jsb/userlist_messages
 -'  1  9  ~/krebsbeam.data
 -'  1  0  ~/krebsbeam.
@@ -163,18 +164,18 @@
 -'  44  0  ~/.jsb/config/mainconfig
 -'  1  0  ~/.jsb/config/mainconfig
 -'  37  0  ~/.jsb/config/fleet/default-irc/config
--'  1  0  ~/.jsb/config/fleet/default-irc/config
 
 # History of marks within files (newest to oldest):
 
 > ~/.jsb/usermap
-	"	5	12
-	^	5	13
-	.	5	12
+	"	7	14
+	^	7	15
+	.	7	14
 	+	3	0
 	+	1	0
 	+	2	28
 	+	5	12
+	+	7	14
 
 > ~/.jsb/userlist_messages
 	"	1	0
