@@ -16,8 +16,6 @@
     - make-based installer for voice-symlinks
 
   - ttycnser
-    - server component
-      - JSON-RPC [spec and implementation]
     - client component
       - ttycnser (makefu)
       DONE - Python Notification (makefu)
@@ -99,3 +97,9 @@
     - cping, cpong
 
   - recursiv make
+
+  - exedirs
+
+  - //-integration
+    - libc?
+    - sh?
