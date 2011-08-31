@@ -2,6 +2,8 @@
 
 export EDITOR=vi
 
+# from original debian /etc/profile
+PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 set -u
 alias bc='bc -q'
 alias df='df -h'
