@@ -3,6 +3,7 @@
 HERE=$(dirname $(readlink -f $0))
 . $HERE/../../../profile
 mkdir -p $PDIR
+ln -s $HERE/index $HERE/../../active/solidcoin
 cat > $PDIR/solidcoin.conf <<EOF 
 set terminal png transparent nocrop enhanced font arial 8 size 500 #size 640, 240
 set style function lines
