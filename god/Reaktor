@@ -8,9 +8,9 @@ port = 2342
 map = {
   'shackspace': {
     'device': {
-      0: 'Licht0, Tensau\'s Kuschelecke; Fenster',
+      0: 'Licht0, Zickenzone; Fenster',
       1: 'Licht1, Sofaecke; Fenster', 
-      2: 'Licht2, Tensau\'s Kuschelecke; Ghetto',
+      2: 'Licht2, Zickenzone; Ghetto',
       3: 'Licht3, Sofaecke; Ghetto',
       4: 'Licht4, Richtung Getränkelager',
       5: 'Licht5, Porschekonsole',
