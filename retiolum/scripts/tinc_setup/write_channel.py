@@ -12,6 +12,7 @@ FILE="/etc/tinc/retiolum/hosts/"+myname
 PORT=6667
 NICK= myname+"_"+str(random.randint(23,666))
 
+print "Connecting..."
 sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 sock.connect((HOST,PORT))
 print NICK
