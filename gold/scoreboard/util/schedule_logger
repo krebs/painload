@@ -1,0 +1,13 @@
+#!/bin/sh
+HERE=$(dirname $(readlink -f $0))
+. $HERE/../profile
+RUN_PARTS=$HERE/run-folder
+echo "adding getlogs to crontab"
+
+crontab -l 2>/dev/null | grep -v "$MDIR/modules/active" > $TEMPDIR/currcron
+echo "*/5 * * * * /bin/date >>$TEMPDIR/debug_log && $RUN_PARTS $MDIR/modules/active >>$TEMPDIR/btc_logger_debug_log 2>&1" >> $TEMPDIR/currcron
+
+cat $TEMPDIR/currcron
+
+crontab $TEMPDIR/currcron
+rm $TEMPDIR/currcron

@@ -1,0 +1,15 @@
+Scoreboard
+==========
+a non-interactive gold logger/plotter
+
+Install
+======
+* install lighttpd
+* configure the profile template file accordingly
+* [currently] do:
+  cd modules/available/ ati_temper; $EDITOR gather # change the host
+  * add the host key file to keys/
+* [currently] run: 
+  modules/available/{ati_temper,bitcoin,solidcoin,static}/init
+* run:
+  util/schedule_logger

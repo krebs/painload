@@ -1,0 +1,8 @@
+#!/bin/sh
+LF=`basename $0`
+token=`curl  -A 'Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0' http://www.bitcoins.lc -c cookiejar 2>/dev/null | grep -E '_csrf_token' | tail -n 1 | sed -n 's/.*value="\([0-9a-f]*\)".*/\1/p'`
+
+curl --keepalive -v -A 'Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0' -e http://www.bitcoins.lc/ -d "_csrf_token=$token" -d "action=login" -d "email=$BITCOINSLC_MAIL" -d "password=$BITCOINSLC_PASS" -d "login=Proceed" -b cookiejar -c cookiejar https://www.bitcoins.lc/ -k 2>/dev/null
+#<p><p><strong>Your current total hashrate</strong><br>765.94 Mhash/s</p></p>
+mkdir -p $LDIR
+echo $(date +%Y-%m-%dT%H:%M:%S) `curl -b cookiejar -A  'Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0' https://www.bitcoins.lc/stats --keepalive 2>/dev/null| sed -n 's/.*Your current total hashrate<\/strong><br>\([0-9.]*\).*/\1/p'` > $ADIR/chinaman_$LF
