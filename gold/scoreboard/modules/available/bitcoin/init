@@ -1,0 +1,48 @@
+#!/bin/sh
+#set -x
+HERE=$(dirname $(readlink -f $0))
+. $HERE/../../../profile
+mkdir -p $PDIR
+ln -s $HERE/index $HERE/../../active/bitcoin
+cat > $PDIR/bitcoin.conf <<EOF 
+set terminal png transparent nocrop enhanced font arial 8 size 500 #size 640, 240
+set style function lines
+#set size ratio 0.5
+#set origin 0.0,0.5
+set multiplot title "Bitcoin"
+set grid
+unset key
+
+set autoscale
+set xdata time
+set timefmt "%Y-%m-%dT%H:%M:%S"
+set format x "%d"
+#set xlabel "Day"
+
+set title "Blocks"
+set size 0.5,0.5
+set origin 0.0,0.0
+plot "$ADIR/bitcoin" using 1:2 smooth bezier title "Blocks" with lines
+
+set title "Difficulty"
+set size 0.5,0.5
+set origin 0.5,0.0
+plot "$ADIR/bitcoin" using 1:3 title "Difficulty" with lines
+
+#set title "MtGox Pricing"
+set notitle
+set tmargin 2
+set size 1,0.5
+set origin 0.0,0.5
+set key left top
+plot "$ADIR/ticker_bitcoin" using 1:2 smooth bezier title "Scex High" with lines , \
+    "$ADIR/ticker_bitcoin" using 1:3 smooth bezier title "Scex Low" with lines , \
+    "$ADIR/ticker_bitcoin" using 1:4 smooth bezier title "Scex Last" with lines 
+
+EOF
+
+sed -e 's/set xlabel.*/set xlabel "Time of Day"/' \
+    -e 's/set format.*/set format x "%H"/' \
+    -e 's/title \"Bitcoin\"/title "Bitcoin Last Day"/' \
+    -e "s/bitcoin/bitcoin_last_day/g" \
+    $PDIR/bitcoin.conf >$PDIR/bitcoin_last_day.conf

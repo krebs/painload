@@ -1,0 +1,22 @@
+#!/usr/bin/python2
+import simplejson,urllib,datetime
+url="http://www.btcguild.com/pool_stats.php"
+f = open('/home/makefu/log/btcguild_stats',mode='a')
+today = datetime.datetime.now()
+
+result = simplejson.load(urllib.urlopen(url))
+try:
+    print >>f, today.strftime("%Y-%m-%dT%H:%M:%S"),
+    # uk_speed round_time round_shares active_workers useast_speed uscentral_speed uswest_speed hash_rate nl_speed
+    print >>f , ("%s" % '0' ).replace('.',''),
+    print >>f , ("%s" % result['round_time'] ).replace('.',''),
+    print >>f , ("%s" % result['round_shares'] ).replace('.',''),
+    print >>f , ("%s" % result['active_workers'] ).replace('.',''),
+    print >>f , ("%s" % result['useast_speed'] ).replace('.',''),
+    print >>f , ("%s" % result['uscentral_speed'] ).replace('.',''),
+    print >>f , ("%s" % result['uswest_speed'] ).replace('.',''),
+    print >>f , ("%s" % result['hash_rate'] ).replace('.',''),
+    print >>f , ("%s" % 0 ).replace('.',''),
+    print >>f
+except:
+    pass
