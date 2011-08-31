@@ -1,0 +1,22 @@
+#! /usr/bin/env python
+
+import socket
+from struct import unpack
+
+listen_address = '0.0.0.0'
+listen_port = 2342
+
+# create udp socket
+mysocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+# allow send/recieve from broacast address
+mysocket.setsockopt(socket.SOL_SOCKET,socket.SO_BROADCAST,1)
+
+# allow the socket to be re-used
+mysocket.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+mysocket.bind((listen_address, listen_port))
+
+while True:
+  dev, state = unpack('BB', mysocket.recv(2))
+  print "dev: " + str(dev)
+  print "state: " + str(state)
