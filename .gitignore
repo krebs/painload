@@ -3,6 +3,7 @@ a.out
 *.o
 *.a
 .svn/
+/god/Reaktor/tmp/
 /bin/
 /node/src
 /node/out
