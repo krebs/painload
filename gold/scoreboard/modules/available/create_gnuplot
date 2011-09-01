@@ -1,0 +1,196 @@
+#!/bin/sh
+#set -x
+umask 000
+MDIR=/home/makefu/log
+DDIR=/srv/http/tmp
+mkdir -p $DDIR/graphs
+cat > $DDIR/.htaccess << EOF
+order allow,deny
+allow from all
+EOF
+
+#
+# chinaman
+#
+cat > $MDIR/plot/chinaman.conf <<EOF 
+set terminal png transparent nocrop enhanced font arial 8
+set xdata time
+set autoscale
+set grid
+set title "Chinaman Temperature"
+set timefmt "%Y-%m-%dT%H:%M:%S"
+set format x "%d"
+set xlabel "Day"
+plot "$MDIR/chinaman_ati_temper" using 1:2 smooth bezier title "gpu0" with lines , \
+"$MDIR/chinaman_ati_temper" using 1:3 smooth bezier title "gpu1" with lines , \
+"$MDIR/chinaman_ati_temper" using 1:4 smooth bezier title "cpu0" with lines , \
+"$MDIR/chinaman_ati_temper" using 1:5 smooth bezier title "rack" with lines
+EOF
+
+sed -e 's/set xlabel.*/set xlabel "Time of Day"/' \
+    -e 's/set format.*/set format x "%H"/' \
+    -e 's/set title.*/set title "Chinaman 24 hours Temperature"/' \
+    -e 's/chinaman_ati_temper/chinaman_last_day/g' \
+    $MDIR/plot/chinaman.conf >$MDIR/plot/chinaman_last_day.conf
+
+cat $MDIR/plot/chinaman.conf | gnuplot > $DDIR/graphs/chinaman_overall.png
+tail -n288 $MDIR/chinaman_ati_temper > $MDIR/chinaman_last_day
+cat $MDIR/plot/chinaman_last_day.conf | gnuplot > $DDIR/graphs/chinaman_24h.png
+rm $MDIR/chinaman_last_day
+
+#
+#bitcoinpool
+#
+cat > $MDIR/plot/bitcoinpool.conf <<EOF 
+set terminal png
+set size 1.0, 1.0
+set style function lines
+set origin 0.0, 0.0
+
+set multiplot
+set grid
+unset key
+
+set autoscale
+set xdata time
+set timefmt "%Y-%m-%dT%H:%M:%S"
+set format x "%d"
+#set xlabel "Day"
+
+set title "Efficieny"
+set size 0.5,0.5
+set origin 0.0,0.5
+plot "$MDIR/bitcoinpool_stats" using 1:2 smooth bezier title "Efficieny" with lines
+
+set title "round shares"
+set size 0.5,0.5
+set origin 0.0,0.0
+plot "$MDIR/bitcoinpool_stats" using 1:3 smooth bezier title "round shares" with lines
+
+
+set title "Active Users"
+set size 0.5,0.5
+set origin 0.5,0.0
+plot "$MDIR/bitcoinpool_stats" using 1:5 smooth bezier title "active users" with lines
+set title "Hashrate"
+set size 0.5,0.5
+set origin 0.5,0.5
+plot "$MDIR/bitcoinpool_stats" using 1:7 smooth bezier title "hashrate" with lines
+EOF
+
+sed -e 's/set xlabel.*/set xlabel "Time of Day"/' \
+    -e 's/set format.*/set format x "%H"/' \
+    -e 's/bitcoinpool_stats/bitcoinpool_last_day/g' \
+    $MDIR/plot/bitcoinpool.conf >$MDIR/plot/bitcoinpool_last_day.conf
+
+cat $MDIR/plot/bitcoinpool.conf | gnuplot > $DDIR/graphs/bitcoinpool.png
+tail -n288 $MDIR/bitcoinpool_stats > $MDIR/bitcoinpool_last_day
+cat $MDIR/plot/bitcoinpool_last_day.conf | gnuplot > $DDIR/graphs/bitcoinpool_24h.png
+rm $MDIR/bitcoinpool_last_day
+
+# uk_speed round_time round_shares active_workers useast_speed uscentral_speed uswest_speed hash_rate nl_speed
+cat > $MDIR/plot/btcguild.conf <<EOF 
+set terminal png
+set size 1.0, 1.0
+set style function lines
+set origin 0.0, 0.0
+
+set multiplot
+set grid
+unset key
+
+set autoscale
+set xdata time
+set timefmt "%Y-%m-%dT%H:%M:%S"
+set format x "%d"
+#set xlabel "Day"
+
+
+set title "round shares"
+set size 0.5,0.5
+set origin 0.0,0.0
+set yrange [0:3000000]
+plot "$MDIR/btcguild_stats" using 1:4 smooth bezier title "round shares" with lines
+
+
+set title "Active Users"
+set size 0.5,0.5
+set origin 0.5,0.0
+set autoscale
+plot "$MDIR/btcguild_stats" using 1:5 smooth bezier title "active users" with lines
+
+set title "Hashrate"
+set size 0.5,0.5
+set origin 0.5,0.5
+plot "$MDIR/btcguild_stats" using 1:9 smooth bezier title "hashrate" with lines
+
+set title "Hash count"
+set size 0.5,0.5
+set origin 0.0,0.5
+bw=300000
+set autoscale
+bin(x,width)=width*floor(x/width)
+#plot "$MDIR/btcguild_stats" using (bin(\$4,bw)):(1.0) smooth frequency title "time taken" with steps
+
+EOF
+
+sed -e 's/set xlabel.*/set xlabel "Time of Day"/' \
+    -e 's/set format.*/set format x "%H"/' \
+    -e 's/btcguild_stats/btcguild_last_day/g' \
+       $MDIR/plot/btcguild.conf >$MDIR/plot/btcguild_last_day.conf
+
+gnuplot $MDIR/plot/btcguild.conf > $DDIR/graphs/btcguild.png
+tail -n288 $MDIR/btcguild_stats > $MDIR/btcguild_last_day
+gnuplot $MDIR/plot/btcguild_last_day.conf > $DDIR/graphs/btcguild_24h.png
+rm $MDIR/btcguild_last_day
+
+#
+#bitcoinslc
+#
+cat > $MDIR/plot/bitcoinslc.conf <<EOF 
+set terminal png
+set size 1.0, 1.0
+set style function lines
+set origin 0.0, 0.0
+
+set multiplot
+set grid
+unset key
+
+set autoscale
+set xdata time
+set timefmt "%Y-%m-%dT%H:%M:%S"
+set format x "%d"
+#set xlabel "Day"
+# hash_rate current_block active_workers total_workers total_users round_shares valid_round_shares total_shares
+
+set title "Hash Rate"
+set size 0.5,0.5
+set origin 0.0,0.5
+plot "$MDIR/bitcoinslc_stats" using 1:2 smooth bezier title "Hash Rate" with lines
+
+set title "active workers"
+set size 0.5,0.5
+set origin 0.0,0.0
+plot "$MDIR/bitcoinslc_stats" using 1:4 smooth bezier title "workers" with lines
+
+
+set title "Round Shares"
+set size 0.5,0.5
+set origin 0.5,0.0
+plot "$MDIR/bitcoinslc_stats" using 1:7 smooth bezier title "round shares" with lines
+set title "Total Shares"
+set size 0.5,0.5
+set origin 0.5,0.5
+plot "$MDIR/bitcoinslc_stats" using 1:7 smooth bezier title "shares" with lines
+EOF
+
+sed -e 's/set xlabel.*/set xlabel "Time of Day"/' \
+    -e 's/set format.*/set format x "%H"/' \
+    -e 's/bitcoinslc_stats/bitcoinslc_last_day/g' \
+    $MDIR/plot/bitcoinslc.conf >$MDIR/plot/bitcoinslc_last_day.conf
+
+cat $MDIR/plot/bitcoinslc.conf | gnuplot > $DDIR/graphs/bitcoinslc.png
+tail -n288 $MDIR/bitcoinslc_stats > $MDIR/bitcoinslc_last_day
+cat $MDIR/plot/bitcoinslc_last_day.conf | gnuplot > $DDIR/graphs/bitcoinslc_24h.png
+rm $MDIR/bitcoinslc_last_day

@@ -1,0 +1,26 @@
+# the webpage directory
+WDIR=/srv/http/tmp
+LDIR=$WDIR/live
+GDIR=$WDIR/graphs/gold
+
+# the root directory
+KREBSDIR=/krebs
+MDIR=$KREBSDIR/gold/scoreboard
+
+# folder where plot configs are written into
+PDIR=$MDIR/plot
+# the archive directory
+ADIR=$MDIR/archive
+
+TEMPDIR=/tmp
+
+# bitcoinslc login/password
+BITCOINSLC_MAIL=
+BITCOINSLC_PASS=
+
+# binaries
+SOLIDCOIND_PATH=/root/bin/solidcoind
+BITCOIND_PATH=/root/bin/bitcoind
+
+# BTCGUILD
+BTCGUILD_APIKEY=
