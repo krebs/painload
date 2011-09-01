@@ -54,4 +54,6 @@ Eine Integration in //streams ist bereits vorgenommen.
 Der MPD lauert auf filebitch.shack:6600 auf MPD Clients die ihn bedienen. 
 Ein Webinterface ist noch nicht geplant. 
 
+Die Musiksammlung kann in incoming/Musik auf der Filebitch erweitert werden.
+
 ## 3. KNUT - Die Krebs Notification Utility Toolchain
