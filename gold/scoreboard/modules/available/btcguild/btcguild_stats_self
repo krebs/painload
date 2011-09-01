@@ -1,0 +1,15 @@
+#!/usr/bin/python2
+import simplejson,urllib,datetime,sys
+url="http://www.btcguild.com/api.php?api_key="+sys.env['BTCGUILD_APIKEY']
+f = open('/home/makefu/log/btcguild_stats_self',mode='a')
+today = datetime.datetime.now()
+
+#result = simplejson.load(urllib.urlopen(url))
+#print >>f, today.strftime("%Y-%m-%dT%H:%M:%S"),
+
+# TODO do the right thing with the data (aka this loop is wrong, fixme
+#for k,v in result.iteritems():
+#    data = '%s' % v
+#    data = data.replace('.','')
+#    print >>f ,data,
+#print >>f

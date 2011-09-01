@@ -1,0 +1,11 @@
+#!/bin/sh
+#set -x
+HERE=$(dirname $(readlink -f $0))
+. $HERE/../../../profile
+umask 000
+export GDFONTPATH=/usr/share/fonts/truetype/msttcorefonts
+mkdir -p $GDIR
+gnuplot $PDIR/bitcoin.conf> $GDIR/bitcoin.png
+tail -n288 $ADIR/bitcoin > $ADIR/bitcoin_last_day
+tail -n288 $ADIR/ticker_bitcoin > $ADIR/ticker_bitcoin_last_day
+gnuplot $PDIR/bitcoin_last_day.conf  > $GDIR/bitcoin_24h.png

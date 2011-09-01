@@ -1,0 +1,32 @@
+#!/bin/sh
+# TODO use active modules to find out which to build
+HERE=$(dirname $(readlink -f $0))
+. $HERE/../../../profile
+cat <<EOF >$GDIR/index.html
+<html> 
+    <head> 
+        <title>Stats</title> 
+    </head> 
+    <body> 
+        <center> 
+            <div style="background-color: lightgrey;"> 
+                <b><a href=http://bitcoin.sipa.be/index.html>Hashrate stats</a> 
+                    <a href=http://bitcoinx.com/profit/index.php>Mining Calculator</a> 
+                </b> 
+            </div> 
+            <h1>Chinaman</h1>
+            <img src="chinaman_overall.png"> <img src="chinaman_24h.png"><br/> 
+            <h1>Solidcoin</h1>
+            <img src="solidcoin.png"> <img src="solidcoin_24h.png"><br/> 
+            <h1>Bitcoin</h1>
+            <img src="bitcoin.png"> <img src="bitcoin_24h.png"><br/> 
+            <!--<h1>BTCGuild</h1> 
+            <img src="btcguild.png"> <img src="btcguild_24h.png"><br/> 
+            <h1>Bitcoinpool</h1> 
+            <img src="bitcoinpool.png"> <img src="bitcoinpool_24h.png"><br/> 
+            <h1>Bitcoins.lc</h1> 
+            <img src="bitcoinslc.png"> <img src="bitcoinslc_24h.png"><br/> --!>
+        </center> 
+    </body> 
+</html>
+EOF

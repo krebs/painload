@@ -1,5 +1,4 @@
 #! /bin/sh
-set -x
 netname=retiolum
 myipv4=${1-10.7.7.-1}
 v4num=${myipv4##*.}
@@ -10,12 +9,12 @@ then
   cd /etc/tinc/$netname/hosts
   printf "Check if ip is still free: "
   for i in `ls -1`; do
-    if grep $myipv4 $i &>/dev/null ;then
+    if grep -q -e $myipv4\$ $i ;then
       echo "Host IP already taken by $i! "
       exit 1
     fi
   done
-  printf "Passed"
+  printf "Passed\n"
 else
   printf "you are made of stupid. bailing out\n" 
   exit 1
