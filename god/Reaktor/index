@@ -33,4 +33,5 @@ sed -i '
   s/^printto *=.*/printto="'$printto'"/
 ' config/udp-send
 
+# TODO output modules: stderr, jsb-udp, remount-ro, ...
 PYTHONUNBUFFERED=y $listener | tee /dev/stderr | bin/jsb-udp
