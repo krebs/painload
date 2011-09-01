@@ -1,0 +1,6 @@
+#!/bin/sh
+ls -1 $1 | while read script; do
+  echo "Running $script"
+  $1/$script &
+done
+

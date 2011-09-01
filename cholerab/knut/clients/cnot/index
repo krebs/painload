@@ -11,7 +11,7 @@ port=42101
 
 params="$*"
 
-flags=-sS
+flags=${curl_flags--fsS}
 
 if test "${verbose-no}" != no; then
   flags="${flags+$flags }-v"

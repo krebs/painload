@@ -1,0 +1,36 @@
+#! /bin/sh
+#
+# //god/Reaktor - listen to UDP events and forward them to IRC
+#
+# export host passwd printto to configure jsb-udp
+#
+set -euf
+cd $(readlink -f $(dirname $0))
+
+listener=$(readlink -f lib/listener.py)
+
+jsb_version=0.7.1.2
+distdir=jsb-$jsb_version.tar.gz
+
+host=${host-91.206.142.247}
+passwd=${passwd-h4x0r}
+printto=${printto-#shackspace}
+
+if ! test -x tmp/jsb-$jsb_version; then
+  mkdir -p tmp
+  cd tmp
+  curl -f http://jsonbot.googlecode.com/files/jsb-$jsb_version.tar.gz | tar zx
+  cd jsb-$jsb_version
+  bin/jsb-udp -s </dev/null
+  cd ../..
+fi
+cd tmp/jsb-$jsb_version
+
+# TODO only if it is not already configured properly
+sed -i '
+  s/^host *=.*/host="'$host'"/
+  s/^passwd *=.*/passwd="'$passwd'"/
+  s/^printto *=.*/printto="'$printto'"/
+' config/udp-send
+
+PYTHONUNBUFFERED=y $listener | tee /dev/stderr | bin/jsb-udp

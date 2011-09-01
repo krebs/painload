@@ -1,0 +1,48 @@
+#!/bin/sh
+#set -x
+HERE=$(dirname $(readlink -f $0))
+. $HERE/../../../profile
+mkdir -p $PDIR
+ln -s $HERE/index $HERE/../../active/solidcoin
+cat > $PDIR/solidcoin.conf <<EOF 
+set terminal png transparent nocrop enhanced font arial 8 size 500 #size 640, 240
+set style function lines
+#set size ratio 0.5
+#set origin 0.0,0.5
+set multiplot title "Solidcoin"
+set grid
+unset key
+
+set autoscale
+set xdata time
+set timefmt "%Y-%m-%dT%H:%M:%S"
+set format x "%d"
+#set xlabel "Day"
+
+set title "Blocks"
+set size 0.5,0.5
+set origin 0.0,0.0
+plot "$ADIR/solidcoin" using 1:2 smooth bezier title "Blocks" with lines
+
+set title "Difficulty"
+set size 0.5,0.5
+set origin 0.5,0.0
+plot "$ADIR/solidcoin" using 1:3 title "Difficulty" with lines
+
+#set title "Scex Pricing"
+set notitle
+set tmargin 2
+set size 1,0.5
+set origin 0.0,0.5
+set key left top
+plot "$ADIR/ticker_solidcoin" using 1:2 smooth bezier title "Scex High" with lines , \
+    "$ADIR/ticker_solidcoin" using 1:3 smooth bezier title "Scex Low" with lines , \
+    "$ADIR/ticker_solidcoin" using 1:4 smooth bezier title "Scex Last" with lines 
+
+EOF
+
+sed -e 's/set xlabel.*/set xlabel "Time of Day"/' \
+    -e 's/set format.*/set format x "%H"/' \
+    -e 's/title \"Solidcoin\"/title "Solidcoin Last Day"/' \
+    -e "s/solidcoin/solidcoin_last_day/g" \
+    $PDIR/solidcoin.conf >$PDIR/solidcoin_last_day.conf
