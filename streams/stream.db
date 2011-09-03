@@ -6,3 +6,4 @@ http://somafm.com/illstreet.pls illstreet
 http://localhost:8000/stream.ogg icecast
 http://stream2.jungletrain.net:8000 jungletrain
 http://playlist.tormentedradio.com/tormentedradio.pls tormented
+http:/filebitch.shack:8000 mpd
