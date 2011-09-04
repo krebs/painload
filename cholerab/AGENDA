@@ -107,3 +107,6 @@
   - //Schnabeltasse
 
   - wgrep
+
+  - generated code must be created outside of the //-hierarchy, so killing
+    a local repository and recloning it is easier

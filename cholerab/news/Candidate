@@ -46,4 +46,14 @@ gewaehrleisten sollen verwendet werden.
 
 [1.1] : https://github.com/krebscode/painload/tree/master/retiolum/bin/get-tinc-dir
 
-## 2. KNUT - Die Krebs Notification Utility Toolchain
+## 2. Krebs MPD + http stream
+
+KM momo hat sich heute (01.09.2011) gegen die streams gewehrt und auf der filebitch einen mpd Server eingerichtet.
+Der MPD streamt jetzt via http(vorbis) auf http://filebitch.shack:8000. 
+Eine Integration in //streams ist bereits vorgenommen. 
+Der MPD lauert auf filebitch.shack:6600 auf MPD Clients die ihn bedienen. 
+Ein Webinterface ist noch nicht geplant. 
+
+Die Musiksammlung kann in incoming/Musik auf der Filebitch erweitert werden.
+
+## 3. KNUT - Die Krebs Notification Utility Toolchain
