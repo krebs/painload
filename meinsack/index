@@ -1,4 +1,12 @@
 #! /bin/sh
+#
+# //meinsack
+#
+# export plz
+# export str
+# export anr
+# export ort
+#
 set -euf
 cd $(dirname $(readlink -f $0))/.. # cd //
 
