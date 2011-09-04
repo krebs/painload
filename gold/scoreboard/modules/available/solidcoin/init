@@ -29,15 +29,15 @@ set size 0.5,0.5
 set origin 0.5,0.0
 plot "$ADIR/solidcoin" using 1:3 title "Difficulty" with lines
 
-#set title "Scex Pricing"
+#set title "Pricing"
 set notitle
 set tmargin 2
 set size 1,0.5
 set origin 0.0,0.5
 set key left top
-plot "$ADIR/ticker_solidcoin" using 1:2 smooth bezier title "Scex High" with lines , \
-    "$ADIR/ticker_solidcoin" using 1:3 smooth bezier title "Scex Low" with lines , \
-    "$ADIR/ticker_solidcoin" using 1:4 smooth bezier title "Scex Last" with lines 
+plot "$ADIR/ticker_solidcoin" using 1:2 smooth bezier title "High" with lines , \
+    "$ADIR/ticker_solidcoin" using 1:3 smooth bezier title "Low" with lines , \
+    "$ADIR/ticker_solidcoin" using 1:4 smooth bezier title "Last" with lines 
 
 EOF
 
