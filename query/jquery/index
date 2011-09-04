@@ -1,0 +1,19 @@
+#! /bin/sh
+set -euf
+
+# cd //
+cd $(dirname $(readlink -f $0))/../..
+
+for x in \
+    github/tmpvar         \
+    github/mikeal         \
+    github/NV             \
+    github/tautologistics \
+; do
+  export NODE_PATH="$(readlink -f submodules/$x)${NODE_PATH+:$NODE_PATH}"
+done
+
+# ensure query is ready
+#git submodule update --init
+
+exec node submodules/github/visionmedia/query "$@"
