@@ -44,10 +44,8 @@ class IRCBot(SimpleIRCClient):
     target, arguments = arguments
 
     arguments = re.split('\s+', arguments, 1)
-    if len(arguments) != 2:
-      return
 
-    command, arguments = arguments
+    command, arguments = arguments if len(arguments) == 2 else [arguments[0],[]]
 
     self.connection.privmsg(self.target, '- target: ' + target)
     self.connection.privmsg(self.target, '- command: ' + command)
