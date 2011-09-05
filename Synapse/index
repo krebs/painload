@@ -5,5 +5,4 @@ cd $(dirname $(readlink -f $0))
 
 ./install
 
-export PYTHONPATH="$PWD"
 exec python2 bot2.py "$@"
