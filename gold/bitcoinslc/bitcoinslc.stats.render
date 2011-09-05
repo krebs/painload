@@ -1,0 +1,7 @@
+#!/usr/bin/python
+
+import json,sys
+
+result = json.load(sys.stdin)
+
+print  "Block: "  + str(result["current_block"]) + " Difficulty: " + str(result["difficulty"])

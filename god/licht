@@ -1,4 +1,18 @@
 #!/bin/bash
+#
+#SYNOPSIS
+#   //god/licht [options] [0/1]
+#OPTIONS
+#   all         -    toggles all lights
+#   links       -    toggles all lights on the left hand side while looking towards the Auditorium
+#   rechts      -    toggles all lights on the right hand side while looking towards the Auditorium
+#   kuschel     -    toggles the lights in the pwnie corner
+#   software    -    toggles the software corner
+#   tische      -    toggles the lights on the window side of the long table
+#   porsche     -    toggles the lights on the window side where the porsche cockpit is
+#   ghetto      -    toggles the lights in the hallway
+#   0-7         -    toggles individual lights
+
 toggle() {
   LAMPE=`echo "$1" | sed -n '/^[1-2]*[0-9]*[0-9]$/p' | xargs echo "obase=16;" | bc` 
   TOGGLE=`echo "$2" | sed -n '/^[0-1]/p'` 

@@ -9,4 +9,4 @@ mkdir -p $LDIR
 # write into live directory and archive
 $SOLIDCOIND_PATH sc_getinfo | python $HERE/render | tee $LDIR/$LF >> $ADIR/$LF
 
-echo  `date +"%Y-%m-%dT%H:%M:%S"` `$KREBSDIR/bin/scex_ticker` | sed -e 's/High: //' -e 's/Low: //' -e 's/Last: //' | tee $LDIR/ticker_${LF}>> $ADIR/ticker_${LF}
+echo  `date +"%Y-%m-%dT%H:%M:%S"` `$KREBSDIR/bin/mooncoin_ticker` | sed -e 's/High: //' -e 's/Low: //' -e 's/Last: //' | tee $LDIR/ticker_${LF}>> $ADIR/ticker_${LF}
