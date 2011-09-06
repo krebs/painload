@@ -16,7 +16,7 @@
 
     ## 2b. upstart-like foo
 
-    cat > /etc/init/Reaktor.conf <EOF
+    cat > /etc/init/Reaktor.conf <<EOF
     description "Krebs Reaktor"
     author      "The Ministerium"
     stop on runlevel [016]
