@@ -1,18 +1,6 @@
 #! /usr/bin/env python
 #
-# //Reaktor/IRC
-#
-# export host and port to connect to a specific IRC server
-# defaults to supernode and 6667
-#
-# export nick to use a specific nickname
-# defaults to Name in /etc/tinc/retiolum/tinc.conf
-#
-# export target to join a specific channel
-# defaults to #retiolum
-#
-# Example usage (in your local krebs repository):
-# host=irc.freenode.org nick=$HOSTNAME target=#tincspasm Reaktor/IRC/index
+# //Reaktor/IRC/bot2.py
 #
 
 from __future__ import print_function
