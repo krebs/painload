@@ -5,4 +5,4 @@ cd $(dirname $(readlink -f $0))
 
 ./install
 
-exec python2 bot2.py "$@"
+exec python bot2.py "$@"
