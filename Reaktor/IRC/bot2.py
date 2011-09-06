@@ -85,16 +85,32 @@ class IRCBot(SimpleIRCClient):
     # TODO reconnect
     exit(0)
 
+# retrieve the value of a [singleton] variable from a tinc.conf(5)-like file
+def getconf1(x, path):
+  from re import findall
+  pattern = '(?:^|\n)\s*' + x + '\s*=\s*(.*\w)\s*(?:\n|$)'
+  y = findall(pattern, open(path, 'r').read())
+  if len(y) < 1:
+    raise AttributeError("len(getconf1('%s', '%s') < 1)" % (x, path))
+  if len(y) > 1:
+    y = ' '.join(y)
+    raise AttributeError("len(getconf1('%s', '%s') > 1)\n  ====>  %s"
+        % (x, path, y))
+  return y[0]
+
 def main():
-  host = str(env.get('host', 'irc.freenode.org'))
+  name = getconf1('Name', '/etc/tinc/retiolum/tinc.conf')
+  host = str(env.get('host', 'supernode'))
   port = int(env.get('port', 6667))
-  nick = str(env.get('nick', 'crabspasm'))
+  nick = str(env.get('nick', name))
   target = str(env.get('target', '#tincspasm'))
   print('====> irc://%s@%s:%s/%s' % (nick, host, port, target))
 
   client = IRCBot(target)
   try:
-    client.connect(host, port, nick)
+    from getpass import getuser
+    client.connect(host, port, nick, username=getuser(),
+        ircname='//Reaktor running at %s.retiolum' % (name))
   except ServerConnectionError, error:
     print(error)
     exit(1)
