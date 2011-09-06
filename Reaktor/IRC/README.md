@@ -1,4 +1,4 @@
-# *//Reaktor/IRC*
+# //Reaktor/IRC
 
 This component implements a remote shell daemon that exposes the
 executable files (which may be symlinks) below
@@ -6,9 +6,8 @@ executable files (which may be symlinks) below
 
 ## Security
 
-Anyone who has access the the IRC server in question has full access to
-all the exposed executable files.  The daemon is executing the commands
-without dropping privileges.
+Access to the IRC server implies full access to all the exposed executable
+files.  The daemon is executing the commands without dropping privileges.
 
 ## Quickstart
 
@@ -25,14 +24,14 @@ without dropping privileges.
 
 The following environment variables are processed by `//Reaktor/IRC`:
 
-### *nick*
+### nick
 
 Use a specific nickname.
 
 Optional if the node running `//Reaktor/IRC` is part of Retiolum, in
 which case it defaults to `Name` in `/etc/tinc/retiolum/tinc.conf`.
 
-### *host* and *port*
+### host and port
 
 Connect to a specific IRC server.
 
@@ -40,7 +39,7 @@ Optional if the node running `//Reaktor/IRC` is part of Retiolum, in
 which case it defaults to `supernode` and `6667` (well, it always
 defaults to these two, but they only make science in Retiolum^_^).
 
-### *target*
+### target
 
 Join a specific channel.
 
