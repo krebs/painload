@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python
 # -*- coding: utf8 -*-
 
 import sys
@@ -47,6 +47,7 @@ def write_node(k,v):
       edges are weightet with the informations inside the nodes provided by
       tinc
   """
+
   node = "  "+k+"[label=\""
   node += k+"\\l"
   node += "external:"+v['external-ip']+":"+v['external-port']+"\\l"
@@ -57,7 +58,7 @@ def write_node(k,v):
   node +="\""
   if v['external-ip'] == "MYSELF":
     node += ",fillcolor=steelblue1"
-  node +=",group="+v['external-ip'].replace(".","")+""
+  node +=",group=\""+v['external-ip'].replace(".","")+"\""
   node += "]"
   print node
 

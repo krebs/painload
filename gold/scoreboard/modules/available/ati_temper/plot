@@ -1,0 +1,10 @@
+#!/bin/sh
+#set -x
+HERE=$(dirname $(readlink -f $0))
+. $HERE/../../../profile
+umask 000
+export GDFONTPATH=/usr/share/fonts/truetype/msttcorefonts
+mkdir -p $GDIR
+gnuplot $PDIR/chinaman.conf> $GDIR/chinaman_overall.png
+tail -n288 $ADIR/chinaman_ati_temper > $ADIR/chinaman_last_day
+gnuplot $PDIR/chinaman_last_day.conf  > $GDIR/chinaman_24h.png

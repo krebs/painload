@@ -6,9 +6,16 @@ if test "${nosudo-false}" != true -a `id -u` != 0; then
   exit 23 # go to hell
 fi
 
+locate_bin() {
+  type -p "$1" || find / | sed -n '/.*bin\/'"$1"'$/{p;q}' | grep .
+}
+
 has_internet() {
   curl -sS google.com >/dev/null
 }
+
+wpa_supplicant="`locate_bin wpa_supplicant`"
+wpa_cli="`locate_bin wpa_cli`"
 
 if test "${force-false}" = true || ! has_internet; then
 
@@ -20,8 +27,8 @@ if test "${force-false}" = true || ! has_internet; then
 
   beep -l 50 -f 2000; pkill wpa
   beep -l 50 -f 2000; rm -vf /var/run/wpa_supplicant/*
-  beep -l 50 -f 2000; wpa_supplicant -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf &
-  while ! wpa_cli status | grep -q wpa_state=COMPLETED; do
+  beep -l 50 -f 2000; $wpa_supplicant -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf || $wpa_supplicant -i wlan0 -c /etc/wpa_supplicant.conf &
+  while ! $wpa_cli status | grep -q wpa_state=COMPLETED; do
     beep -l 50 -f 2000 -D 50 -n -l 50 -f 2000
     sleep 1
   done
@@ -38,4 +45,4 @@ else
     (--quiet) : ;;
     (*) beep -l 50 -f 2000 -n -l 100 -f 2000 ;;
   esac
-fi
+fi 2>&1 | tee /var/log/ensure-wlan0

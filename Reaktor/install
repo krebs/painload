@@ -1,0 +1,6 @@
+#! /bin/sh
+set -euf
+
+cd $(dirname $(readlink -f $0))
+
+exec IRC/install
