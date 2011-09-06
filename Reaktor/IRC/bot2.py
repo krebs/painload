@@ -77,7 +77,8 @@ class IRCBot(SimpleIRCClient):
           ME(self.target, 'mimimi')
 
       else:
-        PRIVMSG(self.target, _from + ': you are made of stupid')
+        if _handle != 'ALL':
+          PRIVMSG(self.target, _from + ': you are made of stupid')
 
   def on_welcome(self, connection, event):
     print('I\'m welcome! :D joining to %s now...' % (self.target))
