@@ -35,7 +35,8 @@ class IRCBot(SimpleIRCClient):
       _, _handle, _command, _argument, _ = re.split(
           '^(\w+):\s*(\w+)(?:\s+(.*))?$', event.arguments()[0])
     except ValueError, error:
-      PRIVMSG(self.target, 'I\'m so famous')
+      if re.search(_nickname, event.arguments()[0]):
+        PRIVMSG(self.target, 'I\'m so famous')
       return # ignore
 
     if _handle == _nickname or _handle == 'ALL':
@@ -57,7 +58,7 @@ class IRCBot(SimpleIRCClient):
           p = popen([command], stdin=PIPE, stdout=PIPE, stderr=PIPE, env=env)
         except OSError, error:
           ME(self.target, 'is made of stupid')
-          print('OSError@%s: %s' % (argv, error))
+          print('OSError@%s: %s' % (command, error))
           return
 
         stdout, stderr = [ x[:len(x)-1] for x in
