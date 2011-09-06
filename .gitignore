@@ -9,4 +9,5 @@ a.out
 /node/out
 /ovh/soapi/src
 /ovh/soapi/SOAPpy
-/Synapse/irclib.py
+/Reaktor/IRC/irclib.py
+/Reaktor/IRC/public_commands/*
