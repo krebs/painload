@@ -10,4 +10,4 @@ a.out
 /ovh/soapi/src
 /ovh/soapi/SOAPpy
 /Reaktor/IRC/irclib.py
-/Reaktor/IRC/public_commands/*
+/Reaktor/public_commands/*

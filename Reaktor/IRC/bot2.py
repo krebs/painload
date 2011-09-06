@@ -40,7 +40,8 @@ class IRCBot(SimpleIRCClient):
       from os.path import realpath, dirname, join
       from subprocess import Popen as popen, PIPE
 
-      public_commands = join(realpath(dirname(__file__)), 'public_commands')
+      Reaktor_dir = dirname(realpath(dirname(__file__)))
+      public_commands = join(Reaktor_dir, 'public_commands')
       command = join(public_commands, _command)
 
       if is_executable(command):
