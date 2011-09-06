@@ -1,21 +1,76 @@
 #! /usr/bin/env python
 
+from __future__ import print_function
 from irclib import SimpleIRCClient, ServerConnectionError, is_channel
 from sys import exit
 from os import environ as env
-import tokenize
-import cStringIO
-import pprint
 import re
-pp = pprint.PrettyPrinter(indent=2)
 
 class IRCBot(SimpleIRCClient):
   def __init__(self, target):
     SimpleIRCClient.__init__(self)
     self.target = target
 
+  def on_pubmsg(self, connection, event):
+
+    def PRIVMSG(target, text):
+      self.connection.privmsg(target, text)
+
+    def ME(target, text):
+      PRIVMSG(target, 'ACTION ' + text + '')
+
+    def is_executable(x):
+      import os
+      return os.path.exists(x) and os.access(x, os.X_OK)
+
+    _nickname = connection.get_nickname()
+    _source = event.source()
+    _from = _source.split('!', 1)[0]
+    _target = event.target()
+
+    try:
+      _, _handle, _command, _argument, _ = re.split(
+          '^(\w+):\s*(\w+)(?:\s+(.*))?$', event.arguments()[0])
+    except ValueError, error:
+      PRIVMSG(self.target, 'I\'m so famous')
+      return # ignore
+
+    if _handle == _nickname or _handle == 'ALL':
+
+      from os.path import realpath, dirname, join
+      from subprocess import Popen as popen, PIPE
+
+      public_commands = join(realpath(dirname(__file__)), 'public_commands')
+      command = join(public_commands, _command)
+
+      if is_executable(command):
+        try:
+          p = popen([command], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        except OSError, error:
+          ME(self.target, 'I am made of stupid')
+          print('OSError@%s: %s' % (argv, error))
+          return
+
+        stdout, stderr = [ x[:len(x)-1] for x in
+            [ x.split('\n') for x in p.communicate()]]
+        code = p.returncode
+        pid = p.pid
+
+        print('command: %s -> %s' % (command, code))
+        [print('%s stdout: %s' % (pid, x)) for x in stdout]
+        [print('%s stderr: %s' % (pid, x)) for x in stderr]
+
+        if code == 0:
+          [PRIVMSG(self.target, _from + ': ' + x) for x in stdout]
+          [PRIVMSG(_source, x) for x in stderr]
+        else:
+          ME(self.target, 'mimimi')
+
+      else:
+        ME(self.target, 'believes that ' + _from + ' is made of stupid')
+
   def on_welcome(self, connection, event):
-    print 'I\'m welcome! :D joining to %s now...' % (self.target)
+    print('I\'m welcome! :D joining to %s now...' % (self.target))
     if is_channel(self.target):
       connection.join(self.target)
     else:
@@ -23,49 +78,26 @@ class IRCBot(SimpleIRCClient):
       self.connection.quit('Pong timeout: 423 seconds')
 
   def on_join(self, connection, event):
-    print 'Es passiert in %s' % (self.target)
+    print('Es passiert in %s' % (self.target))
 
   def on_disconnect(self, connection, event):
+    # TODO reconnect
     exit(0)
-
-  def on_pubmsg(self, connection, event):
-    arguments = ''.join(event.arguments())
-    nickname = connection.get_nickname()
-    server_name = connection.get_server_name()
-    is_connected = connection.is_connected()
-    #readline = cStringIO.StringIO(''.join(event.arguments())).readline
-    #self.connection.privmsg(self.target, 'nickname: ' + nickname)
-    #self.connection.privmsg(self.target, 'server_name: ' + server_name)
-
-    arguments = re.split(':\s+', arguments, 1)
-    if len(arguments) != 2:
-      return
-
-    target, arguments = arguments
-
-    arguments = re.split('\s+', arguments, 1)
-
-    command, arguments = arguments if len(arguments) == 2 else [arguments[0],[]]
-
-    self.connection.privmsg(self.target, '- target: ' + target)
-    self.connection.privmsg(self.target, '- command: ' + command)
-    self.connection.privmsg(self.target, '- arguments: ' + pp.pformat(arguments))
-    
 
 def main():
   host = str(env.get('host', 'irc.freenode.org'))
   port = int(env.get('port', 6667))
   nick = str(env.get('nick', 'crabspasm'))
   target = str(env.get('target', '#tincspasm'))
-  print '====> irc://%s@%s:%s/%s' % (nick, host, port, target)
+  print('====> irc://%s@%s:%s/%s' % (nick, host, port, target))
 
   client = IRCBot(target)
   try:
     client.connect(host, port, nick)
   except ServerConnectionError, error:
-    print error
+    print(error)
     exit(1)
   client.start()
 
 if __name__ == "__main__":
-    main()
+  main()
