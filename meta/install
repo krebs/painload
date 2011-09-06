@@ -1,0 +1,26 @@
+#! /bin/sh
+set -euf
+
+cd $(dirname $(readlink -f $0))
+
+id=`ls -lnd . | awk '{print$3}'`
+update=$PWD/bin/update
+
+echo "#"
+echo "# to install metastatic automatization facility do following:"
+echo "#"
+echo
+echo "  [32msudo ln -vsn $update /update[m"
+echo
+echo "#"
+
+if test -e /update; then
+  echo "# but beware: you already have an /update like this:"
+  ls -l /update
+fi
+
+if test `id -u` != $id; then
+  echo "# and remember to allow yourself to [32msudo -u $id /update[m"
+fi
+
+echo "#[35m^D[m"
