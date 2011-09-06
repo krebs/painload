@@ -3,7 +3,7 @@ set -euf
 
 cd $(dirname $(readlink -f $0))
 
-id=`ls -lnd . | awk '{print$3}'`
+id=`ls -ld . | awk '{print$3}'`
 update=$PWD/bin/update
 
 echo "#"
@@ -19,8 +19,9 @@ if test -e /update; then
   ls -l /update
 fi
 
-if test `id -u` != $id; then
+if test `id -un` != $id; then
   echo "# and remember to allow yourself to [32msudo -u $id /update[m"
+  echo "# i.e. add [32m`id -un` ($id) NOPASSWD:/update[m"
 fi
 
 echo "#[35m^D[m"
