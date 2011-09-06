@@ -10,7 +10,7 @@ echo "#"
 echo "# to install metastatic automatization facility do following:"
 echo "#"
 echo
-echo "  [32msudo ln -vsn $update /update[m"
+echo "  [32mln -vsn $update /update[m"
 echo
 echo "#"
 
