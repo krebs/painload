@@ -13,3 +13,6 @@
 [submodule "submodules/github/tautologistics/node-htmlparser"]
 	path = submodules/github/tautologistics/node-htmlparser
 	url = https://github.com/tautologistics/node-htmlparser
+[submodule "submodules/github/makefu/dpfhack_display"]
+	path = submodules/github/makefu/dpfhack_display
+	url = https://github.com/makefu/dpfhack_pearl

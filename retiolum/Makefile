@@ -1,15 +1,28 @@
-.phony: update it all so install
+.PHONY: update all install hosts
 
-all: select-target
+EXES := update_tinc_hosts fillxx update-retiolum-hosts
 
-it: so
-so: it
+all: update links 
 
-/etc/tinc/retiolum/hosts:
-	cd $(dir $@) && git clone https://github.com/krebscode/hosts
+links:
+	for x in $(EXES); do ln -vsnf ../retiolum/bin/$$x ../bin; done
 
-update: /etc/tinc/retiolum/hosts
-	cd $< && git pull
+hosts:
+	bin/update-retiolum-hosts || true
 
-install:
+install: update
+	@#punani -Ei tinc python
+	@# will not run automatically
 	scripts/tinc_setup/install.sh
+	scripts/autostart/create-startup.sh
+
+update: hosts
+	@echo creating Magic
+	bin/update_tinc_hosts "create magic" || true
+	@echo adding hosts 
+	bin/update_tinc_hosts restart
+
+arch-install: update install arch-autostart autohosts
+
+arch-autostart:
+	make -C scripts/autostart arch || true

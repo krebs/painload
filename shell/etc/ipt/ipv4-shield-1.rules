@@ -1,0 +1,10 @@
+*filter
+:INPUT   DROP   [0:0]
+:FORWARD DROP   [0:0]
+:OUTPUT  ACCEPT [0:0]
+
+-AINPUT -m state --state RELATED,ESTABLISHED -jACCEPT
+
+-AINPUT -i lo -jACCEPT
+
+COMMIT

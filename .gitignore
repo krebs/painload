@@ -1,1 +1,13 @@
+a.out
 *.pyc
+*.o
+*.a
+.svn/
+/god/Reaktor/tmp/
+/bin/
+/node/src
+/node/out
+/ovh/soapi/src
+/ovh/soapi/SOAPpy
+/Reaktor/IRC/irclib.py
+/Reaktor/public_commands/*

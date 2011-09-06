@@ -1,0 +1,8 @@
+#! /bin/sh
+set -xeuf
+
+cd $(dirname $(readlink -f $0))
+
+./install
+
+exec python bot2.py "$@"

@@ -1,0 +1,85 @@
+#! /bin/sh
+#
+# //meinsack
+#
+# export plz
+# export str
+# export anr
+# export ort
+#
+set -euf
+cd $(dirname $(readlink -f $0))/.. # cd //
+
+plz=${plz+"&plz=$plz"}
+str=${str+"&str=$str"}
+anr=${anr+"&anr=$anr"}
+
+url="http://www.sita-deutschland.de/sita/ywbase_Abfallkalender_Stuttgart.nsf/frmSelect?ReadForm$plz$str$anr"
+
+# echo $url
+
+html="$(curl -fsS "$url" | iconv -f latin1 -t utf8)"
+
+if echo "$html" | fgrep -q 'Ihre Eingabe war nicht eindeutig'; then
+  {
+    echo "Error: multiple locations found"
+    echo "$html" |
+    query/jquery/index 'table.tab:nth-child(2n) .bordertop > .text' |
+    sed '
+      s/[[:space:]]\+/ /g
+      s/'"`printf '\xc2\xa0'`"'//g;# kill unicode non-breaking space
+    ' |
+    while read plz &&
+          read str &&
+          read ort &&
+          read bes1 &&
+          read bes2 &&
+          read anr; do
+      str=$(echo "$str"|sed 's/<[^>]*>//g')
+      echo "export anr=$anr if you meant \"$ort\""
+    done | sort | uniq
+  } >&2
+  exit 2
+elif test $(echo "$html" | grep -c 'Abfallkalender für') -gt 1 &&
+     test -z "${ort-}"; then
+  {
+    echo "Error: multiple locations found"
+    echo "$html" |
+    query/jquery/index '.tab span.text,.subheadline' |
+    sed -n '
+      s/[[:space:]]\+/ /g
+      s/'"`printf '\xc2\xa0'`"'//g;# kill unicode non-breaking space
+      s/^Abfallkalender.*[^0-9]\([0-9]\+\)[^(]*(\(.*\))/export ort=\2/p
+    ' | sort | uniq
+  } >&2
+  exit 3
+else
+  result="$(echo "$html" |
+  query/jquery/index '.tab span.text,.subheadline' | {
+    if test -n "${ort-}"; then
+      sed -n "
+        /($ort)/,/^Abfallkalender/{p;b}
+        /($ort)/,\${p;b}
+      "
+    else
+      cat
+    fi
+  } | {
+    grep -v Abfallkalender |
+    sed '
+      s/'"`printf '\xc2\xa0'`"'//g;# kill unicode non-breaking space
+      s/^[A-Z][a-z]\.\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)$/\3-\2-\1/
+      s/^[0-9].*/  "&T00:00:00.000Z"/
+      $!s/$/,/
+      1s/^/[\n/
+      $s/$/\n]/
+    '
+  })"
+  if ! echo "$result" | grep .; then
+    {
+      echo "Error: your query had no effect"
+      echo "url=\"$url\""
+    } >&2
+    exit 4
+  fi
+fi

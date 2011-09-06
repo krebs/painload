@@ -1,0 +1,18 @@
+#!/usr/bin/python2
+import simplejson,urllib,datetime,sys
+url="https://www.bitcoins.lc/stats.json"
+f = open(sys.env['ADIR']+'/bitcoinslc_stats',mode='a')
+today = datetime.datetime.now()
+
+result = simplejson.load(urllib.urlopen(url))
+print >>f, today.strftime("%Y-%m-%dT%H:%M:%S"),
+# hash_rate current_block active_workers total_workers total_users round_shares valid_round_shares total_shares
+print >>f , ("%s" % result['hash_rate'] ),
+print >>f , ("%s" % result['current_block'] ),
+print >>f , ("%s" % result['active_workers'] ),
+print >>f , ("%s" % result['total_workers'] ),
+print >>f , ("%s" % result['total_users'] ),
+print >>f , ("%s" % result['round_shares'] ),
+print >>f , ("%s" % result['valid_round_shares'] ),
+print >>f , ("%s" % result['total_shares'] ),
+print >>f

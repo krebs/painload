@@ -1,0 +1,112 @@
+
+- krebs
+  - krebs.no.de/hosts.tar automatic via github POST hook
+    - same for supernode updates [vs. cron]
+    - krebscode/painload/supernode/foo 
+
+  - overall
+    - krebs/bin at the end of PATH
+
+  - natural voices
+    - unify with translate.google
+      - differences:
+        - url
+        - form data
+        - query args
+    - make-based installer for voice-symlinks
+
+  - ttycnser
+    - client component
+      - ttycnser (makefu)
+      DONE - Python Notification (makefu)
+      - growl (pfleidi)
+
+  - krebs rebootstrapping
+    DONE - curl painload.retiolum | sh
+      [- git clone https://github.com/kreingbscode/painload /krebs]
+      [- /krebs/boot] (makefu)
+  - krebs rebootstrapping
+    - server, der ein shellscript [wenn User-Agent: curl/wget ist] ausgibt] (tv)
+    - painload/{component}/krebs.manifest
+      - welche kategorie: gutartig, boesartig,auf toeten eingestellt, optional
+      DONE - interactive-foo, der am Anfang durchgespielt werden muss
+        - danach darf er nciht mehr sucken, und muss das richtige tun
+      - initiale config file via $EDITOR
+        - config auswerten
+
+  - gutartiger Krebs
+    - retiolum
+      - tinc Installation (via punani)
+      - tinc Konfiguration
+        - update-hosts magic
+        - keys und shit
+        - autostart
+      - Kooperativer NetworkEngineer (rtjure)
+      - retiolumd refactoren
+        - wenn lokale, direkte Verbindung moeglich, dann die nutzen
+    - [cholerab]
+    - CI
+      - issue, issue.tail [etc?] [bku der alten issue]
+      - ftp MOTD
+      - sound theme [see beeps below]
+    - append to PATH
+
+  [- boesartiger Krebs]
+    - public keys installieren
+      - public keys updaten [via github]
+
+  - Enterprisename for serious business
+    - kcpl [pronounce: krepel]
+
+  - p wie punani "hard-install"
+    - merge painload/host
+
+  - gitolite module
+    - ein richtiges /krebs sollte alle peers als remotes haben, sodass
+      man csay makefu: git pull also/blah etc. machen kann.
+
+  - git hooks
+    - Error 1: "Keyword-ratio below 9k"
+      - keyword file
+    - <-- tinc tar file updaten
+
+  - default configuration for $EDITOR & co.
+
+  - Refactort git-eternal-move: use find instead of mv
+    - make it not suck, e.g. do the right thing (currently NOT)
+
+  - NetworkEngineer
+    - kill and replace NetworkManager
+    - mimic NetworkManager but discard all inputs and do the right thing
+      - stay connected to retiolum by any means necessary
+    - keywords:
+      - rpc: irc, cholerab, espeak / beep
+      - iptables
+
+  - thinkabout: util/bin vs {component-like-webcams}
+
+  - beeps
+    - on ssh activity
+
+  - POSIX-sh krebs harder
+    - http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html
+
+  - clive
+    - ccat from [what...] - receive a message from (vs. cget)
+    - cput (vs. cnot)
+    - cping, cpong
+
+  - recursiv make
+
+  - exedirs
+
+  - //-integration
+    - libc?
+    - sh?
+
+  - //Schnabeltasse
+
+  - wgrep
+
+  - generated code must be created outside of the //-hierarchy, so killing
+    a local repository and recloning it is easier

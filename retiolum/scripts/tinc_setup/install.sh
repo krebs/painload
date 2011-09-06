@@ -1,11 +1,18 @@
 #! /bin/sh
 # USE WITH GREAT CAUTION
+set -eu
+
+if test "${nosudo-false}" != true -a `id -u` != 0; then
+  echo "we're going sudo..." >&2
+  exec sudo "$0" "$@"
+  exit 23 # go to hell
+fi
 
 #make -C ../../ update
 set -e
 DIRNAME=`dirname $0`
 CURR=`readlink -f ${DIRNAME}`
-MYBIN=../../bin
+MYBIN=${CURR}/../../bin
 netname=retiolum
 # create configuration directory for $netname
 mkdir -p /etc/tinc/$netname/hosts
@@ -30,18 +37,13 @@ then
   then
     echo "select v4 subnet ip (1-255) :"
     read v4num
-    myipv4=10.7.7.$v4num
-    if [  "$v4num" -gt 0 -a "$v4num" -lt "256" ];
-    then 
-      echo "check"
-    else
-      echo "you are made of stupid. bailing out" 
+    if ! $MYBIN/check-free-retiolum-v4 $v4num;then
       exit 1
     fi
   fi
   echo "Subnet = $myipv4" > hosts/$myname
 
-  myipv6=`${CURR}/../../bin/fillxx 42:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx`/128
+  myipv6=`$MYBIN/fillxx 42:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx`/128
   echo "Subnet = $myipv6" >> hosts/$myname
 else
   echo "own host file already exists! will not write again!"

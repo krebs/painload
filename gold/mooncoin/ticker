@@ -1,0 +1,2 @@
+#! /bin/sh
+exec curl -ksS https://moonco.in/exchange/api/ticker/solidcoin

@@ -1,0 +1,29 @@
+Scoreboard
+==========
+a non-interactive gold logger/plotter
+
+scoreboard contains a number of modules which do a number of things:
+ati_temper: log temperature data of an ati_temper enabled host :
+  see //gold/miner/bin/ati_temper
+solidcoin : graph solidcoin informations
+bitcoin   : s.a.
+
+//gold/scoreboard/profile contains all the important paths and variables
+which are sourced by the modules. In a new installation this file needs
+to be customized. 
+
+//gold/scoreboard/util/schedule_logger is the scheduler for generating
+the graphs every 5 minutes.
+
+
+Install
+======
+* install lighttpd
+* configure the profile template file accordingly
+* [currently] do:
+  cd modules/available/ ati_temper; $EDITOR gather # change the host
+  * add the host key file to keys/
+* [currently] run: 
+  modules/available/{ati_temper,bitcoin,solidcoin,static}/init
+* run:
+  util/schedule_logger

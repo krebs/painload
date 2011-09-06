@@ -1,0 +1,20 @@
+#! /bin/sh
+
+_hrefs() {
+  sed -n 's/href="\([^"]\+\)"/\n&\n/gp' |
+      sed -n 's/^href="\([^"]\+\)"$/\1/p'; }
+
+_add_prefix_to_relative_hrefs() {
+  sed '/^http:/!s^'"$1"''; }
+
+_main() {
+  case $# in
+    (0) _hrefs;;
+    (1) _hrefs | _add_prefix_to_relative_hrefs "$1";;
+    (*)
+      echo "bad command line: $0 $*" >&2; exit 23;;
+  esac; }
+
+set -euf
+_main "$@"
+#### end of file.

@@ -1,0 +1,14 @@
+The connect_narf.pl script morses the IP + "connected" when a user connects to filebitchs proftpd server. 
+The disconnect_narf.pl scritp will do the obvious opposite.
+It will hopefully drive someone crazy.
+
+To make it run you need to add some lines to your proftpd config.
+I decided not to let Krebs do this as I didn't want to break your FTP Server (I know FTP is broken by default).
+The 5 necessary lines are:
+
+<IfModule mod_exec.c>
+    ExecEngine on
+    ExecOnConnect "/krebs/filebitch/connect_narf.pl %a"
+    ExecOnExit "/krebs/filebitch/disconnect_narf.pl %a"
+</IfModule>
+

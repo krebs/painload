@@ -1,0 +1,44 @@
+#! /bin/sh
+set -euf
+
+A=Mozilla
+baseURL="http://192.20.225.36"
+url="$baseURL/tts/cgi-bin/nph-talk"
+
+if test -h "$0"; then
+  voice="${voice-"`basename "$0"`"}"
+fi
+
+pwd="$(dirname "$(readlink -f "$0")")"
+
+for x in \
+    "$pwd/../../submodules/github/tmpvar" \
+    "$pwd/../../submodules/github/mikeal" \
+    "$pwd/../../submodules/github/NV" \
+    "$pwd/../../submodules/github/tautologistics" \
+; do
+  export NODE_PATH="`readlink -f "$x"`${NODE_PATH+:$NODE_PATH}"
+done
+
+# ensure query is ready
+(cd "$pwd/../.." && git submodule update --init)
+
+{
+  for arg; do echo "$arg"; done | sed -rn '
+    s/^--(.*=.*)/\1/p;t
+    s/.*/text="${text+$text }&"/p;t
+  '
+  cat<<EOF
+  query() {
+    node "$(readlink -f "$pwd/../../submodules/github/visionmedia/query")" "\$@"
+  }
+  curl -sS -A "\${A-Mozilla}"  \\
+      -d "voice=\${voice-`basename "$0"`}" \\
+      -d "txt=\$text" \\
+      -d "downloadButton=DOWNLOAD" \\
+      "$url" | 
+    query 'p a'
+EOF
+} | sh | while read url; do
+  curl -sS "$baseURL$url" | aplay -q -
+done

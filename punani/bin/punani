@@ -1,0 +1,90 @@
+#! /bin/sh
+#
+# punani - filesystem scienteer
+#
+# Engineering Operations
+# -E -i spec    insert a package to the target filesystem
+# -E -r spec    remove a package
+#
+
+godmode() {
+  if test "${nosudo-false}" != true -a `id -u` != 0; then
+    echo "Warning: we require god mode..." >&2
+    exec sudo "$0" "$@"
+    exit 23 # go to hell
+  fi
+}
+
+if pacman --version 2>/dev/null | fgrep -q Pacman; then
+  system="${system+$system, }arch-like"
+fi
+
+case "$system" in
+  (*arch-like*)
+    punani_Engineer_insert() {
+      pacman -Sy "$1"
+    }
+    punani_Engineer_remove() {
+      pacman -Rcs "$1"
+    }
+  ;;
+  (*)
+    email='krebs@syntax-fehler.de'
+    irc_host='irc.freenode.org'
+    irc_channel='#tincspasm'
+    cat>&2<<EOF
+Error 2: Your System Will Be Supported ASAP
+1. send us a bug report
+1.1 your operating system's name and version
+1.2 this message: $0 $*
+1.3 mailto:$email
+2. join the relevant IRC channel
+2.1 /connect $irc_host
+2.2 /join $irc_channel
+EOF
+    exit 23
+esac
+
+punani() {
+  ns=punani
+  role=undefined
+  while getopts 'fhvSopEir' OPT; do
+    case $OPT in
+      (f) force=true; continue;;
+      (h) hard=true; continue;;
+      (v) verbose=true; continue;;
+    esac
+    case ${role-Manager} in
+      (Engineer)
+        case $OPT in
+          (i) command="${ns}_${role}_insert";;
+          (r) command="${ns}_${role}_remove";;
+          (*)
+            echo 'Error 1: You are made of stupid!' >&2
+            exit 23;;
+        esac
+      ;;
+      (undefined)
+        case $OPT in
+          (E) role=Engineer;;
+          (*)
+            exit 23;;
+        esac
+      ;;
+      (*)
+        echo 'Error 1: You are made of stupid!' >&2
+        exit 23
+      ;;
+    esac
+  done
+}
+
+punani "$@"
+shift `echo $OPTIND-1 | bc`
+
+case $role in
+  (Engineer) godmode;;
+esac
+for name; do
+  "$command" "$name"
+done
