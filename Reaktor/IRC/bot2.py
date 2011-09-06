@@ -1,4 +1,19 @@
 #! /usr/bin/env python
+#
+# //Reaktor/IRC
+#
+# export host and port to connect to a specific IRC server
+# defaults to supernode and 6667
+#
+# export nick to use a specific nickname
+# defaults to Name in /etc/tinc/retiolum/tinc.conf
+#
+# export target to join a specific channel
+# defaults to #retiolum
+#
+# Example usage (in your local krebs repository):
+# host=irc.freenode.org nick=$HOSTNAME target=#tincspasm Reaktor/IRC/index
+#
 
 from __future__ import print_function
 from irclib import SimpleIRCClient, ServerConnectionError, is_channel
@@ -100,10 +115,10 @@ def getconf1(x, path):
 
 def main():
   name = getconf1('Name', '/etc/tinc/retiolum/tinc.conf')
+  nick = str(env.get('nick', name))
   host = str(env.get('host', 'supernode'))
   port = int(env.get('port', 6667))
-  nick = str(env.get('nick', name))
-  target = str(env.get('target', '#tincspasm'))
+  target = str(env.get('target', '#retiolum'))
   print('====> irc://%s@%s:%s/%s' % (nick, host, port, target))
 
   client = IRCBot(target)
