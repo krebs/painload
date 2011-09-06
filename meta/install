@@ -12,16 +12,14 @@ echo "#"
 echo
 echo "  [32mln -vsn $update /update[m"
 echo
-echo "#"
-
 if test -e /update; then
   echo "# but beware: you already have an /update like this:"
   ls -l /update
 fi
-
-if test `id -un` != $id; then
-  echo "# and remember to allow yourself to [32msudo -u $id /update[m"
-  echo "# i.e. add [32m`id -un` ($id) NOPASSWD:/update[m"
-fi
-
+echo "# then check if you can execute following with your current user:"
+echo
+echo "  [32m/update[m"
+echo
+echo "# if not then add that user to your sudoers... maybe something"
+echo "# like this could work: [32m`id -un` ALL=($id) NOPASSWD:/update[m"
 echo "#[35m^D[m"
