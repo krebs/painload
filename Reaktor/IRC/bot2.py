@@ -48,10 +48,15 @@ class IRCBot(SimpleIRCClient):
       command = join(public_commands, _command)
 
       if is_executable(command):
+
+        env = {}
+        if _argument != None:
+          env['argument'] = _argument
+
         try:
-          p = popen([command], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+          p = popen([command], stdin=PIPE, stdout=PIPE, stderr=PIPE, env=env)
         except OSError, error:
-          ME(self.target, 'I am made of stupid')
+          ME(self.target, 'is made of stupid')
           print('OSError@%s: %s' % (argv, error))
           return
 
@@ -65,13 +70,13 @@ class IRCBot(SimpleIRCClient):
         [print('%s stderr: %s' % (pid, x)) for x in stderr]
 
         if code == 0:
-          [PRIVMSG(self.target, _from + ': ' + x) for x in stdout]
+          [PRIVMSG(self.target, x) for x in stdout]
           [PRIVMSG(_source, x) for x in stderr]
         else:
           ME(self.target, 'mimimi')
 
       else:
-        ME(self.target, 'believes that ' + _from + ' is made of stupid')
+        PRIVMSG(self.target, _from + ': you are made of stupid')
 
   def on_welcome(self, connection, event):
     print('I\'m welcome! :D joining to %s now...' % (self.target))
