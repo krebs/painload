@@ -4,12 +4,12 @@ set -euf
 cd $(dirname $(readlink -f $0))/../..
 id=`ls -lnd . | awk '{print$3}'`
 
-echo "// is $PWD owned by $id"
-
 if test "${nosudo-false}" != true -a `id -u` != $id; then
   echo "we're going sudo..." >&2
   exec sudo -u "#$id" "$0" "$@"
   exit 23 # go to hell
 fi
+
+echo "// is $PWD owned by $id"
 
 git pull
