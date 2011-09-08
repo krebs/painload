@@ -1,5 +1,6 @@
 #! /bin/sh
 
+## find all syscalls that have to be patched
 h="/lib/modules/$(uname -r)/build/include/linux/syscalls.h"
 sed -n 's/.*sys_\([^)]\+\)(.*/\1/p' $h | while read f; do
   x="`( man 3p $f || man 3 $f || man $f ) 2>/dev/null`"
@@ -8,3 +9,8 @@ sed -n 's/.*sys_\([^)]\+\)(.*/\1/p' $h | while read f; do
     echo "$x" | grep -q EACCES && echo 1 || echo 0``
   ` $f"
 done
+
+# disable interrupts before modifying the sys_call_table
+# see: sti tli
+# disable other CPUs: suspend-code [the suspend code does all this, too]
+# TLB flushen: irgendwo bei der architektur
