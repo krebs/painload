@@ -1,3 +1,14 @@
+
+# Linux kernel module
+modules.order
+Module.symvers
+.built-in.o.cmd
+*.ko.cmd
+*.o.cmd
+.tmp_versions/
+*.ko
+*.mod.c
+
 a.out
 *.pyc
 *.o
