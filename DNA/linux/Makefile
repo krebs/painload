@@ -1,4 +1,4 @@
-obj-m += kernelroll.o
+obj-m += krebs.o
 
 all:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) 

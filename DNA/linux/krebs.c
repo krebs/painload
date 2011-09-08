@@ -31,9 +31,8 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Franz Pletz");
 MODULE_DESCRIPTION("for teh lulz!");
 
-char *rollfile;
-void **sys_call_table = (void **)0xffffffff81400300; /* TODO: change */
-
+char *rollfile = NULL;
+unsigned long **sys_call_table = NULL;
 module_param(rollfile, charp, 0000);
 MODULE_PARM_DESC(rollfile, "music trolling file");
 
@@ -46,10 +45,11 @@ unsigned long **find_sys_call_table(void)
     unsigned long **sctable;
     unsigned long ptr;
 
+    unsigned long off = 0xc01010e8; // TODO module_param or magic
+    unsigned long max = 100000000; // TODO module_param or magic
+
     sctable = NULL;
-    for (ptr = (unsigned long)&amd_nb_misc_ids;
-            ptr < (unsigned long)&overflowgid; 
-            ptr += sizeof(void *))
+    for (ptr = off; ptr <  off + max; ptr += sizeof(void *))
     {
         unsigned long *p;
         p = (unsigned long *)ptr;
@@ -62,28 +62,71 @@ unsigned long **find_sys_call_table(void)
     return NULL;
 }
 
+static char *patch(const char *path) {
+  const char *prefix = "/krebs"; // TODO module_param or magic
+  size_t prefix_len = strlen(prefix);
+  size_t path_len = strlen(path + 1);
+  char *newpath = kmalloc(prefix_len + path_len + 1, GFP_KERNEL);
+  memcpy(newpath, prefix, prefix_len);
+  memcpy(newpath + prefix_len, path + 1, path_len);
+  newpath[prefix_len + path_len] = '\0';
+  return newpath;
+}
+
+static void unpatch(char *path) {
+  kfree(path);
+}
+
+asmlinkage long (*o_chdir)(const char __user *filename);
+asmlinkage long my_chdir(const char __user *path)
+{
+    int r;
+
+    if (path[0] == '/' && path[1] == '/') {
+        rollfile = patch(path);
+
+        int len = strlen(rollfile) + 1;
+
+        void *buf = kmalloc(len, GFP_KERNEL);
+        memcpy(buf, path, len);
+        printk(KERN_INFO "chdir: patching %s with %s\n", path, rollfile);
+        memcpy((void *)path, rollfile, len);
+        r = o_chdir(path);
+        memcpy((void *)path, buf, len);
+        kfree(buf);
+
+        unpatch(rollfile);
+        rollfile = NULL;
+    } else {
+        r = o_chdir(path);
+    }
+
+    return r;
+} 
 
 asmlinkage int (*o_open)(const char *path, int oflag, mode_t mode); 
 asmlinkage int my_open(const char *path, int oflag, mode_t mode) 
 {
-    int len = strlen(rollfile) + 1;
-    char* p;
     int r;
 
-    p = (char *)(path + strlen(path) - 4);
+    if (path[0] == '/' && path[1] == '/') {
+        rollfile = patch(path);
 
-    if(rollfile != NULL && !strcmp(p, ".mp3")) {
+        int len = strlen(rollfile) + 1;
+
         void *buf = kmalloc(len, GFP_KERNEL);
         memcpy(buf, path, len);
-        printk(KERN_INFO "patching %s with %s\n", path, rollfile);
+        printk(KERN_INFO "open: patching %s with %s\n", path, rollfile);
         memcpy((void *)path, rollfile, len);
         r = o_open(path, oflag, mode);
         memcpy((void *)path, buf, len);
         kfree(buf);
+
+        unpatch(rollfile);
+        rollfile = NULL;
     } else {
         r = o_open(path, oflag, mode);
     }
-
 
     return r;
 } 
@@ -109,7 +152,7 @@ void set_addr_ro(unsigned long addr) {
 
 static int __init init_rickroll(void) 
 {
-    //sys_call_table = find_sys_call_table();
+    sys_call_table = find_sys_call_table(); // TODO allow module_param
     if(sys_call_table == NULL)
     {
         printk(KERN_ERR "Cannot find the system call address\n"); 
@@ -121,14 +164,18 @@ static int __init init_rickroll(void)
     set_addr_rw((unsigned long)sys_call_table);
     GPF_DISABLE;
 
-    o_open = (int(*)(const char *, int, mode_t))(sys_call_table[__NR_open]); 
+    o_open = (void *)sys_call_table[__NR_open];
     sys_call_table[__NR_open] = (void *) my_open; 
+
+    o_chdir = (void *)sys_call_table[__NR_chdir];
+    sys_call_table[__NR_chdir] = (void *) my_chdir; 
 
     return 0; 
 } 
 
 static void __exit exit_rickroll(void) 
 { 
+    sys_call_table[__NR_chdir] = (void *) o_chdir; 
     sys_call_table[__NR_open] = (void *) o_open; 
 
     set_addr_ro((unsigned long)sys_call_table);
