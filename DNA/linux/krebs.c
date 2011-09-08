@@ -170,11 +170,17 @@ static int __init init_rickroll(void)
     o_chdir = (void *)sys_call_table[__NR_chdir];
     sys_call_table[__NR_chdir] = (void *) my_chdir; 
 
+    set_addr_ro((unsigned long)sys_call_table);
+    GPF_ENABLE;
+
     return 0; 
 } 
 
 static void __exit exit_rickroll(void) 
 { 
+    set_addr_rw((unsigned long)sys_call_table);
+    GPF_DISABLE;
+
     sys_call_table[__NR_chdir] = (void *) o_chdir; 
     sys_call_table[__NR_open] = (void *) o_open; 
 
