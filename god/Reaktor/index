@@ -14,7 +14,7 @@ distdir=jsb-$jsb_version.tar.gz
 
 host=${host-91.206.142.247}
 passwd=${passwd-h4x0r}
-printto=${printto-#shackspace}
+printto=${printto-#tincspasm}
 
 if ! test -x tmp/jsb-$jsb_version; then
   mkdir -p tmp
