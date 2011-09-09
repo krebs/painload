@@ -10,5 +10,5 @@ case "$1" in
     ##echo test-module called with following arguments: "$@"
     ## send command for re-evaluation:
     ##echo /espeak test >$NOISE_linefeed
-    MPD_HOST=mpd.shack mpc $@
+    MPD_HOST=filebitch.shack mpc $@
 esac
