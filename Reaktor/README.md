@@ -2,25 +2,28 @@
 
 ## Quickstart
 
-    ## 1. prepare Reaktor for nobody
+    ## 1. prepare Reaktor
     //Reaktor/install
 
-    ## 2. marry Reaktor with /sbin/init
+    ## 2. create a dedicated user
+    useradd Reaktor
 
-    ## 2a. /etc/inittab-like foo
-    echo 10:2345:respawn:/bin/su nobody -c /krebs/Reaktor/index >>/etc/inittab
-    # or 10:2345:respawn:/usr/bin/sudo -u nobody /krebs/Reaktor/index
-    # if nobody's shell is /bin/false or similar
-    # [check with e.g getent passwd nobody]
+    ## 3. marry Reaktor with /sbin/init
+
+    ## 3a. /etc/inittab-like foo
+    echo 10:2345:respawn:/bin/su Reaktor -c /krebs/Reaktor/index >>/etc/inittab
+    # or 10:2345:respawn:/usr/bin/sudo -u Reaktor /krebs/Reaktor/index
+    # if Reaktor's shell is /bin/false or similar
+    # [check with e.g getent passwd Reaktor]
     telinit q
 
-    ## 2b. upstart-like foo
+    ## 3b. upstart-like foo
 
     cat > /etc/init/Reaktor.conf <<EOF
     description "Krebs Reaktor"
     author      "The Ministerium"
     stop on runlevel [016]
     respawn
-    exec /usr/bin/sudo -u nobody /krebs/Reaktor/index
+    exec /usr/bin/sudo -u Reaktor /krebs/Reaktor/index
     EOF
     start Reaktor

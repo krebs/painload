@@ -1,2 +1,2 @@
 #! /bin/sh
-exec pkill -U nobody
+exec pkill -U Reaktor
