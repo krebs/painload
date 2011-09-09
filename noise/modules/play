@@ -7,8 +7,8 @@ case "$1" in
     ffs='wav mp3 ogg asf flac'
     
     if test -z "$*" ; then
-      ls $HOME/noise/samples | sed -r '
-          s:\.('"`echo "$ffs" | tr \  \|`"')$: [30m\1[m:
+      ls $HOME/noise/samples | sed '
+          s:\.\('"`echo "$ffs" | tr \  \|`"'\)$: [30m\1[m:
           s:^:/play :
           s:.*:[32m&[m:
       '
@@ -28,7 +28,7 @@ Keine Audiodatei mit dem Namen
 
 gefunden... am besten gleich uploaden:
 
-  scp NAME shack@shack.shack:noise/samples/
+  scp NAME shack@shack.shack:$HOME/noise/samples/
 
 folgende Dateiendungen werden erkannt: $ffs[m
 EOF
