@@ -1,6 +1,7 @@
 #! /bin/sh
 set -euf
 
+# cd //Reaktor
 cd $(dirname $(readlink -f $0))
 
 exec IRC/index

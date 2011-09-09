@@ -1,8 +1,9 @@
 #! /bin/sh
 set -xeuf
 
-cd $(dirname $(readlink -f $0))
+# cd //Reaktor
+cd $(dirname $(readlink -f $0))/..
 
-./install
+IRC/install
 
-exec python bot2.py "$@"
+exec python IRC/bot2.py "$@"

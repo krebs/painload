@@ -1,6 +1,7 @@
 #! /bin/sh
 set -xeuf
 
+# cd //Reaktor/IRC
 cd $(dirname $(readlink -f $0))
 
 # install irclib.py
