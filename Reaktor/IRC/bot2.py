@@ -33,13 +33,13 @@ class IRCBot(SimpleIRCClient):
 
     try:
       _, _handle, _command, _argument, _ = re.split(
-          '^(\w+):\s*(\w+)(?:\s+(.*))?$', event.arguments()[0])
+          '^(\w+|\*):\s*(\w+)(?:\s+(.*))?$', event.arguments()[0])
     except ValueError, error:
       if re.search(_nickname, event.arguments()[0]):
         PRIVMSG(self.target, 'I\'m so famous')
       return # ignore
 
-    if _handle == _nickname or _handle == 'ALL':
+    if _handle == _nickname or _handle == '*':
 
       from os.path import realpath, dirname, join
       from subprocess import Popen as popen, PIPE
@@ -77,7 +77,7 @@ class IRCBot(SimpleIRCClient):
           ME(self.target, 'mimimi')
 
       else:
-        if _handle != 'ALL':
+        if _handle != '*':
           PRIVMSG(self.target, _from + ': you are made of stupid')
 
   def on_welcome(self, connection, event):
