@@ -24,8 +24,8 @@ done
 (cd "$pwd/../.." && git submodule update --init)
 
 {
-  for arg; do echo "$arg"; done | sed -rn '
-    s/^--(.*=.*)/\1/p;t
+  for arg; do echo "$arg"; done | sed -n '
+    s/^--\(.*=.*\)/\1/p;t
     s/.*/text="${text+$text }&"/p;t
   '
   cat<<EOF
