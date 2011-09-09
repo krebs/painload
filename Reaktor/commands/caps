@@ -1,0 +1,4 @@
+#! /bin/sh
+set -euf
+cd ../public_commands
+echo `ls`
