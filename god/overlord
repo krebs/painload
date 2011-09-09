@@ -1,0 +1,8 @@
+#!/bin/bash
+
+announcement=$1
+LC_ALL=C aplay -l|sed -n 's/^card \([0-9]\+\):.*\[USB Audio\]$/\1/p'
+
+mplayer -ao=alsa:device=surround40:CARD=default,DEV=0  announce.mp3
+/krebs/util/bin/natural $announcement
+
