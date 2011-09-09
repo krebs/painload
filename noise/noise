@@ -31,8 +31,8 @@ noise_set() { # set a variable
       fi
       ## write variable to $env
       if grep -q "^$1=" "$env" ; then
-        env_cache="`cat $env`"
-        echo "$env_cache" |
+        cache="`cat $env`"
+        echo "$cache" |
         sed "s'^\($1\)=\(.*\)\$'\1=\'$2\''" > $env
       else
         echo "$1='$2'" >>$env
@@ -49,7 +49,9 @@ noise_unset() { # unset a variable
   case $# in
     (1) ## 
       unset "noise_$1"
-      sed -ni "/^$1=/!p" $env
+      cache="`cat $env`"
+      echo "$cache" |
+      sed -n "/^$1=/!p" > $env
     ;;
     (*)
       fail "broken commandline: $@"
