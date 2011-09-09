@@ -14,7 +14,7 @@ if test -d "$cache_dir" ; then
 else
   curl --silent "$url"
 fi |
-sed 's/>\( *.\)/>\n\1/g' | sed -rn '
+sed 's/>\( *.\)/>\n\1/g' | sed -n '
   s/[[:space:]]/ /g
   /<!-- # Werbung # -->/,/<\/td>/b
   /<!-- ============================================== -->/,/^<\/td>/b
@@ -23,7 +23,7 @@ sed 's/>\( *.\)/>\n\1/g' | sed -rn '
   /<div id="divMoreInfo" class="popup">/,/^ <\/table>/b
 
   ## show link in rendered version
-  s/^<a href="(.*searchLocRelinked.*)">$/&mehr: \1/
+  s/^<a href="\(.*searchLocRelinked.*\)">$/&mehr: \1/
   s/^mehr &gt;&gt;//
 
   s/<[Bb][Rr] *\/>/,/g
@@ -36,34 +36,34 @@ sed 's/>\( *.\)/>\n\1/g' | sed -rn '
   s/.*/<!--(&)-->/
   p
 ' \
-| w3m -cols 1024 -T text/html -dump | sed -r '
-  s/[[:space:]]+/ /g
+| w3m -cols 1024 -T text/html -dump | sed '
+  s/[[:space:]]\+/ /g
   s/ ,/,/g
   s/^ //;s/ $//
   s/[┌┬┐└┴┘├┼┤─]//g
   s/ *│ */|/g
   s/\[ \]//
   s/\[Speichern\] der ausgewa:hlten Wo:rter im Trainer//
-  s/^\|\|//;s/\|\| ?$//
-' | sed -rn '
+  s/^||//;s/|| \?$//
+' | sed -n '
   /^\[EN-> DE\]/,$b
   s/^mehr: /+ /
-  s/^ENGLISCH\|\|DEUTSCH ?/= Englisch -> Deutsch/
-  s/^\|([0-9]+) (Treffer)\|$/= \1 \2/
-  s/^([^|]+)\|\|([^|]+)$/- \1|\2/
+  s/^ENGLISCH||DEUTSCH \?/= Englisch -> Deutsch/
+  s/^|\([0-9]\+\) \(Treffer\)|$/= \1 \2/
+  s/^\([^|]\+\)||\([^|]\+\)$/- \1|\2/
 
-  s/^[^=+#-][^|]+$/## &/
+  s/^[^=+#-][^|]\+$/## &/
 
   p
-' | sed -rn '
+' | sed -n '
   /^$/b
-  s/ ([?!])/\1/g
-  s/([[(]) /\1/g;s/ ([])])/\1/g
+  s/ \([?!]\)/\1/g
+  s/\([[(]\) /\1/g;s/ \([]\)]\)/\1/g
 
-  s/ \([0-9]+ of [0-9]+\) ?//;# TODO
+  s/ ([0-9]\+ of [0-9]\+) \?//;# TODO
 
   #s/^##.*Grundform.*/\n#&/
-  /^## .*Grundform.*/,/^##( .*)?/{
+  /^## .*Grundform.*/,/^##\( .*\)\?/{
     /##/{/Grundform/!p}
     b
   }
@@ -71,13 +71,13 @@ sed 's/>\( *.\)/>\n\1/g' | sed -rn '
   /^## Informationen /,$b;# TODO
   #/^## Beispiele/,$b;# TODO
   #/^## Wendungen/,$b;# TODO
-  /^\+/b;# TODO
+  /^+/b;# TODO
   #/^=/b;# TODO
 
   p
-' | sed -r '
+' | sed '
   ##
-  s/\|(.*)/\n  [32m\1[m/g
+  s/|\(.*\)/\n  [32m\1[m/g
   s/^#.*/\n[33m&[m/
 
   s/##.*Treffer $/\n[1;33m#&[m/
