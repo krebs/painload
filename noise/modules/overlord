@@ -1,0 +1,26 @@
+#! /bin/sh
+set -euf
+
+announce() {
+sleep 0.4; amixer -q -c 0 -D hw:0 sset Front 90%
+sleep 0.4; amixer -q -c 0 -D hw:0 sset Front 80%
+sleep 0.4; amixer -q -c 0 -D hw:0 sset Front 70%
+sleep 0.4; amixer -q -c 0 -D hw:0 sset Front 60%
+sleep 0.4; amixer -q -c 0 -D hw:0 sset Front 50%
+/krebs/streams/streams stop
+amixer -q -c 0 -D hw:0 sset Front 100%
+mplayer /krebs/god/overlord/announce.mp3
+/krebs/streams/streams start &
+espeak -v de -s 120 -a 900 "$*"
+amixer -q -c 0 -D hw:0 sset Front 40%
+sleep 0.4; amixer -q -c 0 -D hw:0 sset Front 50%
+sleep 0.4; amixer -q -c 0 -D hw:0 sset Front 60%
+sleep 0.4; amixer -q -c 0 -D hw:0 sset Front 70%
+sleep 0.4; amixer -q -c 0 -D hw:0 sset Front 80%
+sleep 0.4; amixer -q -c 0 -D hw:0 sset Front 90%
+}
+
+case "$1" in
+   --help) echo "Make an announcement! Usage: /overlord <text>";;
+   *) announce "$@";;
+esac
