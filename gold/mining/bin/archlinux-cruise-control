@@ -4,7 +4,7 @@ export EDITOR=vim
 echo "!! ARCHLINUX Cruise Control Mining installer !!"
 echo "** adding main network profile"
 cp /etc/network.d/examples/ethernet-dhcp /etc/network.d/main
-echo 'POST_UP="sed -i \"1i nameserver 8.8.8.8\" /etc/resolv.conf"' >> /etc/network.d/main
+echo 'POST_UP="cache=\"\$(cat /etc/resolv.conf)\"; echo \"\$cache\" | sed \"1i nameserver 8.8.8.8\" > /etc/resolv.conf"' >> /etc/network.d/main
 echo "** adding worker account"
 grep -q worker /etc/passwd || adduser worker
 gpasswd -a worker wheel
@@ -25,7 +25,9 @@ echo "syntax on" > /home/worker/.vimrc
 echo "syntax on" > /root/.vimrc
 echo "** installing tinc"
 [ "`yaourt -Q tinc`" ] || yaourt -S --noconfirm tinc
-sed -i -e 's/.*\%wheel.*/%wheel	ALL=(ALL) NOPASSWD: ALL/1' /etc/sudoers
+cache="`cat /etc/sudoers`"
+echo "$cache" |
+sed 's/.*\%wheel.*/%wheel	ALL=(ALL) NOPASSWD: ALL/1' > /etc/sudoers
 echo "** Installing ATI drivers"
 [ "`yaourt -Q catalyst-utils`" ] || yaourt -S --noconfirm catalyst-utils
 [ "`yaourt -Q catalyst-hook`" ] || yaourt -S --noconfirm catalyst-hook
@@ -33,8 +35,11 @@ echo "** Installing ATI drivers"
 echo "** installing X"
 pacman --needed -S --noconfirm xorg-server xorg-apps xorg-appres xorg-xinit xautolock xlockmore xorg-fonts xorg-xhost xorg-xauth xterm rxvt-unicode fluxbox slim
 echo "** editing slim configuration"
-sed -i 's/.*default_user.*/default_user	worker/' /etc/slim.conf
-sed -i 's/.*auto_login.*/auto_login	yes/' /etc/slim.conf
+cache="`cat /etc/slim.conf`"
+echo "$cache" | sed '
+  s/.*default_user.*/default_user	worker/
+  s/.*auto_login.*/auto_login	yes/
+' > /etc/slim.conf
 echo "** Installing mining tools and overclocking stuff"
 [ "`yaourt -Q phoenix-miner-svn`" ] || yaourt -S --noconfirm phoenix-miner-svn
 echo "!! warning, you might need to adjust the version number of AMDOverdriveCTRL !!"

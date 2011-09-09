@@ -6,6 +6,8 @@ netname=${1-retiolum}
 cd /etc/tinc/$netname/hosts
 
 for i in `ls`; do
-  sed -rn 's|^ *Subnet *= *([^ /]*)(/[0-9]*)? *$|\1\t'$i' '$i'.'$netname'|p' $i
+  sed -n '
+    s|^ *Subnet *= *\([^ /]*\)\(/[0-9]*\)\? *$|\1\t'$i' '$i'.'$netname'|p
+  ' $i
 done | sort
 

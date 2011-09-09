@@ -27,11 +27,13 @@ fi
 cd tmp/jsb-$jsb_version
 
 # TODO only if it is not already configured properly
-sed -i '
+cache="`cat config/udp-send`"
+echo "$cache" |
+sed '
   s/^host *=.*/host="'$host'"/
   s/^passwd *=.*/passwd="'$passwd'"/
   s/^printto *=.*/printto="'$printto'"/
-' config/udp-send
+' > config/udp-send
 
 # TODO output modules: stderr, jsb-udp, remount-ro, ...
 PYTHONUNBUFFERED=y $listener | tee /dev/stderr | bin/jsb-udp
