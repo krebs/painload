@@ -31,7 +31,10 @@ case "${*-I am made of stupid}" in
     $0 has magic || $0 print magic >> $hosts < /dev/null
     ;;
   ('destroy magic')
-    $0 has magic && sed -ie "/^$bs$/,/^$es$/d" $hosts 
+    if $0 has magic; then
+      cache="`cat $hosts`"
+      echo "$cache" | sed "/^$bs$/,/^$es$/d" > $hosts 
+    fi
     ;;
   ('has magic')
     grep -q "^$bs$" $hosts && grep -q "^$es$" $hosts
