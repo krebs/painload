@@ -13,6 +13,7 @@ my_names = {}
 ret = {}
 quiet=False
 
+names = {}
 if len(sys.argv) > 1 and sys.argv[1] == 'q':
   quiet=True
 def get_own_addr():
@@ -22,7 +23,6 @@ def get_own_addr():
       r'\1 \2',data).split()
 
 def load_names(mac_file):
-  names = {}
   f = open(mac_file)
   for l in f:
     mac,name = l.split(' ',1)
@@ -39,33 +39,35 @@ def init():
   my_addr = get_own_addr()
   my_names = load_names(MAC_NAMES)
 
+def arping_helper(dic):
+  log.debug("trying arpingy(%s)" %dic)
+  return arpingy(**dic)
+
 def main():
   init()
   print_config()
-  exit(0)
-  def arping_helper(dic):
-    return arpingy(**dic)
 
-for first in range(1,4):
-  for second in range(256):
-    data.append({'iprange':'10.42.'+str(first)+'.'+str(second),'iface':DEV})
-
+  for first in range(1,4):
+    for second in range(256):
+      data.append({'iprange':'10.42.'+str(first)+'.'+str(second),'iface':DEV})
   try:
-    p = Pool(20)
+    log.info("creating new Pool")
+    p = Pool(30)
     ret = filter(lambda x:x , p.map(arping_helper, data))
-    myip,mymac = get_own_addr()
-    ret.append([mymac,myip])
+    log.info("killing it")
     p.terminate()
+
   except Exception as e:
     print 'you fail '+str(e)
-
-
+  myip,mymac = get_own_addr()
+  ret.append([mymac,myip]) 
 
   for p in ret:
     if not quiet:
       print p[0] + " => " + p[1]
     if p[1] in names:
       print names[p[1]]+ " is online"
+
 if __name__ == "__main__":
   log.debug("starting arping_users")
   main()
