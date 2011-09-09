@@ -1,4 +1,8 @@
 #! /bin/bash
+set -euf
+
+stream_file=/tmp/krebs.stream.current
+
 HERE=$(dirname $(readlink -f $0))
 URLS=`cat $HERE/stream.db`
 CURRENT_STREAM="no stream" #will be set when calling `status`
@@ -22,7 +26,12 @@ function start() {
 
   if echo "$URLS" | while read URL NAME; do
     if [ "$NAME" = "$REQ" ];then
-      tmux new-session -s streams -n streams -d "while sleep 1;do mplayer $URL;done"  
+      tmux new-session -s streams -n streams -d "
+        while sleep 1; do
+          echo $NAME > $stream_file
+          mplayer $URL
+        done
+      "  
       echo "** $REQ started"
       exit 1
     fi
@@ -97,7 +106,7 @@ Examples:
 
 case "$1" in
   start)
-    start $2
+    start ${2-"`test -f $stream_file && cat $stream_file`"}
     ;;
   stop)
     stop
