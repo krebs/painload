@@ -13,7 +13,7 @@ if test `id -u` != 0; then
 fi
 
 file=/etc/tinc/retiolum/hosts/`hostname`
-addr=`sed -rn 's|^Subnet *= *(42:[0-9A-Fa-f:]*/128)|\1|p' $file`
+addr=`sed -n 's|^Subnet *= *\(42:[0-9A-Fa-f:]*/128\)|\1|p' $file`
 route=42::/16
 
 start() {
