@@ -1,7 +1,7 @@
 #! /bin/bash
 
 R() {
-  echo "`od -t d -N 1 /dev/urandom | sed -rn '1s/^[0-9]+ +//p'` % $@" | bc
+  echo "`od -t d -N 1 /dev/urandom | sed -n '1s/^[0-9]\+ \+//p'` % $@" | bc
 }
 
 
