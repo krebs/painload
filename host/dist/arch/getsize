@@ -1,13 +1,13 @@
 #! /bin/sh
 set -euf
-sed -rn '
+sed -n '
   /^Name/{
-    s/^Name *: *(.*)$/\1/
+    s/^Name *: *\(.*\)$/\1/
     T
     h
   }
   /^Installed Size/{
-    s/^Installed Size *: *(.*)$/ \1/
+    s/^Installed Size *: *\(.*\)$/ \1/
     T
     H
     x
