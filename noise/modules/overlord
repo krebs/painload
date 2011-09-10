@@ -1,35 +1,31 @@
 #! /bin/sh
 set -euf
 
+max=100
+step=10
+min=0
+
 announce() {
-sleep 0.1; amixer -q -c 0 -D hw:0 sset Front 90%
-sleep 0.1; amixer -q -c 0 -D hw:0 sset Front 80%
-sleep 0.1; amixer -q -c 0 -D hw:0 sset Front 70%
-sleep 0.1; amixer -q -c 0 -D hw:0 sset Front 60%
-sleep 0.1; amixer -q -c 0 -D hw:0 sset Front 50%
-sleep 0.1; amixer -q -c 0 -D hw:0 sset Front 40%
-sleep 0.1; amixer -q -c 0 -D hw:0 sset Front 30%
-sleep 0.1; amixer -q -c 0 -D hw:0 sset Front 20%
-sleep 0.1; amixer -q -c 0 -D hw:0 sset Front 10%
-sleep 0.1; amixer -q -c 0 -D hw:0 sset Front 0%
-/krebs/streams/streams stop
-amixer -q -c 0 -D hw:0 sset Front 100%
-mplayer /krebs/god/overlord/announce.mp3
-espeak -v de -s 120 -a 900 "$*"
-/krebs/streams/streams start
-sleep 0.1; amixer -q -c 0 -D hw:0 sset Front 0%
-sleep 0.1; amixer -q -c 0 -D hw:0 sset Front 10%
-sleep 0.1; amixer -q -c 0 -D hw:0 sset Front 20%
-sleep 0.1; amixer -q -c 0 -D hw:0 sset Front 30%
-sleep 0.1; amixer -q -c 0 -D hw:0 sset Front 40%
-sleep 0.1; amixer -q -c 0 -D hw:0 sset Front 50%
-sleep 0.1; amixer -q -c 0 -D hw:0 sset Front 60%
-sleep 0.1; amixer -q -c 0 -D hw:0 sset Front 70%
-sleep 0.1; amixer -q -c 0 -D hw:0 sset Front 80%
-sleep 0.1; amixer -q -c 0 -D hw:0 sset Front 90%
+  # fade-out streams
+  for i in `seq $max -$step $min`; do
+    amixer -q -c 0 -D hw:0 sset Front $i%
+    sleep 0.1
+  done
+  /krebs/streams/streams stop
+
+  amixer -q -c 0 -D hw:0 sset Front $max%
+  mplayer /krebs/god/overlord/announce.mp3 >/dev/null
+  espeak -v de -s 120 -a 900 "$*"
+
+  # fade-in streams
+  /krebs/streams/streams start
+  for i in `seq $min $step $max`; do
+    sleep 0.1
+    amixer -q -c 0 -D hw:0 sset Front $i%
+  done
 }
 
-case "$1" in
+case "${1---help}" in
    --help) echo "Make an announcement! Usage: /overlord <text>";;
    *) announce "$@";;
 esac
