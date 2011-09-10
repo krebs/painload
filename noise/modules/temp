@@ -3,26 +3,18 @@
 temper=/krebs/temper/temper
 
 main() {
-  case "$1" in
+  case "${1--K}" in
     (--help)
       echo "report temperature in K, °C, °R, or °F."
       exit
     ;;
-    (-C|--celsius)
-      unit='Grad Zelsius'
-      formula='x - 273.15'
-    ;;
-    (-F|--fahrenheit)
-      unit='Grad Fahrenheit'
-      formula='x * 9/5 - 459.67'
-    ;;
-    (-R|--rankine)
-      unit='Grad Renkin'
-      formula='x * 9/5'
-    ;;
-    (-K|--kelvin|*)
-      unit='Kelvin'
-      formula=x
+    (-C|--celsius)    unit='Grad Zelsius'   ; formula='x - 273.15'       ;;
+    (-F|--fahrenheit) unit='Grad Fahrenheit'; formula='x * 9/5 - 459.67' ;;
+    (-R|--rankine)    unit='Grad Renkin'    ; formula='x * 9/5'          ;;
+    (-K|--kelvin)     unit='Kelvin'         ; formula='x'                ;;
+    (*)
+      echo 'Error 1: you are made of stupid!'
+      exit 23
     ;;
   esac
   if test -f $temper -a -x $temper; then
@@ -43,13 +35,8 @@ outside_temp() {
        ` + 273.15; ${1-x}" | bc
 }
 
-espeak_inside() {
-  echo Die Krebs-tempera-tur beträgt $@ | to_espeak
-}
-
-espeak_outside() {
-  echo Die Außen-tempera-tur beträgt $@ | to_espeak
-}
+espeak_inside()  { echo Die Krebs-tempera-tur beträgt $@ | to_espeak; }
+espeak_outside() { echo Die Außen-tempera-tur beträgt $@ | to_espeak; }
 
 to_espeak() {
   sed '
