@@ -1,5 +1,27 @@
 #! /bin/sh
-echo 'You are made of stupid!' >&2
-exit 23
+#
+# //Kübelwagen/alarm SLEEPARGS...
+#
+# where SLEEPARGS are passed to sleep(3)
+#
+set -euf
+cd $(dirname $(readlink -f $0))
+exec >&2
 
-sleep 5h 19m && while :; do echo $(echo "($(od -tu -An -N 2 /dev/urandom)%1000)+500"|bc) $(echo "($(od -tu -An -N 2 /dev/urandom)%500)+100"|bc) ; done | ./a.out 1
+make
+
+jackd -d alsa &
+trap "kill -0 $! && kill $!" EXIT INT
+
+for i in `seq 8000 1000 10000`; do
+  echo $i 100
+done | ./a.out 1
+echo 'if you heard that sound, then goto sleep..^_^'
+
+echo sleep "$@"
+sleep "$@"
+
+echo 'wake up!'
+while :; do
+  echo $(echo "($(od -tu -An -N 2 /dev/urandom)%1000)+500"|bc) $(echo "($(od -tu -An -N 2 /dev/urandom)%500)+100"|bc)
+done | ./a.out 1

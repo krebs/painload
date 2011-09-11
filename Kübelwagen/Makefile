@@ -1,7 +1,7 @@
 
 CC := gcc -std=c99
 CFLAGS := -D_XOPEN_SOURCE=500
-LIBS := $(shell pkg-config --cflags --libs jack)
+LIBS := $(shell pkg-config --cflags --libs jack) -lm
 
 .PHONY: all clean
 
