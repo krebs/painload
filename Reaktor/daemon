@@ -1,0 +1,12 @@
+#! /bin/sh
+#
+# //Reaktor/daemon
+#
+# Start Reaktor as daemon w/o leaving an useless shell around.
+#
+set -euf
+
+# cd //Reaktor
+cd $(dirname $(readlink -f $0))
+
+./index &
