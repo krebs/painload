@@ -1,0 +1,14 @@
+#! /bin/sh
+set -euf
+
+# cd //
+cd $(dirname $(readlink -f $0))/../..
+
+case "${1---help}" in
+  --help)
+    echo "Make an announcement! Usage: /overlord <text>"
+  ;;
+  *)
+    exec god/overlord/index "$@"
+  ;;
+esac

@@ -1,0 +1,11 @@
+#!/bin/sh
+#set -x
+HERE=$(dirname $(readlink -f $0))
+. $HERE/../../../profile
+umask 000
+export GDFONTPATH=/usr/share/fonts/truetype/msttcorefonts
+mkdir -p $GDIR
+gnuplot $PDIR/solidcoin.conf> $GDIR/solidcoin.png
+tail -n288 $ADIR/solidcoin > $ADIR/solidcoin_last_day
+tail -n288 $ADIR/ticker_solidcoin > $ADIR/ticker_solidcoin_last_day
+gnuplot $PDIR/solidcoin_last_day.conf  > $GDIR/solidcoin_24h.png

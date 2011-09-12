@@ -1,0 +1,41 @@
+#! /bin/sh
+set -euf
+
+cd `dirname $0`
+
+target=../../bin/realpath
+
+findexe() {
+  OLDIFS="$IFS"
+  IFS=:
+  for d in $PATH; do
+    f="$d/$1"
+    if test -f "$f" -a -x "$f"; then
+      echo $f
+      IFS="$OLDIFS"
+      return
+    fi
+  done
+  IFS="$OLDIFS"
+  ! :
+}
+
+if exe="`findexe readlink`" && $exe -f install | grep -q /install$; then
+  ! test -e $target || rm $target
+  cat > $target <<EOF
+#! /bin/sh -euf
+exec $exe -f "\${1-\$file_name}"
+EOF
+  chmod +x $target
+  echo '//query/realpath: install readlink' >&2
+  exit
+fi
+
+if type ruby 1>/dev/null 2>/dev/null; then
+  ln -snf ../query/realpath/src/realpath.rb $target
+  echo '//query/realpath: install realpath.rb' >&2
+  exit
+fi
+
+echo 'Error 2: your system is made of stupid!'
+exit 23

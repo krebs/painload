@@ -15,7 +15,7 @@ try:
     """Arping function takes IP Address or Network, returns nested mac/ip list"""
     try:
       conf.verb=0
-      ans,unans=arping(iprange,iface=iface,timeout=1,retry=3)
+      ans,unans=arping(iprange,iface=iface,timeout=0.4,retry=1)
 
       collection = []
       for snd, rcv in ans:

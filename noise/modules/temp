@@ -1,33 +1,32 @@
 #! /bin/bash
 
+temper=/krebs/temper/temper
+
 main() {
-  case "$1" in
+  case "${1--K}" in
     (--help)
       echo "report temperature in K, °C, °R, or °F."
+      exit
     ;;
-    (-C|--celsius)
-      espeak_inside `inside_temp 'x - 273.15'` Grad Zelsius
-      espeak_outside `outside_temp 'x - 273.15'` Grad Zelsius
-    ;;
-    (-F|--fahrenheit)
-      espeak_inside `inside_temp 'x * 9/5 - 459.67'` Grad Fahrenheit
-      espeak_outside `outside_temp 'x * 9/5 - 459.67'` Grad Fahrenheit
-    ;;
-    (-R|--rankine)
-      espeak_inside `inside_temp 'x * 9/5'` Grad Renkin
-      espeak_outside `outside_temp 'x * 9/5'` Grad Renkin
-    ;;
-    (-K|--kelvin|*)
-      espeak_inside `inside_temp` Kelvin
-      espeak_outside `outside_temp` Kelvin
+    (-C|--celsius)    unit='Grad Zelsius'   ; formula='x - 273.15'       ;;
+    (-F|--fahrenheit) unit='Grad Fahrenheit'; formula='x * 9/5 - 459.67' ;;
+    (-R|--rankine)    unit='Grad Renkin'    ; formula='x * 9/5'          ;;
+    (-K|--kelvin)     unit='Kelvin'         ; formula='x'                ;;
+    (*)
+      echo 'Error 1: you are made of stupid!'
+      exit 23
     ;;
   esac
+  if test -f $temper -a -x $temper; then
+    espeak_inside `inside_temp "$formula"` $unit
+  fi
+  espeak_outside `outside_temp "$formula"` $unit
 }
 
 ## temp [<formula with temperature as x>]
 ## Echo temperature in K.  If formula is given then return that result instead.
 inside_temp() {
-  echo "scale=2; x=`/krebs/temper/temper` + 273.15; ${1-x}" | bc
+  echo "scale=2; x=`$temper` + 273.15; ${1-x}" | bc
 }
 
 outside_temp() {
@@ -36,13 +35,8 @@ outside_temp() {
        ` + 273.15; ${1-x}" | bc
 }
 
-espeak_inside() {
-  echo Die Krebs-tempera-tur beträgt $@ | to_espeak
-}
-
-espeak_outside() {
-  echo Die Außen-tempera-tur beträgt $@ | to_espeak
-}
+espeak_inside()  { echo Die Krebs-tempera-tur beträgt $@ | to_espeak; }
+espeak_outside() { echo Die Außen-tempera-tur beträgt $@ | to_espeak; }
 
 to_espeak() {
   sed '

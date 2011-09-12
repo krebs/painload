@@ -6,23 +6,23 @@ set -euf
 # XXX json_key is something like PWD^^
 
 normalize_json() {
-  sed -rn '
+  sed -n '
     1s/^/cat<<EOF\n/
     # TODO handle escaped double quotes
-    s/"[^"]+"/"$(echo -n & | base64)"/g
+    s/"[^"]\+"/"$(echo -n & | base64)"/g
     $s/$/\nEOF/
     p
   ' | sh | tr -d '[:space:]'
 }
 
 json_to_sh() {
-  sed -rn '
+  sed -n '
     s/,/;/g
     s/\[/begin_json_array;/g; s/\]/end_json_array;/g
     s/\{/begin_json_object;/g; s/\}/end_json_object;/g
-    s/("[^"]+"):/json_set_key \1;/g
-    s/;("[^"]+")/;json_set string \1;/g
-    s/;([0-9.]+)/;json_set number `echo -n \1 | base64`;/g
+    s/\("[^"]\+"\):/json_set_key \1;/g
+    s/;\("[^"]\+"\)/;json_set string \1;/g
+    s/;\([0-9.]\+\)/;json_set number `echo -n \1 | base64`;/g
     s/;;/;/g
     s/;/\n/g
     p
@@ -37,7 +37,7 @@ end_json_object() {
   pop_key # TODO check if is %%%MAKEJSONOBJ%%%
   #echo obj: $1 `set | sed -rn "s/^(${json_key}_[a-zA-Z]+)_VALUE=(.*)/\1/p"` >&2
   #json_set object "`set | sed -rn "s/^(${json_key}_[a-zA-Z]+)_VALUE=(.*)/\1/p"`"
-  json_set object "`set | sed -rn "s/^(${json_key}_[a-zA-Z]+)=(.*)/\1/p"`"
+  json_set object "`set | sed -n "s/^\(${json_key}_[a-zA-Z]\+\)=\(.*\)/\1/p"`"
 }
 begin_json_array() { :; }
 end_json_array() { :; }

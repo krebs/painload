@@ -1,0 +1,79 @@
+#! /bin/sh
+#
+# //node/install
+#
+# export version=X.Y.Z to install a specific version
+# otherwise the latest upstream version will be determined and used
+#
+# export force=true to install even though it already seems to be installed
+#
+# export clean=true to first wipe any generated files
+#
+set -xeuf
+
+# cd //node
+cd $(readlink -f $(dirname $0))
+
+# PATH prepend //node/tools //util/bin
+export PATH="$PWD/tools:$PWD/../util/bin${PATH+:$PATH}"
+
+if test "${force-false}" = true; then
+  : # skip check if it is already installed
+else
+  if test -e ../bin/node; then
+    : '[32m//bin/node[m # is already installed'
+    exit
+  fi
+fi
+
+if test "${clean-false}" = true; then
+  rm -fR src out
+fi
+
+test -d src || mkdir -v src
+cd src
+
+version=${version-`latest-version`}
+
+target=node-v$version
+
+distfile=$target.tar.gz
+
+download() {
+  curl -C - -so $distfile http://nodejs.org/dist/v$version/$distfile ||
+  curl -C - -so $distfile http://nodejs.org/dist/$distfile || :
+}
+is_downloaded() {
+  gzip -t $distfile 2>/dev/null
+}
+if ! is_downloaded; then
+  download
+  if ! is_downloaded; then
+    rm -f $distfile
+    download
+  fi
+  if ! is_downloaded; then
+    rm -f $distfile
+    echo failed to download distfile
+    exit 1
+  fi
+fi
+
+if ! zcat $distfile | tar -x --keep-newer-files 2>/dev/null; then
+  rm -fR $target
+  zcat $distfile | tar -x
+fi
+
+cd ..
+
+prefix=out/$target
+mkdir -p $prefix
+prefix=`readlink -f $prefix`
+
+cd src/$target
+./configure --prefix=$prefix
+CPPFLAGS=-Wno-unused-but-set-variable make
+make install
+cd ../..
+
+ln -snf ../node/out/$target/bin/node ../bin/node

@@ -1,0 +1,32 @@
+# Krebs IRC RPC
+
+    on :<from> PRIVMSG <target> :<handle>: <command> <argument>
+    
+      if <handle> ∈ { nickname, "ALL" }
+        if <command> is a public command
+    
+          path = $__public_command_directory/<command>
+          argv = []
+          envp = { from: <from>, argument: <argument> }
+    
+          <code> = execve(path, argv, envp) → <stdout>, <stderr>
+    
+          if <code> = 0
+            if <target> is channel
+              PRIVMSG <target> :<from>: <stdout>
+              PRIVMSG <from> :<stderr>
+            else
+              ; TODO assert <target> = <from>
+              PRIVMSG <from> :<stdout>
+              PRIVMSG <from> :Error: <stderr>
+          else
+
+            send all <.*> to the Ministerium
+    
+            if <target> is channel
+              PRIVMSG <target> :<from>: <command> is broken ATM
+            else
+              PRIVMSG <target> :Error: <command> is broken ATM
+    
+        else
+          PRIVMSG <target> :<from>: you are made of stupid

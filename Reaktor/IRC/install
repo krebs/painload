@@ -1,0 +1,28 @@
+#! /bin/sh
+set -xeuf
+
+# cd //Reaktor/IRC
+cd $(dirname $(readlink -f $0))
+
+# install irclib.py
+{
+  PV=0.4.6
+  PN=python-irclib
+  P=$PN-$PV
+  tarball=$P.tar.gz
+  URL=http://downloads.sourceforge.net/$PN/$tarball
+  SHA1SUM=c6271e44293ed51c21af0f44ce106667d3006e6f
+
+  file=irclib.py
+
+  if ! echo "$SHA1SUM  $file" | sha1sum -c; then
+    temp=`mktemp`
+    trap "rm -f $temp" EXIT INT
+
+    echo $P/$file > $temp
+    curl -LfsS $URL | tar --strip-components=1 -zxT $temp
+  fi
+  echo "$SHA1SUM  $file" | sha1sum -c
+}
+
+

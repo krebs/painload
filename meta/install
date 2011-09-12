@@ -1,0 +1,25 @@
+#! /bin/sh
+set -euf
+
+cd $(dirname $(readlink -f $0))
+
+id=`ls -ld . | awk '{print$3}'`
+update=$PWD/bin/update
+
+echo "#"
+echo "# to install metastatic automatization facility do following:"
+echo "#"
+echo
+echo "  [32mln -vsn $update /update[m"
+echo
+if test -e /update; then
+  echo "# but beware: you already have an /update like this:"
+  ls -l /update
+fi
+echo "# then check if you can execute following with your current user:"
+echo
+echo "  [32m/update[m"
+echo
+echo "# if not then add that user to your sudoers... maybe something"
+echo "# like this could work: [32m`id -un` ALL=($id) NOPASSWD:/update[m"
+echo "#[35m^D[m"

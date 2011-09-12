@@ -7,8 +7,8 @@ noise_set() { # set a variable
   esac
   case $# in
     (0) ## print all noise variables
-      env | sed -rn '
-        s/^noise_([[:alnum:]_]+)=(.*)$/[35;4m\1[;35m = [32m\2[m/p
+      env | sed -n '
+        s/^noise_\([[:alnum:]_]\+\)=\(.*\)$/[35;4m\1[;35m = [32m\2[m/p
       ' | sort
     ;;
     (1) ## print value the specified variable
@@ -31,7 +31,9 @@ noise_set() { # set a variable
       fi
       ## write variable to $env
       if grep -q "^$1=" "$env" ; then
-        sed -ri "s'^($1)=(.*)\$'\1=\'$2\''" $env
+        cache="`cat $env`"
+        echo "$cache" |
+        sed "s'^\($1\)=\(.*\)\$'\1=\'$2\''" > $env
       else
         echo "$1='$2'" >>$env
       fi
@@ -47,7 +49,9 @@ noise_unset() { # unset a variable
   case $# in
     (1) ## 
       unset "noise_$1"
-      sed -ni "/^$1=/!p" $env
+      cache="`cat $env`"
+      echo "$cache" |
+      sed -n "/^$1=/!p" > $env
     ;;
     (*)
       fail "broken commandline: $@"
@@ -90,13 +94,13 @@ touch $env
 ##
 ##
 readline() {
-  { read REPLY && echo "$REPLY" ; } | sed -rn "
+  { read REPLY && echo "$REPLY" ; } | sed -n "
     s/[']//g
     s/~%/\n/g
-    s/([^\\])([#<>])/\1\\\\\2/g
-    s:^/([a-z_]+)([[:space:]]+(.*))?$:command=\1; args='\3';:p;t
-    s@^([[:alnum:]_/+-]+):[[:space:]]*(.*)@command=lang; args='\1 \2';@p;t
-    s@^\![[:space:]]*(.*)@command=play; args='\1';@p;t
+    s/\([^\\]\)\([#<>]\)/\1\\\\\2/g
+    s:^/\([a-z_]\+\)\([[:space:]]\+\(.*\)\)\?$:command=\1; args='\3';:p;t
+    s@^\([[:alnum:]_/+-]\+\):[[:space:]]*\(.*\)@command=lang; args='\1 \2';@p;t
+    s@^\![[:space:]]*\(.*\)@command=play; args='\1';@p;t
     s:.*:command='$noise_default_command'; args='&';:p;t
   "
 }
@@ -137,8 +141,8 @@ commit `
 [m
 [33;1mJoin the 23.shack-dev-team, we've got `
   sloccount $dirname/* |
-  sed -rn '
-    s/.*\(SLOC\)[[:space:]]*=[[:space:]]*([0-9]+)$/\1/p
+  sed -n '
+    s/.*(SLOC)[[:space:]]*=[[:space:]]*\([0-9]\+\)$/\1/p
   '` SLOC, `
   {
     ls $dirname/modules/

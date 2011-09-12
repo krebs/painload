@@ -1,0 +1,8 @@
+#! /bin/sh
+#
+# //Reactor/commands/uptime - IRC-optimized uptime output
+#
+uptime | sed '
+  s/^\(.*\) up \(.*\) days\?, *\(.*\), *\(.*\) users\?, *load average: \(.*\)$/\1; \2d \3; \4u; \5/;t
+  s/^\(.*\) up  *\(.*\), *\(.*\) users\?, *load average: \(.*\)$/\1; 0d \2; \3u; \4/;t
+'
