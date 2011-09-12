@@ -90,10 +90,10 @@ handle_system () {
             mgr=`arch_aur_helper`
             if  $mgr -S $1 ;then
               echo "++ finished"
-              exit 0
+              return 0
             else
               echo "!! giving up...i am sorry"
-              exit 1
+              return 1
             fi
             echo
           else
@@ -241,10 +241,10 @@ case $role in
 esac
 
 shift `echo $OPTIND-1 | bc`
+
 guess_system
-
-
 handle_system
-for name; do
-  "$command" "$name"
+
+for name in "$@"; do
+  "$command" "$name" || echo "!! could not install $name"
 done
