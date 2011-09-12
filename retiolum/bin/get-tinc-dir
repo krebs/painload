@@ -1,0 +1,9 @@
+#!/bin/ksh
+case `uname -a` in
+  Linux*|CYGWIN*|MING*)   echo "/etc/tinc" 
+  ;;
+  SunOS*|Darwin*)   echo "/usr/local/etc/tinc" 
+  ;;
+  *)        echo "/etc/tinc" 
+  ;;
+esac
