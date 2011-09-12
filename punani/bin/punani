@@ -31,7 +31,8 @@ guess_system()
 }
 arch_aur_helper()
 {
-  manager="yaourt clyde packer bauerbill tupac pacaur paktahn pbfetch aurget aurora cower powaur"
+  # pacman is the last fallback helper
+  manager="yaourt clyde packer bauerbill tupac pacaur paktahn pbfetch aurget aurora cower powaur pacman"
   for i in $manager;do
     mgr=`which $i`
     if [ "$mgr" ] ;then
@@ -39,8 +40,7 @@ arch_aur_helper()
       return 0
     fi
   done
-  echo "!! no aur helper found"
-  echo "!! To be Implemented"
+  echo "!! no helper found, this should never happen(tm)."
   return 1
 }
 handle_system () {
@@ -64,6 +64,14 @@ handle_system () {
         pacman -Sy
         pkgtool -u
       }
+      punani_Scientist_search() {
+        pkgfile $1
+        if [ "${hard-}" ] ; then
+          mgr=`arch_aur_helper`
+          $mgr -Ss $1 
+        fi
+
+      }
 
       punani_Engineer_insert() {
         # punani under archlinux first tries to load the packages with the given file name
@@ -71,7 +79,7 @@ handle_system () {
         #
         # when trying harder it tries to load the package with the given name directly via yaourt
         echo "** trying to find package with given file"
-        if pacman -Sy `pkgfile $1`; then
+        if pacman -S `pkgfile $1` 2>/dev/null; then
           echo "++ finished"
           exit 0
         else
@@ -182,7 +190,7 @@ EOF
 punani (){
   ns=punani
   role=undefined
-  while getopts 'dfhvSopEir' OPT; do
+  while getopts 'dfhvSsopEir' OPT; do
     case $OPT in
       (f) force=true; continue;;
       (h) hard=true; continue;;
@@ -237,7 +245,6 @@ guess_system
 
 
 handle_system
-command="${ns}_Engineer_insert"
 for name; do
   "$command" "$name"
 done
