@@ -33,3 +33,6 @@ UltraPenguin: /etc/ultrapenguin-release
 UnitedLinux: /etc/UnitedLinux-release (covers SUSE SLES8)
 VA-Linux/RH-VALE: /etc/va-release
 Yellow Dog: /etc/yellowdog-release
+
+# own collection
+Angstrom: /etc/angstrom-version
