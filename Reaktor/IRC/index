@@ -6,4 +6,4 @@ cd $(dirname $(readlink -f $0))/..
 
 IRC/install
 
-exec python IRC/bot2.py "$@"
+exec python IRC/asybot.py "$@"
