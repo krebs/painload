@@ -69,6 +69,14 @@ class asybot(asychat):
     elif command == 'PRIVMSG':
       self.on_privmsg(prefix, command, params, rest)
 
+    elif command == '433':
+      # ERR_NICKNAMEINUSE, retry with another name
+      _, nickname, int, _ = split('^.*[^0-9]([0-9]+)$', self.nickname) \
+          if search('[0-9]$', self.nickname) \
+          else ['', self.nickname, 0, '']
+      self.nickname = nickname + str(int + 1)
+      self.handle_connect()
+
     # reset alarm
     alarm(self.alarm_timeout)
 
