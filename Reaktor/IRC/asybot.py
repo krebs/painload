@@ -3,8 +3,6 @@
 # //Reaktor/IRC/asybot.py
 #
 
-from __future__ import print_function
-
 def is_executable(x):
   import os
   return os.path.exists(x) and os.access(x, os.X_OK)
@@ -16,6 +14,10 @@ from signal import SIGALRM, signal, alarm
 from datetime import datetime as date, timedelta
 from sys import exit
 from re import split, search
+
+import logging
+log = logging.getLogger()
+
 class asybot(asychat):
   def __init__(self, server, port, nickname, targets, **kwargs):
     asychat.__init__(self)
@@ -41,7 +43,6 @@ class asybot(asychat):
     signal(SIGALRM, lambda signum, frame: self.alarm_handler())
     self.reset_alarm()
 
-    loop()
 
   def reset_alarm(self):
     self.last_activity = date.now()
@@ -50,10 +51,10 @@ class asybot(asychat):
   def alarm_handler(self):
     delta = date.now() - self.last_activity
     if delta > timedelta(seconds=self.kill_timeout):
-      print('No data for %s.  Giving up...' % delta)
+      log.error('No data for %s.  Giving up...' % delta)
       exit(2)
     else:
-      print('No data for %s.  PINGing server...' % delta)
+      log.error('No data for %s.  PINGing server...' % delta)
       self.push('PING :%s' % self.nickname)
       alarm(self.hammer_interval)
 
@@ -61,7 +62,7 @@ class asybot(asychat):
     self.data += data
 
   def found_terminator(self):
-    print('< %s' % self.data)
+    log.debug('<< %s' % self.data)
 
     message = self.data
     self.data = ''
@@ -73,6 +74,7 @@ class asybot(asychat):
 
     if command == 'PING':
       self.push('PONG :%s' % rest)
+      log.info("Replying to servers PING with PONG :%s" %rest)
 
     elif command == 'PRIVMSG':
       self.on_privmsg(prefix, command, params, rest)
@@ -88,7 +90,7 @@ class asybot(asychat):
     self.reset_alarm()
 
   def push(self, message):
-    print('> %s' % message)
+    log.debug('>> %s' % message)
     asychat.push(self, message + self.get_terminator())
 
   def handle_connect(self):
@@ -99,7 +101,8 @@ class asybot(asychat):
 
   def on_privmsg(self, prefix, command, params, rest):
     def PRIVMSG(text):
-      self.push('PRIVMSG %s :%s' % (','.join(params), text))
+      msg = 'PRIVMSG %s :%s' % (','.join(params), text)
+      self.push(msg)
 
     def ME(text):
       PRIVMSG('ACTION ' + text + '')
@@ -132,8 +135,8 @@ class asybot(asychat):
         try:
           p = popen([command], stdin=PIPE, stdout=PIPE, stderr=PIPE, env=env)
         except OSError, error:
-          ME('is made of stupid')
-          print('OSError@%s: %s' % (command, error))
+          ME('brain damaged')
+          log.error('OSError@%s: %s' % (command, error))
           return
 
         stdout, stderr = [ x[:len(x)-1] for x in
@@ -141,9 +144,9 @@ class asybot(asychat):
         code = p.returncode
         pid = p.pid
 
-        print('command: %s -> %s' % (command, code))
-        [print('%s stdout: %s' % (pid, x)) for x in stdout]
-        [print('%s stderr: %s' % (pid, x)) for x in stderr]
+        log.info('command: %s -> %s' % (command, code))
+        [log.debug('%s stdout: %s' % (pid, x)) for x in stdout]
+        [log.debug('%s stderr: %s' % (pid, x)) for x in stderr]
 
         if code == 0:
           [PRIVMSG(x) for x in stdout]
@@ -154,6 +157,7 @@ class asybot(asychat):
       else:
         if _handle != '*':
           PRIVMSG(_from + ': you are made of stupid')
+
 
 # retrieve the value of a [singleton] variable from a tinc.conf(5)-like file
 def getconf1(x, path):
@@ -170,15 +174,20 @@ def getconf1(x, path):
 
 if __name__ == "__main__":
   from os import environ as env
+
+  lol = logging.DEBUG if env.get('debug',False) else logging.INFO
+  logging.basicConfig(level=lol)
   name = getconf1('Name', '/etc/tinc/retiolum/tinc.conf')
   hostname = '%s.retiolum' % name
   nick = str(env.get('nick', name))
   host = str(env.get('host', 'supernode'))
   port = int(env.get('port', 6667))
   target = str(env.get('target', '#retiolum'))
-  print('====> irc://%s@%s:%s/%s' % (nick, host, port, target))
+  log.info('=> irc://%s@%s:%s/%s' % (nick, host, port, target))
 
   from getpass import getuser
   asybot(host, port, nick, [target], username=getuser(),
       ircname='//Reaktor running at %s' % hostname,
       hostname=hostname)
+
+  loop()
