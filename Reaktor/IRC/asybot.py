@@ -31,29 +31,37 @@ class asybot(asychat):
     self.set_terminator('\r\n')
     self.create_socket(AF_INET, SOCK_STREAM)
     self.connect((self.server, self.port))
+
+    # When we don't receive data for alarm_timeout seconds then issue a
+    # PING every hammer_interval seconds until kill_timeout seconds have
+    # passed without a message.  Any incoming message will reset alarm.
     self.alarm_timeout = 300
+    self.hammer_interval = 10
     self.kill_timeout = 360
-    self.last_activity = date.now()
     signal(SIGALRM, lambda signum, frame: self.alarm_handler())
-    alarm(self.alarm_timeout)
+    self.reset_alarm()
+
     loop()
+
+  def reset_alarm(self):
+    self.last_activity = date.now()
+    alarm(self.alarm_timeout)
 
   def alarm_handler(self):
     delta = date.now() - self.last_activity
     if delta > timedelta(seconds=self.kill_timeout):
-      print('kill alarm %s' % delta)
-      exit()
+      print('No data for %s.  Giving up...' % delta)
+      exit(2)
     else:
-      print('alarm %s' % delta)
-      self.push('PING :asybot')
-      alarm(self.alarm_timeout)
+      print('No data for %s.  PINGing server...' % delta)
+      self.push('PING :%s' % self.nickname)
+      alarm(self.hammer_interval)
 
   def collect_incoming_data(self, data):
     self.data += data
 
   def found_terminator(self):
     print('< %s' % self.data)
-    self.last_activity = date.now()
 
     message = self.data
     self.data = ''
@@ -77,8 +85,7 @@ class asybot(asychat):
       self.nickname = nickname + str(int + 1)
       self.handle_connect()
 
-    # reset alarm
-    alarm(self.alarm_timeout)
+    self.reset_alarm()
 
   def push(self, message):
     print('> %s' % message)
