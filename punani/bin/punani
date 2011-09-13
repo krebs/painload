@@ -6,33 +6,150 @@
 # -E -i spec    insert a package to the target filesystem
 # -E -r spec    remove a package
 #
-
+set -euf
 godmode() {
   if test "${nosudo-false}" != true -a `id -u` != 0; then
-    echo "Warning: we require god mode..." >&2
+    echo "!! we require god mode..." >&2
     exec sudo "$0" "$@"
     exit 23 # go to hell
   fi
 }
 
-if pacman --version 2>/dev/null | fgrep -q Pacman; then
-  system="${system+$system, }arch-like"
-fi
+# return the 'system' variable
+# currently be:
+# arch-like
+# debian-like
+guess_system()
+{
+  if [ -f "/etc/arch-release" ] ;then
+    system="${system+$system, }arch-like"
+  fi
+  if [ -f "/etc/lsb-release" -o -f "/etc/debian_version" ] ;then
+    system="${system+$system, }debian-like"
+  fi
 
-case "$system" in
-  (*arch-like*)
-    punani_Engineer_insert() {
-      pacman -Sy "$1"
-    }
-    punani_Engineer_remove() {
-      pacman -Rcs "$1"
-    }
-  ;;
-  (*)
-    email='krebs@syntax-fehler.de'
-    irc_host='irc.freenode.org'
-    irc_channel='#tincspasm'
-    cat>&2<<EOF
+}
+arch_aur_helper()
+{
+  # pacman is the last fallback helper
+  manager="yaourt clyde packer bauerbill tupac pacaur paktahn pbfetch aurget aurora cower powaur pacman"
+  for i in $manager;do
+    mgr=`which $i`
+    if [ "$mgr" ] ;then
+      echo $mgr
+      return 0
+    fi
+  done
+  echo "!! no helper found, this should never happen(tm)."
+  return 1
+}
+handle_system () {
+  case "$system" in
+    (*arch-like*)
+      # dryrun
+      # TODO dryrun not dry enough for aur helper
+      if [ "${dryrun-}" ];then
+        pacman () { echo  "pacman $@" ; }
+        pkgfile () { echo "pkgfile $@"; }
+        yaourt () { echo  "yaourt $@" ; }
+      fi
+
+      # get dependencies :
+      # we need pkgfile 
+      if ! [ `which pkgfile` ] ; then
+        pacman -S --noconfirm pkgtools 
+        pkgfile -u
+      fi
+      punani_Scientist_update() {
+        pacman -Sy
+        pkgtool -u
+      }
+      punani_Scientist_search() {
+        pkgfile $1
+        if [ "${hard-}" ] ; then
+          mgr=`arch_aur_helper`
+          $mgr -Ss $1 
+        fi
+
+      }
+
+      punani_Engineer_insert() {
+        # punani under archlinux first tries to load the packages with the given file name
+        # it needs pkgfile for that
+        #
+        # when trying harder it tries to load the package with the given name directly via yaourt
+        echo "** trying to find package with given file"
+        if pacman -S `pkgfile $1` 2>/dev/null; then
+          echo "++ finished"
+          exit 0
+        else
+          echo "!! nothing found in base repos"
+          if [ "${hard-}" ] ; then
+            echo "** trying harder"
+            echo "** trying yaourt directly with given package"
+            mgr=`arch_aur_helper`
+            if  $mgr -S $1 ;then
+              echo "++ finished"
+              return 0
+            else
+              echo "!! giving up...i am sorry"
+              return 1
+            fi
+            echo
+          else
+            echo "?? When in doubt try $0 -h -Ei $1 "
+          fi
+        fi
+      }
+      punani_Engineer_remove() {
+        pacman -Rcs "`pacman -Ql | grep $1$ | awk '{print $1}'`" 
+        if [ "${hard-}" ] ; then
+          echo "** trying harder"
+          echo "** directly delete given package name"
+          pacman -Rcs "$1"
+        fi
+      }
+    ;;
+    (*debian-like*)
+      if [ "${dryrun-}" ]; then
+        apt-file () { echo $@; }
+        apt-get () { echo $@; }
+      fi
+      [ `which apt-file` ] || apt-get install --yes apt-file && apt-file update
+      punani_Scientist_update() {
+        apt-get update
+        apt-file update
+      }
+      punani_Scientist_search() {
+        apt-file search $1 && exit 0
+        if [ "${hard-}" ] ; then
+          apt-cache search $1
+        fi
+      }
+      punani_Engineer_insert() {
+        if apt-get install `apt-file search $1`;then
+          echo "++ finished"
+        else
+          if [ "${hard-}" ] ; then
+            echo "** trying harder"
+            apt-get install $1
+          fi
+        fi
+      }
+      punani_Engineer_remove() {
+        apt-get remove --purge "`apt-file search $1`" 
+        if [ "${hard-}" ] ; then
+          echo "** trying harder"
+          echo "** directly delete given package name"
+          apt-get remove --purge "$1"
+        fi
+      }
+    ;;
+    (*)
+      email='krebs@syntax-fehler.de'
+      irc_host='irc.freenode.org'
+      irc_channel='#tincspasm'
+      cat>&2<<EOF
 Error 2: Your System Will Be Supported ASAP
 1. send us a bug report
 1.1 your operating system's name and version
@@ -42,17 +159,44 @@ Error 2: Your System Will Be Supported ASAP
 2.1 /connect $irc_host
 2.2 /join $irc_channel
 EOF
-    exit 23
-esac
+      exit 23
+  esac
+}
+help(){
+  cat <<EOF
+Usage: $0 [Options] [role][command]
 
-punani() {
+Options:
+  -f  force
+  -h  hard
+  -v  verbose
+  -d  dryrun
+  -?  this message
+
+Role:
+  -E  Engineer
+  -S  Scientist
+
+Engineer:
+  i  insert
+  r  remove
+
+Scientist:
+  s  search
+  y  update
+EOF
+  exit 1
+}
+punani (){
   ns=punani
   role=undefined
-  while getopts 'fhvSopEir' OPT; do
+  while getopts 'dfhvSsopEir' OPT; do
     case $OPT in
       (f) force=true; continue;;
       (h) hard=true; continue;;
       (v) verbose=true; continue;;
+      (d) dryrun=true; continue;; 
+      (\?) help;continue ;;
     esac
     case ${role-Manager} in
       (Engineer)
@@ -62,11 +206,19 @@ punani() {
           (*)
             echo 'Error 1: You are made of stupid!' >&2
             exit 23;;
-        esac
-      ;;
+        esac;;
+      (Scientist)
+        case $OPT in
+          (s) command="${ns}_${role}_search";;
+          (y) command="${ns}_${role}_update";;
+          (*)
+            echo 'Error 1: You are made of stupid!' >&2
+            exit 23;;
+        esac ;;
       (undefined)
         case $OPT in
           (E) role=Engineer;;
+          (S) role=Scientist;;
           (*)
             exit 23;;
         esac
@@ -78,13 +230,21 @@ punani() {
     esac
   done
 }
-
-punani "$@"
-shift `echo $OPTIND-1 | bc`
+punani $@
 
 case $role in
-  (Engineer) godmode;;
+  (Engineer) godmode $@;;
+  (Scientist) 
+    case $command in
+      (*_update) godmode $@;;
+    esac;;
 esac
-for name; do
-  "$command" "$name"
+
+shift `echo $OPTIND-1 | bc`
+
+guess_system
+handle_system
+
+for name in "$@"; do
+  "$command" "$name" || echo "!! could not install $name"
 done
