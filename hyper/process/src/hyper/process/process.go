@@ -18,6 +18,7 @@ type Process struct {
   process_stdout *os.File
   process_stderr *os.File
   id string
+  client http.Client
 }
 
 func (p *Process) Id() string {
@@ -99,18 +100,24 @@ func (hp *Process) Start() os.Error {
     file.Close()
   }
 
-  go reader(hp.process_stdout)
-  go reader(hp.process_stderr)
+  go hp.reader(hp.process_stdout, hp.Stdout)
+  go hp.reader(hp.process_stderr, hp.Stderr)
   return nil
 }
 
-func reader(file *os.File) {
+func (p *Process) reader(file *os.File, url string) {
   var b []byte = make([]byte, 1024)
   var err os.Error = nil
   for err == nil {
     var n int
     n, err = file.Read(b)
     fmt.Printf("data: %d, %s\n", n, b)
+
+    res, err := p.client.Post(url, "application/octet-stream", bytes.NewBuffer(b))
+    res = res
+    if err != nil {
+      fmt.Printf("EE: %s: %s\n", url, err)
+    }
   }
 }
 
