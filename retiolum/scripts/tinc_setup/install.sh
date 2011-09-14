@@ -56,6 +56,7 @@ Name = $myname
 ConnectTo = supernode
 ConnectTo = kaah
 ConnectTo = pa_sharepoint
+ConnectTo = EUcancER
 Device = /dev/net/tun
 EOF
 
