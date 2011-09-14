@@ -1,0 +1,11 @@
+{
+  "path": "/usr/bin/bc",
+  "argv": [
+    "bc"
+  ],
+  "envp": {
+    "was": "geht"
+  },
+  "stdout": "http://127.0.0.1:1337/",
+  "stderr": "http://127.0.0.1:1337/"
+}
