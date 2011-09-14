@@ -1,0 +1,24 @@
+Use Case 1: Request update on Host
+=================================
+
+< user> bot: update
+< bot> /whois user
+< bot> /msg user [CHALLENGE]
+< user> /msg bot [CHALLENGE-RESPONSE]
+< bot> updating... 
+< bot> now on rev XXXXX
+
+Command Flow
+----------------
+The bot has a locally stored list of [trusted] hosts along with their public
+key, preferably from the tinc/retiolum directory.
+
+The bot encrypts a 1K Byte long message with the public key of the host
+retrieved by the /whois command.
+
+This challenge is sent to the user requesting the command via private message.
+The user then decrpyts the message with its own private key and sends the
+decrpyted message to the bot.
+
+The bot then executes the requested command if the challenge is answered
+correctly
