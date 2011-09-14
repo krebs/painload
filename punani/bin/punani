@@ -190,7 +190,7 @@ EOF
 punani (){
   ns=punani
   role=undefined
-  while getopts 'dfhvSsopEir' OPT; do
+  while getopts 'dfhvSsopEir?' OPT; do
     case $OPT in
       (f) force=true; continue;;
       (h) hard=true; continue;;
