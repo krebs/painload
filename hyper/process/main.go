@@ -1,52 +1,60 @@
 package main
 
-import "fmt"
+import "json"
+import "log"
+import "http"
+import "gorilla.googlecode.com/hg/gorilla/mux"
 import "os"
+import "fmt"
 
+import "hyper/process"
 
-func reader(file *os.File) {
-  var b []byte = make([]byte, 1024)
-  var err os.Error = nil
-  for err == nil {
-    var n int
-    n, err = file.Read(b)
-    fmt.Printf("data: %d, %s\n", n, b)
+var proc = map[string] *hyper.Process{}
+
+// TODO Retrieve Process, Write, Kill [autokill], get exit code
+
+func RespondJSON(res http.ResponseWriter, v interface{}) os.Error {
+  content, err := json.Marshal(v)
+  if err == nil {
+    log.Printf("< %s", content)
+    res.Header().Set("Content-Type", "application/json; charset=\"utf-8\"")
+    res.WriteHeader(http.StatusOK)
+    res.Write(content)
+  } else {
+    log.Printf("%s while json.Marshal(%s)", err, v)
+  }
+  return err
+}
+
+func CreateProcessHandler(res http.ResponseWriter, req *http.Request) {
+  if p, err := hyper.NewProcess(req); err == nil {
+    id := p.Id()
+    proc[id] = p
+    RespondJSON(res, &map[string]string{
+      "path": fmt.Sprintf("/proc/%s", id),
+    })
+  } else {
+    log.Printf("%s", err)
+    res.WriteHeader(http.StatusInternalServerError)
+  }
+}
+
+func RetrieveProcess(res http.ResponseWriter, req *http.Request) {
+  if p := proc[mux.Vars(req)["id"]]; p != nil {
+    RespondJSON(res, p)
+  } else {
+    res.WriteHeader(http.StatusNotFound)
   }
 }
 
 func main() {
-  var name = "/usr/bin/bc"
-  var argv = []string{ "bc" }
-  var envv = []string{ "FOO=23" }
-  //var chroot = false
-  var dir = "/var/empty"
-  var files [3][2]*os.File
-  var err os.Error
- 
-  for i, _ := range files {
-    files[i][0], files[i][1], err = os.Pipe()
-    err = err
+
+  // Gorilla
+  mux.HandleFunc("/proc", CreateProcessHandler).Methods("POST")
+  mux.HandleFunc("/proc/{id}", RetrieveProcess).Methods("GET")
+
+  err := http.ListenAndServe(":8888", mux.DefaultRouter)
+  if err != nil {
+    log.Fatal("ListenAndServe: ", err.String())
   }
-
-  var attr = &os.ProcAttr{
-    Dir: dir,
-    Env: envv,
-    Files: []*os.File{ /*files[0][0] */ os.Stdin, files[1][1], files[2][1]},
-  }
-
-  var p *os.Process
-
-  p, err = os.StartProcess(name, argv, attr)
-
-  for _, file := range attr.Files {
-    file.Close()
-  }
-
-  p=p
-
-  go reader(files[1][0])
-  reader(files[2][0])
-
-  fmt.Printf("hello, world\n")
-
 }
