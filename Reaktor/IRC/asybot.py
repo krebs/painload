@@ -15,8 +15,12 @@ from datetime import datetime as date, timedelta
 from sys import exit
 from re import split, search
 
-import logging
-log = logging.getLogger()
+import logging,logging.handlers
+log = logging.getLogger('asybot')
+hdlr = logging.handlers.SysLogHandler(facility=logging.handlers.SysLogHandler.LOG_DAEMON)
+formatter = logging.Formatter( '%(filename)s: %(levelname)s: %(message)s')
+hdlr.setFormatter(formatter)
+log.addHandler(hdlr)
 
 class asybot(asychat):
   def __init__(self, server, port, nickname, targets, **kwargs):
