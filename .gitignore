@@ -1,4 +1,8 @@
 
+# go
+_go_.8
+goinstall.log
+
 # Linux kernel module
 modules.order
 Module.symvers

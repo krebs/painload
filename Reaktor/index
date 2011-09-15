@@ -4,4 +4,11 @@ set -euf
 # cd //Reaktor
 cd $(dirname $(readlink -f $0))
 
+# redirect stdout [and stderr] to syslog
+stdout=`mktemp -u`
+mkfifo $stdout
+trap "rm -vf $stdout" EXIT INT
+exec 1<>$stdout 2>&1
+logger -t Reaktor -f $stdout &
+
 exec IRC/index

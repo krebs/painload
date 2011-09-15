@@ -1,2 +1,2 @@
 #! /bin/sh
-exec pkill -U Reaktor
+exec pkill -U reaktor
