@@ -26,8 +26,14 @@ def generate_stats(nodes):
 def delete_unused_nodes(nodes):
   new_nodes = {}
   for k,v in nodes.iteritems():
+    if v['external-ip'] == "(null)":
+      continue
     if v.get('to',[]):
       new_nodes[k] = v
+  for k,v in new_nodes.iteritems():
+    if not [ i for i in v['to'] if i['name'] in new_nodes]:
+      #del(new_nodes[k])
+      del(k)
   return new_nodes
 def merge_edges(nodes):
   """ merge back and forth edges into one
@@ -36,7 +42,7 @@ def merge_edges(nodes):
   """
   for k,v in nodes.iteritems():
     for con in v.get('to',[]):
-      for i,secon in enumerate(nodes[con['name']].get('to',[])):
+      for i,secon in enumerate(nodes.get(con['name'],{}).get('to',[])):
         if k == secon['name']:
           del (nodes[con['name']]['to'][i])
           con['bidirectional'] = True
