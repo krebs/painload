@@ -1,7 +1,7 @@
 # Specifications
 From 2011-09-16:
 ## Use Case
-  { 
+  [ 
     { 
       "port": 1337, 
       "pattern": "XXYY", 
@@ -12,7 +12,7 @@ From 2011-09-16:
         }
       } 
     }
-  }
+  ]
 ## Actions
 ### POST
 "POST" : {
@@ -34,7 +34,7 @@ stdout/stderr are optional and if left away data will be written to real stdout/
       "envp": {
         "was": "geht"
       },
-      "stdout": "/path/to/file",
-      "stderr": "/path/to/file"
+      "stdout": "uri:///path/to/somewhere",
+      "stderr": "uri:///path/to/somewhere"
     }
   }
