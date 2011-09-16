@@ -1,0 +1,40 @@
+# Specifications
+From 2011-09-16:
+## Use Case
+  { 
+    { 
+      "port": 1337, 
+      "pattern": "XXYY", 
+      "action" : { 
+        "POST": {
+          "url" : "xyz",
+          "data" : "abc"
+        }
+      } 
+    }
+  }
+## Actions
+### POST
+"POST" : {
+  "url" : "http://euer.krebsco.de/",
+  "data" : "{ \"something\" : \"else\" }"
+  }
+
+### PROCESS
+Process is taken from //hyper/process/test/bc.json - rev:a7fd3f
+
+stdout/stderr are optional and if left away data will be written to real stdout/stderr
+
+  "PROCESS" : {
+    {                                
+      "path": "/usr/bin/bc",
+      "argv": [
+        "bc"
+      ],
+      "envp": {
+        "was": "geht"
+      },
+      "stdout": "/path/to/file",
+      "stderr": "/path/to/file"
+    }
+  }
