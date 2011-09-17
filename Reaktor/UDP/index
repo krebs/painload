@@ -2,8 +2,9 @@
 
 import asyncore, socket
 import logging
+import re
 import sys
-log = logging.getLogger('asybot')
+log = logging.getLogger('ubot')
 
 def enable_syslog(logger):
   import logging.handlers as handlers
@@ -15,6 +16,7 @@ def enable_syslog(logger):
   hdlr.setFormatter(formatter)
   logger.addHandler(hdlr)
 
+
 class ubot(asyncore.dispatcher):
   """ UDP Bot """
   def __init__(self, port,pattern,action,bind_addr="",):
@@ -22,21 +24,25 @@ class ubot(asyncore.dispatcher):
     self.bind_addr = bind_addr
     self.port = port
     self.data = ''
+    self.pattern = pattern
+    self.action = action
     self.bind_socket()
 
   def bind_socket(self):
     """
     if the socket is already bound we want to reuse this socket anyway
     """
-    
     self.create_socket(socket.AF_INET,socket.SOCK_DGRAM)
     self.set_reuse_addr()
-    self.socket.setsockopt(socket.SOL_SOCKET,socket.SO_BROADCAST,1)
-    log.info("Binding Socket at %s:%d" %(self.bind_addr,self.port))
+    self.socket.setsockopt(
+        socket.SOL_SOCKET,socket.SO_BROADCAST,1)
+    log.info("Binding Socket at %s:%d" 
+        %(self.bind_addr,self.port))
     self.bind( (self.bind_addr,self.port) )
 
   def handle_connect(self):
     log.info("Server Started")
+
   def handle_read(self):
     self.data,addr = self.recvfrom(2048)
     log.debug('<< %s' % self.data)
@@ -46,17 +52,25 @@ class ubot(asyncore.dispatcher):
 
   def find_pattern(self):
     """ returns true if own pattern is found"""
-    log.error("not yet implemented")
-    sys.exit(23)
+    log.debug("Pattern is %s" %self.pattern)
+    ret = re.search(self.pattern,self.data)
+    if ret:
+      log.info("Match \"%s\" with pattern \"%s\"" % ((ret.string.strip()),self.pattern))
+    else:
+      log.info("No Match")
+    return ret
+
 
   def start_action(self):
     """ runs all the defined actions"""
+    log.debug("Actions: %s" % str(self.action))
     log.error("not yet implemented")
     sys.exit(23)
 
 if __name__ == "__main__":
   import os
+  #enable_syslog(log)
   lol = logging.DEBUG if os.environ.get('debug',False) else logging.INFO
   logging.basicConfig(level=lol)
-  ubot(1337,r'',{})
+  ubot(1337,r'abc',{})
   asyncore.loop()
