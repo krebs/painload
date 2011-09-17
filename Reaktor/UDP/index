@@ -1,0 +1,57 @@
+#!/usr/bin/python
+
+from asycore import asychat
+import logging
+import sys
+log = logging.getLogger('asybot')
+
+def enable_syslog(logger):
+  import logging.handlers as handlers
+  from logging import Formatter
+  hdlr = handlers.SysLogHandler(
+      facility=handlers.SysLogHandler.LOG_DAEMON)
+  formatter = Formatter( 
+      '%(filename)s: %(levelname)s: %(message)s')
+  hdlr.setFormatter(formatter)
+  logger.addHandler(hdlr)
+
+class ubot(asychat):
+  """ UDP Bot """
+  def __init__(self, port,pattern,action,bind="0.0.0.0",terminator='\r\n'):
+    asychat.__init__(self)
+    self.bind = bind
+    self.port = port
+    self.data = ''
+    self.set_terminator('\r\n')
+    self.bind_socket()
+
+  def bind_socket(self):
+    """
+    if the socket is already bound we want to reuse this socket anyway
+    """
+    log.error("not yet implemented")
+    sys.exit(23)
+  def collect_incoming_data(self,data):
+    self.data += data
+
+  def found_terminator(self):
+    """
+    TODO what happens if, for example in an html message we find our pattern a hundred times.
+    should the actions been called  a hundred times or just once for the connect?
+    """
+    log.debug('<< %s' % self.data)
+
+    message = self.data
+    self.data = ''
+    if self.find_pattern(message):
+      self.start_action(message)
+
+  def find_pattern(self,message):
+    """ returns true if own pattern is found"""
+    log.error("not yet implemented")
+    sys.exit(23)
+
+  def start_action(self,message):
+    """ runs all the defined actions"""
+    log.error("not yet implemented")
+    sys.exit(23)

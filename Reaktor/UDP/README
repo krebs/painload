@@ -13,6 +13,17 @@ From 2011-09-16:
       } 
     }
   ]
+## Head definition
+  {
+    "bind" : "127.0.0.1",
+    "port" : 1234,
+    "pattern" : "XXZZ",
+    "terminator" : "\r\n"
+    "action" : { },
+  }
+bind is an optional entry which lets the user define a bind address for the server.
+terminator is optional which lets the user define the EOM terminator.
+
 ## Actions
 ### POST
 "POST" : {
