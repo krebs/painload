@@ -1,0 +1,51 @@
+# Specifications
+From 2011-09-16:
+## Use Case
+  [ 
+    { 
+      "port": 1337, 
+      "pattern": "XXYY", 
+      "action" : { 
+        "POST": {
+          "url" : "xyz",
+          "data" : "abc"
+        }
+      } 
+    }
+  ]
+## Head definition
+  {
+    "bind" : "127.0.0.1",
+    "port" : 1234,
+    "pattern" : "XXZZ",
+    "terminator" : "\r\n"
+    "action" : { },
+  }
+bind is an optional entry which lets the user define a bind address for the server.
+terminator is optional which lets the user define the EOM terminator.
+
+## Actions
+### POST
+"POST" : {
+  "url" : "http://euer.krebsco.de/",
+  "data" : "{ \"something\" : \"else\" }"
+  }
+
+### PROCESS
+Process is taken from //hyper/process/test/bc.json - rev:a7fd3f
+
+stdout/stderr are optional and if left away data will be written to real stdout/stderr
+
+  "PROCESS" : {
+    {                                
+      "path": "/usr/bin/bc",
+      "argv": [
+        "bc"
+      ],
+      "envp": {
+        "was": "geht"
+      },
+      "stdout": "uri:///path/to/somewhere",
+      "stderr": "uri:///path/to/somewhere"
+    }
+  }

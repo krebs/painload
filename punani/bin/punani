@@ -79,7 +79,7 @@ handle_system () {
         #
         # when trying harder it tries to load the package with the given name directly via yaourt
         echo "** trying to find package with given file"
-        if pacman -S `pkgfile $1` 2>/dev/null; then
+        if pacman -S `pkgfile $1` ; then
           echo "++ finished"
           exit 0
         else
