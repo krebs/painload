@@ -1,17 +1,21 @@
 #! /bin/sh
 #
-# usage: lgoinstall
+# usage: lgoinstall [path [OPTIONS...]]
 #
-# This script tries to goinstall $PWD
+# This script tries to goinstall ${OPTIONS...} local/$(basename $path)
 #
-# target=local/$(basename $PWD)
+# path defaults to $PWD
+#
+# target=local/$(basename $path)
 # ensure there's a symlink local/$target somewhere in $GOROOT or $GOPATH
-# goinstall local/$(dirname $PWD)
+# goinstall $target
+#
+# TODO use the same argument order as goinstall
 #
 set -euf
 
 #fqtarget="$(readlink -f "$PWD")"
-fqtarget="$PWD"
+fqtarget="$(cd "${1-$PWD}" && echo "$PWD")"
 target="local/$(basename "$fqtarget")"
 
 #
@@ -75,12 +79,14 @@ sub() {
 path="${GOROOT-}${GOPATH+:$GOPATH}"
 
 #
-# if there's a src/$target that points to $PWD, then succeed
+# if there's a src/$target that points to $fqtarget, then succeed
 #
 if x="`resolve "$path" src/$target | xargstest "$fqtarget" = %fqx`"
 then
-  echo "good $target: $x -> $PWD" >&2
-  exec goinstall "$target"
+  echo "good $target: $x -> $fqtarget" >&2
+  shift # off $1 = $fqtarget
+  echo goinstall "$@" "$target" >&2
+  exec goinstall "$@" "$target"
 fi
 
 #
@@ -94,10 +100,10 @@ then
 fi
 
 #
-# if we've no Go-source in $PWD then die to prevent clobbering $GOPATH & co.
+# if we've no Go-source in $fqtarget then die to prevent clobbering $GOPATH.
 #
 if ! ls | grep '\.go$'; then
-  echo "Your \$PWD seems to contain no Go-source... abort." >&2
+  echo "$1 seems to contain no Go-source... abort." >&2
   exit 23
 fi
 
