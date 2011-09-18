@@ -57,3 +57,10 @@ Ein Webinterface ist noch nicht geplant.
 Die Musiksammlung kann in incoming/Musik auf der Filebitch erweitert werden.
 
 ## 3. KNUT - Die Krebs Notification Utility Toolchain
+
+
+## 4. Krebs Kommandozentrale
+
+Der 17" Monitor am Krebs sowie die auf dem Drucker liegende Tastatur wurden so modifiziert dass auf der ersten shell ein ncmpc Interface zu sehen ist, womit sich der MPD und somit auch die Loungebeschallung steuern lässt. Auf der 2. Shell (änderbar duch ctrl+alt+F2) befindet sich ein direktzugriff auf //noise, welcher es u.a. ermöglicht streams zu wechseln oder das licht ein/auszuschalten.
+
+Credits gehen an KM momo und KM tv
