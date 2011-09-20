@@ -1,0 +1,12 @@
+#! /bin/sh
+#
+# nextpath [component...]
+#
+# echo $PATH with the components stripped
+#
+set -euf
+
+pattern="^\\(${1-}$(shift;for i; do echo -n "\\|$i"; done)\\)$"
+
+echo -n "$(echo -n "$PATH" | tr : '\n' | grep -v "$pattern")" | tr '\n' :
+echo

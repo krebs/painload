@@ -1,0 +1,103 @@
+#! /bin/sh
+#
+# [sh -x] spawn [command [argument ...]]
+#
+# export id to create&destroy or reuse the working directory //proc/$id/.
+# this feature is for debug only and marked as deprecated, so don't rely
+# on it too hard.
+#
+spawn() {
+  set -euf
+
+  # establish working subdirectory in //proc.  we're mking only
+  # transient dirs, i.e. if we mkdir, then we also defer rmdir.
+  if test -n "${id-}"; then
+    : "using id=[32;1m$id[m from env"
+    wd=$pd/$id
+    if ! test -d $wd; then
+      : "make transient [32;1m$wd/[m"
+      mkdir $wd
+      defer rmdir $wd
+    elif ! test `ls $wd | wc -l` = 0; then
+      : "[31;1m$wd/[;31m is not empty![m"
+      exit 23
+    else
+      : "reuse existing [32;1m$wd/[m"
+    fi
+  else
+    id=`cd $pd && mktemp -d XXXXXXXXXXXXXXXX`
+    wd=$pd/$id
+    defer rmdir $wd
+    : "made transient [32;1m$wd/[m"
+  fi
+
+  # change to //proc working directory
+  cwd="$PWD"
+  cd $wd
+  defer cd $cwd
+
+  # create named pipes for the child process's stdio
+  mkfifo 0 1 2
+  defer rm 0 1 2
+
+  # spawn child process
+  ( : "in [32;1m$PWD/[m spawn [32m${*:-[35;1mnothing}[m"
+    set +x # disable debug output so we don't clobber 2
+    exec 0>&- 1>&- 2>&- 0<>0 1<>1 2<>2
+    cd "$cwd"
+    exec "$@") &
+  pid=$!
+
+  # setup a trap to kill the child process if this (parent) process dies
+  defer kill $pid
+
+  # store misc. info.
+  ln -snf $cwd cwd
+  echo $id >id
+  echo $$ >ppid
+  echo $pid >pid
+  defer rm cwd id pid ppid
+
+  # wait for the child process's 
+  set +e
+  wait $pid
+  code=$?
+  set -e
+
+  # the child is already dead
+  cancel kill $pid
+
+  # return the same way wait did
+  (exit $code)
+}
+
+#
+# defer [command [argument ...]]
+#
+# Defer execution of a command.  Deferred commands are executed in LIFO
+# order immediately before the script terminates.  See (golang's defer
+# statement for more information how this should work).
+#
+defer() {
+  defer="$*${defer+
+$defer}"
+}
+
+#
+# cancel [command [argument ...]]
+#
+# Cancel a deferred command.  The arguments have to match exactly a
+# prior defer call or else chaos and mayhem shall haunt thee and shi-
+#
+cancel() {
+  defer="`echo "$defer" | grep -Fxv "$*"`"
+}
+
+# setup //proc directory
+pd=/tmp/krebs/proc
+mkdir -p $pd
+test -w $pd
+
+# setup deferred execution and spawn command
+trap 'eval "${defer-}"; defer=' EXIT INT TERM
+spawn "$@"

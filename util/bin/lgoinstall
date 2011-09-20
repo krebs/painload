@@ -1,0 +1,131 @@
+#! /bin/sh
+#
+# usage: lgoinstall [path [OPTIONS...]]
+#
+# This script tries to goinstall ${OPTIONS...} local/$(basename $path)
+#
+# path defaults to $PWD
+#
+# target=local/$(basename $path)
+# ensure there's a symlink local/$target somewhere in $GOROOT or $GOPATH
+# goinstall $target
+#
+# TODO use the same argument order as goinstall
+#
+set -euf
+
+#fqtarget="$(readlink -f "$PWD")"
+fqtarget="$(cd "${1-$PWD}" && echo "$PWD")"
+target="local/$(basename "$fqtarget")"
+
+#
+# resolve PATH [relpath [FS]] # ====> abspath...
+#
+# Resolve relpath to abspath for each component x separated by FS in PATH
+# where x/relpath is an existing file.
+#
+# relpath defaults to ""
+# FS defaults to ":"
+#
+# Example:
+#
+#   resolve "/bin:/usr/bin" sh # ====> /bin/sh
+#
+resolve() {
+  set -- "$1" "${2+/$2}" "${3-:}" "$IFS"
+  IFS="$3"
+  for i in $1; do
+    ! test -x "$i$2" || echo "$i$2"
+  done
+  unset i
+  IFS="$3"
+}
+
+#
+# xargstest TEST_ARGS...
+#
+# Read filenames from stdin and
+# write each filename that satisfies test # $TEST_ARGS to stdout.
+#
+# Each %x in TEST_ARGS gets replaced by the readlink -f of the filename.
+#
+# Example:
+#
+#   xargstest -d %x <<EOF
+#   /bin/sh
+#   /usr
+#   EOF
+#   # ====> /usr
+#
+xargstest() {
+  while read x; do
+    fqx="$(readlink -f "$x")"
+    if sub %x "$x" sub %fqx "$fqx" test "$@"; then
+    #if test "${@//%x/$fqx}"; then
+      echo "$x"
+    fi
+  done | grep .
+}
+
+sub() {
+  sub1="$1"
+  sub2="$2"
+  shift 2
+  set -- "${@//$sub1/$sub2}"
+  unset sub1 sub2
+  "$@"
+}
+
+path="${GOROOT-}${GOPATH+:$GOPATH}"
+
+#
+# if there's a src/$target that points to $fqtarget, then succeed
+#
+if x="`resolve "$path" src/$target | xargstest "$fqtarget" = %fqx`"
+then
+  echo "good $target: $x -> $fqtarget" >&2
+  shift # off $1 = $fqtarget
+  echo goinstall "$@" "$target" >&2
+  exec goinstall "$@" "$target"
+fi
+
+#
+# if there's some other src/$target then die
+#
+if x="`resolve "$path" src/$target | xargstest ! -x %x -o "$fqtarget" != %fqx`"
+then
+  echo bad $target: $x >&2
+  echo check your GOROOT and/or GOPATH or eliminate that $target >&2
+  exit 23
+fi
+
+#
+# if we've no Go-source in $fqtarget then die to prevent clobbering $GOPATH.
+#
+if ! ls | grep '\.go$'; then
+  echo "$1 seems to contain no Go-source... abort." >&2
+  exit 23
+fi
+
+#
+# if we can write to some src/local then symlink $PWD and retry
+#
+if x="`resolve "$path" src/local | xargstest -w %x`"
+then
+  #echo writable src/local: $x
+  ln -vsnf $fqtarget $x
+  exec "$0" "$@"
+fi
+
+#
+# if we can write to some src then mkdir src/local and retry
+#
+if x="`resolve "$path" src | xargstest -w %x`"
+then
+  #echo writable src: $x
+  mkdir "$x/local"
+  exec "$0" "$@"
+fi
+
+echo "This script failed: good luck, you're on your own!" >&2
+exit 23
