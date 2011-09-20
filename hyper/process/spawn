@@ -53,7 +53,6 @@ spawn() {
 defer() {
   defer="$*${defer+
 $defer}"
-  trap "$defer" EXIT
 }
 
 #
@@ -64,7 +63,8 @@ $defer}"
 #
 cancel() {
   defer="`echo "$defer" | grep -Fxv "$*"`"
-  trap "$defer" EXIT
 }
 
+# setup deferred execution and spawn command
+trap 'eval "${defer-}"; defer=' EXIT INT
 spawn "$@"
