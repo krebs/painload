@@ -1,34 +1,61 @@
 #! /bin/sh
 #
-# spawn [command [argument ...]]
+# [sh -x] spawn [command [argument ...]]
+#
+# export id to create&destroy or reuse the working directory //proc/$id/.
+# this feature is for debug only and marked as deprecated, so don't rely
+# on it too hard.
 #
 spawn() {
   set -euf
 
-  # create and change working directory
-  wd=`mktemp -d`
-  defer rmdir $wd
+  # establish working subdirectory in //proc.  we're mking only
+  # transient dirs, i.e. if we mkdir, then we also defer rmdir.
+  if test -n "${id-}"; then
+    : "using id=[32;1m$id[m from env"
+    wd=$pd/$id
+    if ! test -d $wd; then
+      : "make transient [32;1m$wd/[m"
+      mkdir $wd
+      defer rmdir $wd
+    elif ! test `ls $wd | wc -l` = 0; then
+      : "[31;1m$wd/[;31m is not empty![m"
+      exit 23
+    else
+      : "reuse existing [32;1m$wd/[m"
+    fi
+  else
+    id=`cd $pd && mktemp -d XXXXXXXXXXXXXXXX`
+    wd=$pd/$id
+    defer rmdir $wd
+    : "made transient [32;1m$wd/[m"
+  fi
+
+  # change to //proc working directory
+  cwd="$PWD"
   cd $wd
+  #defer cd $cwd # no need for this, b/c at that time we're aldeady dead
 
   # create named pipes for the child process's stdio
   mkfifo 0 1 2
   defer rm 0 1 2
 
   # spawn child process
-  (exec 0>&- 1>&- 2>&- 0<>0 1<>1 2<>2 "$@") &
+  ( : "in [32;1m$PWD/[m spawn [32m${*-"[35;1mnothing"}[m"
+    exec 0>&- 1>&- 2>&- 0<>0 1<>1 2<>2
+    cd "$cwd"
+    exec "$@") &
   pid=$!
 
   # setup a trap to kill the child process if this (parent) process dies
   defer kill $pid
 
-  # write child process's pid 
+  # store misc. info.
+  ln -snf $cwd cwd
+  echo $id >id
+  echo $$ >ppid
   echo $pid >pid
-  defer rm pid
-
-  # create dummy directory for easier debugging
-  mkdir -vp /tmp/dummy
-  ln -vsnf $wd/0 $wd/1 $wd/2 $wd/pid /tmp/dummy/
-  defer rm -v /tmp/dummy/0 /tmp/dummy/1 /tmp/dummy/2 /tmp/dummy/pid
+  defer rm cwd id pid ppid
 
   # wait for the child process's 
   set +e
@@ -65,6 +92,11 @@ cancel() {
   defer="`echo "$defer" | grep -Fxv "$*"`"
 }
 
+# setup //proc directory
+pd=/tmp/krebs/proc
+mkdir -p $pd
+test -w $pd
+
 # setup deferred execution and spawn command
-trap 'eval "${defer-}"; defer=' EXIT INT
+trap 'eval "${defer-}"; defer=' EXIT INT TERM
 spawn "$@"
