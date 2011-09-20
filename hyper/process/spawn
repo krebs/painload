@@ -34,7 +34,7 @@ spawn() {
   # change to //proc working directory
   cwd="$PWD"
   cd $wd
-  #defer cd $cwd # no need for this, b/c at that time we're aldeady dead
+  defer cd $cwd
 
   # create named pipes for the child process's stdio
   mkfifo 0 1 2
