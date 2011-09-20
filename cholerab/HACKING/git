@@ -1,0 +1,6 @@
+# preserve history after move
+you do not have to [✈], simply use: 
+  git log --follow .
+
+
+[✈] http://stackoverflow.com/questions/2314652/is-it-possible-to-move-rename-files-in-git-and-maintain-their-history
