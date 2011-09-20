@@ -42,6 +42,7 @@ spawn() {
 
   # spawn child process
   ( : "in [32;1m$PWD/[m spawn [32m${*:-[35;1mnothing}[m"
+    set +x # disable debug output so we don't clobber 2
     exec 0>&- 1>&- 2>&- 0<>0 1<>1 2<>2
     cd "$cwd"
     exec "$@") &
