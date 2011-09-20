@@ -1,0 +1,70 @@
+#! /bin/sh
+#
+# spawn [command [argument ...]]
+#
+spawn() {
+  set -euf
+
+  # create and change working directory
+  wd=`mktemp -d`
+  defer rmdir $wd
+  cd $wd
+
+  # create named pipes for the child process's stdio
+  mkfifo 0 1 2
+  defer rm 0 1 2
+
+  # spawn child process
+  (exec 0>&- 1>&- 2>&- 0<>0 1<>1 2<>2 "$@") &
+  pid=$!
+
+  # setup a trap to kill the child process if this (parent) process dies
+  defer kill $pid
+
+  # write child process's pid 
+  echo $pid >pid
+  defer rm pid
+
+  # create dummy directory for easier debugging
+  mkdir -vp /tmp/dummy
+  ln -vsnf $wd/0 $wd/1 $wd/2 $wd/pid /tmp/dummy/
+  defer rm -v /tmp/dummy/0 /tmp/dummy/1 /tmp/dummy/2 /tmp/dummy/pid
+
+  # wait for the child process's 
+  set +e
+  wait $pid
+  code=$?
+  set -e
+
+  # the child is already dead
+  cancel kill $pid
+
+  # return the same way wait did
+  (exit $code)
+}
+
+#
+# defer [command [argument ...]]
+#
+# Defer execution of a command.  Deferred commands are executed in LIFO
+# order immediately before the script terminates.  See (golang's defer
+# statement for more information how this should work).
+#
+defer() {
+  defer="$*${defer+
+$defer}"
+  trap "$defer" EXIT
+}
+
+#
+# cancel [command [argument ...]]
+#
+# Cancel a deferred command.  The arguments have to match exactly a
+# prior defer call or else chaos and mayhem shall haunt thee and shi-
+#
+cancel() {
+  defer="`echo "$defer" | grep -Fxv "$*"`"
+  trap "$defer" EXIT
+}
+
+spawn "$@"
