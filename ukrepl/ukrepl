@@ -1,7 +1,62 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 import sys
-wont_change = [ ' ', '\n']
-for line in sys.stdin:
-  for char in line:
+wont_change = { ' '  : ' ' , 
+           '\n' : '\n'
+           }
+fixed_active = False
+def fixed_width_replace(char):
     if char in wont_change: print char,
-    else: print unichr(0xFF00 + ord(char)-32),
+    else: 
+      try:
+        print unichr(0xFF00 + ord(char)-32),
+      except:
+        print char,
+
+cyr_active = False
+cyrillic_dict = {
+    'A' : u'А', 'a' : 'а','Ä' : u'Ӓ', 'ä' : u'ӓ',
+    'B' : u'В',
+    'c' : u'с',
+    'E' : u'Е',
+    'e' : u'е',
+    'H' : u'Н',
+    'I' : u'І', 'i' : u'і',
+    'j' : u'ј','J' : u'Ј',
+    'K' : u'К',
+    'M' : u'М',
+    'O' : u'О', 'o' : u'о', 'Ö' : u'Ӧ', 'ö' : u'ӧ',
+    'P' : u'Р', 'p' : u'р',
+    'S' : u'Ѕ',
+    'T' : u'г'
+    }
+
+def cyrillic_replace(char):
+  print cyrillic_dict.get(char,char),
+
+def helpme():
+  print "usage %s [modes]" % sys.argv[0]
+  print "modes:"
+  print "  c -- cyrillic replace"
+  print "  f -- fixed width"
+  print "  h -- this message"
+  sys.exit(0)
+
+#parsing happens inside the nested loop
+modes = ''.join(sys.argv[1:])
+# sane defaults if no mode given
+if not modes : modes = "f"
+
+if 'h' in modes: helpme()
+
+for mode in modes:
+  for line in sys.stdin:
+    for char in line:
+      if mode is 'c':
+        cyrillic_replace(char)
+      elif mode is 'f':
+        fixed_width_replace(char)
+      else:
+        print "unknown mode %c" % mode
+        helpme()
+
