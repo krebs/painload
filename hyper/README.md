@@ -13,3 +13,14 @@
 ## send data for calculation
 
     echo 9000+2^42 | curl -fvsS --data-binary @- $url/{path}
+
+## spawn process with http influx and local efflux
+
+hint: maybe run each command in some separate terminal.
+
+    id=dummy sh -x //hyper/process/spawn stdbuf -o 0 sed 's/[^0-9 ]//g'
+    port=3 node //hyper/influx/http //proc/dummy/0
+    cat //proc/dummy/1
+    cat //proc/dummy/2
+    date | curl -fvsS --data-binary @- http://localhost:3
+
