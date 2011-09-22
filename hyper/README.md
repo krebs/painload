@@ -24,3 +24,13 @@ hint: maybe run each command in some separate terminal.
     cat //proc/dummy/2
     date | curl -fvsS --data-binary @- http://localhost:3
 
+## calculate the square of the current year in a little local hyper sewer system
+
+hint: maybe run each command in some separate terminal.
+
+    id=sqr sh -x //hyper/process/spawn stdbuf -o 0 sed 's/[^0-9]//g;s/.*/(&)^2/'
+    id=bc sh -x //hyper/process/spawn bc
+    port=42 node //hyper/influx/http //proc/sqr/0
+    cat //proc/sqr/1 > //proc/bc/0
+    cat //proc/bc/1
+    date +%Y | curl -fvsS --data-binary @- http://localhost:42
