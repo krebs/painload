@@ -6,12 +6,13 @@ wont_change = { ' '  : ' ' ,
            }
 fixed_active = False
 def fixed_width_replace(char):
-    if char in wont_change: print char,
+    if char in wont_change: return unicode(char)
     else: 
       try:
-        print unichr(0xFF00 + ord(char)-32),
+        if not 32 < ord(char) < 126: raise Exception("not in range")
+        return unichr(0xFF00 + ord(char)-32)
       except:
-        print char,
+        return char
 
 cyr_active = False
 cyrillic_dict = {
@@ -32,7 +33,7 @@ cyrillic_dict = {
     }
 
 def cyrillic_replace(char):
-  print cyrillic_dict.get(char,char),
+  return cyrillic_dict.get(char,unicode(char))
 
 def helpme():
   print "usage %s [modes]" % sys.argv[0]
@@ -49,14 +50,14 @@ if not modes : modes = "f"
 
 if 'h' in modes: helpme()
 
-for mode in modes:
-  for line in sys.stdin:
-    for char in line:
+for line in sys.stdin:
+  for char in line:
+    for mode in modes:
       if mode is 'c':
-        cyrillic_replace(char)
+        char = cyrillic_replace(char)
       elif mode is 'f':
-        fixed_width_replace(char)
+        char = fixed_width_replace(char)
       else:
         print "unknown mode %c" % mode
         helpme()
-
+    print char,
