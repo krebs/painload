@@ -1,11 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import sys
+
 wont_change = { ' '  : ' ' , 
            '\n' : '\n'
            }
-fixed_active = False
-def fixed_width_replace(char):
+def fixed_width_replace(char): #f
     if char in wont_change: return unicode(char)
     else: 
       try:
@@ -14,7 +14,6 @@ def fixed_width_replace(char):
       except:
         return char
 
-cyr_active = False
 cyrillic_dict = {
     'A' : u'А', 'a' : 'а','Ä' : u'Ӓ', 'ä' : u'ӓ',
     'B' : u'В',
@@ -32,9 +31,42 @@ cyrillic_dict = {
     'T' : u'г'
     }
 
-def cyrillic_replace(char):
+def cyrillic_replace(char): #c
   return cyrillic_dict.get(char,unicode(char))
+historic_latin_dict = { 
+    'B' : u'Ɓ',
+    'b' : u'ƅ',
+    'u' : u'ư',
+    'U' : u'Ư',
+    ''  : 'Ǟ',
+    #'5' : 'ƽ',
+    'o' : 'ơ',
+    'O' : 'Ơ',
+    '5' : 'Ƽ'
+    }
+def historic_latin(char): #H
+  return historic_latin_dict.get(char,unicode(char))
+punctuation_dict = {
+    '!' : u'ǃ',
+    '\'': u'’',
+    '\"': u'ˮ',
+    '(' : u'⟨',
+    ')' : u'⟩',
+    ':' : u'ː',
+    #'-' : u'‒',
+    #'-' : u'—',
+    #'-' : u'―',
+    #'-' : u'‐',
+    #'-' : u'⁃',
+    '-' : u'–',
+    '_' : u'−',
+    '~' : u'⁓',
+    #'~' : u'∼',
+    #'~' : u'〜',
 
+    }
+def punctuation(char): #p
+  return punctuation_dict.get(char,unicode(char))
 def helpme():
   print "usage %s [modes]" % sys.argv[0]
   print "modes:"
@@ -57,6 +89,10 @@ for line in sys.stdin:
         char = cyrillic_replace(char)
       elif mode is 'f':
         char = fixed_width_replace(char)
+      elif mode is 'H':
+        char = historic_latin(char)
+      elif mode is 'p':
+        char = punctuation(char)
       else:
         print "unknown mode %c" % mode
         helpme()
