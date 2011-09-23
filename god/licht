@@ -13,9 +13,11 @@
 #   ghetto      -    toggles the lights in the hallway
 #   0-7         -    toggles individual lights
 
+TOGGLE=`echo "$2" | sed -n '/^[0-1]/p'` 
+
 toggle() {
   LAMPE=`echo "$1" | sed -n '/^[1-2]*[0-9]*[0-9]$/p' | xargs echo "obase=16;" | bc` 
-  TOGGLE=`echo "$2" | sed -n '/^[0-1]/p'` 
+  #TOGGLE=`echo "$2" | sed -n '/^[0-1]/p'` 
   if ! [ "$LAMPE" -a "$TOGGLE" ];then
     echo "you are made of stupid"
    exit 1
@@ -76,38 +78,30 @@ case "$1" in
       echo "Usage: lich <lampe> <0/1>"
       ;;
   all) 
-      TOGGLE=$2
       toggle_all
       ;;
   kuschel)
-      TOGGLE=$2
       kuschel
       ;;
   software)
-      TOGGLE=$2
       software
       ;;
   links)
-      TOGGLE=$2
       kuschel
       software
       ;;
   rechts)
-      TOGGLE=$2
       tische
       porsche
       ghetto
       ;;
   tische)
-      TOGGLE=$2
       tische
       ;;
   porsche)
-      TOGGLE=$2
       porsche
       ;;
   ghetto)
-      TOGGLE=$2
       ghetto
       ;;
   *)
