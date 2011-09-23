@@ -72,6 +72,8 @@ def helpme():
   print "modes:"
   print "  c -- cyrillic replace"
   print "  f -- fixed width"
+  print "  p -- replace punctuation"
+  print "  H -- replace with historic latin chars"
   print "  h -- this message"
   sys.exit(0)
 
