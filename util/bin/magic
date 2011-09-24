@@ -1,36 +1,46 @@
 #! /bin/sh
 #
-# magic name command file < content
+# magic NAME create FILE < CONTENT
+# magic NAME update FILE < CONTENT
+# magic NAME destroy FILE
 #
 
 bs="# begin krebs magic <$1>"
 es="# end krebs magic <$1>"
 
-case $1 in
-  (print)
+has() {
+  grep -q "^$bs$" $3 && grep -q "^$es$" $3
+}
+
+create() {
+  destroy "$@"
+  cache="`cat $3`"
+  {
+    echo "$cache"
     echo "$bs"
     cat
     echo "$es"
-    ;;
-  (create)
-    $0 $1 has $3 || $0 $1 print $3 >> $3 < /dev/null
-    $0 $1 replace $3
-    ;;
-  (destroy)
-    if $0 $1 has $3; then
-      cache"`cat $3`"
-      echo "$cache" | sed "/^$bs$/,/^$es$/d" > $3
-    fi
-    ;;
-  (has)
-    grep -q "^$bs\$" $3 && grep -q "^$es\$" $3
-    ;;
-  (replace)
-    $0 $1 destroy $3 && $0 $1 create $3
-    ;;
-  (clear)
-    $0 $1 replace $3 < /dev/null
-    ;;
+  } >$3
+}
+
+#retrieve() {
+#}
+
+update() {
+  ! has "$@" || create "$@"
+}
+
+destroy() {
+  if has "$@"; then
+    cache="`cat $3`"
+    echo "$cache" | sed "/^$bs$/,/^$es$/d" >$3
+  fi
+}
+
+case $2 in
+  (create) create "$@" ;;
+  (update) update "$@" ;;
+  (destroy) destroy "$@" ;;
   (*)
     echo 'Error 1: You are made of stupid!' >&2
     exit 23
