@@ -7,3 +7,4 @@ http://localhost:8000/stream.ogg icecast
 http://stream2.jungletrain.net:8000 jungletrain
 http://playlist.tormentedradio.com/tormentedradio.pls tormented
 http://filebitch.shack:8000 mpd
+http://radio.krautchan.net:8000/radio.mp3 radiofreieskrautchan

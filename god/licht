@@ -13,17 +13,40 @@
 #   ghetto      -    toggles the lights in the hallway
 #   0-7         -    toggles individual lights
 
+TOGGLE=`echo "$2" | sed -n '/^[0-1]/p'` 
+shorthelp() {
+      echo  "Usage: $0 [OPTIONS] [0|1]"
+      echo  "Toggle the lights in the shack."
+
+}
+longhelp(){
+  shorthelp
+
+cat <<EOF
+
+OPTIONS
+   all         -    toggles all lights
+   links       -    toggles all lights on the left hand side while looking towards the Auditorium
+   rechts      -    toggles all lights on the right hand side while looking towards the Auditorium
+   kuschel     -    toggles the lights in the pwnie corner
+   software    -    toggles the software corner
+   tische      -    toggles the lights on the window side of the long table
+   porsche     -    toggles the lights on the window side where the porsche cockpit is
+   ghetto      -    toggles the lights in the hallway
+   0-7         -    toggles individual lights
+EOF
+}
 toggle() {
   LAMPE=`echo "$1" | sed -n '/^[1-2]*[0-9]*[0-9]$/p' | xargs echo "obase=16;" | bc` 
-  TOGGLE=`echo "$2" | sed -n '/^[0-1]/p'` 
   if ! [ "$LAMPE" -a "$TOGGLE" ];then
-    echo "you are made of stupid"
-   exit 1
+    longhelp
+    exit 1
   fi
   STRING="\\xA5\\x5A\\x$LAMPE\\x$TOGGLE"
   if [ $# != 2 ]
   then
-     echo "Usage: licht <lampe> <0/1>"
+    longhelp
+    exit 1
   else
     echo "Toggle light $LAMPE ($TOGGLE)" 
      printf "$STRING" | nc -u -w1 licht.shack 1337
@@ -33,7 +56,7 @@ toggle() {
 toggle_all() {
     for i in `seq 0 7`
     do
-        printf "\\xA5\\x5A\\x$i\\x$TOGGLE" | nc -u -w1 licht.shack 1337 &
+        toggle $i $TOGGLE
     done
     wait
 }
@@ -41,7 +64,7 @@ toggle_all() {
 kuschel(){
     for i in 0 2
     do
-        printf "\\xA5\\x5A\\x$i\\x$TOGGLE" | nc -u -w1 licht.shack 1337 &
+        toggle $i $TOGGLE
     done
     wait
 }
@@ -49,7 +72,7 @@ kuschel(){
 software(){
     for i in 1 3
     do
-        printf "\\xA5\\x5A\\x$i\\x$TOGGLE" | nc -u -w1 licht.shack 1337 &
+        toggle $i $TOGGLE
     done
     wait
 }
@@ -57,57 +80,53 @@ software(){
 tische(){
     for i in 4 6 
     do
-        printf "\\xA5\\x5A\\x$i\\x$TOGGLE" | nc -u -w1 licht.shack 1337 &
+        toggle $i $TOGGLE
     done
     wait
 }
 
 ghetto(){
-    printf "\\xA5\\x5A\\x7\\x$TOGGLE" | nc -u -w1 licht.shack 1337 
+    i=7
+    toggle $i $TOGGLE
 }
 
 porsche(){
-    printf "\\xA5\\x5A\\x5\\x$TOGGLE" | nc -u -w1 licht.shack 1337 
+    i=5
+    toggle $i $TOGGLE
 }
 
 case "$1" in
-  --help) 
-      echo "Toggle the lights"
-      echo "Usage: lich <lampe> <0/1>"
+  (--help) 
+    if [ "$2" == "--verbose" ]
+    then longhelp
+    else shorthelp
+    fi
       ;;
   all) 
-      TOGGLE=$2
       toggle_all
       ;;
   kuschel)
-      TOGGLE=$2
       kuschel
       ;;
   software)
-      TOGGLE=$2
       software
       ;;
   links)
-      TOGGLE=$2
       kuschel
       software
       ;;
   rechts)
-      TOGGLE=$2
       tische
       porsche
       ghetto
       ;;
   tische)
-      TOGGLE=$2
       tische
       ;;
   porsche)
-      TOGGLE=$2
       porsche
       ;;
   ghetto)
-      TOGGLE=$2
       ghetto
       ;;
   *)
