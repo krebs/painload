@@ -14,13 +14,11 @@ has() {
 
 create() {
   destroy "$@"
-  cache="`cat $3`"
-  {
-    echo "$cache"
-    echo "$bs"
-    cat
-    echo "$es"
-  } >$3
+  cat>>$3<<EOF
+$bs
+`cat`
+$es
+EOF
 }
 
 #retrieve() {
