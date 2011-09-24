@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+#This script toggles the touchpad on a netbook using synclient.
+
+status=`synclient|awk '/TouchpadOff/{printf$3}'`
+status=`expr \( $status + 1 \) \% 2`
+synclient TouchpadOff=$status
+
