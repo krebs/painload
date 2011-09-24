@@ -56,7 +56,7 @@ toggle() {
 toggle_all() {
     for i in `seq 0 7`
     do
-        printf "\\xA5\\x5A\\x$i\\x$TOGGLE" | nc -u -w1 licht.shack 1337 &
+        toggle $i $TOGGLE
     done
     wait
 }
@@ -64,7 +64,7 @@ toggle_all() {
 kuschel(){
     for i in 0 2
     do
-        printf "\\xA5\\x5A\\x$i\\x$TOGGLE" | nc -u -w1 licht.shack 1337 &
+        toggle $i $TOGGLE
     done
     wait
 }
@@ -72,7 +72,7 @@ kuschel(){
 software(){
     for i in 1 3
     do
-        printf "\\xA5\\x5A\\x$i\\x$TOGGLE" | nc -u -w1 licht.shack 1337 &
+        toggle $i $TOGGLE
     done
     wait
 }
@@ -80,17 +80,19 @@ software(){
 tische(){
     for i in 4 6 
     do
-        printf "\\xA5\\x5A\\x$i\\x$TOGGLE" | nc -u -w1 licht.shack 1337 &
+        toggle $i $TOGGLE
     done
     wait
 }
 
 ghetto(){
-    printf "\\xA5\\x5A\\x7\\x$TOGGLE" | nc -u -w1 licht.shack 1337 
+    i=7
+    toggle $i $TOGGLE
 }
 
 porsche(){
-    printf "\\xA5\\x5A\\x5\\x$TOGGLE" | nc -u -w1 licht.shack 1337 
+    i=5
+    toggle $i $TOGGLE
 }
 
 case "$1" in
