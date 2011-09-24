@@ -21,8 +21,9 @@ $es
 EOF
 }
 
-#retrieve() {
-#}
+retrieve() {
+  sed -n "/^$bs$/,/^$es$/p" $3 | sed '1d;$d'
+}
 
 update() {
   ! has "$@" || create "$@"
@@ -37,6 +38,7 @@ destroy() {
 
 case $2 in
   (create) create "$@" ;;
+  (retrieve) retrieve "$@" ;;
   (update) update "$@" ;;
   (destroy) destroy "$@" ;;
   (*)
