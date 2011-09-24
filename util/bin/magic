@@ -1,14 +1,10 @@
 #! /bin/sh
 #
-# magic $name $command $file < $content
+# magic name command file < content
 #
 
-name="$1"; shift
-command="$1"; shift
-file="$1"; shift
-
-bs="# begin krebs magic${name+ <$name>}"
-es="# end krebs magic${name+ <$name>}"
+bs="# begin krebs magic <$1>"
+es="# end krebs magic <$1>"
 
 case $1 in
   (print)
@@ -17,23 +13,23 @@ case $1 in
     echo "$es"
     ;;
   (create)
-    $0 has || $0 print >> $file < /dev/null
-    $0 replace
+    $0 $1 has $3 || $0 $1 print $3 >> $3 < /dev/null
+    $0 $1 replace $3
     ;;
   (destroy)
-    if $0 has; then
-      cache"`cat $file`"
-      echo "$cache" | sed "/^$bs$/,/^$es$/d" > $file
+    if $0 $1 has $3; then
+      cache"`cat $3`"
+      echo "$cache" | sed "/^$bs$/,/^$es$/d" > $3
     fi
     ;;
   (has)
-    grep -q "^$bs\$" $file && grep -q "^$es\$" $file
+    grep -q "^$bs\$" $3 && grep -q "^$es\$" $3
     ;;
   (replace)
-    $0 destroy && $0 create
+    $0 $1 destroy $3 && $0 $1 create $3
     ;;
   (clear)
-    $0 replace < /dev/null
+    $0 $1 replace $3 < /dev/null
     ;;
   (*)
     echo 'Error 1: You are made of stupid!' >&2
