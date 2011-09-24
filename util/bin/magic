@@ -1,0 +1,41 @@
+#! /bin/sh
+#
+# magic $name $command $file < $content
+#
+
+name="$1"; shift
+command="$1"; shift
+file="$1"; shift
+
+bs="# begin krebs magic${name+ <$name>}"
+es="# end krebs magic${name+ <$name>}"
+
+case $1 in
+  (print)
+    echo "$bs"
+    cat
+    echo "$es"
+    ;;
+  (create)
+    $0 has || $0 print >> $file < /dev/null
+    $0 replace
+    ;;
+  (destroy)
+    if $0 has; then
+      cache"`cat $file`"
+      echo "$cache" | sed "/^$bs$/,/^$es$/d" > $file
+    fi
+    ;;
+  (has)
+    grep -q "^$bs\$" $file && grep -q "^$es\$" $file
+    ;;
+  (replace)
+    $0 destroy && $0 create
+    ;;
+  (clear)
+    $0 replace < /dev/null
+    ;;
+  (*)
+    echo 'Error 1: You are made of stupid!' >&2
+    exit 23
+esac
