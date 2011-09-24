@@ -111,23 +111,29 @@ handle_system () {
       }
     ;;
     (*debian-like*)
-      if [ "${dryrun-}" ]; then
-        apt-file () { echo $@; }
-        apt-get () { echo $@; }
+      #if [ "${dryrun-}" ]; then
+      #  apt-file () { echo $@; }
+      #  apt-get () { echo $@; }
+      #fi
+      if [ `which apt-file` ]; then 
+        echo "installing dependencies: apt-file"
+        apt-get install --yes apt-file
+        echo "update the apt-file tool"
+        apt-file update
       fi
-      [ `which apt-file` ] || apt-get install --yes apt-file && apt-file update
       punani_Scientist_update() {
         apt-get update
         apt-file update
       }
+      
       punani_Scientist_search() {
-        apt-file search $1 && exit 0
+        apt-file search -l -x /$1\$ && exit 0
         if [ "${hard-}" ] ; then
           apt-cache search $1
         fi
       }
       punani_Engineer_insert() {
-        if apt-get install `apt-file search $1`;then
+        if apt-get install `apt-file search -l -x /$1\$`;then
           echo "++ finished"
         else
           if [ "${hard-}" ] ; then
@@ -137,7 +143,7 @@ handle_system () {
         fi
       }
       punani_Engineer_remove() {
-        apt-get remove --purge "`apt-file search $1`" 
+        apt-get remove --purge "`apt-file search -l -x /$1\$`" 
         if [ "${hard-}" ] ; then
           echo "** trying harder"
           echo "** directly delete given package name"
@@ -149,7 +155,7 @@ handle_system () {
       email='krebs@syntax-fehler.de'
       irc_host='irc.freenode.org'
       irc_channel='#tincspasm'
-      cat>&2<<EOF
+      cat >&2 <<EOF
 Error 2: Your System Will Be Supported ASAP
 1. send us a bug report
 1.1 your operating system's name and version
