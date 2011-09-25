@@ -1,0 +1,15 @@
+[
+  {
+    "comment" : "listener for licht.shack",
+    "bind_addr" : "0.0.0.0",
+    "port" : 2342,
+    "pattern" : "",
+    "action" : { 
+      "PROCESS" : { 
+         "path" : "/krebs/Reaktor/UDP/licht_resolver",
+         "argv" : [ ],
+         "envp" : { }
+      }
+    }
+  }
+]
