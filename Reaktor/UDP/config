@@ -6,7 +6,7 @@
     "pattern" : "",
     "action" : { 
       "PROCESS" : { 
-         "path" : "/krebs/Reaktor/UDP/licht_resolver",
+         "path" : "/krebs/Reaktor/udp_commands/licht_resolver",
          "argv" : [ ],
          "envp" : { }
       }
