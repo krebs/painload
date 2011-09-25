@@ -115,7 +115,7 @@ handle_system () {
       #  apt-file () { echo $@; }
       #  apt-get () { echo $@; }
       #fi
-      if [ `which apt-file` ]; then 
+      if  ! which apt-file; then 
         echo "installing dependencies: apt-file"
         apt-get install --yes apt-file
         echo "update the apt-file tool"
@@ -133,6 +133,7 @@ handle_system () {
         fi
       }
       punani_Engineer_insert() {
+        echo "trying to install $1"
         if apt-get install `apt-file search -l -x /$1\$`;then
           echo "++ finished"
         else
