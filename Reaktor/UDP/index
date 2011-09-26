@@ -3,7 +3,6 @@
 import asyncore, socket
 import logging,subprocess
 import re
-import sys
 import json
 log = logging.getLogger('ubot')
 
@@ -17,37 +16,33 @@ def enable_syslog(logger):
   hdlr.setFormatter(formatter)
   logger.addHandler(hdlr)
 
+from twisted.internet.protocol import DatagramProtocol
+from twisted.internet import reactor
+from twisted.application.internet import MulticastServer
+from socket import SOL_SOCKET,SO_BROADCAST
+class ubot(DatagramProtocol):
+#  def startProtocol(self):
+#    log.info("Starting Listener for Multicast")
+#    self.transport.joinGroup("255.255.255.255")
 
-class ubot(asyncore.dispatcher):
   """ UDP Bot """
-  def __init__(self, port,pattern,action,comment="",bind_addr="",):
-    asyncore.dispatcher.__init__(self)
-    self.bind_addr = bind_addr
-    self.port = port
+  def startProtocol(self):
+    log.info("starting Protocol at host (%s)" % self.bind_addr)
+    #self.transport.
+    if self.bind_addr != "255.255.255.255":
+      self.transport.joinGroup(self.bind_addr)
+    else:
+      self.transport.socket.setsockopt(SOL_SOCKET,SO_BROADCAST,True)
+  def __init__(self, pattern,action,bind_addr,**kwargs):
+    #DatagramProtocol.__init__(self)
     self.data = ''
     self.pattern = pattern
     self.action = action
-    self.bind_socket()
+    self.bind_addr = bind_addr
 
-  def bind_socket(self):
-    """
-    if the socket is already bound we want to reuse this socket anyway
-    """
-    self.create_socket(socket.AF_INET,socket.SOCK_DGRAM)
-    self.set_reuse_addr()
-    self.socket.setsockopt(
-        socket.SOL_SOCKET,socket.SO_BROADCAST,1)
-    log.info("Binding Socket at %s:%d" 
-        %(self.bind_addr,self.port))
-    self.bind( (self.bind_addr,self.port) )
-
-  def handle_connect(self):
-    log.info("Server Started")
-
-  def handle_read(self):
-    self.data,addr = self.recvfrom(2048)
+  def datagramReceived(self,datagram,addr):
+    self.data = datagram
     log.debug('<< %s' % self.data)
-
     if self.find_pattern():
       self.start_action()
 
@@ -60,8 +55,8 @@ class ubot(asyncore.dispatcher):
     else:
       log.info("No Match")
     return ret
-
-
+  
+  
   def start_action(self):
     """ runs all the defined actions"""
     log.debug("Actions: %s" % str(self.action))
@@ -95,5 +90,5 @@ if __name__ == "__main__":
   lol = logging.DEBUG if os.environ.get('debug',False) else logging.INFO
   logging.basicConfig(level=lol)
   for i in load_conf("%s/config" %HERE):
-    ubot(**i)
-  asyncore.loop()
+    reactor.listenMulticast(i["port"], ubot(**i))
+  reactor.run()
