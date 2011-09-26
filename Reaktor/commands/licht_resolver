@@ -1,0 +1,37 @@
+#! /usr/bin/python
+# -*- coding: utf-8 -*-
+
+map = {
+  'shackspace': {
+    'device': {
+      0: 'Licht0, Zickenzone; Fenster',
+      1: 'Licht1, Sofaecke; Fenster', 
+      2: 'Licht2, Zickenzone; Ghetto',
+      3: 'Licht3, Sofaecke; Ghetto',
+      4: 'Licht4, Richtung Getränkelager',
+      5: 'Licht5, Porschekonsole',
+      6: 'Licht6, Tomatenecke',
+      7: 'Licht7, Ghetto',
+      10: 'Hauptschalter'
+    },
+    'state': {
+      0: 'aus',
+      1: 'an',
+      2: 'aus in T-10s'
+    },
+    '->': 'ist'
+  }
+}
+
+from struct import unpack
+import json
+from os import environ as env
+
+location = "shackspace"
+
+map = map[location]
+print (env["payload"]+"")
+did, sid= unpack('BB', json.loads(env['payload']))
+device,state = map['device'][did], map['state'][sid]
+arrow = map['->']
+print ' '.join([device, arrow, state])

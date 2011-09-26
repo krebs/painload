@@ -5,6 +5,7 @@ From 2011-09-16:
     { 
       "port": 1337, 
       "pattern": "XXYY", 
+      "comment" : "does the right thing",
       "action" : { 
         "POST": {
           "url" : "xyz",
@@ -15,10 +16,9 @@ From 2011-09-16:
   ]
 ## Head definition
   {
-    "bind" : "127.0.0.1",
+    "bind_addr" : "127.0.0.1",
     "port" : 1234,
     "pattern" : "XXZZ",
-    "terminator" : "\r\n"
     "action" : { },
   }
 bind is an optional entry which lets the user define a bind address for the server.
@@ -35,6 +35,7 @@ terminator is optional which lets the user define the EOM terminator.
 Process is taken from //hyper/process/test/bc.json - rev:a7fd3f
 
 stdout/stderr are optional and if left away data will be written to real stdout/stderr
+in the process in envp => "payload" will be allocated for the given payload from the network
 
   "PROCESS" : {
     {                                
@@ -43,7 +44,7 @@ stdout/stderr are optional and if left away data will be written to real stdout/
         "bc"
       ],
       "envp": {
-        "was": "geht"
+        "was": "geht",
       },
       "stdout": "uri:///path/to/somewhere",
       "stderr": "uri:///path/to/somewhere"
