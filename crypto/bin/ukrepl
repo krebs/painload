@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 # -*- coding: utf-8 -*-
 import sys
 
@@ -98,4 +98,7 @@ for line in sys.stdin:
       else:
         print "unknown mode %c" % mode
         helpme()
-    print char,
+    try:
+        sys.stdout.write(char)
+    except:
+        sys.stdout.write(char.encode("utf-8"))
