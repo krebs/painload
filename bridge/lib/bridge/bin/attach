@@ -1,0 +1,3 @@
+#! /bin/sh
+set -euf
+exec tmux -L bridge attach-session -t "$1"

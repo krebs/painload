@@ -1,0 +1,18 @@
+#! /bin/bash
+function comp_bridge() {
+  local cword="${COMP_WORDS[$COMP_CWORD]}"
+  local bindir="$(dirname $(readlink -f "$BASH_SOURCE"))/../../lib/bridge/bin"
+  case $COMP_CWORD in
+    (1)
+      COMPREPLY=( $(cd "$bindir" && ls | grep "^$cword.*") )
+    ;;
+    (2)
+      case "${COMP_WORDS[1]}" in
+        (attach|destroy|paste) 
+          COMPREPLY=( $(bridge list 2>/dev/null | grep "^$cword.*") )
+        ;;
+      esac
+    ;;       
+  esac
+}
+complete -F comp_bridge bridge

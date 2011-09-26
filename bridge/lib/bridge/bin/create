@@ -1,0 +1,6 @@
+#! /bin/sh
+set -euf
+target="$1"; shift
+tmux -L bridge new-session -d -s "$target" "$@"
+tmux -L bridge set-buffer READY.
+exec "$(dirname $0)/attach" "$target"

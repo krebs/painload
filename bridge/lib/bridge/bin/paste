@@ -1,0 +1,17 @@
+#! /bin/sh
+set -euf
+target="$1"; shift
+if test $# -gt 0; then
+  tmux -L bridge set-buffer -b 0 "$*"
+else
+  if test -n "${VIMRUNTIME-}" || tty >/dev/null; then
+    temp=`mktemp`
+    trap "rm -f $temp" EXIT INT TERM
+    cat>$temp
+  else
+    temp=-
+  fi
+  tmux -L bridge load-buffer -b 0 $temp
+fi
+tmux -L bridge paste-buffer -b 0 -t "$target"
+tmux -L bridge   set-buffer -b 0 READY.
