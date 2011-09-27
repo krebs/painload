@@ -1,5 +1,3 @@
-# //bridge
-
 Bridge is a tool to connect your favourite editor and interpreter (or
 similar) for maximum profit.
 
@@ -19,6 +17,11 @@ similar) for maximum profit.
     # write interpreter stuff, e.g. 42^23
     # mark that stuff
     # press return
+
+    # paste some strink into the session
+    bridge paste my_fancy_interpreter '1 + 2 + 4'
+    # or
+    echo 2^20 | bridge paste my_fancy_interpreter
 
     # you can use tab-completion everywhere (if installed)
 
