@@ -1,3 +1,10 @@
 #! /bin/sh
+#
+# Attach current tty to a session.
+#
+## SYNOPSIS
+#
+#     bridge attach SESSION
+#
 set -euf
 exec tmux -L bridge attach-session -t "$1"

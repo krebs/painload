@@ -1,3 +1,10 @@
 #! /bin/sh
+#
+# Write a list of all session names to stdout.
+#
+## SYNOPSIS
+#
+#     bridge list
+#
 set -euf
 exec tmux -L bridge list-sessions | cut -d: -f1

@@ -1,4 +1,13 @@
 #! /bin/sh
+#
+# Create a new session.
+#
+## SYNOPSIS
+#
+#     bridge create SESSION [COMMAND [ARGS ...]]
+#
+# COMMAND defaults to $SHELL (by implication / tmux)
+#
 set -euf
 target="$1"; shift
 tmux -L bridge new-session -d -s "$target" "$@"

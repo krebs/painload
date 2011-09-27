@@ -1,5 +1,12 @@
 #! /bin/sh
+#
+# Interface to the bridge commands.
+#
+# See commands below $bindir
+#
 set -euf
-command="$1"; shift
+
 bindir="$(dirname $(readlink -f "$0"))/../lib/bridge/bin"
-exec "$bindir/$command" "$@"
+cmd="$bindir/$1"; shift
+
+exec "$cmd" "$@"
