@@ -18,9 +18,11 @@ similar) for maximum profit.
     # mark that stuff
     # press return
 
-    # paste some strink into the session
-    bridge paste my_fancy_interpreter '1 + 2 + 4'
-    # or
+    # paste some stuff into the session
+    bridge paste my_fancy_interpreter '1 + 2 + 4^M'
+    # (note that ^M is carriage return obtained by pressing ^V^M AKA C-V C-M)
+
+    # or use bridge as a sink in your pipeline
     echo 2^20 | bridge paste my_fancy_interpreter
 
     # you can use tab-completion everywhere (if installed)
