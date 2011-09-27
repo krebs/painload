@@ -54,6 +54,6 @@ Hint #3: you could also use ~/.profile or similar
 
 ## install bridge into some usr-like hierarchy [advanced]
 
-  tar -C //bridge -c . |
-      tar --exclude=./README.md -C ~/opt -v --keep-newer-files -x
+    tar -C //bridge -c . |
+        tar --exclude=./README.md -C ~/opt -v --keep-newer-files -x
 
