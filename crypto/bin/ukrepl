@@ -53,6 +53,11 @@ punctuation_dict = {
     '(' : u'⟨',
     ')' : u'⟩',
     ':' : u'ː',
+    ' ' : u' ',
+    # all different spaces, made for perfect trolling
+    #' ' : u' ',
+    #' ' : u' ',
+    #' ' : u'⁠',
     #'-' : u'‒',
     #'-' : u'—',
     #'-' : u'―',
