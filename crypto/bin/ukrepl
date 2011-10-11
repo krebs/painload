@@ -32,7 +32,7 @@ cyrillic_dict = {
     }
 
 def cyrillic_replace(char): #c
-  return cyrillic_dict.get(char,unicode(char))
+  return cyrillic_dict.get(char,char)
 historic_latin_dict = { 
     'B' : u'Ɓ',
     'b' : u'ƅ',
@@ -45,7 +45,7 @@ historic_latin_dict = {
     '5' : 'Ƽ'
     }
 def historic_latin(char): #H
-  return historic_latin_dict.get(char,unicode(char))
+  return historic_latin_dict.get(char,char)
 punctuation_dict = {
     '!' : u'ǃ',
     '\'': u'’',
@@ -71,7 +71,7 @@ punctuation_dict = {
 
     }
 def punctuation(char): #p
-  return punctuation_dict.get(char,unicode(char))
+  return punctuation_dict.get(char,char)
 def helpme():
   print "usage %s [modes]" % sys.argv[0]
   print "modes:"
