@@ -29,6 +29,7 @@ guess_system()
   fi
 
 }
+
 arch_aur_helper()
 {
   # pacman is the last fallback helper
@@ -43,6 +44,7 @@ arch_aur_helper()
   echo "!! no helper found, this should never happen(tm)."
   return 1
 }
+
 handle_system () {
   case "$system" in
     (*arch-like*)
@@ -57,7 +59,7 @@ handle_system () {
       # get dependencies :
       # we need pkgfile 
       if ! [ `which pkgfile` ] ; then
-        pacman -S --noconfirm pkgtools 
+        pacman -S --needed --noconfirm pkgtools 
         pkgfile -u
       fi
       punani_Scientist_update() {
@@ -65,7 +67,7 @@ handle_system () {
         pkgtool -u
       }
       punani_Scientist_search() {
-        pkgfile $1
+        pkgfile -s -b $1
         if [ "${hard-}" ] ; then
           mgr=`arch_aur_helper`
           $mgr -Ss $1 
@@ -79,7 +81,7 @@ handle_system () {
         #
         # when trying harder it tries to load the package with the given name directly via yaourt
         echo "** trying to find package with given file"
-        if pacman -S `pkgfile $1` ; then
+        if pacman -S --needed $(pkgfile -s -b -r $1); then
           echo "++ finished"
           exit 0
         else
@@ -127,14 +129,14 @@ handle_system () {
       }
       
       punani_Scientist_search() {
-        apt-file search -l -x /$1\$ && exit 0
+        apt-file search -l -x $1\$ && exit 0
         if [ "${hard-}" ] ; then
           apt-cache search $1
         fi
       }
       punani_Engineer_insert() {
         echo "trying to install $1"
-        if apt-get install `apt-file search -l -x /$1\$`;then
+        if apt-get install `apt-file search -l -x $1\$`;then
           echo "++ finished"
         else
           if [ "${hard-}" ] ; then
