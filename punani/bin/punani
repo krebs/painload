@@ -81,9 +81,17 @@ handle_system () {
         #
         # when trying harder it tries to load the package with the given name directly via yaourt
         echo "** trying to find package with given file"
-        if pacman -S --needed $(pkgfile -s -b -r $1); then
-          echo "++ finished"
-          exit 0
+        pkgs=$(pkgfile -s -b -r $1 | tr "\n" "|" )
+        if [ "$pkgs" ];then
+          echo "** found one or more packages matching, skip the ones you do not need!"
+          OLDIFS=$IFS
+          IFS='|'
+          for to_install in $pkgs;do
+            if pacman -S --needed "$to_install"; then
+              echo "++ finished"
+            fi
+          done
+          IFS=$OLDIFS
         else
           echo "!! nothing found in base repos"
           if [ "${hard-}" ] ; then
@@ -118,9 +126,9 @@ handle_system () {
       #  apt-get () { echo $@; }
       #fi
       if  ! which apt-file; then 
-        echo "installing dependencies: apt-file"
+        echo "** installing dependencies: apt-file"
         apt-get install --yes apt-file
-        echo "update the apt-file tool"
+        echo "** update the apt-file tool"
         apt-file update
       fi
       punani_Scientist_update() {
@@ -136,8 +144,17 @@ handle_system () {
       }
       punani_Engineer_insert() {
         echo "trying to install $1"
-        if apt-get install `apt-file search -l -x $1\$`;then
-          echo "++ finished"
+        pkgs=$(apt-file search -l -x $1\$ | tr "\n" "|" )
+        if [ "$pkgs" ];then
+          echo "** found one or more packages matching, skip the ones you do not need!"
+          OLDIFS=$IFS
+          IFS='|'
+          for to_install in $pkgs;do
+            if apt-get install $to_install;then
+              echo "++ finished"
+            fi
+          done
+          IFS=$OLDIFS
         else
           if [ "${hard-}" ] ; then
             echo "** trying harder"
