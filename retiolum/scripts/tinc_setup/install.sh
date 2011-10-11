@@ -40,6 +40,7 @@ then
     if ! $MYBIN/check-free-retiolum-v4 $v4num;then
       exit 1
     fi
+    myipv4="10.7.7.$v4num"
   fi
   echo "Subnet = $myipv4" > hosts/$myname
 
