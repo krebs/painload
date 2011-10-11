@@ -21,6 +21,8 @@ update: hosts
 	bin/update_tinc_hosts "create magic" || true
 	@echo adding hosts 
 	bin/update_tinc_hosts restart
+	@echo reloading tincd
+	pkill -HUP tincd
 
 arch-install: update install arch-autostart autohosts
 
