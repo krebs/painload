@@ -22,6 +22,7 @@ if curl -fsS \
     _hrefs |
     grep '^/krebscode/painload/blob/' |
     grep -v "/blob/$old_commit/" >$temp1
+then
 
   new_commit=`sed 's|^/krebscode/painload/blob/\([^/]*\)/.*|\1|;q' $temp1`
 
