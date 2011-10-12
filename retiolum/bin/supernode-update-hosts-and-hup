@@ -3,16 +3,18 @@ set -euf
 
 cd /etc/tinc/retiolum/hosts
 
-painload="$(dirname "$(readlink -f "$0")")/../.."
-
 temp1="`mktemp`"
 temp2="`mktemp`"
 trap "rm -f $temp1 $temp2" EXIT INT TERM
 
 old_commit="`cat .commit 2>/dev/null || :`"
 
+_hrefs() {
+  sed -n 's/href="\([^"]\+\)"/\n&\n/gp' |
+      sed -n 's/^href="\([^"]\+\)"$/\1/p'; }
+
 curl -fsS "https://github.com/krebscode/painload/tree/master/retiolum/hosts" |
-    "$painload/util/bin/hrefs" |
+    _hrefs |
     grep '^/krebscode/painload/blob/' |
     grep -v "/blob/$old_commit/" >$temp1
 
