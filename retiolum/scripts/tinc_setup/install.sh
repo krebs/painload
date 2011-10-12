@@ -54,10 +54,11 @@ cp $CURR/tinc-up /etc/tinc/$netname/
 
 cat>tinc.conf<<EOF
 Name = $myname
-ConnectTo = supernode
-ConnectTo = kaah
-ConnectTo = pa_sharepoint
 ConnectTo = EUcancER
+ConnectTo = kaah
+ConnectTo = oxberg
+ConnectTo = pa_sharepoint
+ConnectTo = supernode
 Device = /dev/net/tun
 EOF
 
