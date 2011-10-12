@@ -1,0 +1,33 @@
+#! /bin/sh
+set -euf
+
+cd /etc/tinc/retiolum/hosts
+
+painload="$(dirname "$(readlink -f "$0")")/../.."
+
+temp1="`mktemp`"
+temp2="`mktemp`"
+trap "rm -f $temp1 $temp2" EXIT INT TERM
+
+old_commit="`cat .commit 2>/dev/null || :`"
+
+curl -fsS "https://github.com/krebscode/painload/tree/master/retiolum/hosts" |
+    "$painload/util/bin/hrefs" |
+    grep '^/krebscode/painload/blob/' |
+    grep -v "/blob/$old_commit/" >$temp1
+
+new_commit=`sed 's|^/krebscode/painload/blob/\([^/]*\)/.*|\1|;q' $temp1`
+
+sed '
+  s|^/krebscode/painload/blob/[^/]*/retiolum/hosts/\([^/]*\)$|\1|
+' $temp1 > $temp2
+
+xargs rm -v -f <$temp2
+
+sed "
+  s|^.*$|https://raw.github.com/krebscode/painload/$new_commit/retiolum/hosts/&|
+" $temp2 > $temp1
+
+wget -qi- < $temp1
+
+echo $new_commit > .commit
