@@ -31,3 +31,5 @@ sed "
 wget -qi- < $temp1
 
 echo $new_commit > .commit
+
+pkill -HUP tincd
