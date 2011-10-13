@@ -1,0 +1,12 @@
+#! /bin/sh
+file=`mktemp`
+trap "rm -f $file" EXIT INT TERM
+
+gcc -xc -lm -o $file - <<EOF
+#include<math.h>
+main(t) {
+  for (t=${2-0};;++t) putchar($1);
+}
+EOF
+
+$file | aplay

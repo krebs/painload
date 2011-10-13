@@ -1,17 +1,30 @@
 #! /bin/sh
+#
+# Paste some data to a session.
+#
+## SYNOPSIS
+#
+#     bridge paste SESSION DATA...
+#     bridge paste SESSION < DATA
+#
 set -euf
+
 target="$1"; shift
+
+# paste args or stdin
 if test $# -gt 0; then
   tmux -L bridge set-buffer -b 0 "$*"
 else
+  # use aux file instead of direct stdin for Vim and when used from $SHELL
   if test -n "${VIMRUNTIME-}" || tty >/dev/null; then
-    temp=`mktemp`
-    trap "rm -f $temp" EXIT INT TERM
-    cat>$temp
+    path=`mktemp`
+    trap "rm -f $path" EXIT INT TERM
+    cat>$path
   else
-    temp=-
+    path=-
   fi
-  tmux -L bridge load-buffer -b 0 $temp
+  tmux -L bridge load-buffer -b 0 $path
 fi
+
 tmux -L bridge paste-buffer -b 0 -t "$target"
 tmux -L bridge   set-buffer -b 0 READY.

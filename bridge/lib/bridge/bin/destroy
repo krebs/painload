@@ -1,3 +1,12 @@
 #! /bin/sh
+#
+# Destroy a session.
+#
+## SYNOPSIS
+#
+#     bridge destroy SESSION
+#
+# Note that this may destroy similar named sessions (by implication / tmux)
+#
 set -euf
 tmux -L bridge kill-session -t "$1"

@@ -1,5 +1,3 @@
-# //bridge
-
 Bridge is a tool to connect your favourite editor and interpreter (or
 similar) for maximum profit.
 
@@ -19,6 +17,13 @@ similar) for maximum profit.
     # write interpreter stuff, e.g. 42^23
     # mark that stuff
     # press return
+
+    # paste some stuff into the session
+    bridge paste my_fancy_interpreter '1 + 2 + 4^M'
+    # (note that ^M is carriage return obtained by pressing ^V^M AKA C-V C-M)
+
+    # or use bridge as a sink in your pipeline
+    echo 2^20 | bridge paste my_fancy_interpreter
 
     # you can use tab-completion everywhere (if installed)
 
@@ -49,5 +54,6 @@ Hint #3: you could also use ~/.profile or similar
 
 ## install bridge into some usr-like hierarchy [advanced]
 
-  tar -C //bridge -c . | tar --exclude=./README.md -C ~/opt -v -x
+    tar -C //bridge -c . |
+        tar --exclude=./README.md -C ~/opt -v --keep-newer-files -x
 

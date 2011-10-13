@@ -40,6 +40,7 @@ then
     if ! $MYBIN/check-free-retiolum-v4 $v4num;then
       exit 1
     fi
+    myipv4="10.7.7.$v4num"
   fi
   echo "Subnet = $myipv4" > hosts/$myname
 
@@ -53,10 +54,11 @@ cp $CURR/tinc-up /etc/tinc/$netname/
 
 cat>tinc.conf<<EOF
 Name = $myname
-ConnectTo = supernode
-ConnectTo = kaah
-ConnectTo = pa_sharepoint
 ConnectTo = EUcancER
+ConnectTo = kaah
+ConnectTo = oxberg
+ConnectTo = pa_sharepoint
+ConnectTo = supernode
 Device = /dev/net/tun
 EOF
 

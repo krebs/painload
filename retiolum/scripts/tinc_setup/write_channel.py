@@ -6,7 +6,7 @@ except:
   print "you are made of stupid"
   exit (23)
 
-CHANNEL = '#tincspasm'
+CHANNEL = '#krebsco'
 HOST='irc.freenode.net'
 FILE="/etc/tinc/retiolum/hosts/"+myname
 PORT=6667
