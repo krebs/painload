@@ -4,6 +4,7 @@ http://streams.xenim.de/radiotux.ogg radiotux
 http://bassdrive.com/v2/streams/BassDrive.pls bassdrive
 http://somafm.com/illstreet.pls illstreet
 http://localhost:8000/stream.ogg icecast
+http://localhost:8000/shice.ogg shice
 http://stream2.jungletrain.net:8000 jungletrain
 http://playlist.tormentedradio.com/tormentedradio.pls tormented
 http://filebitch.shack:8000 mpd
