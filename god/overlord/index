@@ -4,7 +4,7 @@ set -euf
 # cd //
 cd $(dirname $(readlink -f $0))/../..
 
-max=100
+max=70
 step=10
 min=0
 
