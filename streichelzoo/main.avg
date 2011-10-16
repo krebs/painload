@@ -1,1 +1,31 @@
-/home/momo/dev/comshack/main.avg
+<?xml version="1.0"?>
+<avg width="1024" height="768" active="True" >
+  <div id="mainwindow" active="True">
+        <div id="welcometext" x="0"   y="70" width="1024" active="True">
+            <words x="1024" y="10"
+               text="Willkommen im shackspace"
+               font="arial" fontsize="100"/>
+            <words x="1024" y="10"
+                text="Welcome to shackspace"
+                font="arial" fontsize="100"/>
+            <words x="1024" y="10" 
+                text="Benevudi a shackspace"
+                font="arial" fontsize="100"/>
+            <words x="1024" y="10"
+                text="Bienvenue à la shackspace"
+                font="arial" fontsize="100"/>
+        </div>
+    <image id="light" href="button_up.png" x="50" y="250"/>
+    <image id="roster" href="button_up.png" x="50" y="400"/>
+    <image id="blank" href="button_up.png" x="50" y="550"/>
+    <words id="txt_light"  x="175" y="250" fontsize="80" variant="bold" text="lightcontrol"/>
+    <words id="txt_roster"  x="175" y="400" fontsize="80" variant="bold" text="current roster"/>
+    <words id="txt_blank" x="175" y="550" fontsize="80" variant="bold" text="blank"/>
+  </div>
+  <div id="lightcontrol" active="False" width="1024" height="768">
+      <div id="segment1" height="200" width="400" x="50" y="50" active="False">
+            <words id="test" text="test"/>
+      </div>
+  </div>
+  <image id="logo" href="shack.png" x="880" y="460" />
+</avg>
