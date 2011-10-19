@@ -22,7 +22,8 @@ update: hosts
 	@echo adding hosts 
 	bin/update_tinc_hosts restart
 	@echo reloading tincd
-	pkill -HUP tincd || true
+	sudo pkill -HUP tincd || true
+	sudo pkill -ALRM tincd || true
 
 arch-install: update install arch-autostart autohosts
 
