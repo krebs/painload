@@ -35,13 +35,33 @@ destroy() {
     echo "$cache" | sed "/^$bs$/,/^$es$/d" >$3
   fi
 }
+help() {
+cat <<EOF
+Usage: $0 DELIMITER_NAME FUNCTION FILE
+$0 creates,updates or destroys magic inside a file.
+It can be used to reliably add or remove custom lines.
+For example add own lines in /etc/rc.local to auto-load 
+scripts.
 
+FUNCTION:
+  create -- creates new magic in file, takes stdin as content in magic
+  update -- updates already existing magic with text from stdin
+  destroy -- destroys magic boundary
+  retrieve -- retrieve the content of magic and writes to stdout
+  
+Not yet implemented is the handling of magic not starting with the 
+shell comment symbol "#".
+
+EOF
+
+}
 case $2 in
   (create) create "$@" ;;
   (retrieve) retrieve "$@" ;;
   (update) update "$@" ;;
   (destroy) destroy "$@" ;;
   (*)
+    help >&2
     echo 'Error 1: You are made of stupid!' >&2
     exit 23
 esac
