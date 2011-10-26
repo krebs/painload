@@ -5,7 +5,7 @@ import sys,json
 supernodes= [ "kaah","supernode","euer","pa_sharepoint","oxberg" ]
 """ TODO: Refactoring needed to pull the edges out of the node structures again,
 it should be easier to handle both structures"""
-DUMP_FILE = "/srv/http/tmp/live/availability"
+DUMP_FILE = "/krebs/db/availability"
 def write_digraph(nodes):
   """
   writes the complete digraph in dot format
