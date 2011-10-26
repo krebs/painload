@@ -50,25 +50,26 @@ def generate_stats(nodes):
   """ Generates some statistics of the network and nodes
   """
   f = open(DUMP_FILE,'r')
-  flines = f.readlines()
+  jlines = []
+  for line in f:
+    jlines.append(json.loads(line))
   f.close()
   for k,v in nodes.iteritems():
     v['num_conns'] = len(v.get('to',[]))
-    v['availability'] = get_node_availability(k,flines)
+    v['availability'] = get_node_availability(k,jlines)
     sys.stderr.write( "%s -> %f\n" %(k ,v['availability']))
 
-def get_node_availability(name,flines):
+def get_node_availability(name,jlines):
   """ calculates the node availability by reading the generated dump file
   adding together the uptime of the node and returning the time
 	parms:
           name - node name
-          f - archival dump line array
+          jlines - list of already parsed dictionaries node archive
   """
   begin = last = current = 0
   uptime = 0
   #sys.stderr.write ( "Getting Node availability of %s\n" % name)
-  for line in flines:
-    stat = json.loads(line)
+  for stat in jlines:
     ts = stat['timestamp']
     if not begin:
       begin = last = ts
@@ -114,7 +115,7 @@ def write_node(k,v):
 
   node = "  "+k+"[label=\""
   node += k+"\\l"
-  node += "availability: %.2f%%\\l" % (v['availability'] * 100)
+  node += "availability: %f\\l" % v['availability'] 
   if v.has_key('num_conns'):
     node += "Num Connects:"+str(v['num_conns'])+"\\l"
   node += "external:"+v['external-ip']+":"+v['external-port']+"\\l"
