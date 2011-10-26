@@ -5,6 +5,7 @@ import sys,json
 supernodes= [ "kaah","supernode","euer","pa_sharepoint","oxberg" ]
 """ TODO: Refactoring needed to pull the edges out of the node structures again,
 it should be easier to handle both structures"""
+DUMP_FILE = "/srv/http/tmp/live/availability"
 def write_digraph(nodes):
   """
   writes the complete digraph in dot format
@@ -15,12 +16,20 @@ def write_digraph(nodes):
   print ('  node[shape=box,style=filled,fillcolor=grey]')
   print ('  overlap=false')
   generate_stats(nodes)
-  nodes = delete_unused_nodes(nodes)
   merge_edges(nodes)
   write_stat_node(nodes)
   for k,v in nodes.iteritems():
     write_node(k,v)
   print ('}')
+def dump_graph(nodes):
+  from time import time
+  graph = {}
+  graph['nodes'] = nodes
+  graph['timestamp'] = time()
+  f = open(DUMP_FILE,'a')
+  json.dump(graph,f)
+  f.write('\n')
+  f.close()
 def write_stat_node(nodes):
   ''' Write a `stats` node in the corner
       This node contains infos about the current number of active nodes and connections inside the network
@@ -40,8 +49,39 @@ def write_stat_node(nodes):
 def generate_stats(nodes):
   """ Generates some statistics of the network and nodes
   """
+  f = open(DUMP_FILE,'r')
+  flines = f.readlines()
+  f.close()
   for k,v in nodes.iteritems():
     v['num_conns'] = len(v.get('to',[]))
+    v['availability'] = get_node_availability(k,flines)
+    sys.stderr.write( "%s -> %f\n" %(k ,v['availability']))
+
+def get_node_availability(name,flines):
+  """ calculates the node availability by reading the generated dump file
+  adding together the uptime of the node and returning the time
+	parms:
+          name - node name
+          f - archival dump line array
+  """
+  begin = last = current = 0
+  uptime = 0
+  #sys.stderr.write ( "Getting Node availability of %s\n" % name)
+  for line in flines:
+    stat = json.loads(line)
+    ts = stat['timestamp']
+    if not begin:
+      begin = last = ts
+    current = ts
+    if stat['nodes'].get(name,{}).get('to',[]):
+      uptime += current - last
+    else:
+      pass
+      #sys.stderr.write("%s offline at timestamp %f\n" %(name,current))
+    last = ts
+  all_the_time = last - begin
+  return uptime/ all_the_time
+
 def delete_unused_nodes(nodes):
   new_nodes = {}
   for k,v in nodes.iteritems():
@@ -57,7 +97,6 @@ def delete_unused_nodes(nodes):
 def merge_edges(nodes):
   """ merge back and forth edges into one
   DESTRUCTS the current structure by deleting "connections" in the nodes
-
   """
   for k,v in nodes.iteritems():
     for con in v.get('to',[]):
@@ -75,9 +114,10 @@ def write_node(k,v):
 
   node = "  "+k+"[label=\""
   node += k+"\\l"
-  node += "external:"+v['external-ip']+":"+v['external-port']+"\\l"
+  node += "availability: %.2f%%\\l" % (v['availability'] * 100)
   if v.has_key('num_conns'):
     node += "Num Connects:"+str(v['num_conns'])+"\\l"
+  node += "external:"+v['external-ip']+":"+v['external-port']+"\\l"
   for addr in v.get('internal-ip',['¯\\\\(°_o)/¯']):
     node += "internal:"+addr+"\\l"
   node +="\""
@@ -138,4 +178,6 @@ def parse_input():
             {'name':l[2],'addr':l[4],'port':l[6],'weight' : l[10] })
   return nodes
 nodes = parse_input()
+nodes = delete_unused_nodes(nodes)
+dump_graph(nodes)
 write_digraph(nodes)
