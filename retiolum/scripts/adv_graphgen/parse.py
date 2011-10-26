@@ -1,23 +1,42 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 
-import sys
+import sys,json
+supernodes= [ "kaah","supernode","euer","pa_sharepoint","oxberg" ]
 """ TODO: Refactoring needed to pull the edges out of the node structures again,
 it should be easier to handle both structures"""
-
 def write_digraph(nodes):
   """
   writes the complete digraph in dot format
   """
   print ('digraph retiolum {')
+  #print ('  graph [center rankdir=LR packMode="clust"]')
+  print ('  graph [center packMode="clust"]')
   print ('  node[shape=box,style=filled,fillcolor=grey]')
   print ('  overlap=false')
   generate_stats(nodes)
   nodes = delete_unused_nodes(nodes)
   merge_edges(nodes)
+  write_stat_node(nodes)
   for k,v in nodes.iteritems():
     write_node(k,v)
   print ('}')
+def write_stat_node(nodes):
+  ''' Write a `stats` node in the corner
+      This node contains infos about the current number of active nodes and connections inside the network
+  '''
+  num_conns = 0
+  num_nodes = len(nodes)
+  for k,v in nodes.iteritems():
+    num_conns+= len(v['to'])
+  node_text = "  stats_node [label=\"Statistics\\l"
+  node_text += "Active Nodes: %s\\l" % num_nodes
+  node_text += "Connections : %s\\l" % num_conns
+  node_text += "\""
+  node_text += ",fillcolor=green"
+  node_text += "]"
+  print(node_text)
+
 def generate_stats(nodes):
   """ Generates some statistics of the network and nodes
   """
@@ -62,14 +81,26 @@ def write_node(k,v):
   for addr in v.get('internal-ip',['¯\\\\(°_o)/¯']):
     node += "internal:"+addr+"\\l"
   node +="\""
-  if v['external-ip'] == "MYSELF":
+  if k in supernodes:
     node += ",fillcolor=steelblue1"
-  node +=",group=\""+v['external-ip'].replace(".","")+"\""
+  #node +=",group=\""+v['external-ip'].replace(".","")+"\""
   node += "]"
   print node
 
   for con in v.get('to',[]):
-    edge = "  "+k+ " -> " +con['name'] + "[weight="+str(float(con['weight']))
+    label  = con['weight']
+    w = int(con['weight'])
+    weight = str(1000 - (((w - 150) * (1000 - 0)) / (1000 -150 )) + 0)
+
+    length = str(float(w)/1500)
+    #weight = "1000" #str(300/float(con['weight']))
+    #weight = str((100/float(con['weight'])))
+    #weight = str(-1 * (200-100000/int(con['weight'])))
+    if float(weight) < 0 :
+      weight= "1"
+
+    #sys.stderr.write(weight + ":"+ length +" %s -> " %k + str(con) + "\n")
+    edge = "  "+k+ " -> " +con['name'] + "[label="+label + " weight="+weight #+ " minlen="+length
     if con.get('bidirectional',False):
       edge += ",dir=both"
     edge += "]"
