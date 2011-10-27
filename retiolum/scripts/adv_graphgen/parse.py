@@ -55,10 +55,18 @@ def generate_stats(nodes):
     jlines.append(json.loads(line))
   f.close()
   for k,v in nodes.iteritems():
-    v['num_conns'] = len(v.get('to',[]))
+    conns = v.get('to',[])
+    v['num_conns'] = len(conns)
+    v['avg_weight'] = get_node_avg_weight(conns)
     v['availability'] = get_node_availability(k,jlines)
     sys.stderr.write( "%s -> %f\n" %(k ,v['availability']))
-
+def get_node_avg_weight(conns):
+  """ calculates the average weight for the given connections """
+  if not conns:
+    sys.syderr.write("get_node_avg_weight: connection parameter empty")
+    return 9001
+  else:
+    return sum([float(c['weight']) for c in conns])/len(conns)
 def get_node_availability(name,jlines):
   """ calculates the node availability by reading the generated dump file
   adding together the uptime of the node and returning the time
@@ -116,6 +124,7 @@ def write_node(k,v):
   node = "  "+k+"[label=\""
   node += k+"\\l"
   node += "availability: %f\\l" % v['availability'] 
+  node += "avg weight: %.2f\\l" % v['avg_weight'] 
   if v.has_key('num_conns'):
     node += "Num Connects:"+str(v['num_conns'])+"\\l"
   node += "external:"+v['external-ip']+":"+v['external-port']+"\\l"
