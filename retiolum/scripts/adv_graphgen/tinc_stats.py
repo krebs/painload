@@ -2,6 +2,8 @@
 from BackwardsReader import BackwardsReader
 import os
 import re
+import sys
+import json
 
 
 TINC_NETWORK = os.environ.get("TINC_NETWORK","retiolum")
@@ -30,7 +32,6 @@ def get_tinc_block(log_file):
     line = BOL.sub('',line).strip()
 
     if END_SUBNET in line:
-      print("Found end of block")
       in_block = True
 
     if not in_block:
@@ -39,7 +40,6 @@ def get_tinc_block(log_file):
     tinc_block.append(line)
 
     if BEGIN_NODES in line:
-      print("Found begin of block")
       break
   return reversed(tinc_block)
 
@@ -74,4 +74,6 @@ def parse_input(log_data):
             {'name':l[2],'addr':l[4],'port':l[6],'weight' : l[10] })
   return nodes
 
-print parse_input((get_tinc_block(SYSLOG_FILE)))
+
+if __name__ == '__main__':
+  print json.dumps(parse_input((get_tinc_block(SYSLOG_FILE))))

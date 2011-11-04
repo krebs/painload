@@ -1,18 +1,18 @@
 #!/bin/sh
-HERE=$(dirname `readlink -f $0`)
+cd $(dirname `readlink -f $0`)
 GRAPH_SETTER1=dot
 GRAPH_SETTER2=circo
 GRAPH_SETTER3='neato -Goverlap=prism '
 GRAPH_SETTER4=sfdp
-LOG_FILE=/var/log/syslog
+#LOG_FILE=/var/log/syslog
 TYPE=svg
 TYPE2=png
 OPENER=/bin/true
 DOTFILE=`mktemp`
 trap 'rm $DOTFILE' SIGINT SIGTERM
 sudo pkill -USR2 tincd
-sudo sed -n '/tinc.retiolum/{s/.*tinc.retiolum\[[0-9]*\]: //gp}' $LOG_FILE |\
-    $HERE/parse.py > $DOTFILE
+sudo python tinc_stats.py |\
+    python parse_tinc_stats.py > $DOTFILE
 
 $GRAPH_SETTER1 -T$TYPE -o $1/retiolum_1.$TYPE $DOTFILE
 $GRAPH_SETTER2 -T$TYPE -o $1/retiolum_2.$TYPE $DOTFILE

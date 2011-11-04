@@ -49,11 +49,14 @@ def write_stat_node(nodes):
 def generate_stats(nodes):
   """ Generates some statistics of the network and nodes
   """
-  f = open(DUMP_FILE,'r')
+  try:
+    f = open(DUMP_FILE,'r')
+    f.close()
+  except Exception,e:
+    f = []
   jlines = []
   for line in f:
     jlines.append(json.loads(line))
-  f.close()
   for k,v in nodes.iteritems():
     conns = v.get('to',[])
     v['num_conns'] = len(conns)
@@ -89,7 +92,10 @@ def get_node_availability(name,jlines):
       #sys.stderr.write("%s offline at timestamp %f\n" %(name,current))
     last = ts
   all_the_time = last - begin
-  return uptime/ all_the_time
+  try:
+    return uptime/ all_the_time
+  except:
+    return 1
 
 def delete_unused_nodes(nodes):
   new_nodes = {}
@@ -156,38 +162,12 @@ def write_node(k,v):
     edge += "]"
     print edge
 
-def parse_input():
-  nodes={}
-  for line in sys.stdin:
-    line = line.replace('\n','')
-    if line == 'Nodes:':
-      nodes={}
-      for line in sys.stdin:
-        if line == 'End of nodes.\n':
-          break
-        l = line.replace('\n','').split() #TODO unhack me
-        nodes[l[0]]= { 'external-ip': l[2], 'external-port' : l[4] }
-    if line == 'Subnet list:':
-      for line in sys.stdin:
-        if line == 'End of subnet list.\n':
-          break
-        l = line.replace('\n','').split() 
-        if not nodes[l[2]].get('internal-ip',False):
-           nodes[l[2]]['internal-ip'] = []
-        nodes[l[2]]['internal-ip'].append(l[0].split('#')[0])
-    if line == 'Edges:':
-      edges = {}
-      for line in sys.stdin:
-        if line == 'End of edges.\n':
-          break
-        l = line.replace('\n','').split() 
-
-        if not nodes[l[0]].has_key('to') :
-          nodes[l[0]]['to'] = []
-        nodes[l[0]]['to'].append(
-            {'name':l[2],'addr':l[4],'port':l[6],'weight' : l[10] })
-  return nodes
-nodes = parse_input()
+def decode_input(FILE):
+  return json.load(FILE)
+nodes = decode_input(sys.stdin)
 nodes = delete_unused_nodes(nodes)
-dump_graph(nodes)
+try:
+  dump_graph(nodes)
+except Exception,e:
+  sys.stderr.write("Cannot dump graph: %s" % str(e))
 write_digraph(nodes)
