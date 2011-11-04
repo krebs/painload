@@ -1,0 +1,2 @@
+#!/bin/sh
+curl http://euer.krebsco.de/live/ip.php
