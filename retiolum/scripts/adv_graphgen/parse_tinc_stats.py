@@ -49,14 +49,14 @@ def write_stat_node(nodes):
 def generate_stats(nodes):
   """ Generates some statistics of the network and nodes
   """
+  jlines = []
   try:
     f = open(DUMP_FILE,'r')
+    for line in f:
+      jlines.append(json.loads(line))
     f.close()
   except Exception,e:
-    f = []
-  jlines = []
-  for line in f:
-    jlines.append(json.loads(line))
+    pass
   for k,v in nodes.iteritems():
     conns = v.get('to',[])
     v['num_conns'] = len(conns)
@@ -81,6 +81,8 @@ def get_node_availability(name,jlines):
   uptime = 0
   #sys.stderr.write ( "Getting Node availability of %s\n" % name)
   for stat in jlines:
+    if not stat['nodes']:
+      continue
     ts = stat['timestamp']
     if not begin:
       begin = last = ts

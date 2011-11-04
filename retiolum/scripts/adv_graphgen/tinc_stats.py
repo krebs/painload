@@ -7,7 +7,8 @@ import json
 
 
 TINC_NETWORK = os.environ.get("TINC_NETWORK","retiolum")
-SYSLOG_FILE = "/var/log/everything.log"
+os.environ["LOG_FILE"]
+SYSLOG_FILE = os.environ.get("LOG_FILE","/var/log/everything.log")
 
 
 # Tags and Delimiters
