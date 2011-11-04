@@ -1,0 +1,24 @@
+/HAG5eHZ010C_IEnBWA02
+
+1-0:0.0.0*255(20745965)         #Eigentumsnummer
+1-0:1.8.0*255(011107.1314)      #Zählerstand Bezug
+1-0:96.5.5*255(82)              #Zählerstand Lieferg
+0-0:96.1.255*255(0000120120)    #Status
+1-0:32.7.0*255(233.90*V)        #Spannung L1
+1-0:52.7.0*255(233.07*V)        #Spannung L2
+1-0:72.7.0*255(236.50*V)        #Spannung L3
+1-0:31.7.0*255(004.99*A)        #Strom L1
+1-0:51.7.0*255(005.02*A)        #Strom L2
+1-0:71.7.0*255(007.14*A)        #Strom L3
+1-0:21.7.0*255(+00984*W)        #Leistung L1
+1-0:41.7.0*255(+00966*W)        #Leistung L2
+1-0:61.7.0*255(+01640*W)        #Leistung L3
+1-0:96.50.0*0(EF)               #Netzstatus
+1-0:96.50.0*1(07CE)             #Netzperiode (1/100ms)
+1-0:96.50.0*2(10)               #aktuelle Chiptemp. Zähler (hex, in °C)
+1-0:96.50.0*3(0B)               #min Chiptemp
+1-0:96.50.0*4(28)               #gemittelte Chiptemp
+1-0:96.50.0*5(1D)               #max. Chiptemp.
+1-0:96.50.0*6(003D381B260A16F1F6FE560200009F80) #Kontrollnummer
+1-0:96.50.0*7(00)               #Diagnose
+!                               #ENTE

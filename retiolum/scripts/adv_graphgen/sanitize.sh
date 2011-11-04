@@ -1,20 +1,24 @@
 #!/bin/sh
-HERE=$(dirname `readlink -f $0`)
-TMP=/tmp
+cd $(dirname `readlink -f $0`)
 GRAPH_SETTER1=dot
 GRAPH_SETTER2=circo
 GRAPH_SETTER3='neato -Goverlap=prism '
 GRAPH_SETTER4=sfdp
 LOG_FILE=/var/log/syslog
+TYPE=svg
+TYPE2=png
 OPENER=/bin/true
+DOTFILE=`mktemp`
+trap 'rm $DOTFILE' SIGTERM
+sudo LOG_FILE=$LOG_FILE python tinc_stats.py |\
+    python parse_tinc_stats.py > $DOTFILE
 
-sudo pkill -USR2 tincd
-sudo sed -n '/tinc.retiolum/{s/.*tinc.retiolum\[[0-9]*\]: //gp}' $LOG_FILE |\
-    $HERE/parse.py > $TMP/retiolum.dot
-
-$GRAPH_SETTER1 -Tpng -o $1/retiolum_1.png $TMP/retiolum.dot
-$GRAPH_SETTER2 -Tpng -o $1/retiolum_2.png $TMP/retiolum.dot
-$GRAPH_SETTER3 -Tpng -o $1/retiolum_3.png $TMP/retiolum.dot
-$GRAPH_SETTER4 -Tpng -o $1/retiolum_4.png $TMP/retiolum.dot
-$OPENER $HERE/retiolum_1.png &>/dev/null 
-rm $TMP/retiolum.dot
+$GRAPH_SETTER1 -T$TYPE -o $1/retiolum_1.$TYPE $DOTFILE
+$GRAPH_SETTER2 -T$TYPE -o $1/retiolum_2.$TYPE $DOTFILE
+$GRAPH_SETTER3 -T$TYPE -o $1/retiolum_3.$TYPE $DOTFILE
+$GRAPH_SETTER4 -T$TYPE -o $1/retiolum_4.$TYPE $DOTFILE
+#convert -resize 20% $1/retiolum_1.$TYPE  $1/retiolum_1.$TYPE2
+#convert -resize 20% $1/retiolum_2.$TYPE  $1/retiolum_2.$TYPE2
+#convert -resize 20% $1/retiolum_3.$TYPE  $1/retiolum_3.$TYPE2
+#convert -resize 20% $1/retiolum_4.$TYPE  $1/retiolum_4.$TYPE2
+#$OPENER $1/retiolum_1.$TYPE &>/dev/null 

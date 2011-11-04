@@ -1,4 +1,6 @@
 #? /bin/sh
+# This  is the project to use the SOAP connector of OVH to change zone 
+# entries for krebsco.de
 set -euf
 
 # install ovh soapi
