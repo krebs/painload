@@ -1,10 +1,17 @@
-# Krebs News Issue #1 (2011-08-24)
-## Ante Scriptum
-Wer noch kein Krebs hat kann es ganz einfach mit git aus github[-1.1]
-auschecken.
+# Krebs News Issue #1 (2011-??-??)
+## -1. Ante Scriptum
 
-Alle Pfade in den Krebs News beginnend mit `//` bezeichnen das root 
-verzeichnis des ausgecheckten krebs ordners ( optimaler weise in `/krebs`).
+Wer noch keinen Krebs hat, kann sich ganz einfach mit [Git][-1.1] ein
+Klon von [GitHub][-1.0] holen:
+
+    git clone https://github.com/krebscode/painload krebs
+
+Das so oder ähnlich erzeugte Verzeichnis wird im Folgenden `//`
+genannt.  Das Ministerium empfiehlt die Verwendung von `/krebs`,
+aber jeder andere Ort ist fast genauso gut.
+
+[-1.0]: https://github.com
+[-1.1]: http://git-scm.com
 
 ## 0. godmode im shack
 Der Urkrebs steuert ab heute die Photonenwerfer im shack. 
