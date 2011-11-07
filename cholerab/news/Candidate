@@ -58,9 +58,36 @@ Die Musiksammlung kann in incoming/Musik auf der Filebitch erweitert werden.
 
 ## 3. KNUT - Die Krebs Notification Utility Toolchain
 
+Bereits wieder obsolete?
 
 ## 4. Krebs Kommandozentrale
 
 Der 17" Monitor am Krebs sowie die auf dem Drucker liegende Tastatur wurden so modifiziert dass auf der ersten shell ein ncmpc Interface zu sehen ist, womit sich der MPD und somit auch die Loungebeschallung steuern lässt. Auf der 2. Shell (änderbar duch ctrl+alt+F2) befindet sich ein direktzugriff auf //noise, welcher es u.a. ermöglicht streams zu wechseln oder das licht ein/auszuschalten.
 
 Credits gehen an KM momo und KM tv
+
+## 5. Todesmeldung Urkrebs
+
+Es ist zu vermerken, dass der Urkebs, bzw. dessen Gedaechnis auf der CF-Disk gestorben. Gluecklicher weise wurde zuvor eine dd[⌅]-kopie auf die CF-Karte von Fuerkrebs (Krebs auf der Bruecke/Optionsraeme [Ȳ]) erstellt und diese wurde kurzer hand fuer die Wiederbelebung des Urkrebses verwendet. Dies hat allerdings auch etwas an urspruenglicher Funktionalitaet (siehe ->Oncology) zerstoert. Diese wurde zu einem spaeteren Zeitpunkt wieder hergestellt. Zusaetzlich meldet sich der Urkrebs nun offiziell im Retiolum als Fuerkrebs an.
+
+## 6. Reaktor for IRC
+
+TODO
+
+## 7. Census auf Urkrebs
+
+Census[Ƀ] ist ein projekt in painload welches dem lokal ansaessigen krebs die moeglichkeit bietet noch gezielter laeute im shack zu beleidigen. Alle weiteren informationen koennen aus dem Quelltext von Census entnommen werden. Census wurde am 2011-11-01 in den erweiterten Probebetrieb aufgenommen.
+
+## 8. Oncology auf dem (neuen) Urkrebs
+
+Nachdem Gedaechnistausch von Fuerkrebs und Urkrebs hat es ja wie beschrieben die Funktionalitaet Oncology (Mini Statusbildschirm an USB) dahingerafft. Am 2011-11-07 wurde diese wieder in den Funktionalbetrieb aufgenommen. 
+
+## 9. Krebs Darknet Retiolum Prefix(KD;RP) Graphen-Map in Version 23
+
+Der Graphengenerator fuer KD;RP (siehe [ɐ]ist ueberarbeitet worden und bietet seit dem 2011-10-23 die moeglichkeit Statistiken zu dem Netzwerk und einzelnen Nodes auszugeben. Hervorzuheben ist hierbei die funktionalitaet die Availability von Nodes zu beschreiben, also wie wahrscheinlich es ist einen Knoten X zu einem Zeitpunkt Y im Darknet anzutreffen. Zusaetzlich wurde die Stats-generator engine ueberarbeitet und laeuft nun besonders bei grossen /var/log/syslog files schneller [⠣].
+
+[⠣] https://github.com/krebscode/painload/commit/822c43a763aa61c1accce3768090d066048faaff 
+[⌅] man dd
+[Ȳ] http://shackspace.de/wiki/doku.php?id=project:krebs#fuerkrebs
+[Ƀ] https://github.com/krebscode/painload/tree/master/census
+[ɐ] http://euer.krebsco.de/graphs/retiolum/retiolum_1.svg
