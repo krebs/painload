@@ -30,9 +30,9 @@ Die relevanten Kommando sehen in etwa so aus:
 
     /licht SPEC ZUSTAND
 
-dabei ist `ZUSTAND` eine Ganzzahl im Bereich `[0,1]` und die möglichen
-Werte von `SPEC` können dem vorzüglich belesenen Quelltext von
-[`//god/licht`][0.1] entnommen werden.
+dabei ist `ZUSTAND` eine Ganzzahl im Bereich `[0,1]` und die möglichen Werte
+von `SPEC` können der vorzüglich belesenen Quelle von [`//god/licht`][0.1]
+entnommen werden.
 
 [0.1]: https://github.com/krebscode/painload/tree/master/god/licht
 [0.2]: https://github.com/krebscode/painload/tree/master/noise
