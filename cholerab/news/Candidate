@@ -1,4 +1,5 @@
 # Krebs News Issue #3 (2011-??-??)
+
 ## -1. Ante Scriptum
 
 Wer noch keinen Krebs hat, kann sich ganz einfach mit [Git][-1.1] ein
@@ -12,24 +13,30 @@ aber jeder andere Ort ist fast genauso gut.
 
 [-1.0]: https://github.com
 [-1.1]: http://git-scm.com
+
+## 0. Steuerung der Lichtverschmutzung
 
-## 0. godmode im shack
-Der Urkrebs steuert ab heute die Photonenwerfer im shack. 
-[`//god/licht`][0.1] ist hierfür verantwortlich.
+Der Urkrebs steuert schon immer das Licht.  Dazu muss man sich lediglich
+auf [`//noise`][0.2]`@krebs.shack` einwählen und die relevanten
+Kommandos absetzen.
 
-Um das Licht anzumachen einfach per Telnet auf krebs.shack:
+Eine Einwahl erfolgt z.B. mittels `netcat` wie folgt:
 
-  $ rlwrap nc krebs.shack 23
+    rlwrap nc krebs.shack telnet
+    rlwrap ncat krebs.shack 23
+    rlwrap netcat krebs.shack 23
 
-und dort mit `/licht <Lampe> <0/1>` das licht an/ausschalten.
-Die Lampen sind von Fensterseite richtung Innenhof durchnummeriert(0-3).
+Die relevanten Kommando sehen in etwa so aus:
 
-Das MoC bedankt sich sehr herzlich bei Ulrich, der auf anfrage die 
-Lichsteuerung mit Ethernet ausgestattet und sie fuer die Benutzung zur
-verfuegung gestellt hat.
+    /licht SPEC ZUSTAND
 
-[0.1]: https://github.com/krebscode/painload/tree/master/god
+dabei ist `ZUSTAND` eine Ganzzahl im Bereich `[0,1]` und die möglichen
+Werte von `SPEC` können dem vorzüglich belesenen Quelltext von
+[`//god/licht`][0.1] entnommen werden.
 
+[0.1]: https://github.com/krebscode/painload/tree/master/god/licht
+[0.2]: https://github.com/krebscode/painload/tree/master/noise
+
 ## 1. Tinc Retiolum updates
 Das retiolum Darknet ueber tinc als vermaschtes VPN ist ein integraler 
 Bestandteil der Krebs Infrastruktur. Umso wichtiger ist es, dass die 
