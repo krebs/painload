@@ -1,0 +1,8 @@
+#!/bin/sh
+
+TMP=`mktemp`
+crontab -l >$TMP
+
+echo "23 * * * * $PWD/arping_users.py > $PWD/../db/arping" |
+../util/bin/magic "arping" create $TMP
+crontab $TMP
