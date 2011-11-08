@@ -22,11 +22,15 @@ echo "added known hosts:"
 ls -1 hosts | LC_ALL=C sort
 echo "delete the nodes you do not trust!"
 
+hostname="${HOSTNAME-`cat /etc/hostname`}"
 myname="${1:-}"
 if [ ! "$myname" ] 
 then
-  echo "select username: "
+  printf "select node name [$hostname]: "
   read myname
+  if test -z "$myname"; then
+    myname="$hostname"
+  fi
 fi
 if [ ! -e "hosts/$myname" ]
 then
@@ -35,11 +39,13 @@ then
   
   if [ ! "$myipv4" ] 
   then
-    echo "select v4 subnet ip (1-255) :"
+    printf 'select v4 subnet ip (1-255): '
     read v4num
-    if ! $MYBIN/check-free-retiolum-v4 $v4num;then
-      exit 1
-    fi
+    until $MYBIN/check-free-retiolum-v4 $v4num; do
+      echo "your're an idiot!"
+      printf 'select unused v4 subnet ip (1-255): '
+      read v4num
+    done
     myipv4="10.7.7.$v4num"
   fi
   echo "Subnet = $myipv4" > hosts/$myname
