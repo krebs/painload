@@ -11,7 +11,7 @@ hosts:
 	bin/update-retiolum-hosts || true
 
 install: update
-	punani -Eih tinc /usr/bin/python /usr/bin/python2
+	../punani/bin/punani -Eih tinc /usr/bin/python /usr/bin/python2
 	@# will not run automatically
 	scripts/tinc_setup/install.sh
 	scripts/autostart/create-startup.sh
