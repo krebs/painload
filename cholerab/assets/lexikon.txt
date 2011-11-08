@@ -1,0 +1,12 @@
+
+asset / N assets
+
+platz / plaetze
+
+root-server
+
+shared root-server
+
+recht / rechte
+
+datenbank

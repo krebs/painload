@@ -1,18 +1,62 @@
-# use case #1:
+# use case #1: asset einsetzen
   Hat Krebs ein Grafikkarte, die gute genug ist.
   Wenn ja, dann will ich die in mein Computer einbauen.
 
-# use case #2:
+# use case #2: asset soll in der Ursprungszustand versetzt werden.
   Urkrebs Mainboard-Batterie is leer und braucht Ersatz.
   Haben wir so eine Batterie und falls ja, dann soll sie
   fuer immer in Urkrebs rein.
 
-# use case #3:
+# use case #3: asset einlagern
   Grafikkarte aus use case #1 (#2) soll wieder zurueck.
 
-# use case #4:
+# use case #4: asset ausschlachten
   Urkrebs ist bis auf das Netzteil zerstoert worden,
-  das Netzteil soll ins Lager.
+  das Netzteil soll eingelagert werden.
 
-# use case #5:
+# use case #5: asset hinzufuegen
   Krebs erhaelt einen neuen Computer.
+
+# use case #6: asset finden
+  Wo oder bei wem ist das USB-Thermometer?
+
+# use case #7: asset details finden
+  Wie viele 4-Port-USB-Hubs hat krebs und wo sind die?
+
+# use case #8: verlust eines assets
+  Urkrebs ist physikalisch verschwunden, aber noch in der datenbank
+  eingetragen.
+  Welt der Dinge und der Daten muessen wieder synchron sein.
+
+# use case #9: asset anzahl erniedrigen; assets mergen
+  Eine von hundert Batterien soll von platz X entnommen werden
+  und in ein asset integriert werden.
+
+# use case #A: asset entfernen
+  Urkrebs wir vom Besitzer ausserhalb von krebs benoetigt und dem Bestand
+  entnommen.
+
+# use case #B: verlust eines platzes 
+  platz ist explodiert und ein Teil der eingelagerten assets wurde vernichtet,
+  der andere Teil muss migriert werden.
+
+# use case #C: assets eines platzes erfragen
+  Was in an platz X eingelagert?
+
+# use case #D:
+  X war noch nie KM, hat aber unberechtigter weise assets, plaetze, rechte.
+  assets muessen an andere plaetze migriert werden.
+  dinge, die wie assets waren, aber nie wirklich assets waren, muessen aus der
+  datenbank entfernt werden.
+  plaetze muessen aus datenbank entfernt werden.
+  X muss entrechtet werden.
+
+# use case #E: assets in assets
+  Batterien liegen im Bankschliesfach X an platz Y.
+
+# use case #F:
+  ein root-server ist verschwunden.
+
+# use case #G:
+  welche shared root-server hat krebs in uk?
+
