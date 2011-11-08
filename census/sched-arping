@@ -4,5 +4,5 @@ TMP=`mktemp`
 crontab -l >$TMP
 
 echo "23 * * * * $PWD/arping_users.py > $PWD/../db/arping" |
-../util/bin/magic "arping" create $TMP
+../util/bin/magic create "arping" $TMP
 crontab $TMP
