@@ -1,12 +1,8 @@
 #! /bin/sh
-#
-# magic NAME create FILE < CONTENT
-# magic NAME update FILE < CONTENT
-# magic NAME destroy FILE
-#
+set -euf
 
-bs="# begin krebs magic <$1>"
-es="# end krebs magic <$1>"
+bs="# begin krebs magic <$2>"
+es="# end krebs magic <$2>"
 
 has() {
   grep -q "^$bs$" $3 && grep -q "^$es$" $3
@@ -37,7 +33,7 @@ destroy() {
 }
 help() {
 cat <<EOF
-Usage: $0 DELIMITER_NAME FUNCTION FILE
+Usage: $0 FUNCTION DELIMITER_NAME FILE
 $0 creates,updates or destroys magic inside a file.
 It can be used to reliably add or remove custom lines.
 For example add own lines in /etc/rc.local to auto-load 
@@ -55,7 +51,7 @@ shell comment symbol "#".
 EOF
 
 }
-case $2 in
+case $1 in
   (create) create "$@" ;;
   (retrieve) retrieve "$@" ;;
   (update) update "$@" ;;
