@@ -1,0 +1,18 @@
+# use case #1:
+  Hat Krebs ein Grafikkarte, die gute genug ist.
+  Wenn ja, dann will ich die in mein Computer einbauen.
+
+# use case #2:
+  Urkrebs Mainboard-Batterie is leer und braucht Ersatz.
+  Haben wir so eine Batterie und falls ja, dann soll sie
+  fuer immer in Urkrebs rein.
+
+# use case #3:
+  Grafikkarte aus use case #1 (#2) soll wieder zurueck.
+
+# use case #4:
+  Urkrebs ist bis auf das Netzteil zerstoert worden,
+  das Netzteil soll ins Lager.
+
+# use case #5:
+  Krebs erhaelt einen neuen Computer.
