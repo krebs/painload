@@ -60,3 +60,12 @@
 # use case #G:
   welche shared root-server hat krebs in uk?
 
+# use case #H:
+  ein asset soll umbenannt werden, da der alte name nicht passend war.
+
+# use case #I:
+  welchen namen hat der Rechner, auf dem ich gerade bin?
+
+# use case #I.2:
+  welchen namen hat das asset in meiner Hand?
+
