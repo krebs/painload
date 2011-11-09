@@ -1,6 +1,7 @@
 Address = tinc.krebs.dotcloud.com
 Port = 1655
 
+Subnet = 42.176.135.119/32
 -----BEGIN RSA PUBLIC KEY-----
 MIIBCgKCAQEA9j7kF3Vf9POQbY16LTkpxLvGFlxQ7uEOKmiZFjLfhBi9yt49n+Oj
 hWcr2Pf0iSBhBBqLja429aDe9DXswYUlDwDGau9o6aGWL9mvKBOZ92nXqHT2xv/p

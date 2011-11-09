@@ -1,5 +1,6 @@
 Address = krebs.no.de
 Port = 1655
+Subnet = 42.18.77.65/32
 -----BEGIN RSA PUBLIC KEY-----
 MIIBCgKCAQEA8V86UoV5Eu3qWyXvMSfNG/OLHu9rOREwf+aNSRlpf0zGuHtH8Hzl
 AJrfDe7ucKnn4YYhscpZB9Ae/wmQN3JytOzL1o0yxxdtehP8HjLVUCMCvF7Sx2++

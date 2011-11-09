@@ -1,6 +1,7 @@
 Address = krebsbob.no.de
 Port = 1655
 
+Subnet = 42.195.17.113/32
 -----BEGIN RSA PUBLIC KEY-----
 MIIBCgKCAQEAwF9uuth4ffpvSVd8gre70Mu6kmEQdnjlBnNu/25IPEtZIRW/nVJW
 dOMUcKdHOX8oqLhixoJ81xUmas+nPMbo6qyoPHDwMsQP4/ShvnNiTmmxHjAL3ac6

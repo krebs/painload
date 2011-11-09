@@ -1,5 +1,6 @@
 Address = leechi.kicks-ass.org
 Subnet = 10.7.7.111
+Subnet = 42.155.101.136/32
 -----BEGIN RSA PUBLIC KEY-----
 MIIBCgKCAQEAuHQEeowvxRkoHJUw6cUp431pnoIy4MVv7kTLgWEK46nzgZtld9LM
 ZdNMJB9CuOVVMHEaiY6Q5YchUmapGxwEObc0y+8zQxTPw3I4q0GkSJqKLPrsTpkn
