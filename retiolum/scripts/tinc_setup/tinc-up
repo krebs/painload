@@ -8,8 +8,8 @@ name=`sed -n 's|^ *Name *= *\([^ ]*\) *$|\1|p' $conf`
 
 host=$dirname/hosts/$name
 
-route4=10.7.7.0/24
-addr4=`sed -n 's|^ *Subnet *= *\(10\.[^ ]*\) *$|\1|p' $host`
+route4=42.0.0.0/8
+addr4=`sed -n 's|^ *Subnet *= *\(42\.[^ ]*\) *$|\1|p' $host`
 
 route6=42::/16
 addr6=`sed -n 's|^ *Subnet *= *\(42:[^ ]*\) *$|\1|p' $host`
