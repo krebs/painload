@@ -39,7 +39,7 @@ then
   # myipv4=$(echo 42.$(for i in `seq 1 3`; do echo "ibase=16;`bin/fillxx xx|tr [a-f] [A-F]`" | bc; done)|tr \  .)/32
 
   myipv4="${2:-}"
-  mynet4=10.7.7.0
+  mynet4=42.0.0.0
   
   if [ ! "$myipv4" ] 
   then
@@ -50,7 +50,7 @@ then
       printf 'select unused v4 subnet ip (1-255): '
       read v4num
     done
-    myipv4="10.7.7.$v4num"
+    myipv4="42.0.0.$v4num"
   fi
   echo "Subnet = $myipv4" > hosts/$myname
 
