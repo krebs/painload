@@ -17,7 +17,7 @@ es='# END OF RETIOLUM'
 
 case "${*-I am made of stupid}" in
   (start|restart)
-    hosts | $0 replace magic
+    hosts | grep ^42 | $0 replace magic
     ;;
   (stop)
     $0 clear magic
