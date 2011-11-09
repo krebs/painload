@@ -34,6 +34,10 @@ then
 fi
 if [ ! -e "hosts/$myname" ]
 then
+
+  # TODO eloop until we found a free IPv4
+  # myipv4=$(echo 42.$(for i in `seq 1 3`; do echo "ibase=16;`bin/fillxx xx|tr [a-f] [A-F]`" | bc; done)|tr \  .)/32
+
   myipv4="${2:-}"
   mynet4=10.7.7.0
   
