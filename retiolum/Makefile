@@ -12,18 +12,20 @@ hosts:
 
 install: update
 	../punani/bin/punani -Eih tinc /usr/bin/python /usr/bin/python2
-	@# will not run automatically
 	scripts/tinc_setup/install.sh
+	cp scripts/tinc_setup/tinc-up /etc/tinc/retiolum/tinc-up
 	scripts/autostart/create-startup.sh
 
 update: hosts
-	@echo creating Magic
 	bin/update_tinc_hosts "create magic" || true
-	@echo adding hosts 
 	bin/update_tinc_hosts restart
-	@echo reloading tincd
-	sudo pkill -HUP tincd || true
-	sudo pkill -ALRM tincd || true
+	if ! diff scripts/tinc_setup/tinc-up /etc/tinc/retiolum/tinc-up; then \
+		sudo cp scripts/tinc_setup/tinc-up /etc/tinc/retiolum/tinc-up; \
+		sudo bin/restart-tincd; \
+	else \
+		sudo pkill -HUP tincd || :; \
+		sudo pkill -ALRM tincd || :; \
+	fi
 
 arch-install: update install arch-autostart autohosts
 

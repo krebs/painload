@@ -60,8 +60,6 @@ else
   echo "own host file already exists! will not write again!"
 fi
 
-cp $CURR/tinc-up /etc/tinc/$netname/
-
 cat>tinc.conf<<EOF
 Name = $myname
 ConnectTo = EUcancER
