@@ -8,6 +8,8 @@ name=`sed -n 's|^ *Name *= *\([^ ]*\) *$|\1|p' $conf`
 
 host=$dirname/hosts/$name
 
+ip link set $INTERFACE up
+
 addr4=`sed -n 's|^ *Subnet *= *\(42[.][^ ]*\) *$|\1|p' $host`
 ip -4 addr add $addr4 dev $INTERFACE
 ip -4 route add 42.0.0.0/8 dev $INTERFACE
@@ -15,5 +17,3 @@ ip -4 route add 42.0.0.0/8 dev $INTERFACE
 addr6=`sed -n 's|^ *Subnet *= *\(42[:][^ ]*\) *$|\1|p' $host`
 ip -6 addr add $addr6 dev $INTERFACE
 ip -6 route add 42::/16 dev $INTERFACE
-
-ip link set $INTERFACE up
