@@ -1,5 +1,4 @@
 Address = 84.23.80.172
-Subnet = 10.7.7.172
 Subnet = 42:c154:3219:a91c:77eb:91bb:2f18:ff75/128
 Subnet = 42.160.213.134/32
 -----BEGIN RSA PUBLIC KEY-----
