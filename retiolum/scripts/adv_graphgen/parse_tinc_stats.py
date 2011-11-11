@@ -59,6 +59,9 @@ def generate_stats(nodes):
     pass
   for k,v in nodes.iteritems():
     conns = v.get('to',[])
+    for c in conns: #sanitize weights
+      if float(c['weight']) > 9000: c['weight'] = str(9001)
+      elif float(c['weight']) < 0: c['weight'] = str(0)
     v['num_conns'] = len(conns)
     v['avg_weight'] = get_node_avg_weight(conns)
     v['availability'] = get_node_availability(k,jlines)
@@ -132,7 +135,7 @@ def write_node(k,v):
   node = "  "+k+"[label=\""
   node += k+"\\l"
   node += "availability: %f\\l" % v['availability'] 
-  node += "avg weight: %.2f\\l" % v['avg_weight'] 
+  #node += "avg weight: %.2f\\l" % v['avg_weight'] 
   if v.has_key('num_conns'):
     node += "Num Connects:"+str(v['num_conns'])+"\\l"
   node += "external:"+v['external-ip']+":"+v['external-port']+"\\l"
