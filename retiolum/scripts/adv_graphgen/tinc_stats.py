@@ -78,6 +78,6 @@ def parse_input(log_data):
 
 if __name__ == '__main__':
   import subprocess,time
-  subprocess.popen("pkill -SIGUSR2 tincd")
+  subprocess.call(["pkill","-SIGUSR2", "tincd"])
   time.sleep(1)
   print json.dumps(parse_input((get_tinc_block(SYSLOG_FILE))))
