@@ -1,0 +1,9 @@
+#add 0.0.0.0/0 to hostsfile
+
+echo 1 >/proc/sys/net/ipv4/ip_forward
+
+/sbin/iptables -P FORWARD ACCEPT
+/sbin/iptables --table nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+#for supercool portforwarding:
+#example!: /sbin/iptables -t nat -A PREROUTING -p tcp -i eth0 -d jgibbs.dyndns.org --dport 3389 -j DNAT --to 172.17.207.4:3389
