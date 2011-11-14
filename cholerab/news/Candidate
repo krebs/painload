@@ -100,8 +100,14 @@ Nachdem Gedaechnistausch von Fuerkrebs und Urkrebs hat es ja wie beschrieben die
 
 Der Graphengenerator fuer KD;RP (siehe [ɐ]ist ueberarbeitet worden und bietet seit dem 2011-10-23 die moeglichkeit Statistiken zu dem Netzwerk und einzelnen Nodes auszugeben. Hervorzuheben ist hierbei die funktionalitaet die Availability von Nodes zu beschreiben, also wie wahrscheinlich es ist einen Knoten X zu einem Zeitpunkt Y im Darknet anzutreffen. Zusaetzlich wurde die Stats-generator engine ueberarbeitet und laeuft nun besonders bei grossen /var/log/syslog files schneller [⠣].
 
+## TODO 10. Ticket-fetcher fuer den 28C2
+
+Da die 28C3 Presales Tickets rar sind und Leute anfangen das einkaufen zu automatisieren kann nicht auf das glueck des tuechtigen gehofft werden, sondern auch fuer den shack wird automatisiert. Herausgekommen ist ein Skript[Բ] (basierend auf einem anderen Skript[в] welches aber zu hart gesuckt hat) welches sich auf der Presales seite einloggt und dort den "Confirm Order" button drueckt. Das ganze wird in eine ELoop gepackt und den Tickets steht nun nichts mehr im wege. Gebaut wurde das Skript in der nacht am 14.November (T-10H) bis zur naechsten Presales Runde fuer den 28C3.
+
 [⠣] https://github.com/krebscode/painload/commit/822c43a763aa61c1accce3768090d066048faaff 
 [⌅] man dd
+[в] http://pastebin.com/SRwtNwKS
 [Ȳ] http://shackspace.de/wiki/doku.php?id=project:krebs#fuerkrebs
+[Բ] https://github.com/krebscode/painload/blob/master/too_old/mechanize_tickets.py
 [Ƀ] https://github.com/krebscode/painload/tree/master/census
 [ɐ] http://euer.krebsco.de/graphs/retiolum/retiolum_1.svg
