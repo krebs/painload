@@ -28,5 +28,29 @@
   "tinc" : {
     "apt-get" : "tinc",
     "yaourt" : "tinc"
-    }
+  },
+  "python-notify" : {
+    "pacman" : "python-notify",
+    "apt-get" : "python-notify"
+  },
+  "python-dbus" : {
+    "pacman" : "dbus-python",
+    "apt-get" : "python-dbus"
+  },
+  "w3m" : {
+    "pacman" : "w3m",
+    "apt-get" : "w3m"
+  },
+  "make" : {
+    "pacman" : "make",
+    "apt-get" : "make"
+  },
+  "perl-xml-simple" : {
+    "apt-get" : "libxml-simple-perl",
+    "pacman" : "perl-xml-simple"
+  },
+  "hostname" : {
+    "pacman" : "inetutils",
+    "apt-get" : "hostname"
+  }
 }
