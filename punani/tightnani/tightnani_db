@@ -52,5 +52,9 @@
   "hostname" : {
     "pacman" : "inetutils",
     "apt-get" : "hostname"
-  }
+  },
+  "pip" : {
+    "pacman" : "python-pip",
+    "apt-get" : "python-pip"
+    }
 }
