@@ -1,5 +1,5 @@
 #!/bin/bash
-set -xeuf
+set -euf
 
 if [ $# -ne 2 ];then
   echo "usage: `basename $0` (install|remove) PACKAGE"
@@ -42,7 +42,7 @@ fi
 
 # find the package name
 PKG="$2"
-RESOLVED=`wget -O- $TIGHTNANI_HOST/$PACKER/$PKG`
+RESOLVED=`wget -O- $TIGHTNANI_HOST/$PACKER/$PKG 2>/dev/null`
 if [ ! "$RESOLVED" ];then
   echo "Could not resolve your requested package, bailing out!"
   exit 23
