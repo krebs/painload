@@ -4,6 +4,9 @@
     "aptitude" : "apt-get",
     "bauerbill" : "yaourt"
   },
+  "super-packer" : {
+    "yaourt" : "pacman"
+  },
   "vim" : {
     "apt-get" : "vim",
     "pacman" : "vim",
