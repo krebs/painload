@@ -1,6 +1,7 @@
 NAGDIR = /etc/nagios3/
 NAGLIBDIR = /usr/lib/nagios
 HTDOCS = /usr/share/nagios3/htdocs
+KREBS = /krebs
 
 .phony: debian
 debian:
@@ -21,3 +22,11 @@ debian:
 	chown nagios:www-data /var/lib/nagios3/rw || true
 	chmod g+x /var/lib/nagios3 || true
 	chmod ugo=rwx /var/lib/nagios3/rw/nagios.cmd || true
+
+debian-shinken: 
+	curl https://raw.github.com/nicolargo/shinkenautoinstall/master/shinkenautoinstall-debian.sh | sh
+
+shinken-discover-hosts: /etc/shinken/resources.cfg
+	sed -i '/.*NMAPTARGETS.*/d' /etc/shinken/resource.cfg
+	$(KREBS)/retiolum/bin/hosts | awk '{print $2}'| tr '\n' ' ' | xargs echo '$$NMAPTARGETS$$=' | magic create krebs-discovery /etc/shinken/resource.cfg 
+	shinken-discovery -o /etc/shinken/objects/discovery 
