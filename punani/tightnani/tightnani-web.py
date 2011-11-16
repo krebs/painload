@@ -12,8 +12,9 @@ urls = (
 
 
 PDB_FILE="tightnani_db"
-
-pdb= json.load(open(PDB_FILE))
+f = open(PDB_FILE)
+pdb= json.load(f)
+f.close()
 
 class Index:
   def GET(self):
@@ -23,7 +24,9 @@ Retrieve a package name for your distribution with: /PACKER/PKG"""
 
 class Reload:
   def GET(self):
-    pdb= json.load(open(PDB_FILE))
+    f = open(PDB_FILE)
+    pdb= json.load(f)
+    f.close()
     return "DB reloaded"
 
 
@@ -40,7 +43,9 @@ class ArchFinder:
       ret = pdb.get(package,{}).get(packer,False)
       ret = ret if ret else pdb.get(package,{}).get(super_packer,False)
 
-      if not ret: web.NotFound()
+      if not ret: 
+        web.NotFound()
+        return "not found. i'm so sorry :("
       else: return ret
 
 
