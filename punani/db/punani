@@ -1,0 +1,60 @@
+{
+  "packer-symlinks" : {
+    "packer" : "yaourt",
+    "aptitude" : "apt-get",
+    "bauerbill" : "yaourt"
+  },
+  "super-packer" : {
+    "yaourt" : "pacman"
+  },
+  "vim" : {
+    "apt-get" : "vim",
+    "pacman" : "vim",
+    "brew" : "vim",
+    "yum" : "vim"
+  },
+  "python" : {
+    "apt-get" : "python",
+    "pacman" : "python2"
+  },
+  "python2" : {
+    "apt-get" : "python",
+    "pacman" : "python2"
+  },
+  "python3" : {
+    "apt-get" : "python3",
+    "pacman" : "python"
+  },
+  "tinc" : {
+    "apt-get" : "tinc",
+    "yaourt" : "tinc"
+  },
+  "python-notify" : {
+    "pacman" : "python-notify",
+    "apt-get" : "python-notify"
+  },
+  "python-dbus" : {
+    "pacman" : "dbus-python",
+    "apt-get" : "python-dbus"
+  },
+  "w3m" : {
+    "pacman" : "w3m",
+    "apt-get" : "w3m"
+  },
+  "make" : {
+    "pacman" : "make",
+    "apt-get" : "make"
+  },
+  "perl-xml-simple" : {
+    "apt-get" : "libxml-simple-perl",
+    "pacman" : "perl-xml-simple"
+  },
+  "hostname" : {
+    "pacman" : "inetutils",
+    "apt-get" : "hostname"
+  },
+  "pip" : {
+    "pacman" : "python-pip",
+    "apt-get" : "python-pip"
+    }
+}
