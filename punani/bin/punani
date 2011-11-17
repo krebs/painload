@@ -1,276 +1,59 @@
-#! /bin/sh
-#
-# punani - filesystem scienteer
-#
-# Engineering Operations
-# -E -i spec    insert a package to the target filesystem
-# -E -r spec    remove a package
-#
+#!/bin/bash
 set -euf
-godmode() {
-  if test "${nosudo-false}" != true -a `id -u` != 0; then
-    echo "!! we require god mode..." >&2
-    exec sudo "$0" "$@"
-    exit 23 # go to hell
+
+if [ $# -ne 2 ];then
+  echo "usage: `basename $0` (install|remove) PACKAGE"
+  exit 23
+fi
+
+PACKERS="yum!-y install remove 
+brew install remove
+pacman!--noconfirm -S!--needed -Rcs
+bauerbill!--noconfirm -S!--needed -Rcs
+yaourt!--noconfirm -S!--needed -Rcs
+packer!--noconfirm -S!--needed -Rcs
+apt-get!--yes install remove
+aptitude!--yes install remove"
+
+OIFS=$IFS
+PACKER=
+IFS='
+'
+
+TIGHTNANI_HOST="http://euer.krebsco.de:9111"
+# Find suitable packer
+for PACKER_LINE in $PACKERS; do
+  TRY_PACKER_CMD="$(echo "$PACKER_LINE" | cut -d ' ' -f 1)"
+  TRY_PACKER="$(echo "$TRY_PACKER_CMD" | cut -d '!' -f 1)"
+  if which $TRY_PACKER &>/dev/null; then
+    PACKER=$TRY_PACKER
+    PACKER_CMD="$(echo "$TRY_PACKER_CMD" | tr "!" " ")"
+    echo "you got $PACKER"
+    INSTALL_PARAM="$(echo "$PACKER_LINE" | cut -d ' ' -f 2 | tr "!" " ")"
+    REMOVE_PARAM="$(echo "$PACKER_LINE" | cut -d ' ' -f 3 | tr "!" " ")"
   fi
-}
-
-# return the 'system' variable
-# currently be:
-# arch-like
-# debian-like
-guess_system()
-{
-  if [ -f "/etc/arch-release" ] ;then
-    system="${system+$system, }arch-like"
-  fi
-  if [ -f "/etc/lsb-release" -o -f "/etc/debian_version" ] ;then
-    system="${system+$system, }debian-like"
-  fi
-
-}
-
-arch_aur_helper()
-{
-  # pacman is the last fallback helper
-  manager="yaourt clyde packer bauerbill tupac pacaur paktahn pbfetch aurget aurora cower powaur pacman"
-  for i in $manager;do
-    mgr=`which $i`
-    if [ "$mgr" ] ;then
-      echo $mgr
-      return 0
-    fi
-  done
-  echo "!! no helper found, this should never happen(tm)."
-  return 1
-}
-
-handle_system () {
-  case "$system" in
-    (*arch-like*)
-      # dryrun
-      # TODO dryrun not dry enough for aur helper
-      if [ "${dryrun-}" ];then
-        pacman () { echo  "pacman $@" ; }
-        pkgfile () { echo "pkgfile $@"; }
-        yaourt () { echo  "yaourt $@" ; }
-      fi
-
-      # get dependencies :
-      # we need pkgfile 
-      if ! [ `which pkgfile` ] ; then
-        pacman -S --needed --noconfirm pkgtools 
-        pkgfile -u
-      fi
-      punani_Scientist_update() {
-        pacman -Sy
-        pkgtool -u
-      }
-      punani_Scientist_search() {
-        pkgfile -s -b $1
-        if [ "${hard-}" ] ; then
-          mgr=`arch_aur_helper`
-          $mgr -Ss $1 
-        fi
-
-      }
-
-      punani_Engineer_insert() {
-        # punani under archlinux first tries to load the packages with the given file name
-        # it needs pkgfile for that
-        #
-        # when trying harder it tries to load the package with the given name directly via yaourt
-        echo "** trying to find package with given file"
-        pkgs=$(pkgfile -s -b -r $1 | tr "\n" "|" )
-        if [ "$pkgs" ];then
-          echo "** found one or more packages matching, skip the ones you do not need!"
-          OLDIFS=$IFS
-          IFS='|'
-          for to_install in $pkgs;do
-            if pacman -S --needed "$to_install"; then
-              echo "++ finished"
-            fi
-          done
-          IFS=$OLDIFS
-        else
-          echo "!! nothing found in base repos"
-          if [ "${hard-}" ] ; then
-            echo "** trying harder"
-            echo "** trying yaourt directly with given package"
-            mgr=`arch_aur_helper`
-            if  $mgr -S $1 ;then
-              echo "++ finished"
-              return 0
-            else
-              echo "!! giving up...i am sorry"
-              return 1
-            fi
-            echo
-          else
-            echo "?? When in doubt try $0 -h -Ei $1 "
-          fi
-        fi
-      }
-      punani_Engineer_remove() {
-        pacman -Rcs "`pacman -Ql | grep $1$ | awk '{print $1}'`" 
-        if [ "${hard-}" ] ; then
-          echo "** trying harder"
-          echo "** directly delete given package name"
-          pacman -Rcs "$1"
-        fi
-      }
-    ;;
-    (*debian-like*)
-      #if [ "${dryrun-}" ]; then
-      #  apt-file () { echo $@; }
-      #  apt-get () { echo $@; }
-      #fi
-      if  ! which apt-file; then 
-        echo "** installing dependencies: apt-file"
-        apt-get install --yes apt-file
-        echo "** update the apt-file tool"
-        apt-file update
-      fi
-      punani_Scientist_update() {
-        apt-get update
-        apt-file update
-      }
-      
-      punani_Scientist_search() {
-        apt-file search -l -x $1\$ && exit 0
-        if [ "${hard-}" ] ; then
-          apt-cache search $1
-        fi
-      }
-      punani_Engineer_insert() {
-        echo "trying to install $1"
-        pkgs=$(apt-file search -l -x $1\$ | tr "\n" "|" )
-        if [ "$pkgs" ];then
-          echo "** found one or more packages matching, skip the ones you do not need!"
-          OLDIFS=$IFS
-          IFS='|'
-          for to_install in $pkgs;do
-            if apt-get install $to_install;then
-              echo "++ finished"
-            fi
-          done
-          IFS=$OLDIFS
-        else
-          if [ "${hard-}" ] ; then
-            echo "** trying harder"
-            apt-get install $1
-          fi
-        fi
-      }
-      punani_Engineer_remove() {
-        apt-get remove --purge "`apt-file search -l -x /$1\$`" 
-        if [ "${hard-}" ] ; then
-          echo "** trying harder"
-          echo "** directly delete given package name"
-          apt-get remove --purge "$1"
-        fi
-      }
-    ;;
-    (*)
-      email='krebs@syntax-fehler.de'
-      irc_host='irc.freenode.org'
-      irc_channel='#tincspasm'
-      cat >&2 <<EOF
-Error 2: Your System Will Be Supported ASAP
-1. send us a bug report
-1.1 your operating system's name and version
-1.2 this message: $0 $*
-1.3 mailto:$email
-2. join the relevant IRC channel
-2.1 /connect $irc_host
-2.2 /join $irc_channel
-EOF
-      exit 23
-  esac
-}
-help(){
-  cat <<EOF
-Usage: $0 [Options] [role][command]
-
-Options:
-  -f  force
-  -h  hard
-  -v  verbose
-  -d  dryrun
-  -?  this message
-
-Role:
-  -E  Engineer
-  -S  Scientist
-
-Engineer:
-  i  insert
-  r  remove
-
-Scientist:
-  s  search
-  y  update
-EOF
-  exit 1
-}
-punani (){
-  ns=punani
-  role=undefined
-  while getopts 'dfhvSsopEir?' OPT; do
-    case $OPT in
-      (f) force=true; continue;;
-      (h) hard=true; continue;;
-      (v) set -x; continue;;
-      (d) dryrun=true; continue;; 
-      (\?) help;continue ;;
-    esac
-    case ${role-Manager} in
-      (Engineer)
-        case $OPT in
-          (i) command="${ns}_${role}_insert";;
-          (r) command="${ns}_${role}_remove";;
-          (*)
-            echo 'Error 1: You are made of stupid!' >&2
-            exit 23;;
-        esac;;
-      (Scientist)
-        case $OPT in
-          (s) command="${ns}_${role}_search";;
-          (y) command="${ns}_${role}_update";;
-          (*)
-            echo 'Error 1: You are made of stupid!' >&2
-            exit 23;;
-        esac ;;
-      (undefined)
-        case $OPT in
-          (E) role=Engineer;;
-          (S) role=Scientist;;
-          (*)
-            exit 23;;
-        esac
-      ;;
-      (*)
-        echo 'Error 1: You are made of stupid!' >&2
-        exit 23
-      ;;
-    esac
-  done
-}
-punani $@
-
-case $role in
-  (Engineer) godmode $@;;
-  (Scientist) 
-    case $command in
-      (*_update) godmode $@;;
-    esac;;
-esac
-
-shift `echo $OPTIND-1 | bc`
-
-guess_system
-handle_system
-
-for name in "$@"; do
-  "$command" "$name" || echo "!! could not install $name"
 done
+IFS=$OIFS
+if [ ! "$PACKER" ];then
+  echo "Could not find a supported packer for you, bailing out!"
+  exit 23
+fi
+
+
+# find the package name
+PKG="$2"
+RESOLVED=`wget -O- $TIGHTNANI_HOST/$PACKER/$PKG 2>/dev/null`
+if [ ! "$RESOLVED" ];then
+  echo "Could not resolve your requested package, bailing out!"
+  exit 23
+fi
+case "$1" in 
+  install)
+    exec $PACKER_CMD $INSTALL_PARAM $RESOLVED
+    ;;
+  remove)
+    exec $PACKER_CMD $REMOVE_PARAM $RESOLVED
+    ;;
+  *)
+    echo "usage: `basename $0` (install|remove) PACKAGE"
+esac
