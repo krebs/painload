@@ -1,0 +1,165 @@
+#!/usr/bin/python
+
+import string, os, sys,  re
+#from optik import OptionParser
+from optparse import OptionParser
+
+
+
+#######################################
+###  Define a set of strings to handle 
+###  any info output requirements.
+
+
+check_cpu_version = "check_cpu (nagios-plugins 1.5.1!?) 0.4.0a\n"
+
+intro = "The nagios plugins come with ABSOLUTELY NO WARRANTY.  You may redistribute\ncopies of the plugins under the terms of the GNU General Public License.\nFor more information about these matters, see the file named COPYING.\nCopyright (c) 2004 Ethan Galstad/Karl DeBisschop\n\n"
+
+preamble = "This plugin will check the percent of idle CPU usage on the system it is\nexecuted on and generate an alert if the percentage is below\none of the threshold values.\n\n"
+
+use = "Usage:\tcheck_cpu -w limit -c limit [-t timeout]\n\tcheck_cpu (-h|--help)\n\tcheck_cpu (-V|--version)\n"
+
+options = "\n -w, --warning=PERCENT\n\tExit with WARNING status if idle CPU percentage is less than PERCENT\n -c, --critical=PERCENT\n\tExit with CRITICAL status if idle CPU percentage is less than PERCENT\n -t, --timeout=INTEGER\n\tSeconds before check attempt times out (default: 10)\n -s, --sample=INTEGER\n\tSeconds to use as sample time. (default: 5)\n -h, --help\n\tPrint detailed help screen\n -V, --version\n\tPrint version information\n\n"
+
+bugs = "Bugs:\tTimeout does not do what has been documented here.  Rather, it does \nnothing. The plugin seems to ignore characters that are not attached to \nparameter syntax.  This has been tested on RedHat 8.0+, Fedora Core 1 & 2, \nOpenBSD 3.x and Debian.  I would appreciate feedback and/or patches if it doesn't\nfunction under your chosen operating system.\n\n"
+
+query = "Send email to nagios-users@lists.sourceforge.net if you have questions\nregarding the use of this software.  To submit patches or suggest improvements,\nsend email to nagiosplug-devel@lists.sourceforge.net.\n\nFor questions and suggestions pertaining to the check_cpu plugin,\nplease send email to nemir@hotmail.com.\n" 
+
+fullHelp = check_cpu_version + intro + preamble + use +  options + bugs + query
+
+
+
+
+
+def helpFunc(option, opt, value, parser):
+        print fullHelp
+        sys.exit(3)
+
+def verFunc(option, opt, value, parser):
+        print check_cpu_version
+        sys.exit(3)
+
+
+
+
+#######################################
+###  Parse all the parameters.  Define
+###  variables for later use.
+
+
+
+parser = OptionParser(add_help_option=0)
+
+parser.add_option("-h", "--help", action="callback", callback=helpFunc)
+parser.add_option("-V", "--version", action="callback", callback=verFunc)
+parser.add_option("-w", "--warning", action="store", type="int", dest="warn", default=-1)
+parser.add_option("-c", "--critical", action="store", type="int", dest="crit", default=-2)
+parser.add_option("-s", "--sample", action="store", type="int", dest="sample", default=5)
+parser.add_option("-t", "--timeout", action="store", type="int", dest="timeout", default=10)
+
+(options, args) = parser.parse_args()
+
+critical = options.crit
+warning = options.warn
+sample = options.sample
+timeout = options.timeout
+
+
+if -3 > critical or 101 < critical:
+        print "Critical value is a percentage and must be between 0 and 100.\n" + use
+        sys.exit(3)
+
+if -2 > warning or 101 < warning:
+        print "Warning value is a percentage and must be between 0 and 100.\n" + use
+        sys.exit(3)
+
+if critical >= warning:
+        print "Critical value must be less than the warning value.\n" + use 
+        sys.exit(3)
+
+if sample >= timeout -1:
+        print "Sample time must be 2 seconds less than timeout.\n" + use 
+        sys.exit(3)
+
+strSample = str(sample)
+
+
+#######################################
+### Determine what OS we are being run
+### on, to figure syntax required.
+
+
+v = os.popen("uname", "r")
+l = v.read()
+
+if l == "Linux\n":
+        vmcmd = "/usr/bin/vmstat " + strSample + " 2"
+elif l == "OpenBSD\n":
+        vmcmd = "/usr/bin/vmstat -c 2 -w " + strSample 
+elif l == "FreeBSD\n":
+        vmcmd = "/usr/bin/vmstat -c 2 -w " + strSample 
+elif l == "NetBSD\n":
+        vmcmd = "/usr/bin/vmstat -c 2 -w " + strSample 
+elif l == "SunOS\n":
+        vmcmd = "/usr/bin/vmstat " + strSample + " 2"
+else:
+        print "Unknown operating system, unable to continue.\n"
+        sys.exit(3)
+
+
+#######################################
+### Grab the CPU sample and convert the 
+### the relevent info to an int.
+
+
+vmstat = os.popen( vmcmd, "r" )
+statOut = vmstat.read()
+
+
+statLines = string.split( statOut, '\n')
+lastLine = statLines[-2].strip()
+
+n = len(statLines)
+for i in range(0, n):
+	idcheck = re.search("id", statLines[i])
+	if idcheck:
+		idLine = statLines[i].strip()
+
+
+
+idStr = re.sub( "[ \t\n\r\v]+", " ", idLine )
+idList = string.split(idStr, " ")
+idColumn = idList.index("id")
+
+valueStr = re.sub( "[ \t\n\r\v]+", " ", lastLine )
+values = string.split( valueStr, ' ')
+
+idleCPU = values[idColumn]
+sysCPU = values[-2]
+userCPU = values[-3]
+
+idleValue = string.atoi(idleCPU)
+
+
+#######################################
+### Finally, determine and report CPU
+### state,  and exit the plugin.
+
+
+if idleValue <= critical:
+        status = "CPU CRITICAL"
+        print status + ": CPU is only " + idleCPU + "% idle"
+        sys.exit(2) 
+elif idleValue <= warning:
+        status = "WARNING"
+        print status + ": CPU is only " + idleCPU + "% idle"
+        sys.exit(1)
+elif warning < idleValue:
+        status = "OK"
+        print status + ": CPU is " + idleCPU + "% idle"
+        sys.exit(0)
+else:
+        status = "CPU STATUS UNKNOWN"
+        print status + ": Could not complete check."
+        sys.exit(3)
+
