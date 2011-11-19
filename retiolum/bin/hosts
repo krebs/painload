@@ -7,7 +7,7 @@ cd /etc/tinc/$netname/hosts
 
 for i in `ls`; do
   sed -n '
-    s|^ *Subnet *= *\([^ /]*\)\(/[0-9]*\)\? *$|\1\t'$i' '$i'.'$netname'|p
+    s|^ *Subnet *= *\([^ /]*\)\(/[0-9]*\)\? *$|\1\t'$i'.'$netname' '$i'|p
   ' $i
 done | sort
 
