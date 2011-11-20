@@ -9,7 +9,7 @@ if [ $# -ne 2 ];then
 fi
 
 ## find package manager
-if ! :; then : # dummy, so the rest has a common format
+if ! :; then : # dummy case, so the rest has a common format
 
 elif for PACKER_CMD in yum
     do type $PACKER_CMD 2>/dev/null 1>&2 && break; done; then
@@ -36,14 +36,15 @@ else
   exit 23
 fi
 
-
-# find the package name
+## find package name
 PKG="$2"
-RESOLVED=`wget -O- $TIGHTNANI_HOST/$PACKER_CMD/$PKG 2>/dev/null`
+RESOLVED=`wget -O- $TIGHTNANI_HOST/$PACKER_CMD/$PKG 2>/dev/null || :`
 if [ ! "$RESOLVED" ];then
-  echo "Could not resolve your requested package, bailing out!"
+  echo "Error 2: could not resolve '$PKG'; no punany for you!" >&2
   exit 23
 fi
+
+## dispatch
 case "$1" in 
   install)
     exec $PACKER_CMD $INSTALL_PARAM $RESOLVED
