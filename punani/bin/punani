@@ -1,7 +1,7 @@
 #! /bin/sh
 set -euf
 
-TIGHTNANI_HOST="${TIGHTNANI_HOST-http://euer.krebsco.de:9111}"
+PUNANI_HOST="${PUNANI_HOST-http://euer.krebsco.de:9111}"
 
 if [ $# -ne 2 ];then
   echo "usage: `basename $0` (install|remove) PACKAGE"
@@ -23,8 +23,8 @@ elif for PACKER_CMD in brew
 
 elif for PACKER_CMD in bauerbill packer yaourt pacman
     do type $PACKER_CMD 2>/dev/null 1>&2 && break; done; then
-  INSTALL_PARAM='--noconfirm -S'
-  REMOVE_PARAM='--needed -Rcs'
+  INSTALL_PARAM='--noconfirm -S --needed'
+  REMOVE_PARAM='-Rcs'
 
 elif for PACKER_CMD in aptitude apt-get
     do type $PACKER_CMD 2>/dev/null 1>&2 && break; done; then
@@ -38,9 +38,9 @@ fi
 
 ## find package name
 PKG="$2"
-RESOLVED=`wget -O- $TIGHTNANI_HOST/$PACKER_CMD/$PKG 2>/dev/null || :`
+RESOLVED=`wget -O- $PUNANI_HOST/$PACKER_CMD/$PKG 2>/dev/null || :`
 if [ ! "$RESOLVED" ];then
-  echo "Error 2: could not resolve '$PKG'; no punany for you!" >&2
+  echo "Error 2: could not resolve '$PKG'; no punani for you!" >&2
   exit 23
 fi
 
