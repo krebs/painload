@@ -1,0 +1,43 @@
+"name": // default: random (gensym)
+  "type": "grafikkarte"
+  "location": "kremium"
+  "amount": 23 // default: 1
+  "owner": "shack" // default: krebs
+
+"nebula":
+  "type": "location"
+  "owner": "tv"
+
+"tv":
+  "type": "owner"
+
+"grafikkarte":
+  "type": "type"
+
+"amount":
+  "type": "natural"
+
+"root-server":
+  "type": "irgend ein owner ist root"
+
+"shared":
+  "type": "alle owner sind root"
+
+"oxberg":
+  "type": "root-server"
+  "location": "de"
+  "ipv4-address": "84.23.80.172"
+  "isp": "euserv"
+  "ram": "512MiB"
+
+"ram":
+  "must-match": /[0-9]+[MGk]iB/
+
+"kremium":
+  "location": "nebula"
+  "type": "root-server"
+  "shared": true
+
+"euserv":
+  "type": "ISP"
+ 
