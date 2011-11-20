@@ -47,10 +47,12 @@ fi
 ## dispatch
 case "$1" in 
   install)
-    exec $PACKER_CMD $INSTALL_PARAM $RESOLVED
+    set -x
+    exec sudo $PACKER_CMD $INSTALL_PARAM $RESOLVED
     ;;
   remove)
-    exec $PACKER_CMD $REMOVE_PARAM $RESOLVED
+    set -x
+    exec sudo $PACKER_CMD $REMOVE_PARAM $RESOLVED
     ;;
   *)
     echo "usage: `basename $0` (install|remove) PACKAGE"
