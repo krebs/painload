@@ -13,6 +13,10 @@
     "brew" : "vim",
     "yum" : "vim"
   },
+  "unison" : {
+    "apt-get" : "unison",
+    "pacman" : "unison"
+  },
   "python" : {
     "apt-get" : "python",
     "pacman" : "python2"

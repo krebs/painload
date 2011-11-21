@@ -2,7 +2,8 @@
 
 import web
 import json
-
+import os
+from bot import *
 urls = ( 
   '/', 'Index',
   '/dump','Dump',
@@ -17,27 +18,14 @@ CHANNEL="#retiolum"
 f = open(PDB_FILE)
 pdb = json.load(f)
 f.close()
-bot = False
+polite = os.environ.get("polite",False)
+from socket import *
 
-try:
-  from threading import Thread
-  from ircbot import SingleServerIRCBot
-  class QuickBot(SingleServerIRCBot):
-    def on_welcome(self,conn,event): conn.join(CHANNEL)
-    def announce(self,msg): self.connection.privmsg(CHANNEL,"superballs")
-    #def on_pubmsg(self,conn,e): conn.privmsg(CHANNEL,"superaidsballs")
-
-  bot = QuickBot([("supernode",6667)],"punani","punani")
-  try:
-    t = Thread(target=bot.start)
-    t.setDaemon(1)
-    t.start()
-  except (KeyboardInterrupt, SystemExit):
-    print("Got Interrupt!")
-    sys.exit()
-except Exception,e:
-  print("Cannot connect to IRC %s" %str(e))
-
+def local_announce(msg):
+  s = socket(AF_INET,SOCK_STREAM)
+  s.connect(('localhost',5555))
+  s.send(msg)
+  s.close()
 class Index:
   def GET(self):
     ret = """Welcome to the Tightnani API<br/>
@@ -66,8 +54,11 @@ class ArchFinder:
       ret = ret if ret else pdb.get(package,{}).get(super_packer,False)
 
       if not ret:
-	try:
-          bot.announce("%s asked for %s for the packer %s but i failed to find it. Please help me!" %(web.ctx.ip, packer, package))
+        try:
+          if polite:
+            local_announce("Client `%s` asked for the tool `%s` in packer `%s` but i do not have it in my Database. Please update me!" %(web.ctx.ip, package,packer))
+          else:
+            local_announce("404: no %s/%s for %s" % (request_packer,package,gethostbyaddr(web.ctx.ip)[0]))
         except Exception,e:
           print ("Got Exception %s: %s" % (str(Exception),(e)))
         web.NotFound()
@@ -78,6 +69,27 @@ class ArchFinder:
 
 if __name__ == "__main__":
   import sys 
+  # Set IRC connection parameters.
+  irc_servers = [('supernode', 6667)]
+  irc_channels = [('#retiolum','')]
+
+  # Prepare and start IRC bot.
+  bot = PunaniBot(irc_servers, irc_channels)
+  t = Thread(target=bot.start)
+  t.daemon = True
+  t.start()
+  announce = bot.say
+
+  receiver = PunaniReceiveServer()
+  t = Thread(target=receiver.serve_forever)
+  t.daemon = True
+  t.start()
+
+  t = Thread(target=process_queue,args=(announce,receiver.queue))
+  t.daemon = True
+  t.start()
+
+
   sys.argv.append(PORT)
   app = web.application(urls,globals())
   app.internalerror = web.debugerror
