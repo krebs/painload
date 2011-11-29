@@ -1,4 +1,3 @@
-Subnet = 10.7.7.234
 Subnet = 42:9277:1f1e:7599:ae4b:7cca:b4a3:fe47/128
 Subnet = 42.24.21.32/32
 -----BEGIN RSA PUBLIC KEY-----

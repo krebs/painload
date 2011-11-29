@@ -24,7 +24,6 @@ update: hosts
 		sudo bin/restart-tincd; \
 	else \
 		sudo pkill -HUP tincd || :; \
-		sudo pkill -ALRM tincd || :; \
 	fi
 
 arch-install: update install arch-autostart autohosts
