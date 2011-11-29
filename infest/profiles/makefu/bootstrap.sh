@@ -12,7 +12,7 @@ fi
 
 # write dotfiles
 for dotfile in $(ls .);do
-  [ "./$dotfile" == "$0" ] && continue
+  [ "x./${dotfile}" = "x$0" ] && continue
   cp -fr --remove-destination $dotfile $HOME/.$dotfile
 done
 
@@ -21,7 +21,7 @@ cd $HOME/.vim
 mkdir bundle
 mkdir backup
 echo "* Fetching vim-vundle"
-git clone https://github.com/gmarik/vundle.git bundle/vundle &>/dev/null && echo "Vim Vundle deployed"
+git clone https://github.com/gmarik/vundle.git bundle/vundle > /dev/null && echo "Vim Vundle deployed"
 echo "* Installing Vundle Bundles"
 vim "+:BundleInstall" "+:qall"
 cd -
@@ -34,8 +34,8 @@ if which zsh &>/dev/null ; then
   else
     echo "* zsh already set as default shell"
   fi
-  if [ -d ~/.oh-my-zsh ] ; then
-    git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh &> /dev/null && echo "oh-my-zsh deployed"
+  if [ ! -d ~/.oh-my-zsh ] ; then
+    git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh > /dev/null && echo "oh-my-zsh deployed"
   else
     echo "* oh-my-zsh already installed"
   fi
