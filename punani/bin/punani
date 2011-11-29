@@ -52,11 +52,15 @@ fi
 case "$ACTION" in 
   install)
     set -x
-    exec sudo $PACKER_CMD $INSTALL_PARAM $RESOLVED
+    for PKG in $RESOLVED; do
+      sudo $PACKER_CMD $INSTALL_PARAM $PKG || echo "Cannot install $PKG!"
+    done
     ;;
   remove)
     set -x
-    exec sudo $PACKER_CMD $REMOVE_PARAM $RESOLVED
+    for PKG in $RESOLVED; do
+      sudo $PACKER_CMD $REMOVE_PARAM $PKG || echo "Cannot remove $PKG!"
+    done
     ;;
   *)
     echo "usage: `basename $0` (install|remove) PACKAGE..."
