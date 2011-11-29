@@ -1,59 +1,64 @@
-#!/bin/bash
+#! /bin/sh
 set -euf
 
-if [ $# -ne 2 ];then
-  echo "usage: `basename $0` (install|remove) PACKAGE"
+PUNANI_HOST="${PUNANI_HOST-http://euer.krebsco.de:9111}"
+ACTION="$1"; shift
+PKGS="$*"
+
+## find package manager
+if ! :; then : # dummy case, so the rest has a common format
+
+elif for PACKER_CMD in yum
+    do type $PACKER_CMD 2>/dev/null 1>&2 && break; done; then
+  INSTALL_PARAM='-y install'
+  REMOVE_PARAM='-y remove'
+
+elif for PACKER_CMD in brew
+    do type $PACKER_CMD 2>/dev/null 1>&2 && break; done; then
+  INSTALL_PARAM='install'
+  REMOVE_PARAM='remove'
+
+elif for PACKER_CMD in bauerbill packer yaourt pacman
+    do type $PACKER_CMD 2>/dev/null 1>&2 && break; done; then
+  INSTALL_PARAM='--noconfirm -S --needed'
+  REMOVE_PARAM='-Rcs'
+
+elif for PACKER_CMD in aptitude apt-get
+    do type $PACKER_CMD 2>/dev/null 1>&2 && break; done; then
+  INSTALL_PARAM='--yes install'
+  REMOVE_PARAM='--yes remove'
+
+else
+  echo "Error 2: no known package manager found; no punani for you!" >&2
   exit 23
 fi
 
-PACKERS="yum!-y install remove 
-brew install remove
-pacman!--noconfirm -S!--needed -Rcs
-bauerbill!--noconfirm -S!--needed -Rcs
-yaourt!--noconfirm -S!--needed -Rcs
-packer!--noconfirm -S!--needed -Rcs
-apt-get!--yes install remove
-aptitude!--yes install remove"
-
-OIFS=$IFS
-PACKER=
-IFS='
-'
-
-TIGHTNANI_HOST="http://euer.krebsco.de:9111"
-# Find suitable packer
-for PACKER_LINE in $PACKERS; do
-  TRY_PACKER_CMD="$(echo "$PACKER_LINE" | cut -d ' ' -f 1)"
-  TRY_PACKER="$(echo "$TRY_PACKER_CMD" | cut -d '!' -f 1)"
-  if which $TRY_PACKER &>/dev/null; then
-    PACKER=$TRY_PACKER
-    PACKER_CMD="$(echo "$TRY_PACKER_CMD" | tr "!" " ")"
-    echo "you got $PACKER"
-    INSTALL_PARAM="$(echo "$PACKER_LINE" | cut -d ' ' -f 2 | tr "!" " ")"
-    REMOVE_PARAM="$(echo "$PACKER_LINE" | cut -d ' ' -f 3 | tr "!" " ")"
-  fi
-done
-IFS=$OIFS
-if [ ! "$PACKER" ];then
-  echo "Could not find a supported packer for you, bailing out!"
-  exit 23
+## find package name
+if test -n "$PKGS"; then
+  for PKG in $PKGS; do
+    RES="`wget -O- $PUNANI_HOST/$PACKER_CMD/$PKG 2>/dev/null || :`"
+    if [ ! "$RES" ]; then
+      echo "Error 2: could not resolve '$PKG'; no punani for you!" >&2
+      exit 23
+    fi
+    RESOLVED="${RESOLVED+$RESOLVED }$RES"
+  done
+else
+  echo "Error 1: no PACKAGE specified." >&2
+  ACTION="usage"
 fi
 
-
-# find the package name
-PKG="$2"
-RESOLVED=`wget -O- $TIGHTNANI_HOST/$PACKER/$PKG 2>/dev/null`
-if [ ! "$RESOLVED" ];then
-  echo "Could not resolve your requested package, bailing out!"
-  exit 23
-fi
-case "$1" in 
+## dispatch
+case "$ACTION" in 
   install)
-    exec $PACKER_CMD $INSTALL_PARAM $RESOLVED
+    set -x
+    exec sudo $PACKER_CMD $INSTALL_PARAM $RESOLVED
     ;;
   remove)
-    exec $PACKER_CMD $REMOVE_PARAM $RESOLVED
+    set -x
+    exec sudo $PACKER_CMD $REMOVE_PARAM $RESOLVED
     ;;
   *)
-    echo "usage: `basename $0` (install|remove) PACKAGE"
+    echo "usage: `basename $0` (install|remove) PACKAGE..."
+    exit 23
 esac
