@@ -1,4 +1,3 @@
-Subnet = 10.7.7.137
 Subnet = 42:0:0:0:0:0:0:affe/128
 Subnet = 42.35.89.21/32
 -----BEGIN RSA PUBLIC KEY-----

@@ -16,3 +16,6 @@
 [submodule "submodules/github/makefu/dpfhack_display"]
 	path = submodules/github/makefu/dpfhack_display
 	url = https://github.com/makefu/dpfhack_pearl
+[submodule "submodules/github/jbalogh/python-irclib"]
+	path = submodules/github/jbalogh/python-irclib
+	url = https://github.com/jbalogh/python-irclib.git

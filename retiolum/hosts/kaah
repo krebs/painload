@@ -1,6 +1,4 @@
 Address = kaah.ath.cx
-Subnet = 10.7.7.21
-
 Subnet = 42.220.181.17/32
 -----BEGIN RSA PUBLIC KEY-----
 MIIBCgKCAQEAtd9+R7NYs/5LmXoFakuoFzdO/8hy4MMeGjdDqbubKyJmIO/nvQWS

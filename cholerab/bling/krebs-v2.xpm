@@ -1,0 +1,24 @@
+/* XPM */
+static char *krebs_v2[] = {
+/* columns rows colors chars-per-pixel */
+"16 16 2 1 ",
+"  c None",
+"x c #E4002B",
+/* pixels */
+"                ",
+"                ",
+" x x         x x",
+"xx x  xx xx xx x",
+"xx x  xx xx xx x",
+" xxx   x  x  xxx",
+" xxx  xxxxx  xxx",
+"  x  xxxxxxx  x ",
+"  xxxxxxxxxxxxx ",
+"     xxxxxxx    ",
+"   xxxxxxxxxxx  ",
+"   x   xxx   x  ",
+"  x  x x x x  x ",
+"  x  x x x x  x ",
+"  x xx x x xx x ",
+"                ",
+};
