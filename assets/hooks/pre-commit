@@ -8,11 +8,12 @@ cat $DB | python -m json.tool > $TMP
 RET=$?
 if [ "$RET" = "0" ];
 then
-  echo "** Check succeeded"
+  echo "** Database sanity verified"
   git add $DB
-  mv $TMP $DB
+  #mv $TMP $DB
 else
-  echo "!! database insane!"
+  echo "!! Database insane"
   cat $TMP
 fi
+rm $TMP
 exit $RET
