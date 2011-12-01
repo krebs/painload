@@ -1,0 +1,9 @@
+ass usages:
+
+$0 create name
+  if not "create name" in history and name is not retarded:
+    echo "timestamp: create name" >> history
+
+$0 set name property value
+  if "create name" in history and property is not retarded:
+    echo "timestamp: set name property value" >> history
