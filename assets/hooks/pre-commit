@@ -1,0 +1,18 @@
+#!/bin/sh
+set -euf
+DB="assets.json"
+TMP=`mktemp`
+
+echo "** checking $DB for sanity"
+cat $DB | python -m json.tool > $TMP
+RET=$?
+if [ "$RET" = "0" ];
+then
+  echo "** Check succeeded"
+  git add $DB
+  mv $TMP $DB
+else
+  echo "!! database insane!"
+  cat $TMP
+fi
+exit $RET
