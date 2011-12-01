@@ -29,8 +29,8 @@
   Welt der Dinge und der Daten muessen wieder synchron sein.
 
 # use case #9: asset anzahl erniedrigen; assets mergen
-  Eine von hundert Batterien soll von platz X entnommen werden
-  und in ein asset integriert werden.
+  Eines von hundert 4-Port-USB-Hubs soll von platz X entnommen werden
+  und an ein asset gestoepselt werden.
 
 # use case #A: asset entfernen
   Urkrebs wir vom Besitzer ausserhalb von krebs benoetigt und dem Bestand
