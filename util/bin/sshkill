@@ -1,0 +1,33 @@
+#! /bin/sh
+#
+# kill ssh client: sshkill user@host:port
+# setup bash completion: . sshkill
+#
+if ! grep -q '^ControlPath /tmp/%u/sshmux/%r@%h:%p$' "$HOME/.ssh/config"; then
+  echo "Your ~/.ssh/config's ControlPath sucks!" >&2
+  (exit 23)
+else
+  if test "${0:0:1}" = -; then
+    if ! echo "${BASHOPTS-}" | grep -Eq '(^|:)progcomp(:|$)'; then
+      echo "source sshmux into something other than a progcomp'able bash" >&2
+      (exit 23)
+    else
+
+      # setup bash completion
+      comp_sshkill() {
+        if test $COMP_CWORD = 1; then
+          COMPREPLY=($(cd "/tmp/$LOGNAME/sshmux" &&
+              ls | grep "^${COMP_WORDS[$COMP_CWORD]}.*"))
+        fi
+      }
+      complete -F comp_sshkill sshkill
+
+    fi
+  else
+
+    # kill ssh client
+    set -euf
+    exec pkill -f "^ssh: /tmp/$LOGNAME/sshmux/$1 \[mux\]$"
+
+  fi
+fi
