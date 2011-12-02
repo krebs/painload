@@ -2,17 +2,17 @@
 
 set -euf
 
-JOURNAL="/krebs/db/truth.db"
+JOURNAL="/krebs/db/truth"
 
 METHOD="$1"
 shift
 
 case $METHOD in
 "create")
-  echo "`date +%s.%N`: create $1" | tee -a $JOURNAL
+  echo "`date --utc --rfc-3339=ns` create $1" | tee -a $JOURNAL
 ;;
 "set")
-  echo "`date +%s.%N`: set $1 $2 $3" | tee -a $JOURNAL 
+  echo "`date --utc --rfc-3339=ns` set $1 $2 $3" | tee -a $JOURNAL 
 ;;
 *)
   echo "you are made of stupid!"
