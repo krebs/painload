@@ -2,6 +2,11 @@
 
 set -euf
 
+# TODO REPO=...
+# TODO check if $REPO is the right one
+# TODO sanity-check arguments
+# TODO commit changes; pull and push $REPO
+
 JOURNAL="/krebs/db/truth"
 
 METHOD="$1"
