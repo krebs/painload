@@ -23,7 +23,7 @@ for line in f:
   cmd = lsplit[2]
   target = lsplit[3]
   if cmd == "create":
-    assert target not in ret, "Target '%s' already created!"
+    assert target not in ret, "Target '%s' already created!" %target
     ret[target] = {}
   elif cmd == "set":
     key = lsplit[4]
