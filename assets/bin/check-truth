@@ -1,0 +1,11 @@
+#!/bin/sh
+set -euf
+DB=${1-"/krebs/db/truth"}
+HERE=$(dirname $(readlink -f $0))
+read LINE
+if (cat $DB;echo $LINE) | $HERE/truth2json - >/dev/null ;then
+  echo "success"
+else
+  echo "you fail"
+fi
+

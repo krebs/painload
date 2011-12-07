@@ -1,0 +1,37 @@
+#!/usr/bin/python
+
+import sys
+
+try:
+  db=sys.argv[1]
+except:
+  db="/krebs/db/truth"
+
+ret = {}
+
+
+if db is "-":
+  sys.stderr.write("Using stdin\n")
+  f = sys.stdin
+else:
+  sys.stderr.write("Using journal '%s'\n" % db)
+  f = open(db)
+
+for line in f:
+  lsplit = line.split()
+  date = ' '.join(lsplit[0:2])
+  cmd = lsplit[2]
+  target = lsplit[3]
+  if cmd == "create":
+    assert target not in ret, "Target '%s' already created!"
+    ret[target] = {}
+  elif cmd == "set":
+    key = lsplit[4]
+    value = ' '.join(lsplit[5:])
+    assert target in ret, "target '%s' not set yet!" % target
+    ret[target][key] = value
+  else:
+    raise AssertionError,"unknown command '%s'!"
+
+import json
+print json.dumps(ret,sort_keys=True,indent=4)
