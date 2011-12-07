@@ -4,6 +4,7 @@ set -euf
 
 DB="/krebs/db"
 JOURNAL="$DB/truth"
+HERE=$(dirname $(readlink -f $0))
 
 (cd $DB && git pull >/dev/null && echo "pulled new version")
 
@@ -11,10 +12,10 @@ METHOD="$1"; shift
 
 case $METHOD in
 "create")
-  echo "`date --utc --rfc-3339=ns` create $1" | check-truth | tee -a $JOURNAL
+  echo "`date --utc --rfc-3339=ns` create $1" | $HERE/check-truth | tee -a $JOURNAL
 ;;
 "set")
-  echo "`date --utc --rfc-3339=ns` set $1 $2 $3" | check-truth | tee -a $JOURNAL 
+  echo "`date --utc --rfc-3339=ns` set $1 $2 $3" | $HERE/check-truth | tee -a $JOURNAL 
 ;;
 *)
   echo "you are made of stupid!"
