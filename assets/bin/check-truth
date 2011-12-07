@@ -3,9 +3,9 @@ set -euf
 DB=${1-"/krebs/db/truth"}
 HERE=$(dirname $(readlink -f $0))
 read LINE
-if (cat $DB;echo $LINE) | $HERE/truth2json - >/dev/null ;then
-  echo "success"
+if (cat $DB;echo $LINE) | $HERE/truth2json - 1>/dev/null ;then
+  echo "success" 1>&2
+  echo "$LINE"
 else
-  echo "you fail"
+  echo "you fail" 1>&2
 fi
-
