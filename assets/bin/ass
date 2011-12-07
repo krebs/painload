@@ -2,20 +2,23 @@
 
 set -euf
 
-JOURNAL="/krebs/db/truth"
+DB="/krebs/db"
+JOURNAL="$DB/truth"
 
-METHOD="$1"
-shift
+(cd $DB && git pull >/dev/null && echo "pulled new version")
+
+METHOD="$1"; shift
 
 case $METHOD in
 "create")
-  echo "`date --utc --rfc-3339=ns` create $1" | tee -a $JOURNAL
+  echo "`date --utc --rfc-3339=ns` create $1" | check-truth | tee -a $JOURNAL
 ;;
 "set")
-  echo "`date --utc --rfc-3339=ns` set $1 $2 $3" | tee -a $JOURNAL 
+  echo "`date --utc --rfc-3339=ns` set $1 $2 $3" | check-truth | tee -a $JOURNAL 
 ;;
 *)
   echo "you are made of stupid!"
   exit 23
 ;;
 esac
+(cd $DB && git commit -a -m bump >/dev/null && git push 1>&2 2>/dev/null && echo "updates pushed")&
