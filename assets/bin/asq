@@ -1,0 +1,21 @@
+#!/bin/bash
+set -xeuf
+cd $(dirname $(readlink -f $0))
+
+if [ "$1" == "c" ];then
+  echo ./ass create "$2" && export ASS_CREATED="$2"
+  if [ "${ASS_OWNER-}" ]; then
+    $0 s "owner" "${ASS_OWNER}"
+  fi
+  if [ "${ASS_LOCATION-}" ]; then
+    $0 s "location" "${ASS_LOCATION}"
+  fi
+else if [ "$1" == "s" ]
+then
+    echo ./ass set "${ASS_CREATED}" "${2}" "${3}"
+  else
+    echo "you are made of stupid!"
+    cat $0
+    exit 23
+  fi
+fi
