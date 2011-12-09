@@ -4,12 +4,11 @@ cd $(dirname $(readlink -f $0))
 
 if [ "$1" == "c" ];then
   echo ./ass create "$2" && export ASS_CREATED="$2"
-  if [ "${ASS_OWNER-}" ]; then
-    $0 s "owner" "${ASS_OWNER}"
-  fi
-  if [ "${ASS_LOCATION-}" ]; then
-    $0 s "location" "${ASS_LOCATION}"
-  fi
+  for i in `env | grep -v '^ASS_CREATED=' | grep "^ASS" | cut -d '=' -f 1`;do
+    e=`echo $i | cut -d '_' -f 2 | tr '[A-Z]' '[a-z]'`
+    eval con=\$$i
+    $0 s "$e" "$con"
+  done
 else if [ "$1" == "s" ]
 then
     echo ./ass set "${ASS_CREATED}" "${2}" "${3}"
