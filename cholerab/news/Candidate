@@ -1,4 +1,4 @@
-# Krebs News Issue #3 (2011-??-??)
+# Krebs News Issü #3 (2011-??-??)
 
 ## -1. Ante Scriptum
 
@@ -14,9 +14,9 @@ aber jeder andere Ort ist fast genauso gut.
 [-1.0]: https://github.com
 [-1.1]: http://git-scm.com
 
-## 0. Steuerung der Lichtverschmutzung
+## Steürung der Lichtverschmutzung
 
-Der Urkrebs steuert schon immer das Licht.  Dazu muss man sich lediglich
+Der Urkrebs steürt schon immer das Licht.  Dazu muss man sich lediglich
 auf [`//noise`][0.2]`@krebs.shack` einwählen und die relevanten
 Kommandos absetzen.
 
@@ -25,93 +25,89 @@ Eine Einwahl erfolgt z.B. mittels `netcat` wie folgt:
     rlwrap nc krebs.shack telnet
     rlwrap ncat krebs.shack 23
     rlwrap netcat krebs.shack 23
+    telnet krebs.shack
 
 Die relevanten Kommando sehen in etwa so aus:
 
     /licht SPEC ZUSTAND
 
 dabei ist `ZUSTAND` eine Ganzzahl im Bereich `[0,1]` und die möglichen Werte
-von `SPEC` können der vorzüglich belesenen Quelle von [`//god/licht`][0.1]
-entnommen werden.
+von `SPEC` können der vorzüglich belesenen Qülle von [`//god/licht`][0.1]
+entnommen oder licht mit dem kommando `help` aufgerufen werden:
+
+    /licht help
 
 [0.1]: https://github.com/krebscode/painload/tree/master/god/licht
 [0.2]: https://github.com/krebscode/painload/tree/master/noise
 
-## TODO 1. Tinc Retiolum updates
-Das retiolum Darknet ueber tinc als vermaschtes VPN ist ein integraler 
-Bestandteil der Krebs Infrastruktur. Umso wichtiger ist es, dass die 
-installation ueberall imer genau das richtige macht. 
+## Tinc Retiolum updates
+Das [`//retiolum][1.1]` Darknet Submodul unter Verwebdung von tinc als vermaschtes VPN 
+ist ein integraler Bestandteil der Krebs Infrastruktur. Umso wichtiger ist es, 
+dass die installation überall immer genau das richtige macht. 
 
-KM Pfleidi hat sich gestern (26.08.2011) Retiolum angenommen um es 
+Am 26.08.2011 wurde sich dem Retiolum angenommen um es 
 sauber auf OSX (und ggf. weiteren Unixartigen OSen) zum laufen zu
 bringen. Ziel ist es die Installation auf ein einfaches 
-  $ make -C //retiolum install
-zu beschraenken.
+
+  make -C //retiolum install
+
+zu beschränken.
 
 Die Host-Dateien, welche von tinc verwendet werden koennen mit
-  $ make -C //retiolum update
-geupdatet werden. Alle update skripte muessen auf das neue updateverfahren 
-ggf. umgestellt werden.
 
-In diesem Kontext sind unter anderem Skript fuer das erraten des richtigen 
-Tinc-Konfigurationsordners [1.1] entstanden. Eine aehnliche funktionalitaet
-kann nun fuer verschiedenste weitere module, welche Plattformunabhaengigkeit
-gewaehrleisten sollen verwendet werden.
+  make -C //retiolum update
 
-[1.1] : https://github.com/krebscode/painload/tree/master/retiolum/bin/get-tinc-dir
+geupdatet werden. Alle update skripte sind auf das neü Verfahren umgestellt
 
-## TODO 2. Krebs MPD + http stream
+In diesem Kontext sind unter anderem Skript für das errechnen der richtigen 
+Tinc-Konfigurationsordners `[1.2]` entstanden. Es wird hierbei die Architektur 
+des Wirtes gefunden. Eine ähnliche Funktionalität kann nun für verschiedenste 
+weitere Module welche Plattformunabhängigkeit gewährleisten sollen verwendet werden.
 
-KM momo hat sich heute (01.09.2011) gegen die streams gewehrt und auf der filebitch einen mpd Server eingerichtet.
-Der MPD streamt jetzt via http(vorbis) auf http://filebitch.shack:8000. 
-Eine Integration in //streams ist bereits vorgenommen. 
-Der MPD lauert auf filebitch.shack:6600 auf MPD Clients die ihn bedienen. 
-Ein Webinterface ist noch nicht geplant. 
+[1.1]: https://github.com/krebscode/painload/tree/master/retiolum
+[1.2]: https://github.com/krebscode/painload/tree/master/retiolum/bin/get-tinc-dir
 
-Die Musiksammlung kann in incoming/Musik auf der Filebitch erweitert werden.
+## Todesmeldung Urkrebs
 
-## TODO 3. KNUT - Die Krebs Notification Utility Toolchain
+Es ist zu vermerken, dass das Gedächnis von Urkrebs zusammen mit der CF-Disk gestorben ist. 
+Glücklicher Weise wurde zuvor eine `dd[⌅]`-Kopie auf die CF-Karte von `Fürkrebs[Ȳ]` 
+(Krebs auf der Brücke/ den Optionsräumen) erstellt und diese wurde kurzer Hand für die 
+Wiederbelebung des Urkrebses verwendet. 
 
-Bereits wieder obsolete?
+Dies hat allerdings auch etwas an ursprünglicher Funktionalität (`Oncology[2.1]`) zerstoert. 
+Die gerette Maschine in der Lounge meldet sich nun offiziell als `Fürkrebs[2.2]` im Retiolum an.
 
-## TODO 4. Krebs Kommandozentrale
+[⌅] man dd
+[Ȳ] http://shackspace.de/wiki/doku.php?id=project:krebs#fürkrebs
+[2.1]: https://github.com/krebscode/painload/tree/master/oncology
+[2.2]: fuerkrebs.retiolum
 
-Der 17" Monitor am Krebs sowie die auf dem Drucker liegende Tastatur wurden so modifiziert dass auf der ersten shell ein ncmpc Interface zu sehen ist, womit sich der MPD und somit auch die Loungebeschallung steuern lässt. Auf der 2. Shell (änderbar duch ctrl+alt+F2) befindet sich ein direktzugriff auf //noise, welcher es u.a. ermöglicht streams zu wechseln oder das licht ein/auszuschalten.
-
-Credits gehen an KM momo und KM tv
-
-## TODO 5. Todesmeldung Urkrebs
-
-Es ist zu vermerken, dass der Urkebs, bzw. dessen Gedaechnis auf der CF-Disk gestorben. Gluecklicher weise wurde zuvor eine dd[⌅]-kopie auf die CF-Karte von Fuerkrebs (Krebs auf der Bruecke/Optionsraeme [Ȳ]) erstellt und diese wurde kurzer hand fuer die Wiederbelebung des Urkrebses verwendet. Dies hat allerdings auch etwas an urspruenglicher Funktionalitaet (siehe ->Oncology) zerstoert. Diese wurde zu einem spaeteren Zeitpunkt wieder hergestellt. Zusaetzlich meldet sich der Urkrebs nun offiziell im Retiolum als Fuerkrebs an.
-
-## TODO 6. Reaktor for IRC
+## TODO Reaktor for IRC
 
 TODO
 
 ## TODO 7. Census auf Urkrebs
 
-Census[Ƀ] ist ein projekt in painload welches dem lokal ansaessigen krebs die moeglichkeit bietet noch gezielter laeute im shack zu beleidigen. Alle weiteren informationen koennen aus dem Quelltext von Census entnommen werden. Census wurde am 2011-11-01 in den erweiterten Probebetrieb aufgenommen.
+Census[Ƀ] ist ein Projekt in painload welches dem lokal ansässigen krebs die moeglichkeit bietet noch gezielter läute im shack zu beleidigen. Alle weiteren informationen koennen aus dem Qülltext von Census entnommen werden. Census wurde am 2011-11-01 in den erweiterten Probebetrieb aufgenommen.
 
-## TODO 8. Oncology auf dem (neuen) Urkrebs
+## TODO 8. Oncology auf dem (neün) Urkrebs
 
-Nachdem Gedaechnistausch von Fuerkrebs und Urkrebs hat es ja wie beschrieben die Funktionalitaet Oncology (Mini Statusbildschirm an USB) dahingerafft. Am 2011-11-07 wurde diese wieder in den Funktionalbetrieb aufgenommen. 
+Nachdem Gedächnistausch von Fürkrebs und Urkrebs hat es ja wie beschrieben die Funktionalität Oncology (Mini Statusbildschirm an USB) dahingerafft. Am 2011-11-07 wurde diese wieder in den Funktionalbetrieb aufgenommen. 
 
 ## TODO 9. Krebs Darknet Retiolum Prefix(KD;RP) Graphen-Map in Version 23
 
-Der Graphengenerator fuer KD;RP (siehe [ɐ]ist ueberarbeitet worden und bietet seit dem 2011-10-23 die moeglichkeit Statistiken zu dem Netzwerk und einzelnen Nodes auszugeben. Hervorzuheben ist hierbei die funktionalitaet die Availability von Nodes zu beschreiben, also wie wahrscheinlich es ist einen Knoten X zu einem Zeitpunkt Y im Darknet anzutreffen. Zusaetzlich wurde die Stats-generator engine ueberarbeitet und laeuft nun besonders bei grossen /var/log/syslog files schneller [⠣].
+Der Graphengenerator für KD;RP (siehe [ɐ]ist überarbeitet worden und bietet seit dem 2011-10-23 die moeglichkeit Statistiken zu dem Netzwerk und einzelnen Nodes auszugeben. Hervorzuheben ist hierbei die funktionalität die Availability von Nodes zu beschreiben, also wie wahrscheinlich es ist einen Knoten X zu einem Zeitpunkt Y im Darknet anzutreffen. Zusätzlich wurde die Stats-generator engine überarbeitet und läuft nun besonders bei grossen /var/log/syslog files schneller [⠣].
 
-## TODO 10. Ticket-fetcher fuer den 28C2
+## TODO 10. Ticket-fetcher für den 28C2
 
-Da die 28C3 Presales Tickets rar sind und Leute anfangen das einkaufen zu automatisieren kann nicht auf das glueck des tuechtigen gehofft werden, sondern auch fuer den shack wird automatisiert. Herausgekommen ist ein Skript[Բ] (basierend auf einem anderen Skript[в] welches aber zu hart gesuckt hat) welches sich auf der Presales seite einloggt und dort den "Confirm Order" button drueckt. Das ganze wird in eine ELoop gepackt und den Tickets steht nun nichts mehr im wege. Gebaut wurde das Skript in der nacht am 14.November (T-10H) bis zur naechsten Presales Runde fuer den 28C3. 
+Da die 28C3 Presales Tickets rar sind und Leute anfangen das einkaufen zu automatisieren kann nicht auf das glück des tüchtigen gehofft werden, sondern auch für den shack wird automatisiert. Herausgekommen ist ein Skript[Բ] (basierend auf einem anderen Skript[в] welches aber zu hart gesuckt hat) welches sich auf der Presales seite einloggt und dort den "Confirm Order" button drückt. Das ganze wird in eine ELoop gepackt und den Tickets steht nun nichts mehr im wege. Gebaut wurde das Skript in der nacht am 14.November (T-10H) bis zur nächsten Presales Runde für den 28C3. 
 
-UPDATE 14.11.2011 16:30: Die Tickets sind bestellt, das Ziel ist erreicht. Allerdings nicht von einem der deployten Skripten gefetcht, sondern durch die manuelle Klick-Kraft[1]. Fuer das naechste Jahr muss das skript also noch viel aggressiver fetchen und die bandbreite mit HTTP requests fuellen.
+UPDATE 14.11.2011 16:30: Die Tickets sind bestellt, das Ziel ist erreicht. Allerdings nicht von einem der deployten Skripten gefetcht, sondern durch die manülle Klick-Kraft[1]. Für das nächste Jahr muss das skript also noch viel aggressiver fetchen und die bandbreite mit HTTP reqüsts füllen.
 
 
 [⠣] https://github.com/krebscode/painload/commit/822c43a763aa61c1accce3768090d066048faaff 
-[⌅] man dd
 [в] http://pastebin.com/SRwtNwKS
 [1] http://f.cl.ly/items/213N2l0c1p3d24332l0X/ragecomic.png
-[Ȳ] http://shackspace.de/wiki/doku.php?id=project:krebs#fuerkrebs
 [Բ] https://github.com/krebscode/painload/blob/master/too_old/mechanize_tickets.py
 [Ƀ] https://github.com/krebscode/painload/tree/master/census
 [ɐ] http://euer.krebsco.de/graphs/retiolum/retiolum_1.svg
