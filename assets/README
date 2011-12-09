@@ -1,0 +1,41 @@
+# Asset tools for krebs
+
+## Prereqs
+Check out the current krebs-asset repo into //db
+
+  git checkout root@db-host:/krebs.db.git db
+
+in //db/ is an append-only file known as 'truth'. it contains the assets and the history of these. 
+Every commit is atomic, every line needs to be committed after being produced.
+
+## Usage
+### ass
+bin/ass has the power to add entries to the //db/truth file in the correct manner. It has two modes, create mode and set mode.
+Create mode produces new keys in the database, these database entries are unique.
+Set mode can set attributes to an entry in the database
+
+Example:
+  ass create bob
+  ass set bob type 
+  ass create bob-pc
+  ass set bob-pc owner bob
+  ass set bob-pc location bob\'s-home
+
+### asq (ass-quick)
+asq is a wrapper around the core ass. It should be used for adding lots and lots of new entries to the truth. It evaluates Variables from your environment.
+
+Example:
+  export ASS_LOCATION=bob\'s-home
+  export ASS_OWNER=bob
+  asq c logitech-sidewinder-gamepad
+  asq c arduino-uno
+  asq s amount 3
+
+asq will then actually generate the following:
+  ass create logitech-sidewinder-gamepad
+  ass set logitech-sidewinder-gamepad owner bob
+  ass set logitech-sidewinder-gamepad location bob\'s-home
+  ass create arduino-uno
+  ass set arduino-uno owner bob
+  ass set arduino-uno location bob\'s-home
+  ass set arduino-uno amount 3
