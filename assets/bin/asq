@@ -3,7 +3,7 @@ set -xeuf
 cd $(dirname $(readlink -f $0))
 
 if [ "$1" == "c" ];then
-  echo ./ass create "$2" && export ASS_CREATED="$2"
+  ./ass create "$2" && export ASS_CREATED="$2"
   for i in `env | grep -v '^ASS_CREATED=' | grep "^ASS" | cut -d '=' -f 1`;do
     e=`echo $i | cut -d '_' -f 2 | tr '[A-Z]' '[a-z]'`
     eval con=\$$i
@@ -11,7 +11,7 @@ if [ "$1" == "c" ];then
   done
 else if [ "$1" == "s" ]
 then
-    echo ./ass set "${ASS_CREATED}" "${2}" "${3}"
+    ./ass set "${ASS_CREATED}" "${2}" "${3}"
   else
     echo "you are made of stupid!"
     cat $0
