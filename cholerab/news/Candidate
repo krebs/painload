@@ -11,7 +11,8 @@ Das so oder ähnlich erzeugte Verzeichnis wird im Folgenden `//` genannt.
 Das Ministerium empfiehlt die Verwendung von `/krebs`, aber jeder andere
 Ort ist fast genauso gut.
 
-[-1.0]: https://github.com [-1.1]: http://git-scm.com
+[-1.0]: https://github.com 
+[-1.1]: http://git-scm.com
 
 ## Steürung der Lichtverschmutzung
 
@@ -39,7 +40,7 @@ aufgerufen werden:
 [0.2]: https://github.com/krebscode/painload/tree/master/noise
 
 ## Tinc Retiolum updates
-#
+
 Das [`//retiolum][1.1]` Darknet Submodul unter Verwebdung von tinc als
 vermaschtes VPN ist ein integraler Bestandteil der Krebs Infrastruktur.
 Umso wichtiger ist es, dass die installation überall immer genau das
@@ -72,24 +73,24 @@ sollen verwendet werden.
 ## Todesmeldung Urkrebs
 
 Es ist zu vermerken, dass das Gedächnis von Urkrebs zusammen mit der
-CF-Disk gestorben ist.  Glücklicher Weise wurde zuvor eine `dd[⌅]`-Kopie
-auf die CF-Karte von `Fürkrebs[Ȳ]` (Krebs auf der Brücke/ den
+CF-Disk gestorben ist.  Glücklicher Weise wurde zuvor eine `[dd][2.1]`-Kopie
+auf die CF-Karte von `[Fuerkrebs][2.2]` (Krebs auf der Brücke/ den
 Optionsräumen) erstellt und diese wurde kurzer Hand für die Wiederbelebung
 des Urkrebses verwendet. 
 
 Dies hat allerdings auch etwas an ursprünglicher Funktionalität
-(`Oncology[2.1]`) zerstoert.  Die gerette Maschine in der Lounge meldet
-sich nun offiziell als `Fürkrebs[2.2]` im Retiolum an.
+(`[Oncology][2.3]`) zerstoert.  Die gerette Maschine in der Lounge meldet
+sich nun offiziell als `[Fuerkrebs][2.4]` im Retiolum an.
 
-[⌅]: man dd 
-[Ȳ]: http://shackspace.de/wiki/doku.php?id=project:krebs#fürkrebs
-[2.1]: https://github.com/krebscode/painload/tree/master/oncology 
-[2.2]: fuerkrebs.retiolum
+[2.1]: man dd 
+[2.2]: http://shackspace.de/wiki/doku.php?id=project:krebs#fürkrebs
+[2.3]: https://github.com/krebscode/painload/tree/master/oncology 
+[2.4]: fuerkrebs.retiolum
 
 
 ## Census auf Urkrebs
 
-Census[Ƀ] ist ein Projekt in painload welches dem lokal ansässigen Krebs
+`[Census][3.1]` ist ein Projekt in painload welches dem lokal ansässigen Krebs
 die Möglichkeit bietet noch gezielter Leute im shack zu beleidigen. Primär
 geht es darum, dass Krebs die Teilnehmer seines lokalen Netzwerkes
 identifiziert und loggt.  Benutzung:
@@ -97,17 +98,17 @@ identifiziert und loggt.  Benutzung:
     //census/arping_users.py
 
 Census kann fuer maximale informationgewinnung in entsprechend gewählten
-Abständen mittels `cron[4.1]` geplant werden. 
+Abständen mittels `[cron][3.2]` geplant werden. 
 
 Um den Eintrag so leicht wie Möglich Löschen oder Updaten zu können wird
-das //krebs/utils Werkzeug `magic[4.2]` verwendet.  Alle weiteren
+das //krebs/utils Werkzeug `[magic][3.3]` verwendet.  Alle weiteren
 Informationen koennen aus dem Quelltext von Census entnommen werden.
 Census wurde am 2011-11-01 auf Urkrebs in den erweiterten Probebetrieb
 aufgenommen.
 
-[Ƀ]: https://github.com/krebscode/painload/tree/master/census 
-[4.1]: man cron
-[4.2]: https://github.com/krebscode/painload/tree/master/utils/bin/magic
+[3.1]: https://github.com/krebscode/painload/tree/master/census 
+[3.2]: man cron
+[3.3]: https://github.com/krebscode/painload/tree/master/utils/bin/magic
 
 ## magic
 
@@ -140,23 +141,23 @@ die Funktionalität Oncology (Statusbildschirm an USB) dahingerafft. Am
 
 ## Krebs Darknet Retiolum Prefix(KD;RP) Graphen-Map in Version 23
 
-Der Graphengenerator für `KD;RP[ɐ]` ist überarbeitet worden und bietet
+Der `[Graphengenerator für KD;RP][5.1]` ist überarbeitet worden und bietet
 seit dem 2011-10-23 die Möglichkeit Statistiken zu dem Netzwerk und
 einzelnen Nodes auszugeben. Hervorzuheben ist hierbei die Funktionalität
 die Availability von Nodes zu beschreiben, also wie wahrscheinlich es ist
 einen Knoten X zu einem Zeitpunkt Y im Darknet anzutreffen. Zusätzlich
 wurde die Stats-Generator engine überarbeitet und läuft nun besonders bei
-grossen /var/log/syslog files schneller[⠣].
+grossen /var/log/syslog files `[schneller][5.2]`.
 
-[ɐ]: https://github.com/krebscode/painload/tree/master/retiolum/scripts/adv_graphgen
-[⠣]: https://github.com/krebscode/painload/commit/822c43a763aa61c1accce3768090d066048faaff 
+[5.1]: https://github.com/krebscode/painload/tree/master/retiolum/scripts/adv_graphgen
+[5.2]: https://github.com/krebscode/painload/commit/822c43a763aa61c1accce3768090d066048faaff 
 
 ## Ticket-Fetcher für den 28C2
 
 Da die 28C3 Presales Tickets rar sind und Leute anfangen das Einkaufen zu
 automatisieren kann nicht auf das Glück des Tüchtigen gehofft werden,
 sondern auch für den shack wird automatisiert. Herausgekommen ist ein
-Skript[Բ] (basierend auf einem anderen Skript[в] welches aber zu hart
+Skript[6.1] (basierend auf einem anderen `[Skript][6.2] welches aber zu hart
 gesuckt hat) welches sich auf der Presales Seite einloggt und dort den
 "Confirm Order" Button drückt. Das Ganze wird in eine ELoop gepackt und den
 Tickets steht nun nichts mehr im Wege. Gebaut wurde das Skript in der nacht
@@ -164,13 +165,12 @@ am 14.November (T-10H) bis zur nächsten Presales Runde für den 28C3.
 
 UPDATE 14.11.2011 16:30: Die Tickets sind bestellt, das Ziel ist erreicht.
 Allerdings nicht von einem der deployten Skripten gefetcht, sondern durch
-die manülle Klick-Kraft[1]. Für das nächste Jahr muss das skript also noch
+die manuelle `[Klick-Kraft][6.3]`. Für das nächste Jahr muss das skript also noch
 viel aggressiver fetchen und die bandbreite mit HTTP reqüsts füllen.
 
-[в] http://pastebin.com/SRwtNwKS 
-[1] http://f.cl.ly/items/213N2l0c1p3d24332l0X/ragecomic.png 
-[Բ] https://github.com/krebscode/painload/blob/master/too_old/mechanize_tickets.py
-[ɐ] http://euer.krebsco.de/graphs/retiolum/retiolum_1.svg
+[6.1] https://github.com/krebscode/painload/blob/master/too_old/mechanize_tickets.py
+[6.2] http://pastebin.com/SRwtNwKS 
+[6.3] http://f.cl.ly/items/213N2l0c1p3d24332l0X/ragecomic.png 
 
 ## Das Krebs Asset Web
 
@@ -179,20 +179,20 @@ an physikalischen Assets angesammelt. Diese werden von den KMs bzw. Krebs
 selbst verwaltet. Ziel des Krebs Asset Webs ist es die vorhandenen Assets
 zu dokumentieren und Metadaten über Besitzer, Ort oder Anzahl aufzunehmen.
 Dafür wurden im ersten Schritt Usecases definiert und
-`niedergeschrieben[չ]`. 
+`[niedergeschrieben][7.1]`. 
 
-Daraus entstanden ist `ass[ɤ]`, ein minimalistisches Asset-Management Tool.
+Daraus entstanden ist `[ass][7.2]`, ein minimalistisches Asset-Management Tool.
 Als persistentes Backend wird eine Append-Only Datei verwendet, Einträge
-werden atomar in ein Git-Repository committed.  `truth2json[Ճ]` erzeugt aus
+werden atomar in ein Git-Repository committed.  `[truth2json][7.3]` erzeugt aus
 dem aktuellen Datenbestand des asset-web eine JSON Datenstruktur. Diese
 kann dann für weitergehende Informationsgewinnung verwendet werden.  Die
-README[吳] Datei erklärt die Verwendung der implementierten Tools, sowie
+`[README][7.4]` Datei erklärt die Verwendung der implementierten Tools, sowie
 die dahinter stehenden Konzepte.
 
 
-[չ] https://github.com/krebscode/painload/blob/master/cholerab/assets/usecases.txt
-[ɤ] https://github.com/krebscode/painload/blob/master/assets/bin/ass 
-[Ճ] https://github.com/krebscode/painload/blob/master/assets/bin/truth2json
-[吳] https://github.com/krebscode/painload/blob/master/assets/README
+[7.1] https://github.com/krebscode/painload/blob/master/cholerab/assets/usecases.txt
+[7.2] https://github.com/krebscode/painload/blob/master/assets/bin/ass 
+[7.3] https://github.com/krebscode/painload/blob/master/assets/bin/truth2json
+[7.4] https://github.com/krebscode/painload/blob/master/assets/README
 
 EOF
