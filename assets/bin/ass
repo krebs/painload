@@ -2,10 +2,9 @@
 
 set -euf
 
-DB="/krebs/db"
-JOURNAL="$DB/truth"
 HERE=$(dirname $(readlink -f $0))
-
+DB="$HERE/../../../krebs/db"
+JOURNAL="$DB/truth"
 (cd $DB && git pull >/dev/null && echo "pulled new version")
 
 METHOD="$1"; shift
