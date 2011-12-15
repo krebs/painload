@@ -3,7 +3,7 @@
 set -euf
 
 HERE=$(dirname $(readlink -f $0))
-DB="$HERE/../../../krebs/db"
+DB="$HERE/../../db"
 JOURNAL="$DB/truth"
 (cd $DB && git pull >/dev/null && echo "pulled new version")
 
