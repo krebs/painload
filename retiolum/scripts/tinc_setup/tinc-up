@@ -10,7 +10,7 @@ host=$dirname/hosts/$name
 
 ip link set $INTERFACE up
 
-addr4=`sed -n 's|^ *Subnet *= *\(42[.][^ ]*\) *$|\1|p' $host`
+addr4=`sed -n 's|^ *Subnet *= *\(10[.][^ ]*\) *$|\1|p' $host`
 ip -4 addr add $addr4 dev $INTERFACE
 ip -4 route add 10.243.0.0/16 dev $INTERFACE
 
