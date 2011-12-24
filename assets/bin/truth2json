@@ -5,7 +5,7 @@ import sys
 try:
   db=sys.argv[1]
 except:
-  db="/krebs/db/truth"
+  db="../../db/truth"
 
 ret = {}
 
