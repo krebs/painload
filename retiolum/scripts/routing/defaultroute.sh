@@ -30,8 +30,17 @@ case "$1" in
         exit 1;;
 esac
 
+
 cat $tincdir/hosts/* | grep Address | cut -b 11- |
 while read host
 do
-    route $command $host gw $defaultroute
+    if [ "$(echo $host | sed 's/[0-9]*//g' | sed 's/>//g')" = '' ]; then
+        route $command $host gw $defaultroute
+    else
+        host -4 $host | grep "has address" | awk '{ print $4 }' |
+        while read addr
+        do
+            route $command $addr gw $defaultroute
+        done
+    fi
 done
