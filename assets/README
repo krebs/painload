@@ -21,17 +21,20 @@ Example:
   ass set bob-pc owner bob
   ass set bob-pc location bob\'s-home
 
-### asq (ass-quick)
-asq is a wrapper around the core ass. It should be used for adding lots and lots of new entries to the truth. It evaluates Variables from your environment.
+### asq
+asq is a tool to query the truth for facts. This is currently only a placeholder
+
+### FAST
+fast is a wrapper around the core ass. It should be used for adding lots and lots of new entries to the truth. It evaluates Variables from your environment.
 
 Example:
   export ASS_LOCATION=bob\'s-home
   export ASS_OWNER=bob
-  asq c logitech-sidewinder-gamepad
-  asq c arduino-uno
-  asq s amount 3
+  fast c logitech-sidewinder-gamepad
+  fast c arduino-uno
+  fast s amount 3
 
-asq will then actually generate the following:
+fast will then actually generate the following:
   ass create logitech-sidewinder-gamepad
   ass set logitech-sidewinder-gamepad owner bob
   ass set logitech-sidewinder-gamepad location bob\'s-home
