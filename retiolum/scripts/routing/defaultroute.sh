@@ -40,7 +40,7 @@ do
         host -4 $host | grep "has address" | awk '{ print $4 }' |
         while read addr
         do
-            route $command $addr gw $defaultroute
+            route $command $addr gw $defaultroute && echo "$command routing to $addr via $defaultroute"
         done
     fi
 done
