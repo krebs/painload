@@ -9,7 +9,7 @@ links:
 
 
 install: upgrade
-	../punani/bin/punani -Eih tinc /usr/bin/python /usr/bin/python2
+	../punani/bin/punani tinc python
 	scripts/tinc_setup/install.sh
 	cp scripts/tinc_setup/tinc-up /etc/tinc/retiolum/tinc-up
 	scripts/autostart/create-startup.sh
