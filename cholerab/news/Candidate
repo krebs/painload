@@ -1,4 +1,4 @@
-hosts for deletion:
+# hosts for deletion
 zerg
 rtjure
 miefda901
@@ -11,3 +11,17 @@ temperator
 miefdahome
 krebsbitch
 armageddon421_de
+
+# euer http pub und priv
+
+euer.krebsco.de bzw. euer.retiolum bietet ein HTTP interface an. Vorher gab es
+keinen unterschied zwischen public und private interface. nun bietet euer auf
+dem public interface eine "zensierte" version des retiolum graphen und im
+private interface den graphen inkl aller informationen welche verfuegbar sind
+an.
+
+# darkstats fuer euer
+
+auf euer laeuft auf port 8080 ein darkstat daemon, welcher informationen ueber
+den server geroutet werden. Das interface ist nur innerhalb des darknets
+verfuegbar.
