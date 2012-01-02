@@ -7,7 +7,7 @@ usage()
     echo "-d       deactivate routing"
 }
 
-defaultroute=$(route -n | grep 'UG[ \t]' | awk '{print $2}')
+defaultroute=$(ip route show | grep default | awk '{ print $3 }')
 tincdir="/etc/tinc/retiolum"
 
 if [[ $(id -u) -gt 0 ]]; then
@@ -30,17 +30,9 @@ case "$1" in
         exit 1;;
 esac
 
-
-cat $tincdir/hosts/* | grep Address | cut -b 11- |
+cat $tincdir/tinc.conf | grep ConnectTo | cut -b 13- |
 while read host
 do
-    if [ "$(echo $host | sed 's/[0-9]*//g' | sed 's/\.//g')" = '' ]; then
-        route $command $host gw $defaultroute
-    else
-        host -4 $host | grep "has address" | awk '{ print $4 }' |
-        while read addr
-        do
-            route $command $addr gw $defaultroute && echo "$command routing to $addr via $defaultroute"
-        done
-    fi
+    addr=$(cat $tincdir/hosts/$host | grep Address | cut -b 11-)
+    echo route $command $addr gw $defaultroute
 done
