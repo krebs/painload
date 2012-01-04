@@ -78,7 +78,7 @@ class asybot(asychat):
 
     if command == 'PING':
       self.push('PONG :%s' % rest)
-      log.info("Replying to servers PING with PONG :%s" %rest)
+      log.debug("Replying to servers PING with PONG :%s" %rest)
 
     elif command == 'PRIVMSG':
       self.on_privmsg(prefix, command, params, rest)
