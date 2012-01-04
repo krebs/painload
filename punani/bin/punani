@@ -25,8 +25,8 @@ elif for PACKER_CMD in bauerbill packer yaourt pacman
 
 elif for PACKER_CMD in aptitude apt-get
     do type $PACKER_CMD 2>/dev/null 1>&2 && break; done; then
-  INSTALL_PARAM='--yes install'
-  REMOVE_PARAM='--yes remove'
+  INSTALL_PARAM='-y install'
+  REMOVE_PARAM='-y remove'
 
 else
   echo "Error 2: no known package manager found; no punani for you!" >&2
