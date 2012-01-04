@@ -7,6 +7,7 @@ from time import sleep, strftime, strptime
 from ircbot import SingleServerIRCBot
 from irclib import nm_to_n
 
+
 class PunaniRequestHandler(BaseRequestHandler):
     """Handler for Punani messages."""
 
@@ -24,13 +25,17 @@ class PunaniReceiveServer(ThreadingTCPServer):
     """UDP server that waits for Punani messages."""
 
     def __init__(self):
-        ThreadingTCPServer.__init__(self, ('127.0.0.1', 5555), PunaniRequestHandler)
+        ThreadingTCPServer.__init__(self,
+                ('127.0.0.1', 5555),
+                PunaniRequestHandler)
         self.queue = Queue()
+
 
 class PunaniBot(SingleServerIRCBot):
 
     def __init__(self, server_list, channel_list, nickname='punani-ircbot',
             realname='Bob Ross'):
+        self.reconnection_interval = 30
         SingleServerIRCBot.__init__(self, server_list, nickname, realname)
         self.channel_list = channel_list
 
@@ -70,6 +75,7 @@ class PunaniBot(SingleServerIRCBot):
         for channel, key in self.channel_list:
             self.connection.privmsg(channel, msg)
 
+
 def process_queue(announce_callback, queue, delay=2):
     """Process received messages in queue."""
     while True:
@@ -83,7 +89,7 @@ def process_queue(announce_callback, queue, delay=2):
 if __name__ == '__main__':
     # Set IRC connection parameters.
     irc_servers = [('supernode', 6667)]
-    irc_channels = [('#retiolum','')]
+    irc_channels = [('#retiolum', '')]
 
     # Prepare and start IRC bot.
     bot = PunaniBot(irc_servers, irc_channels)
@@ -93,7 +99,7 @@ if __name__ == '__main__':
     announce = bot.say
 
     receiver = PunaniReceiveServer()
-    t = Thread(target=process_queue,args=(announce,receiver.queue))
+    t = Thread(target=process_queue, args=(announce, receiver.queue))
     t.daemon = True
     t.start()
     receiver.serve_forever()
