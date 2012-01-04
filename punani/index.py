@@ -3,6 +3,7 @@
 import web
 import json
 import os
+import sys
 from bot import *
 urls = ( 
   '/', 'Index',
@@ -12,7 +13,7 @@ urls = (
 )
 
 
-PDB_FILE="db/punani"
+PDB_FILE=os.path.dirname(os.path.abspath(sys.argv[0])) + "/db/punani"
 PORT="9111"
 CHANNEL="#retiolum"
 f = open(PDB_FILE)
@@ -70,7 +71,7 @@ class ArchFinder:
 if __name__ == "__main__":
   import sys 
   # Set IRC connection parameters.
-  irc_servers = [('supernode', 6667)]
+  irc_servers = [('supernode.retiolum', 6667)]
   irc_channels = [('#retiolum','')]
 
   # Prepare and start IRC bot.
