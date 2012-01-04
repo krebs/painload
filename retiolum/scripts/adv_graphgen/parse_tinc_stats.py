@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
-
+from BackwardsReader import BackwardsReader
 import sys,json
 supernodes= [ "kaah","supernode","euer","pa_sharepoint","oxberg" ]
 """ TODO: Refactoring needed to pull the edges out of the node structures again,
@@ -51,12 +51,19 @@ def generate_stats(nodes):
   """
   jlines = []
   try:
-    f = open(DUMP_FILE,'r')
-    for line in f:
-      jlines.append(json.loads(line))
-    f.close()
+    f = BackwardsReader(DUMP_FILE)
+    lines_to_use = 1000
+    while True:
+      if lines_to_use == 0: break
+      line = f.readline()
+      if not line: break
+      jline = json.loads(line)
+      if not jline['nodes']: continue
+
+      jlines.append(jline)
+      lines_to_use -=1
   except Exception,e:
-    pass
+    sys.stderr.write(str(e))
   for k,v in nodes.iteritems():
     conns = v.get('to',[])
     for c in conns: #sanitize weights
