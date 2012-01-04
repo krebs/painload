@@ -1,0 +1,30 @@
+tunneling:
+ovpn relevant fixes:
+
+    -up /etc/openvpn/update-resolv-conf
+    -down /etc/openvpn/update-resolv-conf
+    +#up /etc/openvpn/update-resolv-conf
+    +#down /etc/openvpn/update-resolv-conf
+
+    +route-nopull
+    -redirect-gateway $def1
+    -dev tun
+    +dev $(your interfacename here)
+    +dev-type tun
+
+    -auth-user-pass
+    +auth-user-pass $(your openvpn user_pass_file here)
+
+normal firewall stuff:
+    shorewall:
+    in /etc/shorewall/interfaces
+    +loc     $(interfacename)           detect          tcpflags,nosmurfs,routefilter,logmartians
+
+ip+iptables
+    iptables --table nat -A POSTROUTING -o $(your interfacename here) -j MASQUERADE
+    ip route add table $(interfacename) via $(route -n | grep $(interfacename) | grep 0.0.0.0 | awk '{print $1}') dev $(interfacename)
+    ip rule add $(your rule spec here) table $(interfacename)
+
+
+
+
