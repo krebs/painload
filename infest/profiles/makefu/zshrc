@@ -12,10 +12,10 @@ export DISABLE_AUTO_UPDATE="true"
 
 plugins=(git ssh-agent)
 source $ZSH/oh-my-zsh.sh
-test -e $HOME/.bash_alias && source $HOME/.bash_alias
+test -e $HOME/.aliases && source $HOME/.aliases
 
 # Customize to your needs...
-export PATH=$PATH:/krebs/bin:$HOME/bin
+export PATH=$PATH:/sbin:/usr/sbin:/krebs/bin:$HOME/bin
 HISTFILE=~/.histfile
 HISTSIZE=900001
 SAVEHIST=900001
