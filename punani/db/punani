@@ -7,11 +7,23 @@
   "super-packer" : {
     "yaourt" : "pacman"
   },
+  "nano" : {
+    "apt-get" : "nano",
+    "pacman" : "nano"
+    },
   "vim" : {
     "apt-get" : "vim",
     "pacman" : "vim",
     "brew" : "vim",
     "yum" : "vim"
+  },
+  "zsh" : {
+    "pacman" : "zsh",
+    "apt-get" : "zsh"
+  },
+  "git" : {
+   "pacman" : "git",
+   "apt-get" : "git-core"
   },
   "unison" : {
     "apt-get" : "unison",

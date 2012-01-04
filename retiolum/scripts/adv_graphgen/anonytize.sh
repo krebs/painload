@@ -12,7 +12,7 @@ OPENER=/bin/true
 DOTFILE=`mktemp`
 trap 'rm $DOTFILE' INT TERM
 sudo LOG_FILE=$LOG_FILE python tinc_stats.py |\
-    python parse_tinc_stats.py > $DOTFILE
+    python parse_tinc_anon.py> $DOTFILE
 
 
 i=1
@@ -24,7 +24,6 @@ do
   mv $tmpgraph $1/retiolum_$i.$TYPE
   i=`expr $i + 1`
 done
-
 #convert -resize 20% $1/retiolum_1.$TYPE  $1/retiolum_1.$TYPE2
 #convert -resize 20% $1/retiolum_2.$TYPE  $1/retiolum_2.$TYPE2
 #convert -resize 20% $1/retiolum_3.$TYPE  $1/retiolum_3.$TYPE2

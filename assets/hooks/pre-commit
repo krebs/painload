@@ -1,19 +1,8 @@
 #!/bin/sh
 set -euf
-DB="assets.json"
-TMP=`mktemp`
-
-echo "** checking $DB for sanity"
-cat $DB | python -m json.tool > $TMP
-RET=$?
-if [ "$RET" = "0" ];
-then
-  echo "** Database sanity verified"
-  #git add $DB
-  #mv $TMP $DB
+if which truth2json;then
+  truth2json >/dev/null && echo "db verified"
 else
-  echo "!! Database insane"
-  cat $TMP
+  echo "cannot verify as truth2json is not installed"
 fi
-rm $TMP
-exit $RET
+
