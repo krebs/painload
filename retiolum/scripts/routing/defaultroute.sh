@@ -34,5 +34,5 @@ cat $tincdir/tinc.conf | grep ConnectTo | cut -b 13- |
 while read host
 do
     addr=$(cat $tincdir/hosts/$host | grep Address | cut -b 11-)
-    echo route $command $addr gw $defaultroute
+    route $command $addr gw $defaultroute && echo $command $addr via $defaultroute
 done
