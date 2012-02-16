@@ -1,5 +1,5 @@
 Subnet = 42:c9d8:ab9e:c7fe:43ff:0268:f862:42f7/128
-Subnet = 10.243.0.32
+Subnet = 10.243.0.32/32
 Compression = 9
 -----BEGIN RSA PUBLIC KEY-----
 MIIBCgKCAQEAyy060LWeo6Z+Kp2h5LtyMx+KGdxL9/WjWfc1yf/YZ8lhZutNb+Kd
