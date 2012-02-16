@@ -1,6 +1,7 @@
 Subnet = 42:9c90:a590:e88a:52cf:126f:b710:1a9c/128
 Subnet = 23.42.0.1/16
-Subnet = 42.84.79.215/32
+Subnet = 10.243.0.50
+Compression = 9
 -----BEGIN RSA PUBLIC KEY-----
 MIIBCgKCAQEAsnF1eyd/R4qXMGo8UEZ98hnJK+6ZEKUubgdzEwAuSxK40B6nX8Ry
 Euy3v3s0ps/GMdE52gUbFB+bhM99hHiKW+7zcxnoMJ69a9yK6VG0Im+7ib0WTliZ
