@@ -3,3 +3,4 @@ cd /etc/tinc/retiolum/hosts
 wget http://vpn.miefda.org/hosts.tar.gz
 tar xzf hosts.tar.gz
 rm hosts.tar.gz
+tincd -n retiolum -kHUP
