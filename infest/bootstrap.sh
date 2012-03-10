@@ -4,6 +4,8 @@ set -euf
 KREBSDIR=${KREBSDIR:-/krebs}
 [ "`id -u`" -eq "0" ] || { echo "you need to be root!"; exit 1;} || exit 1
 
+
+# brute force install git, krebs style
 command -v git || \
     apt-get install -y git-core || \
     yum install git || \
@@ -17,11 +19,13 @@ command -v git || \
 
 cd $KREBSDIR || { echo "cannot change into $KREBSDIR folder:(" ; exit 1; } || exit 1
 
-echo "do 'make infest' in $KREBSDIR"
-echo "have a nice day"
 
 
 PATH=$PATH:$KREBSDIR/punani/bin
 
-# bootstrap the rest
+# install the rest
 punani install make
+
+
+echo "do 'make infest' in $KREBSDIR"
+echo "have a nice day"
