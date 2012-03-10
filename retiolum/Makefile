@@ -17,13 +17,13 @@ install: upgrade
 upgrade: update
 	if ! diff -u scripts/tinc_setup/tinc-up /etc/tinc/retiolum/tinc-up; then \
 		sudo cp scripts/tinc_setup/tinc-up /etc/tinc/retiolum/tinc-up; \
-		sudo bin/restart-tincd; \
+		sudo bin/restart-tincd || :; \
 	fi
 
 update: hosts
-	bin/update_tinc_hosts "create magic" || true
+	bin/update_tinc_hosts "create magic" || :;
 	bin/update_tinc_hosts restart
 	sudo pkill -HUP tincd || :; 
 
 hosts:
-	bin/update-retiolum-hosts || true
+	bin/update-retiolum-hosts || :;
