@@ -1,2 +1,0 @@
-#!/bin/sh
-nmap -sP 42.0.0.0/8 -T5| grep "Host is up" | wc -l

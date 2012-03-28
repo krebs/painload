@@ -1,0 +1,5 @@
+# Soundboard 
+The basic idea is to use a joystick or gamepad to trigger actions
+
+# config.json
+currently there is only one joystick supported, as well as one pad and buttons
