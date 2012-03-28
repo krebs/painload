@@ -1,0 +1,87 @@
+#! /usr/bin/env python
+#
+# Example program using irclib.py.
+#
+# This program is free without restrictions; do anything you like with
+# it.
+#
+# Joel Rosdahl <joel@rosdahl.net>
+
+import irclib
+import sys
+#irclib.DEBUG= True
+class IRCCat(irclib.SimpleIRCClient):
+    def __init__(self, target,msg=""):
+        irclib.SimpleIRCClient.__init__(self)
+        self.target = target
+        self.msg = msg
+
+    def on_welcome(self, connection, event):
+        if irclib.is_channel(self.target):
+            connection.join(self.target)
+        else:
+            self.send_it()
+
+    def on_join(self, connection, event):
+        self.send_it()
+
+    def on_disconnect(self, connection, event):
+        sys.exit(0)
+
+    def send_it(self):
+        if self.msg:
+            print "writing given argv privmsg",self.msg
+            self.connection.privmsg(self.target, self.msg)
+        else:
+            print "writing stdin privmsg:"
+            while 1:
+                line = sys.stdin.readline()
+                if not line:
+                    break
+                print line
+                self.connection.privmsg(self.target, line)
+        self.connection.quit("Using irclib.py")
+def findGreatNick(prefix='shinken'):
+    import random
+    import re
+    dic="/usr/share/dict/danish"
+    found=False
+    while not found:
+      w = random.choice(list(open(dic)))
+      found = re.match(r"^[a-zA-Z_-]+$",w)
+    return  prefix +"|"+w.strip()
+
+def main():
+    if len(sys.argv) < 3:
+        print "Usage: notify_irc <server[:port]> <target> [message]"
+        print "\ntarget is a nickname or a channel."
+        sys.exit(1)
+
+    s = sys.argv[1].split(":", 1)
+    server = s[0]
+    if len(s) == 2:
+        try:
+            port = int(s[1])
+        except ValueError:
+            print "Error: Erroneous port."
+            sys.exit(1)
+    else:
+        port = 6667
+    import random
+    nickname = findGreatNick()
+    print nickname
+    target = sys.argv[2]
+    msg = ""
+    if len(sys.argv) == 4:
+      msg = sys.argv[3]
+    c = IRCCat(target,msg)
+    try:
+        print "trying to connect to ",server,port,nickname
+        c.connect(server, port, nickname )
+    except irclib.ServerConnectionError, x:
+        print x
+        sys.exit(1)
+    c.start()
+
+if __name__ == "__main__":
+    main()
