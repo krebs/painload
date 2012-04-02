@@ -17,7 +17,7 @@ streams/streams stop
 
 amixer -q -c 0 -D hw:0 sset Front $max%
 mplayer god/overlord/announce.mp3 >/dev/null
-espeak -v de -s 120 -a 900 "$*"
+../../util/bin/naturalvoices2.sh "$*"
 
 # fade-in streams
 streams/streams start
