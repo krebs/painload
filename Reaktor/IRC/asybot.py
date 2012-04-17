@@ -12,6 +12,8 @@ from asyncore import loop
 from socket import AF_INET, SOCK_STREAM
 from signal import SIGALRM, signal, alarm
 from datetime import datetime as date, timedelta
+import shlex
+from time import sleep
 from sys import exit
 from re import split, search
 
@@ -107,6 +109,7 @@ class asybot(asychat):
     def PRIVMSG(text):
       msg = 'PRIVMSG %s :%s' % (','.join(params), text)
       self.push(msg)
+      sleep(2)
 
     def ME(text):
       PRIVMSG('ACTION ' + text + '')
@@ -133,11 +136,12 @@ class asybot(asychat):
       if is_executable(command):
 
         env = {}
+        args = []
         if _argument != None:
           env['argument'] = _argument
-
+          args = shlex.split(_argument)
         try:
-          p = popen([command], stdin=PIPE, stdout=PIPE, stderr=PIPE, env=env)
+          p = popen([command] + args, stdin=PIPE, stdout=PIPE, stderr=PIPE, env=env)
         except OSError, error:
           ME('brain damaged')
           log.error('OSError@%s: %s' % (command, error))
@@ -181,8 +185,12 @@ if __name__ == "__main__":
 
   lol = logging.DEBUG if env.get('debug',False) else logging.INFO
   logging.basicConfig(level=lol)
-  name = getconf1('Name', '/etc/tinc/retiolum/tinc.conf')
-  hostname = '%s.retiolum' % name
+  try: 
+    name = getconf1('Name', '/etc/tinc/retiolum/tinc.conf')
+    hostname = '%s.retiolum' % name
+  except:
+    name = socket.gethostname()
+    hostname = name
   nick = str(env.get('nick', name))
   host = str(env.get('host', 'supernode'))
   port = int(env.get('port', 6667))
