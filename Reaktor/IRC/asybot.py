@@ -109,7 +109,7 @@ class asybot(asychat):
     def PRIVMSG(text):
       msg = 'PRIVMSG %s :%s' % (','.join(params), text)
       self.push(msg)
-      sleep(2)
+      sleep(1)
 
     def ME(text):
       PRIVMSG('ACTION ' + text + '')
@@ -128,7 +128,7 @@ class asybot(asychat):
 
       from os.path import realpath, dirname, join
       from subprocess import Popen as popen, PIPE
-
+      from time import time
       Reaktor_dir = dirname(realpath(dirname(__file__)))
       public_commands = join(Reaktor_dir, 'public_commands')
       command = join(public_commands, _command)
@@ -137,29 +137,27 @@ class asybot(asychat):
 
         env = {}
         args = []
+        start = time()
         if _argument != None:
           env['argument'] = _argument
           args = shlex.split(_argument)
         try:
-          p = popen([command] + args, stdin=PIPE, stdout=PIPE, stderr=PIPE, env=env)
+          p = popen([command] + args,bufsize=1, stdout=PIPE, stderr=PIPE, env=env)
         except OSError, error:
           ME('brain damaged')
           log.error('OSError@%s: %s' % (command, error))
           return
-
-        stdout, stderr = [ x[:len(x)-1] for x in
-            [ x.split('\n') for x in p.communicate()]]
-        code = p.returncode
         pid = p.pid
+        for line in iter(p.stdout.readline,""):
+          PRIVMSG(line)
+          log.debug('%s stdout: %s' % (pid, line)) 
+        p.wait()
+        elapsed = time() - start
+        code = p.returncode
+        log.info('command: %s -> %s in %d seconds' % (command, code,elapsed))
+        [log.debug('%s stderr: %s' % (pid, x)) for x in p.stderr.readlines()]
 
-        log.info('command: %s -> %s' % (command, code))
-        [log.debug('%s stdout: %s' % (pid, x)) for x in stdout]
-        [log.debug('%s stderr: %s' % (pid, x)) for x in stderr]
-
-        if code == 0:
-          [PRIVMSG(x) for x in stdout]
-          [PRIVMSG(x) for x in stderr]
-        else:
+        if code != 0:
           ME('mimimi')
 
       else:
