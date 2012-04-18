@@ -1,0 +1,58 @@
+#!/usr/bin/python -u
+import os
+from subprocess import Popen
+import csv
+import sys
+import tempfile
+os.chdir (os.path.dirname (os.path.realpath (sys.argv[0])))
+dnsmap_enabled = False
+DNSMAP = "../dnsmap/dnsmap"
+silent=open("/dev/null","w")
+gxfr_enabled = False
+GXFR = "../gxfr/gxfr.py"
+domains = {}
+try:
+  DOMAIN=sys.argv[1]
+except:
+  print "Usage: %s [hostname]"
+  sys.exit(1)
+print("checking for back end")
+if os.path.isfile(DNSMAP) :
+  dnsmap_enabled=True
+  print ("  dnsmap enabled")
+else:
+  print ("  dnsmap not available")
+if os.path.isfile(GXFR):
+  gxfr_enabled=True
+  print ("  gxfr.py enabled")
+else:
+  print ("  gxfr.py not available or not supported")
+
+
+if dnsmap_enabled:
+  dnsmap_tmp = tempfile.NamedTemporaryFile(delete=False).name
+  print ("Starting DNSMAP, this may take some time")
+  p = Popen([DNSMAP,DOMAIN,"-c",dnsmap_tmp],stdout=silent,stderr=silent)
+  p.wait()
+  reader = csv.reader(open(dnsmap_tmp))
+  for row in reader:
+    domains[row[0]] = row[1:]
+  print ("...finished with [%d] domains" %reader.line_num)
+  os.unlink(dnsmap_tmp)
+
+if gxfr_enabled:
+  gxfr_tmp = tempfile.NamedTemporaryFile(delete=False).name
+  print ("Starting gxfr, this may take some time")
+  p = Popen(["/usr/bin/python",GXFR,DOMAIN,"-q","5","--csv",gxfr_tmp],stdout=silent,stderr=silent)
+  p.wait()
+  reader = csv.reader(open(gxfr_tmp))
+  for row in reader:
+    domains[row[0]] = row[1:]
+  print ("...finished with [%d] domains" %reader.line_num)
+  os.unlink(gxfr_tmp)
+
+print "found %d subdomain(s)" % len(domains)
+num = 1
+for dom in domains:
+  print "[%d/%d]" % (num,len(domains)),dom,":",", ".join(domains[dom])
+  num = num + 1
