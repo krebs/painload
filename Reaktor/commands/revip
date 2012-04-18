@@ -1,0 +1,46 @@
+#!/usr/bin/python
+# fork from darkb0t v0.4
+# modularized and extended 
+import sys
+import os
+import json
+import socket
+import httplib
+try:
+  target = sys.argv[1]
+except:
+  print "Usage: %s [target]" % sys.argv[0]
+  exit(0)
+
+print "Reverse IP Search"
+print "Target: ",target
+try:
+  hostname,aliases,ip = socket.gethostbyaddr(target)
+except:
+  print "Cannot resolve `%s`!" % target
+  exit (1)
+print "IP: ",ip[0]
+sites = {target : "", hostname : ""} # make entries unique
+for a in aliases:
+  sites[a] = ""
+offset = 0
+appid = os.environ.get("BING_APPID",'7A0B8DA3E913BE5ECB4AF11C7BC398B43000DC1C')
+while offset < 50:
+  url ="/json.aspx?AppId=%s&Query=ip:%s&Sources=Web+RelatedSearch+News+Image+Video&Version=2.2&Market=en-us&Web.Count=50&Web.Offset=%s&Web.Options=DisableQueryAlterations" % (appid,  ip,  offset)
+  conn = httplib.HTTPConnection("api.bing.net")
+  conn.request("GET", url)
+  res = conn.getresponse()
+  doc = json.load(res)
+  try:
+    results = doc["SearchResponse"]["Web"]["Results"]
+    conn.close()
+    for res in results:
+      sites[res['DisplayUrl']] = ""
+    offset += 50
+  except:
+    break
+print "Total: ", len(sites), " dns name(s)\n"
+num = 1
+for s in sites:
+  print "["+str(num)+"/"+str(len(sites))+"] : "+s
+  num += 1
