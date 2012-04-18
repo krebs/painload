@@ -1,14 +1,16 @@
 #!/usr/bin/python -tt
 
 # gxfr replicates dns zone transfers by enumerating subdomains using advanced search engine queries and conducting dns lookups.
-# By Tim Tomes (LaNMaSteR53)
-# Available for download at http://LaNMaSteR53.com or http://code.google.com/p/gxfr/
+# Original code By Tim Tomes (LaNMaSteR53)
+# rewrite for bing.com,csv output by makefu
+# Available for download at http://LaNMaSteR53.com or
+# http://code.google.com/p/gxfr/ and https://github.com/krebscode/painload in Reaktor/repos
 
 import sys, os.path, urllib, urllib2, re, time, socket, random, socket
 
 
 def help():
-  print """  Syntax: ./gxfr.py domain [options]
+  print """  Syntax: %s domain [options]
   
   -h, --help               this screen
   -v                       enable verbose mode
@@ -27,7 +29,7 @@ def help():
   $ ./gxfr.py foxnews.com --dns-lookup --proxy open_proxies.txt --timeout 10
   $ ./gxfr.py foxnews.com --dns-lookup -t 5 -q 5 -v --proxy 127.0.0.1:8080
   $ curl http://rmccurdy.com/scripts/proxy/good.txt | ./gxfr.py website.com -v -t 3 --proxy -
-  """
+  """ % sys.argv[0]
   sys.exit(2)
 
 if len(sys.argv) < 2:
@@ -37,22 +39,22 @@ if '-h' in sys.argv or '--help' in sys.argv:
   help()
 
 # declare vars and process arguments
-#http://www.bing.com/search?q=site%3agoogle.de&qs=n&filt=all&pq=site%3agoogle.d&sc=8-5&sp=-1&sk=&first=1&FORM=PORE
 query_cnt = 0
 csvname = False
 domain = sys.argv[1]
 sys.argv = sys.argv[2:]
 lookup = False
 encrypt = True
-base_url = 'http://www.bing.com'
-base_uri = '/search?qs=n&form=QBRE&sc=0-0&sp=-1&sk='
+base_url = 'http://api.bing.net'
+bing_appid = "01CDBCA91C590493EE4E91FAF83E5239FEF6ADFD" #from darkb0t, thanks
+base_uri = '/xml.aspx?AppID=%s&Sources=Web&Version=2.0&Web.Count=50&Web.Options=DisableHostCollapsing+DisableQueryAlterations' %bing_appid
 base_query = 'site:' + domain
-pattern = '//([\.\w-]*)\.%s.+?' % (domain)
+pattern = '>([\.\w-]*)\.%s.+?<' % (domain)
 proxy = False
 user_agent = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; FDM; .NET CLR 2.0.50727; InfoPath.2; .NET CLR 1.1.4322)'
 verbose = False
-secs = 15
-max_queries = 10 # default = 10 queries
+secs = 10
+max_queries = 10 
 # process command line arguments
 if len(sys.argv) > 0:
   if '--dns-lookup' in sys.argv:
@@ -99,8 +101,8 @@ while new == True:
     for sub in subs:
       query += ' -site:%s.%s' % (sub, domain)
     full_query = base_query + query
-    start_param = '&first=%s' % (str(page*10))
-    query_param = '&q=%s&pq=%s' % (urllib.quote_plus(full_query),urllib.quote_plus(full_query))
+    start_param = '&Web.Offset=%s' % (str(page*10))
+    query_param = '&Query=%s' % (urllib.quote_plus(full_query))
     if len(base_uri) + len(query_param) + len(start_param) < 2048:
       last_query_param = query_param
       params = query_param + start_param
@@ -203,9 +205,7 @@ except:
   print "[!] Cannot open CSV"
 for sub in subs: 
   dom = '%s.%s' % (sub, domain )
-
-  #host resolution makes this computer more visible
-  hostname,aliases,ips = socket.gethostbyname_ex(dom) 
+  hostname,aliases,ips = socket.gethostbyname_ex(dom)
   #print hostname,aliases,ip
   print dom,",".join(ips) 
   try:
