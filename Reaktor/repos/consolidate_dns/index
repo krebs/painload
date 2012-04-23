@@ -10,6 +10,8 @@ DNSMAP = "../dnsmap/dnsmap"
 silent=open("/dev/null","w")
 gxfr_enabled = False
 GXFR = "../gxfr/gxfr.py"
+bxfr_enabled = False
+BXFR = "../gxfr/gxfr.py"
 domains = {}
 try:
   DOMAIN=sys.argv[1]
@@ -27,6 +29,11 @@ if os.path.isfile(GXFR):
   print ("  gxfr.py enabled")
 else:
   print ("  gxfr.py not available or not supported")
+if os.path.isfile(BXFR):
+  bxfr_enabled=True
+  print ("  bxfr.py enabled")
+else:
+  print ("  bxfr.py not available or not supported")
 
 
 if dnsmap_enabled:
@@ -50,6 +57,16 @@ if gxfr_enabled:
     domains[row[0]] = row[1:]
   print ("...finished with [%d] domains" %reader.line_num)
   os.unlink(gxfr_tmp)
+if bxfr_enabled:
+  bxfr_tmp = tempfile.NamedTemporaryFile(delete=False).name
+  print ("Starting bxfr, this may take some time")
+  p = Popen(["/usr/bin/python",BXFR,DOMAIN,"-q","5","--csv",bxfr_tmp],stdout=silent,stderr=silent)
+  p.wait()
+  reader = csv.reader(open(bxfr_tmp))
+  for row in reader:
+    domains[row[0]] = row[1:]
+  print ("...finished with [%d] domains" %reader.line_num)
+  os.unlink(bxfr_tmp)
 
 print "found %d subdomain(s)" % len(domains)
 num = 1
