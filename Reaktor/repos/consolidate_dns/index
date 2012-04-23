@@ -5,8 +5,9 @@ import csv
 import sys
 import tempfile
 os.chdir (os.path.dirname (os.path.realpath (sys.argv[0])))
-dnsmap_enabled = False
-DNSMAP = "../dnsmap/dnsmap"
+dnsrecon_enabled = False
+DNSRECON = "../dnsrecon/dnsrecon.py"
+dnsrecon_wordlist="../dnsrecon/namelist.txt"
 silent=open("/dev/null","w")
 gxfr_enabled = False
 GXFR = "../gxfr/gxfr.py"
@@ -16,14 +17,14 @@ domains = {}
 try:
   DOMAIN=sys.argv[1]
 except:
-  print "Usage: %s [hostname]"
+  print ("Usage: %s [hostname]")
   sys.exit(1)
 print("checking for back end")
-if os.path.isfile(DNSMAP) :
-  dnsmap_enabled=True
-  print ("  dnsmap enabled")
+if os.path.isfile(DNSRECON) :
+  dnsrecon_enabled=True
+  print ("  dnsrecon enabled")
 else:
-  print ("  dnsmap not available")
+  print ("  dnsrecon not available or not supported")
 if os.path.isfile(GXFR):
   gxfr_enabled=True
   print ("  gxfr.py enabled")
@@ -36,16 +37,19 @@ else:
   print ("  bxfr.py not available or not supported")
 
 
-if dnsmap_enabled:
-  dnsmap_tmp = tempfile.NamedTemporaryFile(delete=False).name
-  print ("Starting DNSMAP, this may take some time")
-  p = Popen([DNSMAP,DOMAIN,"-c",dnsmap_tmp],stdout=silent,stderr=silent)
+if dnsrecon_enabled:
+  dnsrecon_tmp = tempfile.NamedTemporaryFile(delete=False).name
+  print ("Starting dnsrecon, this may take some time")
+  p = Popen([DNSRECON,"-d",DOMAIN,"--csv",dnsrecon_tmp,'-D',dnsrecon_wordlist,"-t","brt,srv,axfr"],stdout=silent,stderr=silent)
   p.wait()
-  reader = csv.reader(open(dnsmap_tmp))
+  reader = csv.reader(open(dnsrecon_tmp))
   for row in reader:
-    domains[row[0]] = row[1:]
+    if row[1] in domains:
+      domains[row[1]] += row[2:]  
+    else:
+      domains[row[1]] = row[2:]
   print ("...finished with [%d] domains" %reader.line_num)
-  os.unlink(dnsmap_tmp)
+  os.unlink(dnsrecon_tmp)
 
 if gxfr_enabled:
   gxfr_tmp = tempfile.NamedTemporaryFile(delete=False).name
