@@ -25,3 +25,6 @@
 [submodule "Reaktor/repos/dnsrecon"]
 	path = Reaktor/repos/dnsrecon
 	url = https://github.com/makefu/dnsrecon.git
+[submodule "Reaktor/repos/dnsmap"]
+	path = Reaktor/repos/dnsmap
+	url = https://github.com/makefu/dnsmap.git
