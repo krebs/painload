@@ -44,10 +44,7 @@ if dnsrecon_enabled:
   p.wait()
   reader = csv.reader(open(dnsrecon_tmp))
   for row in reader:
-    if row[1] in domains:
-      domains[row[1]] += row[2:]  
-    else:
-      domains[row[1]] = row[2:]
+    domains[row[1]] += row[2:]
   print ("...finished with [%d] domains" %reader.line_num)
   os.unlink(dnsrecon_tmp)
 
@@ -58,7 +55,7 @@ if gxfr_enabled:
   p.wait()
   reader = csv.reader(open(gxfr_tmp))
   for row in reader:
-    domains[row[0]] = row[1:]
+      domains[row[0]] += row[1:]
   print ("...finished with [%d] domains" %reader.line_num)
   os.unlink(gxfr_tmp)
 if bxfr_enabled:
@@ -68,7 +65,7 @@ if bxfr_enabled:
   p.wait()
   reader = csv.reader(open(bxfr_tmp))
   for row in reader:
-    domains[row[0]] = row[1:]
+    domains[row[0]] += row[1:]
   print ("...finished with [%d] domains" %reader.line_num)
   os.unlink(bxfr_tmp)
 
