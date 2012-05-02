@@ -9,7 +9,7 @@ def is_executable(x):
 
 from asynchat import async_chat as asychat
 from asyncore import loop
-from socket import AF_INET, SOCK_STREAM
+from socket import AF_INET, SOCK_STREAM,gethostname
 from signal import SIGALRM, signal, alarm
 from datetime import datetime as date, timedelta
 import shlex
@@ -189,7 +189,7 @@ if __name__ == "__main__":
     name = getconf1('Name', '/etc/tinc/retiolum/tinc.conf')
     hostname = '%s.retiolum' % name
   except:
-    name = socket.gethostname()
+    name = gethostname()
     hostname = name
   nick = str(env.get('nick', name))
   host = str(env.get('host', 'supernode'))
