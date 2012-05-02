@@ -80,5 +80,6 @@ if bxfr_enabled:
 print "found %d subdomain(s)" % len(domains)
 num = 1
 for dom in domains:
+  domains[dom] = set(domains[dom])
   print "[%d/%d]" % (num,len(domains)),dom,":",", ".join(domains[dom])
   num = num + 1
