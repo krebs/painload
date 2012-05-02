@@ -4,15 +4,17 @@ from subprocess import Popen
 import csv
 import sys
 import tempfile
+
+
 os.chdir (os.path.dirname (os.path.realpath (sys.argv[0])))
 dnsrecon_enabled = False
 DNSRECON = "../dnsrecon/dnsrecon.py"
-dnsrecon_wordlist="../dnsrecon/namelist.txt"
+dnsrecon_wordlist="namelist.txt"
 silent=open("/dev/null","w")
 gxfr_enabled = False
 GXFR = "../gxfr/gxfr.py"
 bxfr_enabled = False
-BXFR = "../gxfr/gxfr.py"
+BXFR = "../bxfr/bxfr.py"
 domains = {}
 try:
   DOMAIN=sys.argv[1]
@@ -40,7 +42,7 @@ else:
 if dnsrecon_enabled:
   dnsrecon_tmp = tempfile.NamedTemporaryFile(delete=False).name
   print ("Starting dnsrecon, this may take some time")
-  p = Popen([DNSRECON,"-d",DOMAIN,"--csv",dnsrecon_tmp,'-D',dnsrecon_wordlist,"-t","brt,srv,axfr"],stdout=silent,stderr=silent)
+  p = Popen([DNSRECON,"-d",DOMAIN,"--csv",dnsrecon_tmp,'-D',dnsrecon_wordlist,"-t","brt,srv,axfr","--skip"],stdout=silent,stderr=silent)
   p.wait()
   reader = csv.reader(open(dnsrecon_tmp))
   for row in reader:
@@ -53,7 +55,7 @@ if dnsrecon_enabled:
 if gxfr_enabled:
   gxfr_tmp = tempfile.NamedTemporaryFile(delete=False).name
   print ("Starting gxfr, this may take some time")
-  p = Popen(["/usr/bin/python",GXFR,DOMAIN,"-q","5","--csv",gxfr_tmp],stdout=silent,stderr=silent)
+  p = Popen(["/usr/bin/python",GXFR,DOMAIN,"-q","3","--csv",gxfr_tmp],stdout=silent,stderr=silent)
   p.wait()
   reader = csv.reader(open(gxfr_tmp))
   for row in reader:
@@ -65,7 +67,7 @@ if gxfr_enabled:
 if bxfr_enabled:
   bxfr_tmp = tempfile.NamedTemporaryFile(delete=False).name
   print ("Starting bxfr, this may take some time")
-  p = Popen(["/usr/bin/python",BXFR,DOMAIN,"-q","5","--csv",bxfr_tmp],stdout=silent,stderr=silent)
+  p = Popen(["/usr/bin/python",BXFR,DOMAIN,"-q","3","--csv",bxfr_tmp],stdout=silent,stderr=silent)
   p.wait()
   reader = csv.reader(open(bxfr_tmp))
   for row in reader:
