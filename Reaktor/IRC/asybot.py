@@ -16,7 +16,7 @@ import shlex
 from time import sleep
 from sys import exit
 from re import split, search
-
+from textwrap import TextWrapper
 import logging,logging.handlers
 log = logging.getLogger('asybot')
 hdlr = logging.handlers.SysLogHandler(facility=logging.handlers.SysLogHandler.LOG_DAEMON)
@@ -39,6 +39,7 @@ class asybot(asychat):
     self.set_terminator('\r\n')
     self.create_socket(AF_INET, SOCK_STREAM)
     self.connect((self.server, self.port))
+    self.wrapper = TextWrapper(subsequent_indent=" ",width=400)
 
     # When we don't receive data for alarm_timeout seconds then issue a
     # PING every hammer_interval seconds until kill_timeout seconds have
@@ -107,9 +108,10 @@ class asybot(asychat):
 
   def on_privmsg(self, prefix, command, params, rest):
     def PRIVMSG(text):
-      msg = 'PRIVMSG %s :%s' % (','.join(params), text)
-      self.push(msg)
-      sleep(1)
+      for line in self.wrapper.wrap(text):
+        msg = 'PRIVMSG %s :%s' % (','.join(params), line)
+        self.push(msg)
+        sleep(1)
 
     def ME(text):
       PRIVMSG('ACTION ' + text + '')
