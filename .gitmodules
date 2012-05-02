@@ -25,3 +25,6 @@
 [submodule "Reaktor/repos/dnsrecon"]
 	path = Reaktor/repos/dnsrecon
 	url = https://github.com/makefu/dnsrecon.git
+[submodule "Reaktor/repos/whatweb"]
+	path = Reaktor/repos/whatweb
+	url = https://github.com/urbanadventurer/WhatWeb.git

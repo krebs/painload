@@ -1,0 +1,5 @@
+#!/bin/sh
+#wrapper for WhatWeb
+whatweb_bin='../repos/whatweb/whatweb'
+[ -e "$whatweb_bin" ] || ( echo "Whatweb app does not exist" && exit 1 )
+$whatweb_bin "$1"

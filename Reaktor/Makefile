@@ -1,13 +1,23 @@
-init:
+submodules = gxfr dnsrecon bxfr whatweb
+security_modules = subdomains revip whatweb
+
+all: init all-mods
+
+init: init-submodules $(submodules)
+init-submodules: 
 	cd ..;git submodule init; git submodule update
-	cd repos/gxfr/; git checkout master; git pull
-	cd repos/dnsrecon; git checkout master; git pull
-	cd repos/dnsmap; git checkout master; git pull
+$(submodules):
+	cd repos/$@ ; git checkout master;git pull
 
-
+all-mods: $(addprefix public_commands/,$(security_modules))
+public_commands/%:commands/%
+	ln -s ../$< $@
 
 debian-autostart:
 	useradd reaktor ||:
-	cp autostart/reaktor-debian /etc/init.d/reaktor
-	cp autostart/reaktor /etc/default/
+	cp startup/init.d/reaktor-debian /etc/init.d/reaktor
+	cp startup/conf.d/reaktor /etc/default/
 	update-rc.d reaktor defaults
+supervisor-autostart:
+	useradd reaktor ||:
+	cp startup/supervisor/Reaktor.conf /etc/supervisor/conf.d/
