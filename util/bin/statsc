@@ -1,0 +1,4 @@
+#!/bin/sh
+# see https://github.com/etsy/statsd for syntax
+[[ $# -eq 0 ]] && echo "usage: $0 MESSAGE"
+echo "$1" | nc localhost 8126
