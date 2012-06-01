@@ -2,6 +2,14 @@
 # -*- coding: utf8 -*-
 from BackwardsReader import BackwardsReader
 import sys,json
+try:
+  import statsd
+except:
+  print >>sys.stderr,'!! no statsd installed, try `pip install statsd`'
+  timer = statsd.Timer("graph.detail")
+  timer.start()
+  gauge = statsd.Gauge('graph.detail')
+
 supernodes= [ "kaah","supernode","euer","pa_sharepoint","oxberg" ]
 """ TODO: Refactoring needed to pull the edges out of the node structures again,
 it should be easier to handle both structures"""
@@ -36,6 +44,8 @@ def write_stat_node(nodes):
   '''
   num_conns = 0
   num_nodes = len(nodes)
+  try: gauge.send('num_nodes',num_nodes)
+  except: pass
   for k,v in nodes.iteritems():
     num_conns+= len(v['to'])
   node_text = "  stats_node [label=\"Statistics\\l"
@@ -183,3 +193,5 @@ try:
 except Exception,e:
   sys.stderr.write("Cannot dump graph: %s" % str(e))
 write_digraph(nodes)
+try: timer.stop("execution_time")
+except: pass
