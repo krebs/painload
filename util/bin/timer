@@ -1,14 +1,14 @@
 #!/bin/bash
-
+curr=$(date '+%s%N')
+etime=${curr:0:${#curr}-6}
 if [[ $# -eq 0 ]];then
-  echo $(date '+%s')
+  echo $etime
 else
-  [ "$1" -eq "-h" -o "$1" -eq "--help" ] && \
-    echo "usage: $0 [start_time]" && \
-    echo "  if no start_time is given, return the currentime" && \
-    echo "  if start_time is given, return the difference"
+  [ "$1" == "-h" -o "$1" == "--help" ] && \
+    echo "usage: $0 [start_ms]" && \
+    echo "  if no start_ms is given, return the currentime" && \
+    echo "  if start_ms is given, return the difference" && exit 0
   stime=$1
-  etime=$(date '+%s')
   [[ -z "$stime" ]] && stime=$etime
   echo $((etime - stime))
 fi
