@@ -3,6 +3,17 @@
 from BackwardsReader import BackwardsReader
 import sys,json
 #supernodes= [ "kaah","supernode","euer","pa_sharepoint","oxberg" ]
+try:
+  import socket
+  from time import time
+  host = "localhost"
+  port = 2003
+  g_path = "retiolum"
+  begin = time()
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+  s.connect((host,port))
+except Exception as e:
+  print >>sys.stderr, "Cannot connect to graphite: " + str(e)
 """ TODO: Refactoring needed to pull the edges out of the node structures again,
 it should be easier to handle both structures"""
 DUMP_FILE = "/krebs/db/availability"
@@ -133,3 +144,9 @@ def decode_input(FILE):
 nodes = decode_input(sys.stdin)
 nodes = delete_unused_nodes(nodes)
 write_digraph(nodes)
+try: 
+  end = time()
+  msg = '%s.graph.anon_build_time %d %d\n' % (g_path,((end-begin)*1000),end)
+  s.send(msg)
+  s.close()
+except Exception as e: print >>sys.stderr, e
