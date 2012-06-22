@@ -6,11 +6,13 @@ import sys,json
 try:
   import socket
   from time import time
-  host = "localhost"
+  import os
+  host = os.environ.get("GRAPHITE_HOST","localhost")
   port = 2003
-  g_path = "retiolum"
+  g_path =  os.environ.get("GRAPHITE_PATH","retiolum")
   begin = time()
   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+  sys.stderr.write("connecting to %s:%d"%(host,port))
   s.connect((host,port))
 except Exception as e:
   print >>sys.stderr, "Cannot connect to graphite: " + str(e)
@@ -146,7 +148,7 @@ nodes = delete_unused_nodes(nodes)
 write_digraph(nodes)
 try: 
   end = time()
-  msg = '%s.graph.anon_build_time %d %d\n' % (g_path,((end-begin)*1000),end)
+  msg = '%s.graph.anon_build_time %d %d\r\n' % (g_path,((end-begin)*1000),end)
   s.send(msg)
   s.close()
 except Exception as e: print >>sys.stderr, e

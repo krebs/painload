@@ -5,14 +5,16 @@ import sys,json
 try:
   from time import time
   import socket
-  host = "localhost"
+  import os
+  host = os.environ.get("GRAPHITE_HOST","localhost")
   port = 2003
-  g_path = "retiolum"
+  g_path =  os.environ.get("GRAPHITE_PATH","retiolum")
   begin = time()
   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+  sys.stderr.write("connecting to %s:%d"%(host,port))
   s.connect((host,port))
 except Exception as e:
-  print >>sys.stderr, "Cannot connect to graphite: " + str(e)
+  sys.stderr.write("Cannot connect to graphite: %s\n" % str(e))
 
 supernodes= [ "kaah","supernode","euer","pa_sharepoint","oxberg" ]
 """ TODO: Refactoring needed to pull the edges out of the node structures again,
@@ -49,7 +51,7 @@ def write_stat_node(nodes):
   num_conns = 0
   num_nodes = len(nodes)
   try: 
-    msg = '%s.num_nodes %d %d\n' %(g_path,num_nodes,begin)
+    msg = '%s.num_nodes %d %d\r\n' %(g_path,num_nodes,begin)
     s.send(msg)
     #print >>sys.stderr, msg
   except Exception as e: print sys.stderr,e
@@ -204,8 +206,8 @@ write_digraph(nodes)
 
 try: 
   end = time()
-  msg = '%s.graph.detail_build_time %d %d\n' % (g_path,((end-begin)*1000),end)
+  msg = '%s.graph.detail_build_time %d %d\r\n' % (g_path,((end-begin)*1000),end)
   s.send(msg)
-  print >>sys.stderr,msg
+  sys.stderr.write(msg)
   s.close()
-except Exception as e: print >>sys.stderr, e
+except Exception as e: sys.stderr.write( str(e) + "\n")
