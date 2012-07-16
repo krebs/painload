@@ -21,5 +21,5 @@ src/SOAPpy: src
 src/SOAPpy/build/lib/SOAPpy: src/SOAPpy
 	cd $< && python setup.py build
 
-SOAPpy: src/SOAPpy/build/lib/SOAPpy
+SOAPpy: src/SOAPpy/build/lib.linux-x86_64-2.6/SOAPpy
 	ln -snf $<
