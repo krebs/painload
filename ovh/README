@@ -15,8 +15,12 @@ export PATH="$PWD/bin${PATH+:$PATH}"
 export KREBS_OVH_USER=...
 export KREBS_OVH_PASS=...
 
-zoneExport > /tmp/foo
-$EDITOR /tmp/foo
-zoneImport < /tmp/foo
+
+zoneEntryAdd "krebsco.de" "subdomain" "A" "a.b.c.d."
+
+# ZoneExport Broken since 2012-07-16
+# zoneExport > /tmp/foo
+# $EDITOR /tmp/foo
+# zoneImport < /tmp/foo
 
 # Have a nice day!^_^
