@@ -19,3 +19,12 @@
 [submodule "submodules/github/jbalogh/python-irclib"]
 	path = submodules/github/jbalogh/python-irclib
 	url = https://github.com/jbalogh/python-irclib.git
+[submodule "Reaktor/repos/gxfr"]
+	path = Reaktor/repos/gxfr
+	url = https://github.com/makefu/gxfr.git
+[submodule "Reaktor/repos/dnsrecon"]
+	path = Reaktor/repos/dnsrecon
+	url = https://github.com/makefu/dnsrecon.git
+[submodule "Reaktor/repos/whatweb"]
+	path = Reaktor/repos/whatweb
+	url = https://github.com/urbanadventurer/WhatWeb.git

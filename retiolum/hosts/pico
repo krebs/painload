@@ -1,4 +1,5 @@
-Subnet = 42.0.0.42
+Address = pu11.de
+Subnet = 10.243.0.102/32
 Subnet = 42:b103:275c:1723:edc8:b24d:452b:352a/128
 -----BEGIN RSA PUBLIC KEY-----
 MIIBCgKCAQEAsbe4wzTOHHLyuPO/AsfDqQHyV41qgs3dqt6uWcDcdiEsUvbCK9Ch

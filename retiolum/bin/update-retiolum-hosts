@@ -10,7 +10,7 @@ fi
 # cd //retiolum
 cd $(dirname $(readlink -f $0))/..
 
-mkdir -v -p /etc/tinc/retiolum/hosts
+mkdir -p /etc/tinc/retiolum/hosts
 cp -v -r hosts/* /etc/tinc/retiolum/hosts
 pkill -HUP tincd
 pkill -ALRM tincd

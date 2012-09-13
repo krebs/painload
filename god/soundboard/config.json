@@ -1,0 +1,13 @@
+{
+  "direction" : {
+    "up" : "echo pushed up",
+    "down" : "echo pushed down",
+    "left" : "echo pushed left",
+    "right" : "echo pushed right"
+  },
+  "button" : {
+    "1" : "echo 'fuck yeah 1'",
+    "2" : "echo 'fuck jeah 2'",
+    "8" : "echo 'fuck jeah 8'"
+  }
+}

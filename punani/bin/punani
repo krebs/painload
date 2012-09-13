@@ -8,6 +8,16 @@ PKGS="$*"
 ## find package manager
 if ! :; then : # dummy case, so the rest has a common format
 
+elif for PACKER_CMD in aptitude apt-get
+    do type $PACKER_CMD 2>/dev/null 1>&2 && break; done; then
+  INSTALL_PARAM='-y install'
+  REMOVE_PARAM='-y remove'
+
+elif for PACKER_CMD in bauerbill packer yaourt pacman
+    do type $PACKER_CMD 2>/dev/null 1>&2 && break; done; then
+  INSTALL_PARAM='--noconfirm -S --needed'
+  REMOVE_PARAM='-Rcs'
+
 elif for PACKER_CMD in yum
     do type $PACKER_CMD 2>/dev/null 1>&2 && break; done; then
   INSTALL_PARAM='-y install'
@@ -18,15 +28,7 @@ elif for PACKER_CMD in brew
   INSTALL_PARAM='install'
   REMOVE_PARAM='remove'
 
-elif for PACKER_CMD in bauerbill packer yaourt pacman
-    do type $PACKER_CMD 2>/dev/null 1>&2 && break; done; then
-  INSTALL_PARAM='--noconfirm -S --needed'
-  REMOVE_PARAM='-Rcs'
 
-elif for PACKER_CMD in aptitude apt-get
-    do type $PACKER_CMD 2>/dev/null 1>&2 && break; done; then
-  INSTALL_PARAM='-y install'
-  REMOVE_PARAM='-y remove'
 
 else
   echo "Error 2: no known package manager found; no punani for you!" >&2

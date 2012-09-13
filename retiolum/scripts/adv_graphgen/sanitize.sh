@@ -5,7 +5,7 @@ GRAPH_SETTER1=dot
 GRAPH_SETTER2=circo
 GRAPH_SETTER3='neato -Goverlap=prism '
 GRAPH_SETTER4=sfdp
-LOG_FILE=/var/log/syslog
+LOG_FILE=${LOG_FILE:-/var/log/syslog}
 TYPE=svg
 TYPE2=png
 OPENER=/bin/true
