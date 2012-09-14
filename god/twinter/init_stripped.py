@@ -2,6 +2,7 @@
 import os.path
 import sys
 import tweepy
+import re
 from socket import *
 CONSUMER_KEY = ''
 CONSUMER_SECRET = ''
@@ -13,7 +14,8 @@ auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
 api = tweepy.API(auth)
 mention = api.mentions()[0]
-mention_stripped = mention.text.replace("@shacktwinter","").lstrip().rstrip().replace("  "," ")[:32]
+mention_stripped = mention.text.replace("@shacktwinter","").lstrip().rstrip()
+mention_stripped = re.sub(r'[^\w _|@\[\]{}()<>:;!#$%^&+=-]+','',mention_stripped)[:32]
 f = open(os.path.dirname(os.path.abspath(sys.argv[0]))+"/msg_file","r+")
 last = f.read()
 #sys.exit(23)
