@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 
 # this version cannot tell if a stream is running or just ordinary music
 import os
@@ -7,6 +7,7 @@ from subprocess import Popen, PIPE
 
 os.chdir(os.path.dirname(os.path.realpath(sys.argv[0])))
 pidfile = "/tmp/krebs.stream.pid"
+host="lounge.mpd.shack"
 url_file = os.environ.get("STREAM_DB", "stream.db")
 urls = []
 #urls = [ url,f for (url,f) in open(url_file).readline() ]
@@ -29,15 +30,15 @@ def streamForUrl(url):
             return stream 
 
 def startStream(stream_url):
-    Popen(["mpc","crossfade","5"],
+    Popen(["mpc","--host",host,"crossfade","5"],
             stdout=pipe_silent,stderr=pipe_silent)
-    Popen(["mpc","repeat","yes"],
+    Popen(["mpc","--host",host,"repeat","yes"],
             stdout=pipe_silent,stderr=pipe_silent)
-    Popen(["mpc","clear"],
+    Popen(["mpc","--host",host,"clear"],
             stdout=pipe_silent,stderr=pipe_silent)
-    Popen(["mpc","load",stream_url],
+    Popen(["mpc","--host",host,"add",stream_url],
             stdout=pipe_silent,stderr=pipe_silent).wait()
-    Popen(["mpc","play"],
+    Popen(["mpc","--host",host,"play"],
             stdout=pipe_silent,stderr=pipe_silent)
 
 def start(stream):
@@ -56,13 +57,13 @@ def stop():
         print "!! No Stream running!"
     else:
         print "** Stopping `%s`" % ret
-        Popen(["mpc","stop"],
+        Popen(["mpc","--host",host,"stop"],
             stdout=pipe_silent,stderr=pipe_silent)
         
 
 def running():
     try:
-        (out,err) = Popen(["mpc","current"],stdout=PIPE,stderr=PIPE).communicate()
+        (out,err) = Popen(["mpc","--host",host,"current"],stdout=PIPE,stderr=PIPE).communicate()
         out = out.rstrip()
         return out
     except Exception as e:
