@@ -7,13 +7,18 @@ set -euf
 
 cd /path/to/krebscode/painload
 
+
 make -C ovh/soapi install
+// if the command breaks, try:
+// pip install soappy
 
 # edit the zone
 
 export PATH="$PWD/bin${PATH+:$PATH}"
 export KREBS_OVH_USER=...
 export KREBS_OVH_PASS=...
+// Optional:
+// export KREBS_OVH_DOMAIN=...
 
 
 zoneEntryAdd "krebsco.de" "subdomain" "A" "a.b.c.d."
