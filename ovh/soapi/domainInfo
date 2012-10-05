@@ -19,10 +19,11 @@ soap = WSDL.Proxy(wsdl)
 
 username = environ['KREBS_OVH_USER']
 password = environ['KREBS_OVH_PASS']
+domain = environ.get('KREBS_OVH_DOMAIN','krebsco.de')
 
 session = soap.login(username, password, 'de', 0)
 
-result = soap.domainInfo(session, 'krebsco.de')
+result = soap.domainInfo(session, domain)
 print dumps(result, sort_keys=True, indent=2, default=default)
 
 soap.logout(session)
