@@ -1,0 +1,107 @@
+#!/usr/bin/python2
+
+# this version cannot tell if a stream is running or just ordinary music
+import os
+import sys
+import json
+from urllib import quote
+from relaxxapi import relaxx 
+
+try:
+    import requests
+except:
+    print ("you are missing the `requests` dependency, please do a `pip install requests`")
+from subprocess import Popen, PIPE
+
+os.chdir(os.path.dirname(os.path.realpath(sys.argv[0])))
+pidfile = "/tmp/krebs.stream.pid"
+baseurl="http://elab.mpd.shack/"
+url=baseurl+"include/controller-playlist.php?action=%s&value=%s&json=%s"
+url_file = os.environ.get("STREAM_DB", "direct.db")
+urls = []
+
+for line in open(url_file):
+    urls.append(line.split())
+#print urls
+mybin = sys.argv[0]
+cmd = sys.argv[1] if len(sys.argv) > 1 else "you-are-made-of-stupid"
+stream = sys.argv[2] if len(sys.argv) == 3 else "groove"
+pipe_silent = open("/dev/null","w")
+api = relaxx(baseurl)
+
+def urlForStream(stream):
+    for url, s in urls:
+        if s == stream:
+            return url
+
+def streamForUrl(url):
+    for u, s in urls:
+        if u == url:
+            return stream 
+
+def startStream(stream_url):
+    print api.crossfade("5")
+    print api.repeat("1")
+    print api.clear()
+    print api.add_song(stream_url)
+    print api.play_first()
+
+def start(stream):
+    ret = api.playing()
+    if ret:
+        print "!! Stream `%s` already running !" % \
+                (ret)
+    else:
+        startStream(urlForStream(stream))
+        print "** Starting `%s`."% stream
+
+
+def stop():
+    ret = api.playing()
+    if not ret:
+        print "!! No Stream running!"
+    else:
+        print "** Stopping `%s`" % ret
+        api.stop()
+
+def slist():
+    for url, name in urls:
+        print "%s : %s" % (name, url)
+
+def shorthelp():
+    print "start|stop|restart|status|list [audio stream]"
+
+
+def longhelp():
+    print "Usage: %s" % mybin,
+    shorthelp
+    print """[32;1m get all available streams with [31;1;4m'/%(fil)s list'[m
+    Examples:
+    %(fil)s list
+    %(fil)s start groove
+    %(fil)s switch deepmix
+    %(fil)s status
+    %(fil)s stop""" % {'fil': mybin}
+
+if cmd == "start":
+    start(stream)
+elif cmd == "stop":
+    stop()
+elif cmd == "switch" or cmd == "restart":
+    stop()
+    start(stream)
+elif cmd == "status":
+    ret = api.playing()
+    if not ret:
+        print "** nothing running"  # , e
+    else:
+        print "Now Playing: %s" % ret
+elif cmd == "list":
+    slist()
+elif cmd == "--help":
+    longhelp()
+elif cmd == "-h":
+    shorthelp()
+else:
+    print "unknown command `%s`" % cmd
+    print "try `%s` --help" % os.path.basename(mybin)
