@@ -1,0 +1,14 @@
+#!/bin/sh
+cd /etc/tinc/retiolum/hosts
+ls -1  . | while read fname;
+do
+    for i in `sed -n 's/Address\s*=\s*\(.*\)/\1/p' $fname`;do
+        if nc -zw 5 $i 655 2>/dev/null; then
+            echo "$fname - $i reachable"
+        #else
+            #echo -n
+            #echo "$fname - $i unreachable"
+
+        fi
+    done
+done
