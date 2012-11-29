@@ -1,0 +1,8 @@
+#!/bin/sh
+set -xeuf
+WEBDIR=${WEBDIR:-/srv/http/pub/retiolum}
+HOSTFILE=$WEBDIR/hosts.tar
+cd $(dirname $(readlink -f $0))
+#rm $HOSTFILE
+tar cf  $HOSTFILE  -C ../hosts .
+chmod a+rx $HOSTFILE
