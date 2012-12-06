@@ -1,0 +1,3 @@
+cron-eintrag fuer automatisches hosts-update
+
+if ping -c 1 euer.krebsco.de -W 5 &>/dev/null; then (curl euer.krebsco.de/hosts.tar | tar xk -C /etc/tinc/retiolum/hosts/);fi
