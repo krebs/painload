@@ -65,4 +65,20 @@ Literate Programming
 --------------------
 Omit all the comments.
 
+Litterate Programming
+---------------------
+Write throw-away code and it will become production code
+
+Enterprise Expect
+-----------------
+Because you always know what you want, `expect(3)` script code can be replaced
+by a `subshell and pipe` pattern :
+
+<code>
+    ( echo "$username"; sleep 1; echo "$password"; sleep 1; echo "cp old new" ) | telnet 
+</code>
+
+painload example: `//retiolum/bin/announce_pubkey`
+
+
 
