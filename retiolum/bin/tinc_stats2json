@@ -1,13 +1,17 @@
 #!/usr/bin/python
-from BackwardsReader import BackwardsReader
+import subprocess
 import os
 import re
 import sys
 import json
 
 
-TINC_NETWORK = os.environ.get("TINC_NETWORK","retiolum")
-os.environ["LOG_FILE"]
+
+TINC_NETWORK =os.environ.get("TINC_NETWORK","retiolum")
+
+# is_legacy is the parameter which defines if the tinc config files are handled old fashioned (parse from syslog), 
+# or if the new and hip tincctl should be used
+is_legacy=    os.environ.get("TINC_LEGACY",False)
 SYSLOG_FILE = os.environ.get("LOG_FILE","/var/log/everything.log")
 
 
@@ -21,11 +25,14 @@ BEGIN_EDGES = "Edges:"
 END_EDGES = "End of edges."
 
 def get_tinc_block(log_file):
-  """ returns an iterateable block from the given log file (syslog) """
+  """ returns an iterateable block from the given log file (syslog) 
+      This function became obsolete with the introduction of tincctl
+  """
+  from BackwardsReader import BackwardsReader
   tinc_block = []
   in_block = False
   bf = BackwardsReader(log_file)
-  BOL = re.compile(".*tinc.retiolum\[[0-9]+\]: ")
+  BOL = re.compile(".*tinc.%s\[[0-9]+\]: " % TINC_NETWORK)
   while True:
     line = bf.readline()
     if not line:
@@ -43,6 +50,36 @@ def get_tinc_block(log_file):
     if BEGIN_NODES in line:
       break
   return reversed(tinc_block)
+
+def parse_new_input():
+  nodes = {}
+  pnodes = subprocess.check_output(["tincctl","-n",TINC_NETWORK,"dump","reachable","nodes"])
+  for line in pnodes.split('\n'):
+    if not line: continue
+    l = line.split()
+    nodes[l[0]]= { 'external-ip': l[2], 'external-port' : l[4] }
+  psubnets = subprocess.check_output(["tincctl","-n",TINC_NETWORK,"dump","subnets"])
+  for line in psubnets.split('\n'):
+    if not line: continue
+    l = line.split()
+    try:
+      if not nodes[l[2]].get('internal-ip',False):
+         nodes[l[2]]['internal-ip'] = []
+      nodes[l[2]]['internal-ip'].append(l[0].split('#')[0])
+    except KeyError:
+      pass # node does not exist (presumably)
+  pedges = subprocess.check_output(["tincctl","-n",TINC_NETWORK,"dump","edges"])
+  for line in pedges.split('\n'):
+    if not line: continue
+    l = line.split()
+    try:
+      if not nodes[l[0]].has_key('to') :
+        nodes[l[0]]['to'] = []
+      nodes[l[0]]['to'].append(
+          {'name':l[2],'addr':l[4],'port':l[6],'weight' : l[10] })
+    except KeyError:
+      pass #node does not exist
+  return nodes
 
 def parse_input(log_data):
   nodes={}
@@ -68,7 +105,6 @@ def parse_input(log_data):
         if END_EDGES in line :
           break
         l = line.replace('\n','').split() 
-
         if not nodes[l[0]].has_key('to') :
           nodes[l[0]]['to'] = []
         nodes[l[0]]['to'].append(
@@ -78,6 +114,10 @@ def parse_input(log_data):
 
 if __name__ == '__main__':
   import subprocess,time
-  subprocess.call(["pkill","-SIGUSR2", "tincd"])
-  time.sleep(1)
-  print json.dumps(parse_input((get_tinc_block(SYSLOG_FILE))))
+  if is_legacy:
+    subprocess.call(["pkill","-SIGUSR2", "tincd"])
+    time.sleep(1)
+    print json.dumps(parse_input((get_tinc_block(SYSLOG_FILE))))
+  else:
+    print json.dumps(parse_new_input())
+
