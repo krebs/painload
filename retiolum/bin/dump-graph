@@ -1,0 +1,9 @@
+#! /bin/sh
+set -euf
+
+t0="`date '+%Y-%m-%d %H:%M:%S'`"
+systemctl kill --signal=USR2 tincd@retiolum
+sleep 5
+journalctl --since="$t0" | sed -n '
+  s/.*tinc\.retiolum\[[0-9]\+\]: \([^ ]\+\) to \([^ ]\+\) at \([^ ]\+\) .*$/\1 \2 \3/p
+'
