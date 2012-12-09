@@ -1,0 +1,13 @@
+# HowTo
+  
+  useradd -r tinc
+  mkdir -p /opt/
+  git init github_listener
+  git remote add -f origin https://github.com/krebscode/painload.git
+  git config core.sparsecheckout true
+  echo retiolum/hosts/ >> .git/info/sparse-checkout
+  git pull origin master
+  ln -s $static_painload/retiolum/{scripts,bin} retiolum/
+  cp scripts/github_listener/github_listener.conf /etc/supervisor/conf.d/
+  cd ..
+  chown tinc:tinc -R github_listener
