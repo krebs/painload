@@ -1,5 +1,12 @@
 #!/bin/sh
 
+#get sudo
+if test "${nosudo-false}" != true -a `id -u` != 0; then
+  echo "we're going sudo..." >&2
+  exec sudo "$0" "$@"
+  exit 23 # go to hell
+fi
+
 usage()
 {
 cat << EOF
@@ -10,13 +17,33 @@ all parameters are optional
 Options:
  -h          Show this message(haha)
  -4 \$ipv4   specify an ip(version 4), this also disables random ip mode, default is random
+ -6 \$ipv6   specify an ip(version 6), this also disables random ip mode, default is random
+ -s \$SUBNET Choose another Subnet(version4), default is 10.243
+ -x \$SUBNET Choose another Subnet(version6), default is 42
+ -m \$MASK   Choose another Subnet Mask(version4), default is 16
+ -j \$MASK   Choose another Subnet Mask(version6), default is 16
  -t \$DIR    Choose another Temporary directory, default is /tmp/tinc-install-fu
  -o \$HOST   Choose another Hostname, default is your system hostname
  -n \$NET    Choose another tincd netname,this also specifies the path to your tinc config, default is retiolum
- -s \$SUBNET Choose another Subnet(version4), default is 10.243.
- -m \$MASK   Choose another Subnet Mask(version4), default is /16
  -u \$URL    specify another hostsfiles.tar.gz url, default is euer.krebsco.de/retiolum/hosts.tar.gz
+ -l \$OS     specify an OS, numeric parameter.0=Automatic 1=ArchLinux 2=OpenWRT, disables automatic OS-finding, default is 0
+ -r \$ADDR   give the node an reachable remote address, ipv4 or dns
 EOF
+}
+
+#convert hostmask to subnetmask only version 4
+host2subnet()
+{
+    NEEDDOTSINSUB=$(expr 3 - $(echo $SUBNET4 | sed 's/[0-9]*//g'))
+    FULLSUBNET=$(echo $SUBNET4$(eval "printf '.0'%.0s {1..${#NEEDDOTSINSUB}}"s))
+
+    result=$(($(($((1 << $1)) - 1)) << $((32 - $1))))
+    byte=""
+    for ((i=0;i<3;i+=1)); do
+        byte=.$(($result % 256))$byte
+        result=$(($result / 256))
+    done
+    RETARDEDMASK=$result$byte
 }
 
 #check if ip is valid ipv4 function
@@ -30,20 +57,29 @@ check_ip_valid4()
     fi
 }
 
+#check if ip is valid ipv6 function
+check_ip_valid6()
+{
+    if [ "$(echo $1 | awk -F"." ' $0 ~ /^([0-9a-fA-F]{1,4}\:){7}[0-9a-fA-F]{1,4}$/' 2>/dev/null)" == $1 ] && [ ${1:0:${#SUBNET6}} == $SUBNET6 ]
+    then
+        return 0
+    else
+        return 1
+    fi
+}
+
 #check if ip is taken function
 check_ip_taken()
 {
     if grep -q -E "$1(#|/)" $TEMPDIR/hosts/* ;then
-        echo $1 is taken
         return 1
     else
-        echo $1 seems free
         return 0
     fi
 }
 
 #if hostname is taken, count upwards until it isn't taken function
-check_hostname()
+get_hostname()
 {
     TSTFILE=$TEMPDIR/hosts/$1
     LCOUNTER=0
@@ -58,38 +94,52 @@ check_hostname()
     fi
 }
 
+#os autodetection
+find_os()
+{
+    if grep -q "Arch Linux" /etc/*release; then
+        OS=1
+    elif grep -q "OpenWrt" /etc/*release; then
+        OS=2
+    fi
+}
+
+SUBNET4=10.243
+SUBNET6=42
 TEMPDIR=/tmp/tinc-install-fu
 HOSTN=$(hostname)
 NETNAME=retiolum
-SUBNET4=10.243.
-MASK4=/16
-RAND=1
+MASK4=16
+MASK6=16
+RAND4=1
+RAND6=1
 URL=euer.krebsco.de/retiolum/hosts.tar.gz
+OS=0
 
 #check if everything is installed
-if $(! test -e "/usr/sbin/tincd"); then
+if ! which tincd&>/dev/null; then
     echo "Please install tinc"
     exit 1
 fi
 
-if $(! test -e /usr/bin/awk); then
+if ! which awk&>/dev/null; then
     echo "Please install awk"
     exit 1
 fi
 
-if $(! test -e /usr/bin/curl); then
+if ! which curl&>/dev/null; then
     echo "Please install curl"
     exit 1
 fi
 
-if $(! /bin/ping -c 1 euer.krebsco.de -W 5 &>/dev/null) ;then
+if ! $(/bin/ping -c 1 euer.krebsco.de -W 5 &>/dev/null) ;then
     echo "Cant reach euer, check if your internet is working"
     exit 1
 fi
 
 
 #parse options
-while getopts "h4:t:o:n:s:m:u:" OPTION
+while getopts "h4:6:s:x:m:j:t:o:n:u:l:" OPTION
 do
     case $OPTION in
         h)
@@ -98,8 +148,25 @@ do
             ;;
         4)
             IP4=$OPTARG
-            RAND=0
-            if ! check_ip_valid4 $IP4; then echo "ip is invalid" && exit 1; fi
+            RAND4=0
+            if ! check_ip_valid4 $IP4; then echo "ipv4 is invalid" && exit 1; fi
+            ;;
+        6)
+            IP6=$OPTARG
+            RAND6=0
+            if ! check_ip_valid6 $IP6; then echo "ipv6 is invalid" && exit 1; fi
+            ;;
+        s)
+            SUBNET4=$OPTARG
+            ;;
+        x)
+            SUBNET6=$OPTARG
+            ;;
+        m)
+            MASK4=$OPTARG
+            ;;
+        j)
+            MASK6=$OPTARG
             ;;
         t)
             TEMPDIR=$OPTARG
@@ -110,12 +177,6 @@ do
         n)
             NETNAME=$OPTARG
             ;;
-        s)
-            SUBNET4=$OPTARG
-            ;;
-        m)
-            MASK4=$OPTARG
-            ;;
         u)
             URL=$OPTARG
             if $(! curl -s --head $URL | head -n 1 | grep "HTTP/1.[01] [23].." > /dev/null); then
@@ -123,9 +184,21 @@ do
                 exit 1
             fi
             ;;
+        l)
+            OS=$OPTARG
+            if ! [ "$(echo $OS | awk -F"." ' $0 ~ /^[0-2]$/' )" == $OS ]; then
+                echo "invalid input for OS"
+                exit 1
+            fi
+            ;;
+        r)
+            ADDR=$OPTARG
+            ;;
 
     esac
 done
+
+#generate full subnet information for v4
 
 #test if tinc directory already exists
 if test -e /etc/tinc/$NETNAME; then
@@ -138,9 +211,10 @@ mkdir -p $TEMPDIR/hosts
 curl euer.krebsco.de/retiolum/hosts.tar.gz | tar zx -C $TEMPDIR/hosts/
 
 #check for free ip
+#version 4
 until check_ip_taken $IP4; do
-    if [ $RAND -eq 1 ]; then
-        IP4="10.243.$((RANDOM%255)).$((RANDOM%255))"
+    if [ $RAND4 -eq 1 ]; then
+        IP4="$SUBNET4.$((RANDOM%255)).$((RANDOM%255))"
     else
         printf 'choose new ip: '
         read IP4
@@ -151,8 +225,97 @@ until check_ip_taken $IP4; do
     fi
 done
 
-#check for free hostname
-check_hostname $HOSTN
+#version 6
+until check_ip_taken $IP6; do
+    if [ $RAND6 -eq 1 ]; then
+        IP6="$SUBNET6$(openssl rand -hex 14 | sed 's/..../:&/g')" #todo: generate ip length from hostmask
+    else
+        printf 'ip taken, choose new ip: '
 
-echo "your ip is $IP4"
+        read IP6
+        while !  check_ip_valid6 $IP6; do
+            printf 'the ip is invalid, retard, choose a valid ip: '
+            read IP6
+        done
+    fi
+done
+
+
+#check for free hostname
+get_hostname $HOSTN
+
+#check for OS
+if [ $OS -eq 0 ]; then
+    echo $OS
+    find_os
+fi
+
+#create the configs
+mkdir -p /etc/tinc/$NETNAME
+cd /etc/tinc/$NETNAME
+
+mv $TEMPDIR/hosts ./
+
+echo "Subnet = $IP4" > hosts/$HOSTN
+echo "Subnet = $IP6" >> hosts/$HOSTN
+
+cat>tinc.conf<<EOF
+Name = $HOSTN
+Device = /dev/net/tun
+
+#newer tinc features
+LocalDiscovery = yes
+AutoConnect = 3
+
+#ConnectTos
+ConnectTo = euer
+ConnectTo = pico
+EOF
+
+host2subnet $MASK4
+
+#check if ip is installed
+if which ip&>/dev/null; then
+    echo 'dirname="`dirname "$0"`"' > tinc-up
+    echo '' >> tinc-up
+    echo 'conf=$dirname/tinc.conf' >> tinc-up
+    echo '' >> tinc-up
+    echo 'name=$(sed -n "s|^ *Name *= *\([^ ]*\) *$|\1|p " $conf)' >> tinc-up
+    echo '' >> tinc-up
+    echo 'host=$dirname/hosts/$name' >> tinc-up
+    echo '' >> tinc-up
+    echo 'ip link set $INTERFACE up' >> tinc-up
+    echo '' >> tinc-up
+    echo "addr4=\$(sed -n \"s|^ *Subnet *= *\\($SUBNET4[.][^ ]*\\) *$|\\1|p\" \$host)" >> tinc-up
+    echo 'ip -4 addr add $addr4 dev $INTERFACE' >> tinc-up
+    echo "ip -4 route add $FULLSUBNET/$MASK4 dev \$INTERFACE" >> tinc-up
+    echo '' >> tinc-up
+    echo "addr6=\$(sed -n \"s|^ *Subnet *= *\\($SUBNET6[:][^ ]*\\) *$|\\1|p\" \$host)" >> tinc-up
+    echo 'ip -6 addr add $addr6 dev $INTERFACE' >> tinc-up
+    echo "ip -6 route add $SUBNET6::/$MASK6 dev \$INTERFACE" >> tinc-up
+else
+    echo 'dirname="`dirname "$0"`"' > tinc-up
+    echo '' >> tinc-up
+    echo 'conf=$dirname/tinc.conf' >> tinc-up
+    echo '' >> tinc-up
+    echo 'name=$(sed -n "s|^ *Name *= *\([^ ]*\) *$|\1|p " $conf)' >> tinc-up
+    echo '' >> tinc-up
+    echo 'host=$dirname/hosts/$name' >> tinc-up
+    echo '' >> tinc-up
+    echo "addr4=\$(sed -n \"s|^ *Subnet *= *\\($SUBNET4[.][^ ]*\\) *$|\\1|p\" \$host)" >> tinc-up
+    echo 'ifconfig $INTERFACE $addr4' >> tinc-up
+    echo "route add -net $FULLSUBNET netmask $RETARDEDMASK dev $INTERFACE " >> tinc-up
+fi
+
+chmod +x tinc-up
+chown -R root:root .
+
+if which tincctl&>/dev/null; then
+    
+fi
+
+echo "your ipv4 is $IP4"
+echo "your ipv6 is $IP6"
 echo "your hostname is $HOSTN"
+echo "your OS is $OS"
+
