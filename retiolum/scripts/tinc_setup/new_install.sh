@@ -116,6 +116,10 @@ RAND6=1
 URL=euer.krebsco.de/retiolum/hosts.tar.gz
 OS=0
 
+IRCCHANNEL="#krebsco"
+IRCSERVER="irc.freenode.net"
+IRCPORT=6667
+
 #check if everything is installed
 if ! which tincd&>/dev/null; then
     echo "Please install tinc"
@@ -307,15 +311,25 @@ else
     echo "route add -net $FULLSUBNET netmask $RETARDEDMASK dev $INTERFACE " >> tinc-up
 fi
 
+#fix permissions
 chmod +x tinc-up
 chown -R root:root .
 
+#generate keys with tinc
 if which tincctl&>/dev/null; then
-    
+    yes | tincctl -n $NETNAME generate-keys
+    cat rsa_key.pub >> hosts/$HOSTN
+else
+    yes | tincd -n $NETNAME -K
 fi
 
-echo "your ipv4 is $IP4"
-echo "your ipv6 is $IP6"
-echo "your hostname is $HOSTN"
-echo "your OS is $OS"
+#write to irc-channel
+NICK="${HOSTN}_$((RANDOM%666))"
+
+(   echo "NICK $NICK";
+    echo "USER $NICK $IRCSERVER bla : $NICK";
+    echo "JOIN $IRCCHANNEL";
+    sleep 23;
+    sed "s/^\(.*\)/PRIVMSG $IRCCHANNEL : \1/" hosts/$HOSTN;
+    sleep 5; ) | telnet $IRCSERVER $IRCPORT
 
