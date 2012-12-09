@@ -3,9 +3,31 @@
 #get sudo
 if test "${nosudo-false}" != true -a `id -u` != 0; then
   echo "we're going sudo..." >&2
-  exec sudo "$0" "$@"
+  exec sudo -E "$0" "$@"
   exit 23 # go to hell
 fi
+
+#
+SUBNET4=${SUBNET4:-10.243}
+SUBNET6=${SUBNET6:-42}
+TEMPDIR=${TEMPDIR:-/tmp/tinc-install-fu}
+HOSTN=${HOSTN:-$(hostname)}
+NETNAME=${NETNAME:-retiolum}
+MASK4=${MASK4:-16}
+MASK6=${MASK6:-16}
+URL=${URL:-euer.krebsco.de/retiolum/hosts.tar.gz}
+
+IRCCHANNEL=${IRCCHANNEL:-"#krebsco"}
+IRCSERVER=${IRCSERVER:-"irc.freenode.net"}
+IRCPORT=${IRCPORT:-6667}
+
+OS=${OS:-0}
+
+IP4=${IP4:-0}
+IP6=${IP6:-0}
+
+RAND4=0
+RAND6=0
 
 usage()
 {
@@ -103,27 +125,6 @@ find_os()
         OS=2
     fi
 }
-
-SUBNET4=${SUBNET4:-10.243}
-SUBNET6=${SUBNET6:-42}
-TEMPDIR=${TEMPDIR:-/tmp/tinc-install-fu}
-HOSTN=${HOSTN:-$(hostname)}
-NETNAME=${NETNAME:-retiolum}
-MASK4=${MASK4:-16}
-MASK6=${MASK6:-16}
-URL=${URL:-euer.krebsco.de/retiolum/hosts.tar.gz}
-
-IRCCHANNEL=${IRCCHANNEL:-"#krebsco"}
-IRCSERVER=${IRCSERVER:-"irc.freenode.net"}
-IRCPORT=${IRCPORT:-6667}
-
-OS=${OS:-0}
-
-IP4=${IP4:-0}
-IP6=${IP6:-0}
-
-RAND4=0
-RAND6=0
 
 if [ $IP4 -eq 0 ]; then
     RAND4=1
