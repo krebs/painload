@@ -1,6 +1,11 @@
-git init painload
-cd painload
-git remote add -f origin https://github.com/krebscode/painload.git
-git config core.sparsecheckout true
-echo retiolum/hosts/ >> .git/info/sparse-checkout
-git pull origin master
+# Reference
+http://jasonkarns.com/blog/subdirectory-checkouts-with-git-sparse-checkout/
+
+# Code
+
+  git init painload
+  cd painload
+  git remote add -f origin https://github.com/krebscode/painload.git
+  git config core.sparsecheckout true
+  echo retiolum/hosts/ >> .git/info/sparse-checkout
+  git pull origin master
