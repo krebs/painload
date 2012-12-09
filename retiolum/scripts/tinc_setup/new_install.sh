@@ -104,21 +104,40 @@ find_os()
     fi
 }
 
-SUBNET4=10.243
-SUBNET6=42
-TEMPDIR=/tmp/tinc-install-fu
-HOSTN=$(hostname)
-NETNAME=retiolum
-MASK4=16
-MASK6=16
-RAND4=1
-RAND6=1
-URL=euer.krebsco.de/retiolum/hosts.tar.gz
-OS=0
+SUBNET4=${SUBNET4:-10.243}
+SUBNET6=${SUBNET6:-42}
+TEMPDIR=${TEMPDIR:-/tmp/tinc-install-fu}
+HOSTN=${HOSTN:-$(hostname)}
+NETNAME=${NETNAME:-retiolum}
+MASK4=${MASK4:-16}
+MASK6=${MASK6:-16}
+URL=${URL:-euer.krebsco.de/retiolum/hosts.tar.gz}
 
-IRCCHANNEL="#krebsco"
-IRCSERVER="irc.freenode.net"
-IRCPORT=6667
+IRCCHANNEL=${IRCCHANNEL:-"#krebsco"}
+IRCSERVER=${IRCSERVER:-"irc.freenode.net"}
+IRCPORT=${IRCPORT:-6667}
+
+OS=${OS:-0}
+
+IP4=${IP4:-0}
+IP6=${IP6:-0}
+
+RAND4=0
+RAND6=0
+
+if [ $IP4 -eq 0 ]; then
+    RAND4=1
+elif ! check_ip_valid4 $IP4; then
+    echo 'ip4 is invalid'
+    exit 1
+fi
+if [ $IP6 -eq 0 ]; then
+    RAND6=1
+elif ! check_ip_valid6 $IP6; then
+    echo 'ip6 is invalid'
+    exit 1
+fi
+
 
 #check if everything is installed
 if ! which tincd&>/dev/null; then
