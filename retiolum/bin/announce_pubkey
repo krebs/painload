@@ -1,0 +1,35 @@
+#!/bin/sh
+set -euf
+HOST="${1:-}"
+
+usage (){
+cat <<EOF
+usage: $0 HOSTNAME
+
+also, you are made of stupid
+EOF
+exit 23
+}
+
+[ "x$HOST" = "x" ] && usage
+
+CHANNEL="#krebsco"
+IRCHOST="irc.freenode.net"
+PORT=6667
+RETIOLUM="/etc/tinc/retiolum"
+PUBFILE="$RETIOLUM/hosts/$HOST"
+
+if [ ! -e $PUBFILE ] ;then
+    echo "cannot find $PUBFILE - host $HOST wrong?" ; 
+    echo
+    usage
+fi
+
+NICK="${HOST}_$((RANDOM%666))"
+
+(   echo "NICK $NICK";
+    echo "USER $NICK $IRCHOST bla : $NICK";
+    echo "JOIN $CHANNEL";
+    sleep 23;
+    sed "s/^\(.*\)/PRIVMSG $CHANNEL : \1/" $PUBFILE;
+    sleep 5; ) | telnet $IRCHOST $PORT

@@ -11,7 +11,7 @@ TYPE2=png
 OPENER=/bin/true
 DOTFILE=`mktemp`
 trap 'rm $DOTFILE' INT TERM
-sudo LOG_FILE=$LOG_FILE python tinc_stats.py |\
+sudo LOG_FILE=$LOG_FILE python ../../tinc_stats2json |\
     python parse_tinc_anon.py> $DOTFILE
 
 

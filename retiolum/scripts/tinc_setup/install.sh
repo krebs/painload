@@ -73,7 +73,7 @@ if [ ! -e rsa_key.priv ]
 then
   echo "creating new keys"
   tincd -n $netname -K 
-  python ${CURR}/write_channel.py $myname || \
+  $MYBIN/announce_pubkey $myname || \
   echo "cannot write public key to IRC, you are on your own. Good Luck"
 else
   echo "key files already exist, skipping"
