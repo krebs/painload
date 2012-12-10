@@ -3,6 +3,7 @@ set -xeuf
 WEBDIR=${WEBDIR:-/srv/http/pub/retiolum}
 HOSTFILE=$WEBDIR/hosts.tar.gz
 cd $(dirname $(readlink -f $0))
+git pull origin master || logger "cannot pull painload"
 #rm $HOSTFILE
 tar czf  $HOSTFILE  -C ../hosts .
 chmod a+rx $HOSTFILE

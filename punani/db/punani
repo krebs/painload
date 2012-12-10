@@ -43,7 +43,7 @@
   },
   "tinc" : {
     "apt-get" : "tinc",
-    "yaourt" : "tinc"
+    "pacman" : "tinc"
   },
   "python-notify" : {
     "pacman" : "python-notify",

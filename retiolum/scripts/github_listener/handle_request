@@ -1,0 +1,16 @@
+#!/bin/sh
+# Possible Shell Vars
+#   WEBDIR 
+#   HOSTFOLDER
+set -euf
+HOSTFOLDER=${HOSTFOLDER:-../../hosts}
+cd $(dirname $(readlink -f $0))
+cd "$HOSTFOLDER"
+git pull origin master  >&2
+cd - >&2
+
+echo "sorry for keeping you waiting, please be patient"
+../../bin/create-supernode-tar
+echo "almost done..."
+../../bin/create-host-tar
+echo "Thank you for your patience!"

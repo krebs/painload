@@ -16,3 +16,7 @@ with a "logger" command to signalise successful tarball generation.
 github_listener.conf
 ===================
 the supervisor config file
+
+References
+==========
+also see //retiolum/doc/git_checkout_only_hosts
