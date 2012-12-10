@@ -264,7 +264,6 @@ done
 until check_ip_taken $IP6; do
     if [ $RAND6 -eq 1 ]; then
         NETLENGTH=$(expr $(expr 128 - $MASK6) / 4)
-        echo $NETLENGTH
         IP6="$SUBNET6$(head /dev/urandom | tr -dc "0123456789abcdef" | head -c$NETLENGTH | sed 's/..../:&/g')" #todo: generate ip length from hostmask
     else
         printf 'ip taken, choose new ip: '
