@@ -167,6 +167,7 @@ if ! which curl&>/dev/null; then
         exit 1
     else
         LOADER='wget -O-'
+    fi
 else
     LOADER=curl
 fi
