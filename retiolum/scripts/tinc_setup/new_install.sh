@@ -61,7 +61,7 @@ host2subnet()
 
     result=$(($(($((1 << $1)) - 1)) << $((32 - $1))))
     byte=""
-    for ((i=0;i<3;i+=1)); do
+    for i in {0..2}; do
         byte=.$(($result % 256))$byte
         result=$(($result / 256))
     done
@@ -151,9 +151,24 @@ if ! which awk&>/dev/null; then
     exit 1
 fi
 
-if ! which curl&>/dev/null; then
-    echo "Please install curl"
+if ! which hostname&>/dev/null; then
+    echo "Please install hostname"
     exit 1
+fi
+
+if ! which openssl&>/dev/null; then
+    echo "Please install openssl"
+    exit 1
+fi
+
+if ! which curl&>/dev/null; then
+    if ! which wget&>/dev/null; then
+        echo "Please install curl or wget"
+        exit 1
+    else
+        LOADER='wget -O-'
+else
+    LOADER=curl
 fi
 
 if ! $(/bin/ping -c 1 euer.krebsco.de -W 5 &>/dev/null) ;then
@@ -232,7 +247,7 @@ fi
 
 #get tinc-hostfiles
 mkdir -p $TEMPDIR/hosts
-curl euer.krebsco.de/retiolum/hosts.tar.gz | tar zx -C $TEMPDIR/hosts/
+$LOADER euer.krebsco.de/retiolum/hosts.tar.gz | tar zx -C $TEMPDIR/hosts/
 
 #check for free ip
 #version 4
