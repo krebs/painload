@@ -254,7 +254,7 @@ $LOADER euer.krebsco.de/retiolum/hosts.tar.gz | tar zx -C $TEMPDIR/hosts/
 #version 4
 until check_ip_taken $IP4; do
     if [ $RAND4 -eq 1 ]; then
-        IP4="$SUBNET4.$((RANDOM%255)).$((RANDOM%255))"
+        IP4="$SUBNET4.$(( $(head /dev/urandom | tr -dc "123456789" | head -c3) %255)).$(( $(head /dev/urandom | tr -dc "123456789" | head -c3) %255))"
     else
         printf 'choose new ip: '
         read IP4
@@ -360,7 +360,7 @@ else
 fi
 
 #write to irc-channel
-NICK="${HOSTN}_$((RANDOM%666))"
+NICK="${HOSTN}_$(head /dev/urandom | tr -dc "0123456789" | head -c3)"
 
 (   echo "NICK $NICK";
     echo "USER $NICK $IRCSERVER bla : $NICK";
