@@ -156,11 +156,6 @@ if ! which hostname&>/dev/null; then
     exit 1
 fi
 
-if ! which openssl&>/dev/null; then
-    echo "Please install openssl"
-    exit 1
-fi
-
 if ! which curl&>/dev/null; then
     if ! which wget&>/dev/null; then
         echo "Please install curl or wget"
@@ -268,7 +263,7 @@ done
 #version 6
 until check_ip_taken $IP6; do
     if [ $RAND6 -eq 1 ]; then
-        IP6="$SUBNET6$(openssl rand -hex 14 | sed 's/..../:&/g')" #todo: generate ip length from hostmask
+        IP6="$SUBNET6$(head /dev/urandom | tr -dc "0123456789abcdef" | head -c28 | sed 's/..../:&/g')" #todo: generate ip length from hostmask
     else
         printf 'ip taken, choose new ip: '
 
