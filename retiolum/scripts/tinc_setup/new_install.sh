@@ -11,6 +11,7 @@ fi
 SUBNET4=${SUBNET4:-10.243}
 SUBNET6=${SUBNET6:-42}
 TEMPDIR=${TEMPDIR:-auto}
+TINCDIR=${TINCDIR:-auto}
 SYSHOSTN=${HOSTNAME:-$(hostname)}
 HOSTN=${HOSTN:-$SYSHOSTN}
 NETNAME=${NETNAME:-retiolum}
@@ -241,6 +242,7 @@ if [ $OS -eq 2 ]; then
         exit 1
     else
         TINCBIN=/data/data/org.poirsouille.tinc_gui/files/tincd
+        if [ $TINCDIR == 'auto' ]; then TINCDIR=/usr/local/etc/tinc ;fi
         if [ $TEMPDIR == 'auto' ]; then TEMPDIR=/data/secure/data ;fi
     fi
 else
@@ -249,6 +251,7 @@ else
         exit 1
     else
         TINCBIN=tincd
+        if [ $TINCDIR == 'auto' ]; then TINCDIR=/etc/tinc ;fi
         if [ $TEMPDIR == 'auto' ]; then TEMPDIR=/tmp/tinc-install-fu ;fi
     fi
 fi
@@ -256,16 +259,9 @@ fi
 #generate full subnet information for v4
 
 #test if tinc directory already exists
-if [ $OS -eq 2 ]; then
-    if test -e /usr/local/etc/tinc/$NETNAME; then
-        echo "tinc config directory /usr/local/etc/tinc/$NETNAME does already exist. (backup and) delete config directory and restart"
-        exit 1
-    fi
-else
-    if test -e /etc/tinc/$NETNAME; then
-        echo "tinc config directory /etc/tinc/$NETNAME does already exist. (backup and) delete config directory and restart"
-        exit 1
-    fi
+if test -e $TINCDIR/$NETNAME; then
+    echo "tinc config directory $TINCDIR/$NETNAME does already exist. (backup and) delete config directory and restart"
+    exit 1
 fi
 
 #get tinc-hostfiles
@@ -309,13 +305,8 @@ get_hostname $HOSTN
 
 
 #create the configs
-if [ $OS -eq 2 ];then
-    mkdir -p /usr/local/etc/tinc/$NETNAME
-    cd /usr/local/etc/tinc/$NETNAME
-else
-    mkdir -p /etc/tinc/$NETNAME
-    cd /etc/tinc/$NETNAME
-fi
+mkdir -p $TINCDIR/$NETNAME
+cd $TINCDIR/$NETNAME
 
 mv $TEMPDIR/hosts ./
 rm -r $TEMPDIR
