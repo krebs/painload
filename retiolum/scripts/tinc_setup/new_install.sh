@@ -266,6 +266,7 @@ else
         echo "tinc config directory /etc/tinc/$NETNAME does already exist. (backup and) delete config directory and restart"
         exit 1
     fi
+fi
 
 #get tinc-hostfiles
 mkdir -p $TEMPDIR/hosts
