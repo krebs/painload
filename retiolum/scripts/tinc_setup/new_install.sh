@@ -249,7 +249,7 @@ else
         exit 1
     else
         TINCBIN=tincd
-        if [ $TEMPDIR == 'auto' ]; then TEMPDIR=/mnt/tinc-install-fu ;fi
+        if [ $TEMPDIR == 'auto' ]; then TEMPDIR=/tmp/tinc-install-fu ;fi
     fi
 fi
 
@@ -318,7 +318,7 @@ else
 fi
 
 mv $TEMPDIR/hosts ./
-rm -r $TEMDIR
+rm -r $TEMPDIR
 
 echo "Subnet = $IP4" > hosts/$HOSTN
 echo "Subnet = $IP6" >> hosts/$HOSTN
