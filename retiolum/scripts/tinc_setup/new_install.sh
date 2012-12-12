@@ -1,4 +1,4 @@
-#!/bin/sh
+
 
 #get sudo
 if test "${nosudo-false}" != true -a `id -u` != 0; then
@@ -10,8 +10,9 @@ fi
 #
 SUBNET4=${SUBNET4:-10.243}
 SUBNET6=${SUBNET6:-42}
-TEMPDIR=${TEMPDIR:-/tmp/tinc-install-fu}
-HOSTN=${HOSTN:-$(hostname)}
+TEMPDIR=${TEMPDIR:-auto}
+SYSHOSTN=${HOSTNAME:-$(hostname)}
+HOSTN=${HOSTN:-$SYSHOSTN}
 NETNAME=${NETNAME:-retiolum}
 MASK4=${MASK4:-16}
 MASK6=${MASK6:-16}
@@ -48,7 +49,7 @@ Options:
  -o \$HOST   Choose another Hostname, default is your system hostname
  -n \$NET    Choose another tincd netname,this also specifies the path to your tinc config, default is retiolum
  -u \$URL    specify another hostsfiles.tar.gz url, default is euer.krebsco.de/retiolum/hosts.tar.gz
- -l \$OS     specify an OS, numeric parameter.0=Automatic 1=ArchLinux 2=OpenWRT, disables automatic OS-finding, default is 0
+ -l \$OS     specify an OS, numeric parameter.0=Automatic 1=Linux 2=Android, disables automatic OS-finding, default is 0
  -r \$ADDR   give the node an reachable remote address, ipv4 or dns
 EOF
 }
@@ -119,9 +120,9 @@ get_hostname()
 #os autodetection
 find_os()
 {
-    if grep -q "Arch Linux" /etc/*release; then
+    if grep -qe '.*' /etc/*release 2>/dev/null; then
         OS=1
-    elif grep -q "OpenWrt" /etc/*release; then
+    elif which getprop&>/dev/null; then
         OS=2
     fi
 }
@@ -139,20 +140,14 @@ elif ! check_ip_valid6 $IP6; then
     exit 1
 fi
 
+#find OS
+if [ $OS -eq 0 ]; then
+    find_os
+fi
 
 #check if everything is installed
-if ! which tincd&>/dev/null; then
-    echo "Please install tinc"
-    exit 1
-fi
-
 if ! which awk&>/dev/null; then
     echo "Please install awk"
-    exit 1
-fi
-
-if ! which hostname&>/dev/null; then
-    echo "Please install hostname"
     exit 1
 fi
 
@@ -232,6 +227,25 @@ do
 
     esac
 done
+
+#check if everything is installed
+if [ $OS -eq 2 ]; then
+    if ! test -e /data/data/org.poirsouille.tinc_gui/files/tincd; then
+        echo "Please install tinc-gui"
+        exit 1
+    else
+        TINCBIN=/data/data/org.poirsouille.tinc_gui/files/tincd
+        if [ $TEMPDIR == 'auto' ]; then TEMPDIR=/data/secure/data ;fi
+    fi
+else
+    if ! which tincd&>/dev/null; then
+        echo "Please install tinc"
+        exit 1
+    else
+        TINCBIN=tincd
+        if [ $TEMPDIR == 'auto' ]; then TEMPDIR=/mnt/tinc-install-fu ;fi
+    fi
+fi
 
 #generate full subnet information for v4
 
@@ -352,7 +366,7 @@ if which tincctl&>/dev/null; then
     yes | tincctl -n $NETNAME generate-keys
     cat rsa_key.pub >> hosts/$HOSTN
 else
-    yes | tincd -n $NETNAME -K
+    yes | $TINCBIN -n $NETNAME -K
 fi
 
 #write to irc-channel
