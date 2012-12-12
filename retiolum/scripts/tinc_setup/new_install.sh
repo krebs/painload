@@ -228,6 +228,12 @@ do
     esac
 done
 
+#check for OS
+if [ $OS -eq 0 ]; then
+    echo $OS
+    find_os
+fi
+
 #check if everything is installed
 if [ $OS -eq 2 ]; then
     if ! test -e /data/data/org.poirsouille.tinc_gui/files/tincd; then
@@ -294,11 +300,6 @@ done
 #check for free hostname
 get_hostname $HOSTN
 
-#check for OS
-if [ $OS -eq 0 ]; then
-    echo $OS
-    find_os
-fi
 
 #create the configs
 mkdir -p /etc/tinc/$NETNAME
