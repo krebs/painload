@@ -162,7 +162,7 @@ else
     LOADER=curl
 fi
 
-if ! $(/bin/ping -c 1 euer.krebsco.de -W 5 &>/dev/null) ;then
+if ! $(ping -c 1 euer.krebsco.de -W 5 1>/dev/null) ;then
     echo "Cant reach euer, check if your internet is working"
     exit 1
 fi
