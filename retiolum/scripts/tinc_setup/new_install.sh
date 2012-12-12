@@ -1,4 +1,4 @@
-
+#!/bin/sh
 
 #get sudo
 if test "${nosudo-false}" != true -a `id -u` != 0; then
