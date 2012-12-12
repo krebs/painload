@@ -256,10 +256,16 @@ fi
 #generate full subnet information for v4
 
 #test if tinc directory already exists
-if test -e /etc/tinc/$NETNAME; then
-    echo "tinc config directory /etc/tinc/$NETNAME does already exist. (backup and) delete config directory and restart"
-    exit 1
-fi
+if [ $OS -eq 2 ]; then
+    if test -e /usr/local/etc/tinc/$NETNAME; then
+        echo "tinc config directory /usr/local/etc/tinc/$NETNAME does already exist. (backup and) delete config directory and restart"
+        exit 1
+    fi
+else
+    if test -e /etc/tinc/$NETNAME; then
+        echo "tinc config directory /etc/tinc/$NETNAME does already exist. (backup and) delete config directory and restart"
+        exit 1
+    fi
 
 #get tinc-hostfiles
 mkdir -p $TEMPDIR/hosts
@@ -311,6 +317,7 @@ else
 fi
 
 mv $TEMPDIR/hosts ./
+rm -r $TEMDIR
 
 echo "Subnet = $IP4" > hosts/$HOSTN
 echo "Subnet = $IP6" >> hosts/$HOSTN
