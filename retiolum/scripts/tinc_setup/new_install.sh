@@ -302,8 +302,13 @@ get_hostname $HOSTN
 
 
 #create the configs
-mkdir -p /etc/tinc/$NETNAME
-cd /etc/tinc/$NETNAME
+if [ $OS -eq 2 ];then
+    mkdir -p /usr/local/etc/tinc/$NETNAME
+    cd /usr/local/etc/tinc/$NETNAME
+else
+    mkdir -p /etc/tinc/$NETNAME
+    cd /etc/tinc/$NETNAME
+fi
 
 mv $TEMPDIR/hosts ./
 
