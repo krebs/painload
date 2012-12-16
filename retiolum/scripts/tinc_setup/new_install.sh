@@ -10,8 +10,10 @@ fi
 #
 SUBNET4=${SUBNET4:-10.243}
 SUBNET6=${SUBNET6:-42}
-TEMPDIR=${TEMPDIR:-/tmp/tinc-install-fu}
-HOSTN=${HOSTN:-$(hostname)}
+TEMPDIR=${TEMPDIR:-auto}
+TINCDIR=${TINCDIR:-auto}
+SYSHOSTN=${HOSTNAME:-$(hostname)}
+HOSTN=${HOSTN:-$SYSHOSTN}
 NETNAME=${NETNAME:-retiolum}
 MASK4=${MASK4:-16}
 MASK6=${MASK6:-16}
@@ -48,7 +50,7 @@ Options:
  -o \$HOST   Choose another Hostname, default is your system hostname
  -n \$NET    Choose another tincd netname,this also specifies the path to your tinc config, default is retiolum
  -u \$URL    specify another hostsfiles.tar.gz url, default is euer.krebsco.de/retiolum/hosts.tar.gz
- -l \$OS     specify an OS, numeric parameter.0=Automatic 1=ArchLinux 2=OpenWRT, disables automatic OS-finding, default is 0
+ -l \$OS     specify an OS, numeric parameter.0=Automatic 1=Linux 2=Android, disables automatic OS-finding, default is 0
  -r \$ADDR   give the node an reachable remote address, ipv4 or dns
 EOF
 }
@@ -61,7 +63,7 @@ host2subnet()
 
     result=$(($(($((1 << $1)) - 1)) << $((32 - $1))))
     byte=""
-    for ((i=0;i<3;i+=1)); do
+    for i in {0..2}; do
         byte=.$(($result % 256))$byte
         result=$(($result / 256))
     done
@@ -119,9 +121,9 @@ get_hostname()
 #os autodetection
 find_os()
 {
-    if grep -q "Arch Linux" /etc/*release; then
+    if grep -qe '.*' /etc/*release 2>/dev/null; then
         OS=1
-    elif grep -q "OpenWrt" /etc/*release; then
+    elif which getprop&>/dev/null; then
         OS=2
     fi
 }
@@ -139,24 +141,29 @@ elif ! check_ip_valid6 $IP6; then
     exit 1
 fi
 
-
-#check if everything is installed
-if ! which tincd&>/dev/null; then
-    echo "Please install tinc"
-    exit 1
+#find OS
+if [ $OS -eq 0 ]; then
+    find_os
 fi
 
+#check if everything is installed
 if ! which awk&>/dev/null; then
     echo "Please install awk"
     exit 1
 fi
 
 if ! which curl&>/dev/null; then
-    echo "Please install curl"
-    exit 1
+    if ! which wget&>/dev/null; then
+        echo "Please install curl or wget"
+        exit 1
+    else
+        LOADER='wget -O-'
+    fi
+else
+    LOADER=curl
 fi
 
-if ! $(/bin/ping -c 1 euer.krebsco.de -W 5 &>/dev/null) ;then
+if ! $(ping -c 1 euer.krebsco.de -W 5 1>/dev/null) ;then
     echo "Cant reach euer, check if your internet is working"
     exit 1
 fi
@@ -222,23 +229,50 @@ do
     esac
 done
 
+#check for OS
+if [ $OS -eq 0 ]; then
+    echo $OS
+    find_os
+fi
+
+#check if everything is installed
+if [ $OS -eq 2 ]; then
+    if ! test -e /data/data/org.poirsouille.tinc_gui/files/tincd; then
+        echo "Please install tinc-gui"
+        exit 1
+    else
+        TINCBIN=/data/data/org.poirsouille.tinc_gui/files/tincd
+        if [ $TINCDIR == 'auto' ]; then TINCDIR=/usr/local/etc/tinc ;fi
+        if [ $TEMPDIR == 'auto' ]; then TEMPDIR=/data/secure/data ;fi
+    fi
+else
+    if ! which tincd&>/dev/null; then
+        echo "Please install tinc"
+        exit 1
+    else
+        TINCBIN=tincd
+        if [ $TINCDIR == 'auto' ]; then TINCDIR=/etc/tinc ;fi
+        if [ $TEMPDIR == 'auto' ]; then TEMPDIR=/tmp/tinc-install-fu ;fi
+    fi
+fi
+
 #generate full subnet information for v4
 
 #test if tinc directory already exists
-if test -e /etc/tinc/$NETNAME; then
-    echo "tinc config directory /etc/tinc/$NETNAME does already exist. (backup and) delete config directory and restart"
+if test -e $TINCDIR/$NETNAME; then
+    echo "tinc config directory $TINCDIR/$NETNAME does already exist. (backup and) delete config directory and restart"
     exit 1
 fi
 
 #get tinc-hostfiles
 mkdir -p $TEMPDIR/hosts
-curl euer.krebsco.de/retiolum/hosts.tar.gz | tar zx -C $TEMPDIR/hosts/
+$LOADER euer.krebsco.de/retiolum/hosts.tar.gz | tar zx -C $TEMPDIR/hosts/
 
 #check for free ip
 #version 4
 until check_ip_taken $IP4; do
     if [ $RAND4 -eq 1 ]; then
-        IP4="$SUBNET4.$((RANDOM%255)).$((RANDOM%255))"
+        IP4="$SUBNET4.$(( $(head /dev/urandom | tr -dc "123456789" | head -c3) %255)).$(( $(head /dev/urandom | tr -dc "123456789" | head -c3) %255))"
     else
         printf 'choose new ip: '
         read IP4
@@ -252,7 +286,8 @@ done
 #version 6
 until check_ip_taken $IP6; do
     if [ $RAND6 -eq 1 ]; then
-        IP6="$SUBNET6$(openssl rand -hex 14 | sed 's/..../:&/g')" #todo: generate ip length from hostmask
+        NETLENGTH=$(expr $(expr 128 - $MASK6) / 4)
+        IP6="$SUBNET6$(head /dev/urandom | tr -dc "0123456789abcdef" | head -c$NETLENGTH | sed 's/..../:&/g')" #todo: generate ip length from hostmask
     else
         printf 'ip taken, choose new ip: '
 
@@ -268,17 +303,13 @@ done
 #check for free hostname
 get_hostname $HOSTN
 
-#check for OS
-if [ $OS -eq 0 ]; then
-    echo $OS
-    find_os
-fi
 
 #create the configs
-mkdir -p /etc/tinc/$NETNAME
-cd /etc/tinc/$NETNAME
+mkdir -p $TINCDIR/$NETNAME
+cd $TINCDIR/$NETNAME
 
 mv $TEMPDIR/hosts ./
+rm -r $TEMPDIR
 
 echo "Subnet = $IP4" > hosts/$HOSTN
 echo "Subnet = $IP6" >> hosts/$HOSTN
@@ -340,11 +371,11 @@ if which tincctl&>/dev/null; then
     yes | tincctl -n $NETNAME generate-keys
     cat rsa_key.pub >> hosts/$HOSTN
 else
-    yes | tincd -n $NETNAME -K
+    yes | $TINCBIN -n $NETNAME -K
 fi
 
 #write to irc-channel
-NICK="${HOSTN}_$((RANDOM%666))"
+NICK="${HOSTN}_$(head /dev/urandom | tr -dc "0123456789" | head -c3)"
 
 (   echo "NICK $NICK";
     echo "USER $NICK $IRCSERVER bla : $NICK";
