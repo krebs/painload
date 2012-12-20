@@ -16,18 +16,19 @@ that contains an index.{js,sh,py,etc.} file.
 like your sh's PATH
 
 ## example: cobra as some kind of make
-$ echo $COBRA_PATH
-.
-$ ls .
-foo/ bar/ baz/
-$ cat foo/cobra.json
-{ "deps": "bar", "baz" }
-$ cat bar/cobra.json
-No such file or directory
-$ cat baz/cobra.json
-No such file or directory
-$ cobra foo
-[cobra bar]
-[cobra baz]
-[cobra foo]
-$ exit
+
+    $ echo $COBRA_PATH
+    .
+    $ ls .
+    foo/ bar/ baz/
+    $ cat foo/cobra.json
+    { "deps": "bar", "baz" }
+    $ cat bar/cobra.json
+    No such file or directory
+    $ cat baz/cobra.json
+    No such file or directory
+    $ cobra foo
+    [cobra bar]
+    [cobra baz]
+    [cobra foo]
+    $ exit
