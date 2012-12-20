@@ -2,7 +2,7 @@ http://lounge.mpd.shack/include/controller-playback.php?action=setCrossfade&valu
 http://lounge.mpd.shack/include/controller-playback.php?action=repeat&value=1&json=null
 http://lounge.mpd.shack/include/controller-playlist.php?action=clear&value=&json=null
 http://lounge.mpd.shack/include/controller-playlist.php?action=addSong&value=http%3A%2F%2F212.7.194.133%3A8128&json=null
-http://lounge.mpd.shack/include/controller- playlist.php?action=getPlaylistInfo&value=0&json=
+http://lounge.mpd.shack/include/controller-playlist.php?action=getPlaylistInfo&value=0&json=
 [{                                                                 
   "file": "http:\/\/212.7.194.133:8128",
   "Title": "Max & Dima - Sapovnela Studio: Batut",

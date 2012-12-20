@@ -15,9 +15,9 @@ from subprocess import Popen, PIPE
 
 os.chdir(os.path.dirname(os.path.realpath(sys.argv[0])))
 pidfile = "/tmp/krebs.stream.pid"
-baseurl="http://elab.mpd.shack/"
+baseurl="http://lounge.mpd.shack/"
 url=baseurl+"include/controller-playlist.php?action=%s&value=%s&json=%s"
-url_file = os.environ.get("STREAM_DB", "direct.db")
+url_file = os.environ.get("STREAM_DB", "../db/direct.db")
 urls = []
 
 for line in open(url_file):

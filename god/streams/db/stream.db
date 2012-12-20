@@ -7,7 +7,7 @@ http://stream2.jungletrain.net:8000 jungletrain
 http://playlist.tormentedradio.com/tormentedradio.pls tormented
 http://filebitch.shack:8000 mpd
 http://radio.krautchan.net:8000/radio.mp3 radiofreieskrautchan
-http://nl1.streamhosting.ch/listen.pls lounge
+http://nl1.streamhosting.ch:80 lounge
 http://deluxetelevision.com/livestreams/radio/DELUXE_RADIO.pls deluxe
 http://livestream.radiodarmstadt.de:8000 darmstadt
 http://somafm.com/sxfm.pls southbysoma
@@ -26,7 +26,7 @@ http://somafm.com/bootliquor.pls bootliquor
 http://somafm.com/covers.pls covers
 http://somafm.com/illstreet.pls illstreet
 http://somafm.com/tags.pls tagstrip
-http://somafm.com/groovesalad.pls groove 
+http://somafm.com/groovesalad.pls groove
 http://somafm.com/lush.pls lush
 http://somafm.com/digitalis.pls digitalis
 http://somafm.com/sonicuniverse.pls sonicuniverse
