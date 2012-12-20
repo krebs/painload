@@ -1,0 +1,10 @@
+#!/bin/sh
+cat stream.db | while read url name;do
+    curl $url --max-time 1 2>/dev/null| sed -n 's/[fF]ile[0-9]=\(.*\)/\1/p' > "streamfinder/$name"
+    if [ "x`cat \"streamfinder/$name\"`" == "x" ];then
+        rm "streamfinder/$name"
+        echo "$name empty or not a stream"
+    else
+        echo "wrote $name"
+    fi
+done

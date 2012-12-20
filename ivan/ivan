@@ -1,5 +1,5 @@
 #!/bin/bash
-SATZ_LISTE=/krebs/evan/satz-liste
+SATZ_LISTE=/krebs/ivan/satz-liste
 p="${noise_pitch-10}"
 v="${noise_lang-de}"
 k="${noise_capital-0}"

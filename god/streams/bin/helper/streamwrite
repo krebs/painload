@@ -1,0 +1,6 @@
+for i in `ls -1 streamfinder/`;
+do
+    for j in `cat "$i"`;do
+        echo "$j $i" >> direct.db
+    done
+done
