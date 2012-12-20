@@ -231,7 +231,6 @@ done
 
 #check for OS
 if [ $OS -eq 0 ]; then
-    echo $OS
     find_os
 fi
 
