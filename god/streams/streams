@@ -1,131 +1,116 @@
-#! /bin/bash
-set -euf
+#!/usr/bin/python
+import os
+import sys
+from subprocess import Popen, PIPE
 
-stream_file=/tmp/krebs.stream.current
-
-HERE=$(dirname $(readlink -f $0))
-URLS=`cat $HERE/stream.db`
-CURRENT_STREAM="no stream" #will be set when calling `status`
-if [ ! `id -u` -eq "0" ]; then
-  exec sudo "$0" "$@"
-fi
-
-#if [ ! `id -u` -eq "0" ]; then
-#  echo "we are going sudo..."
-#  exec sudo "$0" "$@"
-#fi
-
-function start() {
-  # start the given stream von $1
-  REQ=$1
-  tmux start-server 
-  if status &>/dev/null ; then
-    echo "!! Stream already running!"
-    exit 1
-  fi
-
-  if echo "$URLS" | while read URL NAME; do
-    if [ "$NAME" = "$REQ" ];then
-      tmux new-session -s streams -n streams -d "
-        while sleep 1; do
-          echo $NAME > $stream_file
-          mplayer $URL
-        done
-      "  
-      echo "** $REQ started"
-      exit 1
-    fi
-  done; then
-    echo "!! Stream '$REQ' not found!"
-    exit 1
-  fi
-}
-function stop()
-{
-  #stops every stream
-  if status &>/dev/null; then
-    status | cut -d\  -f2 | xargs printf "** killing %s\n"
-    tmux kill-session -t streams 2>/dev/null || echo "!! killing session failed" 
-  else
-    echo "** no stream running"; 
-    return 1
-  fi
-}
-
-function status()
-{
-  #tmux has-session -t streams 2>/dev/null
-  #RET=$?
-
-  #tmux list-sessions  2>/dev/null
-  #return $RET
-  EV="`ps -ef | grep mplayer`"
-  if echo "$URLS" | while read URL NAME; do
-    if [ "`echo "$EV" | grep \"$URL\"`" ] ;then
-      echo "** $NAME running ($URL)"
-      exit 1
-    fi
-  done; then
-    echo "** no stream running"
-    return 1
-  else
-    return 0
-  fi
-}
-function current()
-{
-
-  return 1
-}
-function list()
-{
-  echo "$URLS" | while read URL NAME ; do
-    echo "$NAME : $URL"
-  done
-
-}
-
-function shorthelp()
-{
-    echo "start|stop|restart|status|list [audio stream]"
-}
-function longhelp()
-{
-  B=`basename $0`
-  echo -n "Usage: $B "
-  shorthelp
-  echo "[32;1m get all available streams with [31;1;4m'/$B list'[m
-Examples: 
-  $B list
-  $B start groove
-  $B restart deepmix
-  $B status
-  $B stop"
-}
+os.chdir(os.path.dirname(os.path.realpath(sys.argv[0])))
+pidfile = "/tmp/krebs.stream.pid"
+url_file = os.environ.get("STREAM_DB", "stream.db")
+urls = []
+#urls = [ url,f for (url,f) in open(url_file).readline() ]
+for line in open(url_file):
+    urls.append(line.split())
+#print urls
+mybin = sys.argv[0]
+cmd = sys.argv[1] if len(sys.argv) > 1 else "you-are-made-of-stupid"
+stream = sys.argv[2] if len(sys.argv) == 3 else "groove"
 
 
-case "$1" in
-  start)
-    start ${2-"`test -f $stream_file && cat $stream_file`"}
-    ;;
-  stop)
-    stop
-    ;;
-  (switch|restart)
-    stop
-    start $2
-    ;;
-  status)
-    status
-    exit $?
-    ;;
-  list)
-    list
-    ;;
-  (--help)
+def check_pid(pid):
+    """ Check For the existence of a unix pid. """
+    try:
+        os.kill(pid, 0)
+    except OSError:
+        return False
+    else:
+        return True
+
+
+def urlForStream(stream):
+    for url, s in urls:
+        if s == stream:
+            return url
+
+
+def start(stream):
+    ret = running()
+    if ret:
+        print "!! Stream `%s` already running with pid `%s` !" % \
+                (ret[1], ret[0])
+    else:
+        pipe_silent = open('/dev/null', 'w')
+        url = urlForStream(stream)
+        mpl = Popen(["mplayer", url],
+                 stdout=pipe_silent, stderr=pipe_silent).pid
+        print >> open(pidfile, "w+"), "%d %s" % (mpl, stream)
+
+
+def stop():
+    ret = running()
+    if not ret:
+        print "!! No Stream running!"
+    else:
+        pid, name = ret
+        print "** Killing `%s` with pid %s" % (name, pid)
+        os.kill(int(pid), 15)
+        #if check_pid(int(pid)):
+        #    print "!! trying harder to kill process"
+        #    os.kill(int(pid), 9)
+        os.remove(pidfile)
+
+
+def running():
+    try:
+        pid, currstream = open(pidfile).read().split()
+        if check_pid(int(pid)):
+            return (pid, currstream)
+        else:
+            print "!! removing stale pidfile"
+            os.remove(pidfile)
+            raise Exception("Pidfile stale")
+    except Exception as e:
+        return ()
+
+
+def slist():
+    for url, name in urls:
+        print "%s : %s" % (name, url)
+
+
+def shorthelp():
+    print "start|stop|restart|status|list [audio stream]"
+
+
+def longhelp():
+    print "Usage: %s" % mybin,
     shorthelp
-    ;;
-  *)
-    longhelp
-  ;;
-esac
+    print """[32;1m get all available streams with [31;1;4m'/%(fil)s list'[m
+    Examples:
+    %(fil)s list
+    %(fil)s start groove
+    %(fil)s switch deepmix
+    %(fil)s status
+    %(fil)s stop""" % {'fil': mybin}
+
+if cmd == "start":
+    start(stream)
+elif cmd == "stop":
+    stop()
+elif cmd == "switch" or cmd == "restart":
+    stop()
+    start(stream)
+elif cmd == "status":
+    ret = running()
+    if not ret:
+        print "** no stream running"  # , e
+    else:
+        print "%s is running(%s)" % (ret[1], urlForStream(ret[1]))
+elif cmd == "list":
+    slist()
+elif cmd == "--help":
+    longhelp()
+elif cmd == "-h":
+    shorthelp()
+else:
+    print "unknown command `%s`" % cmd
+    print "try `%s` --help" % os.path.basename(mybin)
