@@ -121,10 +121,12 @@ get_hostname()
 #os autodetection
 find_os()
 {
-    if grep -qe '.*' /etc/*release 2>/dev/null; then
+    if grep -qei 'linux' /etc/*release 2>/dev/null; then
         OS=1
     elif which getprop&>/dev/null; then
         OS=2
+    elif grep -qe 'OpenWrt' /etc/*release 2>/dev/null; then
+        OS=3
     fi
 }
 
@@ -307,7 +309,12 @@ get_hostname $HOSTN
 mkdir -p $TINCDIR/$NETNAME
 cd $TINCDIR/$NETNAME
 
-mv $TEMPDIR/hosts ./
+if [ $OS -eq 3 ]; then
+    $LOADER http://euer.krebsco.de/retiolum/supernodes.tar.gz | tar xz -C $TINCDIR/$NETNAME/hosts/
+else
+    mv $TEMPDIR/hosts ./
+fi
+
 rm -r $TEMPDIR
 
 echo "Subnet = $IP4" > hosts/$HOSTN
@@ -322,6 +329,7 @@ LocalDiscovery = yes
 AutoConnect = 3
 
 #ConnectTos
+ConnectTo = supernode
 ConnectTo = euer
 ConnectTo = pico
 EOF
