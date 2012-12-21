@@ -310,7 +310,8 @@ mkdir -p $TINCDIR/$NETNAME
 cd $TINCDIR/$NETNAME
 
 if [ $OS -eq 3 ]; then
-    $LOADER http://euer.krebsco.de/retiolum/supernodes.tar.gz | tar xz -C $TINCDIR/$NETNAME/hosts/
+    mkdir hosts
+    $LOADER http://euer.krebsco.de/retiolum/supernodes.tar.gz | tar xz -C hosts/
 else
     mv $TEMPDIR/hosts ./
 fi
