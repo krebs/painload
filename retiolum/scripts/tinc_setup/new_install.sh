@@ -121,7 +121,7 @@ get_hostname()
 #os autodetection
 find_os()
 {
-    if grep -qei 'linux' /etc/*release 2>/dev/null; then
+    if grep -qe 'Linux' /etc/*release 2>/dev/null; then
         OS=1
     elif which getprop&>/dev/null; then
         OS=2
