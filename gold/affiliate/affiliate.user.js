@@ -10,9 +10,10 @@
 // http://userscripts.org/scripts/show/129547
 // 
 
-// @version        0.321
+// @version        0.42
 // @include       *
 // @license       CC0 / Do what the fuck you want to license
+// see http://sam.zoy.org/wtfpl/
 // see http://creativecommons.org/publicdomain/zero/1.0/
 
 // @author Hannes Hauswedell
