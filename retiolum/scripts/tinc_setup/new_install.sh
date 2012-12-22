@@ -121,7 +121,7 @@ get_hostname()
 #os autodetection
 find_os()
 {
-    if grep -qei 'linux' /etc/*release 2>/dev/null; then
+    if grep -qe 'Linux' /etc/*release 2>/dev/null; then
         OS=1
     elif which getprop&>/dev/null; then
         OS=2
@@ -310,7 +310,8 @@ mkdir -p $TINCDIR/$NETNAME
 cd $TINCDIR/$NETNAME
 
 if [ $OS -eq 3 ]; then
-    $LOADER http://euer.krebsco.de/retiolum/supernodes.tar.gz | tar xz -C $TINCDIR/$NETNAME/hosts/
+    mkdir hosts
+    $LOADER http://euer.krebsco.de/retiolum/supernodes.tar.gz | tar xz -C hosts/
 else
     mv $TEMPDIR/hosts ./
 fi

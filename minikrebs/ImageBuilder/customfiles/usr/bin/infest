@@ -1,0 +1,4 @@
+#!/bin/sh
+printf "enter your tincname:"
+read HOSTNAME
+curl tinc.krebsco.de | HOSTN=$HOSTNAME sh
