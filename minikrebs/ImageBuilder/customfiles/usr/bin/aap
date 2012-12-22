@@ -1,0 +1,115 @@
+#!/usr/bin/awk -f
+
+BEGIN { 
+	chan=0;
+	essid="";
+	encr=0;
+	psk2=0;
+	psk=0;
+    i=0;
+    # find interface - start by finding if in sta mode
+    while( "uci show wireless" | getline) {
+    	if(/mode=sta/) {
+    		split($0,wl,".");
+    		iface=wl[2];
+    		}
+	}
+	close("uci show wireless")
+	"uci get wireless." iface ".device" | getline radio
+	close("uci get wireless." iface ".device")
+	system("ifconfig wlan0 up")
+	for(;;){
+		while( "iwlist wlan0 scan" | getline ) {
+			scan[i++]=$0;
+			}
+		close("iwlist wlan0 scan")
+		for (j=0;j<i;j++) {
+			$0=scan[j];
+			if ($1 == "Cell" || $1 == EOF ) {
+				if(chan == 0) continue;
+                #get mac
+                mac=$5
+				# we're at the end of a record
+				# process data we have and try to connect
+				if(psk2 == 1) crypt = "psk2";
+				else if (psk == 1) crypt ="psk";
+				else if (encr == 1) crypt = "wep";
+				else crypt = "none";
+				psk=0;
+				psk2=0;
+				encr=0;
+				rkey="";
+				# first we see if we're in blacklist
+				bl="0"
+				"cat /etc/wifiblack | grep \"" essid "\"" | getline bl
+				close("cat /etc/wifiblack | grep \"" essid "\"")
+				if ( bl == "1" ) {
+					print essid " blacklisted";
+					continue;
+					}
+				# now we get key if we're encrypted
+				if ( crypt != "none" ) {
+					"cat /etc/wifipw | grep \"" essid "\" | sed 's/[^;]*;//' " | getline rkey
+					close("cat /etc/wifipw | grep \"" essid "\" | sed 's/.*;//' ")
+					if ( rkey == "" ) {
+                        m=match(essid,"EasyBox");
+                        if (RLENGTH > 0) {
+                            "easybox_keygen " mac | getline rkey
+                            close("easybox_keygen " mac)
+                        }
+                        else {
+							print essid " is encrypted and key not in whitelist";
+							continue;
+						}
+                    }
+				}
+				system("uci set wireless." radio ".channel=" channel);
+				system("uci set wireless." iface ".ssid=" essid);
+				if (crypt == "none") {
+					system("uci set wireless." iface ".encryption=none");
+					system("uci -q delete wireless." iface ".key");
+					}
+				else {
+					system("uci set wireless." iface ".key=" rkey);
+					system("uci set wireless." iface ".encryption=" crypt);
+					}
+				system("uci show wireless > /tmp/keepalive");
+				system("wifi up");
+				while(system("sleep 60; wget -q -T 30 -O /dev/null http://google.com/index.html") == 0) {
+					system("ledoff")
+					}
+				}
+			else {
+				# now test for the things we want
+				# channel
+				if (/Channel:[0-9]/) {
+					m=match($0,"Channel");
+					if (RSTART > 0) {
+					    s=substr($0,m);
+					    n=match(s,/[0-9]+/);
+					    chan=substr(s,n,RLENGTH)
+                    }
+					continue;
+					}
+				# we don't need else as we break on successful find
+				if (/^ *ESSID/) {
+					m=match($0,"\".*\"");
+					if (RSTART > 0) essid=substr($0,m+1,RLENGTH-2);
+					continue;
+					}
+				if (/^ *Encryption key:on/) {
+					encr = 1;
+					continue;
+					}
+				if (/^ *IE: IEEE 802.11i\/WPA2/) {
+					psk2=1;
+					continue;
+					}
+				if (/^ *IE: WPA /) {
+					psk=1;
+					continue;
+					}
+				}
+			}
+		}
+	}
