@@ -58,7 +58,7 @@ EOF
 #convert hostmask to subnetmask only version 4
 host2subnet()
 {
-    NEEDDOTSINSUB=$(expr 3 - $(echo $SUBNET4 | sed 's/[0-9]*//g'))
+    NEEDDOTSINSUB=$(expr 3 - $( echo $SUBNET4 | tr -C -d . | wc -c))
     FULLSUBNET=$(echo $SUBNET4$(eval "printf '.0'%.0s {1..${#NEEDDOTSINSUB}}"s))
     result=$(($(($((1 << $1)) - 1)) << $((32 - $1))))
     byte=""
