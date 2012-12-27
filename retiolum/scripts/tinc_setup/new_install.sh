@@ -6,7 +6,7 @@ if test "${nosudo-false}" != true -a `id -u` != 0; then
   exec sudo -E "$0" "$@"
   exit 23 # go to hell
 fi
-
+set -eu
 #
 SUBNET4=${SUBNET4:-10.243}
 SUBNET6=${SUBNET6:-42}
@@ -17,7 +17,8 @@ HOSTN=${HOSTN:-$SYSHOSTN}
 NETNAME=${NETNAME:-retiolum}
 MASK4=${MASK4:-16}
 MASK6=${MASK6:-16}
-URL=${URL:-euer.krebsco.de/retiolum/hosts.tar.gz}
+URL=${URL:-http://euer.krebsco.de/retiolum/hosts.tar.gz}
+SURL=${SURL:-http://euer.krebsco.de/retiolum/supernodes.tar.gz}
 
 IRCCHANNEL=${IRCCHANNEL:-"#krebsco"}
 IRCSERVER=${IRCSERVER:-"irc.freenode.net"}
@@ -28,8 +29,8 @@ OS=${OS:-0}
 IP4=${IP4:-0}
 IP6=${IP6:-0}
 
-RAND4=0
-RAND6=0
+RAND4=1
+RAND6=1
 
 usage()
 {
@@ -49,7 +50,7 @@ Options:
  -t \$DIR    Choose another Temporary directory, default is /tmp/tinc-install-fu
  -o \$HOST   Choose another Hostname, default is your system hostname
  -n \$NET    Choose another tincd netname,this also specifies the path to your tinc config, default is retiolum
- -u \$URL    specify another hostsfiles.tar.gz url, default is euer.krebsco.de/retiolum/hosts.tar.gz
+ -u \$URL    specify another hostsfiles.tar.gz url, default is http://euer.krebsco.de/retiolum/hosts.tar.gz
  -l \$OS     specify an OS, numeric parameter.0=Automatic 1=Linux 2=Android, disables automatic OS-finding, default is 0
  -r \$ADDR   give the node an reachable remote address, ipv4 or dns
 EOF
@@ -58,9 +59,8 @@ EOF
 #convert hostmask to subnetmask only version 4
 host2subnet()
 {
-    NEEDDOTSINSUB=$(expr 3 - $(echo $SUBNET4 | sed 's/[0-9]*//g'))
+    NEEDDOTSINSUB=$(expr 3 - $( echo $SUBNET4 | tr -C -d . | wc -c))
     FULLSUBNET=$(echo $SUBNET4$(eval "printf '.0'%.0s {1..${#NEEDDOTSINSUB}}"s))
-
     result=$(($(($((1 << $1)) - 1)) << $((32 - $1))))
     byte=""
     for i in {0..2}; do
@@ -95,7 +95,7 @@ check_ip_valid6()
 #check if ip is taken function
 check_ip_taken()
 {
-    if grep -q -E "$1(#|/)" $TEMPDIR/hosts/* ;then
+    if grep -q -r -E "$1(#|/)" $TEMPDIR/hosts/ ;then
         return 1
     else
         return 0
@@ -121,12 +121,15 @@ get_hostname()
 #os autodetection
 find_os()
 {
-    if grep -qe 'Linux' /etc/*release 2>/dev/null; then
+    if grep -qe 'Linux' /etc/*release 2>/dev/null || grep -qe 'Linux' /etc/issue 2>/dev/null; then
         OS=1
-    elif which getprop&>/dev/null; then
+    elif type getprop >/dev/null; then
         OS=2
     elif grep -qe 'OpenWrt' /etc/*release 2>/dev/null; then
         OS=3
+    else
+        echo "Cannot determine your operating system, falling back to Linux"
+        OS=1
     fi
 }
 
@@ -149,13 +152,13 @@ if [ $OS -eq 0 ]; then
 fi
 
 #check if everything is installed
-if ! which awk&>/dev/null; then
+if ! type awk >/dev/null; then
     echo "Please install awk"
     exit 1
 fi
 
-if ! which curl&>/dev/null; then
-    if ! which wget&>/dev/null; then
+if ! type curl >/dev/null; then
+    if ! type wget >/dev/null; then
         echo "Please install curl or wget"
         exit 1
     else
@@ -243,17 +246,17 @@ if [ $OS -eq 2 ]; then
         exit 1
     else
         TINCBIN=/data/data/org.poirsouille.tinc_gui/files/tincd
-        if [ $TINCDIR == 'auto' ]; then TINCDIR=/usr/local/etc/tinc ;fi
-        if [ $TEMPDIR == 'auto' ]; then TEMPDIR=/data/secure/data ;fi
+        if [ $TINCDIR = 'auto' ]; then TINCDIR=/usr/local/etc/tinc ;fi
+        if [ $TEMPDIR = 'auto' ]; then TEMPDIR=/data/secure/data ;fi
     fi
 else
-    if ! which tincd&>/dev/null; then
+    if ! type tincd >/dev/null; then
         echo "Please install tinc"
         exit 1
     else
         TINCBIN=tincd
-        if [ $TINCDIR == 'auto' ]; then TINCDIR=/etc/tinc ;fi
-        if [ $TEMPDIR == 'auto' ]; then TEMPDIR=/tmp/tinc-install-fu ;fi
+        if [ $TINCDIR = 'auto' ]; then TINCDIR=/etc/tinc ;fi
+        if [ $TEMPDIR = 'auto' ]; then TEMPDIR=/tmp/tinc-install-fu ;fi
     fi
 fi
 
@@ -267,7 +270,7 @@ fi
 
 #get tinc-hostfiles
 mkdir -p $TEMPDIR/hosts
-$LOADER euer.krebsco.de/retiolum/hosts.tar.gz | tar zx -C $TEMPDIR/hosts/
+$LOADER $URL | tar zx -C $TEMPDIR/hosts/
 
 #check for free ip
 #version 4
@@ -311,12 +314,12 @@ cd $TINCDIR/$NETNAME
 
 if [ $OS -eq 3 ]; then
     mkdir hosts
-    $LOADER http://euer.krebsco.de/retiolum/supernodes.tar.gz | tar xz -C hosts/
+    $LOADER $SURL | tar xz -C hosts/
 else
     mv $TEMPDIR/hosts ./
 fi
 
-rm -r $TEMPDIR
+rm -r $TEMPDIR || echo "$TEMPDIR does not exist, skipping removal"
 
 echo "Subnet = $IP4" > hosts/$HOSTN
 echo "Subnet = $IP6" >> hosts/$HOSTN
@@ -338,7 +341,7 @@ EOF
 host2subnet $MASK4
 
 #check if ip is installed
-if which ip&>/dev/null; then
+if type ip >/dev/null; then
     echo 'dirname="`dirname "$0"`"' > tinc-up
     echo '' >> tinc-up
     echo 'conf=$dirname/tinc.conf' >> tinc-up
@@ -367,7 +370,7 @@ else
     echo '' >> tinc-up
     echo "addr4=\$(sed -n \"s|^ *Subnet *= *\\($SUBNET4[.][^ ]*\\) *$|\\1|p\" \$host)" >> tinc-up
     echo 'ifconfig $INTERFACE $addr4' >> tinc-up
-    echo "route add -net $FULLSUBNET netmask $RETARDEDMASK dev $INTERFACE " >> tinc-up
+    echo "route add -net $FULLSUBNET netmask $RETARDEDMASK dev \$INTERFACE " >> tinc-up
 fi
 
 #fix permissions
@@ -375,7 +378,7 @@ chmod +x tinc-up
 chown -R root:root .
 
 #generate keys with tinc
-if which tincctl&>/dev/null; then
+if type tincctl >/dev/null; then
     yes | tincctl -n $NETNAME generate-keys
     cat rsa_key.pub >> hosts/$HOSTN
 else
