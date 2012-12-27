@@ -28,8 +28,8 @@ OS=${OS:-0}
 IP4=${IP4:-0}
 IP6=${IP6:-0}
 
-RAND4=0
-RAND6=0
+RAND4=1
+RAND6=1
 
 usage()
 {
@@ -94,7 +94,7 @@ check_ip_valid6()
 #check if ip is taken function
 check_ip_taken()
 {
-    if grep -q -E "$1(#|/)" $TEMPDIR/hosts/* ;then
+    if grep -q -r -E "$1(#|/)" $TEMPDIR/hosts/ ;then
         return 1
     else
         return 0
@@ -366,7 +366,7 @@ else
     echo '' >> tinc-up
     echo "addr4=\$(sed -n \"s|^ *Subnet *= *\\($SUBNET4[.][^ ]*\\) *$|\\1|p\" \$host)" >> tinc-up
     echo 'ifconfig $INTERFACE $addr4' >> tinc-up
-    echo "route add -net $FULLSUBNET netmask $RETARDEDMASK dev $INTERFACE " >> tinc-up
+    echo "route add -net $FULLSUBNET netmask $RETARDEDMASK dev \$INTERFACE " >> tinc-up
 fi
 
 #fix permissions
