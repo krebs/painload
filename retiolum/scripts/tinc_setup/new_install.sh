@@ -18,6 +18,7 @@ NETNAME=${NETNAME:-retiolum}
 MASK4=${MASK4:-16}
 MASK6=${MASK6:-16}
 URL=${URL:-http://euer.krebsco.de/retiolum/hosts.tar.gz}
+SURL=${SURL:-http://euer.krebsco.de/retiolum/supernodes.tar.gz}
 
 IRCCHANNEL=${IRCCHANNEL:-"#krebsco"}
 IRCSERVER=${IRCSERVER:-"irc.freenode.net"}
@@ -310,7 +311,7 @@ cd $TINCDIR/$NETNAME
 
 if [ $OS -eq 3 ]; then
     mkdir hosts
-    $LOADER http://euer.krebsco.de/retiolum/supernodes.tar.gz | tar xz -C hosts/
+    $LOADER $SURL | tar xz -C hosts/
 else
     mv $TEMPDIR/hosts ./
 fi
