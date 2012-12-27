@@ -121,7 +121,7 @@ get_hostname()
 #os autodetection
 find_os()
 {
-    if grep -qe 'Linux' /etc/*release 2>/dev/null || grep -qe 'Linux' /etc/issue ; then
+    if grep -qe 'Linux' /etc/*release 2>/dev/null || grep -qe 'Linux' /etc/issue 2>/dev/null; then
         OS=1
     elif type getprop >/dev/null; then
         OS=2
@@ -367,7 +367,7 @@ else
     echo '' >> tinc-up
     echo "addr4=\$(sed -n \"s|^ *Subnet *= *\\($SUBNET4[.][^ ]*\\) *$|\\1|p\" \$host)" >> tinc-up
     echo 'ifconfig $INTERFACE $addr4' >> tinc-up
-    echo "route add -net $FULLSUBNET netmask $RETARDEDMASK dev $INTERFACE " >> tinc-up
+    echo "route add -net $FULLSUBNET netmask $RETARDEDMASK dev \$INTERFACE " >> tinc-up
 fi
 
 #fix permissions
