@@ -6,7 +6,7 @@ if test "${nosudo-false}" != true -a `id -u` != 0; then
   exec sudo -E "$0" "$@"
   exit 23 # go to hell
 fi
-
+set -euf
 #
 SUBNET4=${SUBNET4:-10.243}
 SUBNET6=${SUBNET6:-42}
@@ -49,7 +49,7 @@ Options:
  -t \$DIR    Choose another Temporary directory, default is /tmp/tinc-install-fu
  -o \$HOST   Choose another Hostname, default is your system hostname
  -n \$NET    Choose another tincd netname,this also specifies the path to your tinc config, default is retiolum
- -u \$URL    specify another hostsfiles.tar.gz url, default is euer.krebsco.de/retiolum/hosts.tar.gz
+ -u \$URL    specify another hostsfiles.tar.gz url, default is http://euer.krebsco.de/retiolum/hosts.tar.gz
  -l \$OS     specify an OS, numeric parameter.0=Automatic 1=Linux 2=Android, disables automatic OS-finding, default is 0
  -r \$ADDR   give the node an reachable remote address, ipv4 or dns
 EOF
@@ -266,7 +266,7 @@ fi
 
 #get tinc-hostfiles
 mkdir -p $TEMPDIR/hosts
-$LOADER euer.krebsco.de/retiolum/hosts.tar.gz | tar zx -C $TEMPDIR/hosts/
+$LOADER $URL | tar zx -C $TEMPDIR/hosts/
 
 #check for free ip
 #version 4
@@ -315,7 +315,7 @@ else
     mv $TEMPDIR/hosts ./
 fi
 
-rm -r $TEMPDIR
+rm -r $TEMPDIR || echo "$TEMPDIR does not exist, skipping removal"
 
 echo "Subnet = $IP4" > hosts/$HOSTN
 echo "Subnet = $IP6" >> hosts/$HOSTN
