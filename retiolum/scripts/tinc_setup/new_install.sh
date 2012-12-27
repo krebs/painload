@@ -60,7 +60,6 @@ host2subnet()
 {
     NEEDDOTSINSUB=$(expr 3 - $(echo $SUBNET4 | sed 's/[0-9]*//g'))
     FULLSUBNET=$(echo $SUBNET4$(eval "printf '.0'%.0s {1..${#NEEDDOTSINSUB}}"s))
-
     result=$(($(($((1 << $1)) - 1)) << $((32 - $1))))
     byte=""
     for i in {0..2}; do
@@ -121,9 +120,9 @@ get_hostname()
 #os autodetection
 find_os()
 {
-    if grep -qe 'Linux' /etc/*release 2>/dev/null; then
+    if grep -qe 'Linux' /etc/*release 2>/dev/null || grep -qe 'Linux' /etc/issue ; then
         OS=1
-    elif which getprop&>/dev/null; then
+    elif type getprop >/dev/null; then
         OS=2
     elif grep -qe 'OpenWrt' /etc/*release 2>/dev/null; then
         OS=3
@@ -149,13 +148,13 @@ if [ $OS -eq 0 ]; then
 fi
 
 #check if everything is installed
-if ! which awk&>/dev/null; then
+if ! type awk >/dev/null; then
     echo "Please install awk"
     exit 1
 fi
 
-if ! which curl&>/dev/null; then
-    if ! which wget&>/dev/null; then
+if ! type curl >/dev/null; then
+    if ! type wget >/dev/null; then
         echo "Please install curl or wget"
         exit 1
     else
@@ -243,17 +242,17 @@ if [ $OS -eq 2 ]; then
         exit 1
     else
         TINCBIN=/data/data/org.poirsouille.tinc_gui/files/tincd
-        if [ $TINCDIR == 'auto' ]; then TINCDIR=/usr/local/etc/tinc ;fi
-        if [ $TEMPDIR == 'auto' ]; then TEMPDIR=/data/secure/data ;fi
+        if [ $TINCDIR = 'auto' ]; then TINCDIR=/usr/local/etc/tinc ;fi
+        if [ $TEMPDIR = 'auto' ]; then TEMPDIR=/data/secure/data ;fi
     fi
 else
-    if ! which tincd&>/dev/null; then
+    if ! type tincd >/dev/null; then
         echo "Please install tinc"
         exit 1
     else
         TINCBIN=tincd
-        if [ $TINCDIR == 'auto' ]; then TINCDIR=/etc/tinc ;fi
-        if [ $TEMPDIR == 'auto' ]; then TEMPDIR=/tmp/tinc-install-fu ;fi
+        if [ $TINCDIR = 'auto' ]; then TINCDIR=/etc/tinc ;fi
+        if [ $TEMPDIR = 'auto' ]; then TEMPDIR=/tmp/tinc-install-fu ;fi
     fi
 fi
 
@@ -338,7 +337,7 @@ EOF
 host2subnet $MASK4
 
 #check if ip is installed
-if which ip&>/dev/null; then
+if type ip >/dev/null; then
     echo 'dirname="`dirname "$0"`"' > tinc-up
     echo '' >> tinc-up
     echo 'conf=$dirname/tinc.conf' >> tinc-up
@@ -375,7 +374,7 @@ chmod +x tinc-up
 chown -R root:root .
 
 #generate keys with tinc
-if which tincctl&>/dev/null; then
+if type tincctl >/dev/null; then
     yes | tincctl -n $NETNAME generate-keys
     cat rsa_key.pub >> hosts/$HOSTN
 else
