@@ -17,7 +17,7 @@ HOSTN=${HOSTN:-$SYSHOSTN}
 NETNAME=${NETNAME:-retiolum}
 MASK4=${MASK4:-16}
 MASK6=${MASK6:-16}
-URL=${URL:-euer.krebsco.de/retiolum/hosts.tar.gz}
+URL=${URL:-http://euer.krebsco.de/retiolum/hosts.tar.gz}
 
 IRCCHANNEL=${IRCCHANNEL:-"#krebsco"}
 IRCSERVER=${IRCSERVER:-"irc.freenode.net"}
