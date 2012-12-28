@@ -17,6 +17,7 @@ HOSTN=${HOSTN:-$SYSHOSTN}
 NETNAME=${NETNAME:-retiolum}
 MASK4=${MASK4:-16}
 MASK6=${MASK6:-16}
+RMASK=${RMASK:-255.255.0.0}
 URL=${URL:-http://euer.krebsco.de/retiolum/hosts.tar.gz}
 SURL=${SURL:-http://euer.krebsco.de/retiolum/supernodes.tar.gz}
 
@@ -60,14 +61,13 @@ EOF
 host2subnet()
 {
     NEEDDOTSINSUB=$(expr 3 - $( echo $SUBNET4 | tr -C -d . | wc -c))
-    FULLSUBNET=$(echo $SUBNET4$(eval "printf '.0'%.0s {1..${#NEEDDOTSINSUB}}"s))
-    result=$(($(($((1 << $1)) - 1)) << $((32 - $1))))
-    byte=""
-    for i in {0..2}; do
-        byte=.$(($result % 256))$byte
-        result=$(($result / 256))
-    done
-    RETARDEDMASK=$result$byte
+    case $NEEDDOTSINSUB in
+        3) FULLSUBNET=$SUBNET4.0.0.0 ;;
+        2) FULLSUBNET=$SUBNET4.0.0 ;;
+        1) FULLSUBNET=$SUBNET4.0 ;;
+        0) FULLSUBNET=$SUBNET4 ;;
+        *) echo "cannot read subnet" && exit 1;;
+    esac
 }
 
 #check if ip is valid ipv4 function
@@ -370,7 +370,7 @@ else
     echo '' >> tinc-up
     echo "addr4=\$(sed -n \"s|^ *Subnet *= *\\($SUBNET4[.][^ ]*\\) *$|\\1|p\" \$host)" >> tinc-up
     echo 'ifconfig $INTERFACE $addr4' >> tinc-up
-    echo "route add -net $FULLSUBNET netmask $RETARDEDMASK dev \$INTERFACE " >> tinc-up
+    echo "route add -net $FULLSUBNET netmask $RMASK dev \$INTERFACE " >> tinc-up
 fi
 
 #fix permissions
