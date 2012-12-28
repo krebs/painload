@@ -6,7 +6,7 @@ if test "${nosudo-false}" != true -a `id -u` != 0; then
   exec sudo -E "$0" "$@"
   exit 23 # go to hell
 fi
-set -eu
+set -euf
 #
 SUBNET4=${SUBNET4:-10.243}
 SUBNET6=${SUBNET6:-42}
@@ -125,7 +125,7 @@ find_os()
         OS=1
     elif type getprop >/dev/null; then
         OS=2
-    elif grep -qe 'OpenWrt' /etc/*release 2>/dev/null; then
+    elif test -e /etc/openwrt_release; then
         OS=3
     else
         echo "Cannot determine your operating system, falling back to Linux"
