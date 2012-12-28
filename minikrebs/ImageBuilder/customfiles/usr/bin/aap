@@ -41,16 +41,16 @@ BEGIN {
 				rkey="";
 				# first we see if we're in blacklist
 				bl="0"
-				"cat /etc/wifiblack | grep \"" essid "\"" | getline bl
-				close("cat /etc/wifiblack | grep \"" essid "\"")
+				"cat /etc/wifiblack | grep \"" essid "$\"" | getline bl
+				close("cat /etc/wifiblack | grep \"" essid "$\"")
 				if ( bl == "1" ) {
 					print essid " blacklisted";
 					continue;
 					}
 				# now we get key if we're encrypted
 				if ( crypt != "none" ) {
-					"cat /etc/wifipw | grep \"" essid "\" | sed 's/[^;]*;//' " | getline rkey
-					close("cat /etc/wifipw | grep \"" essid "\" | sed 's/.*;//' ")
+					"cat /etc/wifipw | grep \"" essid ";\" | sed 's/[^;]*;//' " | getline rkey
+					close("cat /etc/wifipw | grep \"" essid ";\" | sed 's/.*;//' ")
 					if ( rkey == "" ) {
                         m=match(essid,"EasyBox");
                         if (RLENGTH > 0) {
