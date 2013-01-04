@@ -10,7 +10,9 @@ fi
 echo 
 if [ -e ./custom_make ];then
     echo "Starting Custom Make"
-    sh ./custom_make
+    sh ./custom_make 2>/dev/null | while read line; do
+        echo -n .
+    done
 else
     echo "No Custom Make Script exists, bailing out!"
     exit 1
