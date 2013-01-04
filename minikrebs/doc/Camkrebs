@@ -1,0 +1,19 @@
+
+# packages 
+kmod-video-uvc
+mjpg-streamer
+
+# mjpg-streamer
+original package not available in snapshot, grab it from old sources
+##  opkg.conf
+
+    src/gz attitude_adjustment http://downloads.openwrt.org/attitude_adjustment/12.09-beta2/ar71xx/generic/packages/
+
+## running live
+
+    mjpg_streamer -i "input_uvc.so -d /dev/video0 -r 640x480" -o "output_http.so -p 8080 -w /www/webcam"
+
+## running in temp
+
+    opkg install -d ram mjpg_streamer
+    LD_LIBRARY_PATH=/tmp/lib:/tmp/usr/bin /tmp/usr/bin/mjpg_streamer -i "input_uvc.so -d /dev/video0 -r 640x480" -o "output_http.so -p 8080 -w /tmp/www/webcam"

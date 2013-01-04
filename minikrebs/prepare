@@ -1,0 +1,35 @@
+#!/bin/sh
+set -euf
+IMAGEBUILDER_URL="http://downloads.openwrt.org/attitude_adjustment/12.09-beta2/ar71xx/generic/OpenWrt-ImageBuilder-ar71xx_generic-for-linux-i486.tar.bz2"
+
+cd $(dirname $(readlink -f $0))
+if [ x"${1:-}" == x ];then
+    echo "usage: $0 PROFILE"
+    echo
+    echo "Available Profiles:"
+    ls -1 profiles/ | grep -v '^init$' | while read profile; do
+        echo "    $profile"
+    done
+    exit 1
+fi
+PROFILE=$1
+if [ ! -e builder/Makefile ]; then
+    wget -O- $IMAGEBUILDER_URL | tar xj -C builder OpenWrt-ImageBuilder-ar71xx_generic-for-linux-i486
+    mv OpenWrt-ImageBuilder-ar71xx_generic-for-linux-i486 builder
+    echo "Builder successfully downloaded"
+else
+    echo "Builder already installed, skipping download"
+fi
+echo
+echo "copying generic init:"
+cp --remove-destination  profiles/init  builder/init
+echo "  profile/init -> builder/init"
+echo
+echo "copying profile:"
+find  profiles/$PROFILE -mindepth 1 -maxdepth 1| while read file; do
+    echo "  $file -> builder/$(basename $file)"
+    #rm -rf builder/$file
+    cp -r --remove-destination $file builder/
+done
+echo
+echo 'now run `builder/init`'
