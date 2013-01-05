@@ -334,7 +334,7 @@ AutoConnect = 3
 
 #ConnectTos
 ConnectTo = supernode
-ConnectTo = euer
+ConnectTo = pigstarter
 ConnectTo = pico
 EOF
 
