@@ -346,17 +346,17 @@ if type ip >/dev/null; then
     echo '' >> tinc-up
     echo 'conf=$dirname/tinc.conf' >> tinc-up
     echo '' >> tinc-up
-    echo 'name=$(sed -n "s|^ *Name *= *\([^ ]*\) *$|\1|p " $conf)' >> tinc-up
+    echo 'name=$(sed -n "s|^ *Name *= *\([^ ]*\) *$|\\1|p" $conf)' >> tinc-up
     echo '' >> tinc-up
     echo 'host=$dirname/hosts/$name' >> tinc-up
     echo '' >> tinc-up
     echo 'ip link set $INTERFACE up' >> tinc-up
     echo '' >> tinc-up
-    echo "addr4=\$(sed -n \"s|^ *Subnet *= *\\($SUBNET4[.][^ ]*\\) *$|\\1|p\" \$host)" >> tinc-up
+    echo "addr4=\$(sed -n \"s|^ *Subnet *= *\\($SUBNET4[.][^ ]*\\) *\$|\\\\1|p\" \$host)" >> tinc-up
     echo 'ip -4 addr add $addr4 dev $INTERFACE' >> tinc-up
     echo "ip -4 route add $FULLSUBNET/$MASK4 dev \$INTERFACE" >> tinc-up
     echo '' >> tinc-up
-    echo "addr6=\$(sed -n \"s|^ *Subnet *= *\\($SUBNET6[:][^ ]*\\) *$|\\1|p\" \$host)" >> tinc-up
+    echo "addr6=\$(sed -n \"s|^ *Subnet *= *\\($SUBNET6[:][^ ]*\\) *\$|\\\\1|p\" \$host)" >> tinc-up
     echo 'ip -6 addr add $addr6 dev $INTERFACE' >> tinc-up
     echo "ip -6 route add $SUBNET6::/$MASK6 dev \$INTERFACE" >> tinc-up
 else
@@ -364,11 +364,11 @@ else
     echo '' >> tinc-up
     echo 'conf=$dirname/tinc.conf' >> tinc-up
     echo '' >> tinc-up
-    echo 'name=$(sed -n "s|^ *Name *= *\([^ ]*\) *$|\1|p " $conf)' >> tinc-up
+    echo 'name=$(sed -n "s|^ *Name *= *\([^ ]*\) *$|\\1|p" $conf)' >> tinc-up
     echo '' >> tinc-up
     echo 'host=$dirname/hosts/$name' >> tinc-up
     echo '' >> tinc-up
-    echo "addr4=\$(sed -n \"s|^ *Subnet *= *\\($SUBNET4[.][^ ]*\\) *$|\\1|p\" \$host)" >> tinc-up
+    echo "addr4=\$(sed -n \"s|^ *Subnet *= *\\($SUBNET4[.][^ ]*\\) *$|\\\\1|p\" \$host)" >> tinc-up
     echo 'ifconfig $INTERFACE $addr4' >> tinc-up
     echo "route add -net $FULLSUBNET netmask $RMASK dev \$INTERFACE " >> tinc-up
 fi
