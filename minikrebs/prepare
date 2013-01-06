@@ -7,15 +7,15 @@ if [ x"${1:-}" == x ];then
     echo "usage: $0 PROFILE"
     echo
     echo "Available Profiles:"
-    ls -1 profiles/ | grep -v '^init$' | while read profile; do
+    ls -1 profiles/ |grep -v '^README' | grep -v '^init$' | while read profile; do
         echo "    $profile"
     done
     exit 1
 fi
 PROFILE=$1
 if [ ! -e builder/Makefile ]; then
-    wget -O- $IMAGEBUILDER_URL | tar xj -C builder OpenWrt-ImageBuilder-ar71xx_generic-for-linux-i486
-    mv OpenWrt-ImageBuilder-ar71xx_generic-for-linux-i486 builder
+    wget -O- $IMAGEBUILDER_URL | tar xj OpenWrt-ImageBuilder-ar71xx_generic-for-linux-i486
+    mv -f OpenWrt-ImageBuilder-ar71xx_generic-for-linux-i486 builder
     echo "Builder successfully downloaded"
 else
     echo "Builder already installed, skipping download"
@@ -28,8 +28,10 @@ echo
 echo "copying profile:"
 find  profiles/$PROFILE -mindepth 1 -maxdepth 1| while read file; do
     echo "  $file -> builder/$(basename $file)"
-    #rm -rf builder/$file
-    cp -r --remove-destination $file builder/
+    rm -rf builder/$(basename $file)
+    cp -r $file builder/
 done
+
 echo
+echo $PROFILE > builder/current_profile
 echo 'now run `builder/init`'

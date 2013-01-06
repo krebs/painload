@@ -1,0 +1,3 @@
+#!/bin/sh
+
+make image PROFILE=TLWR703 PACKAGES="tinc ip kmod-ipv6 radvd kmod-fs-ext4 wireless-tools kmod-usb-core kmod-usb2  kmod-video-gspca-stv06xx mjpg-streamer -kmod-ppp -kmod-pppoe -kmod-pppox -ppp -ppp-mod-pppoe -dnsmasq" FILES=customfiles/
