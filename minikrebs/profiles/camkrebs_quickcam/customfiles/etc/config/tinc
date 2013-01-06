@@ -1,0 +1,2 @@
+config tinc-net retiolum
+        option enabled 1
