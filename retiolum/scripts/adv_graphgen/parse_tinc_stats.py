@@ -171,11 +171,12 @@ def write_node(k,v):
   for addr in v.get('internal-ip',['¯\\\\(°_o)/¯']):
     node += "internal:"+addr+"\\l"
   node +="\""
-  if k in supernodes:
-    node += ",fillcolor=steelblue1"
+
   # warning if node only has one connection
-  elif v['num_conns'] == 1:
+  if v['num_conns'] == 1:
     node += ",fillcolor=red"
+  elif k in supernodes:
+    node += ",fillcolor=steelblue1"
   #node +=",group=\""+v['external-ip'].replace(".","")+"\""
   node += "]"
   print node
