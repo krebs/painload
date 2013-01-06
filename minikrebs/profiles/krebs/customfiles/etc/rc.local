@@ -1,0 +1,3 @@
+/usr/bin/genhostid
+[ ! -e /etc/tinc/retiolum ] && /usr/bin/autoinfest
+exit 0

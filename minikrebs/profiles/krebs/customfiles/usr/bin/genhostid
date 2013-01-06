@@ -1,0 +1,4 @@
+#!/bin/sh
+if [ ! -e /etc/hostid ];then
+    dd if=/dev/urandom bs=1 count=4 | hexdump -e '8 "%x"' > /etc/hostid
+fi
