@@ -3,9 +3,6 @@ config system
         option timezone UTC
 
 config 'led' 'lan_led' 
-    option 'name' 'LAN' 
+    option 'name' 'blue-led' 
     option 'sysfs' 'tp-link:blue:system' 
-    option 'trigger' 'netdev' 
-    option 'dev' 'eth0' 
-    option 'mode' 'link tx rx'
-
+    option 'trigger' 'default-on' 
