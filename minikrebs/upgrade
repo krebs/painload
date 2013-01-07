@@ -1,0 +1,31 @@
+#!/bin/sh
+OWN_ADDR=${OWN_ADDR:-192.168.0.1}
+PORT=8080
+IMAGE=${IMAGE:-openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-factory.bin}
+cd $(dirname $(readlink -f $0))
+if [ x"${1:-}" == x ];then
+    echo "usage: $0 ADDRESS"
+    echo 
+    echo "ENVIRONMENT:"
+    echo "    OWN_ADDR (currently $OWN_ADDR)"
+    echo "    IMAGE    (currently $IMAGE)"
+    echo "    PORT     (currently $PORT)"
+
+    exit 1
+fi
+
+IP=$1
+cd builder/bin/ar71xx/
+
+if [ -e "$IMAGE" ];then
+    python2 -m SimpleHTTPServer $PORT &
+    sleep 1
+    SERVER_PID=$!
+    ssh root@$IP "wget -O /tmp/firmware.bin http://${OWN_ADDR}:${PORT}/${IMAGE} \
+        && mtd write /tmp/firmware.bin firmware \
+        && reboot"
+    kill $SERVER_PID
+else
+    echo "cannot find ar71xx build, aborting"
+    exit 1
+fi
