@@ -12,7 +12,14 @@ SUBNET4=${SUBNET4:-10.243}
 SUBNET6=${SUBNET6:-42}
 TEMPDIR=${TEMPDIR:-auto}
 TINCDIR=${TINCDIR:-auto}
-SYSHOSTN=${HOSTNAME:-$(hostname)}
+
+if type hostname >/dev/null ;then SYSHOSTN=${HOSTNAME:-$(hostname)}
+elif type uci >/dev/null    ;then SYSHOSTN=$(uci get system.@system[0].hostname)
+elif [ -e /etc/hostname ]   ;then SYSHOSTN=$(cat /etc/hostname)
+else                              SYSHOSTN="unknown"
+fi
+
+#overwrite `found` hostname
 HOSTN=${HOSTN:-$SYSHOSTN}
 NETNAME=${NETNAME:-retiolum}
 MASK4=${MASK4:-16}

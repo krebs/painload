@@ -18,12 +18,12 @@ except Exception as e:
   sys.stderr.write("Cannot connect to graphite: %s\n" % str(e))
 
 supernodes= [ ]
-#supernodes= [ "kaah","supernode","euer","pa_sharepoint","oxberg" ]
 for supernode,addr in check_super():
   supernodes.append(supernode)
 """ TODO: Refactoring needed to pull the edges out of the node structures again,
 it should be easier to handle both structures"""
 DUMP_FILE = "/krebs/db/availability"
+
 def write_digraph(nodes):
   """
   writes the complete digraph in dot format
@@ -173,6 +173,9 @@ def write_node(k,v):
   node +="\""
   if k in supernodes:
     node += ",fillcolor=steelblue1"
+  # warning if node only has one connection
+  elif v['num_conns'] == 1:
+    node += ",fillcolor=red"
   #node +=",group=\""+v['external-ip'].replace(".","")+"\""
   node += "]"
   print node
