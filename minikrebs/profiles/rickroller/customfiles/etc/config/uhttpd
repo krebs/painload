@@ -11,16 +11,3 @@ config uhttpd main
     option network_timeout  30
     option tcp_keepalive    1
     option error_page   /index.html
-
-# Certificate defaults for px5g key generator
-config cert px5g
-
-    option days     730
-
-    option bits     1024
-
-    option country      DE
-    option state        shackspace
-    option location     shackspace
-
-    option commonname   krebs-rickroller

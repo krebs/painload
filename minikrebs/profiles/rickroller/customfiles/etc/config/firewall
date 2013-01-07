@@ -93,18 +93,20 @@ config rule
     option family       ipv6
     option target       ACCEPT
     
-# does not seem to work for some reason:    
-#config redirect
-#    option src      lan
-#    option proto        tcp
-#    option src_dport    80
-#    option dest_port    80
-
 config redirect
-    option src      lan
+    option src          lan
     option proto        tcp
     option src_dport    80
-    option src_ip           !192.168.23.1
+    option src_ip       !192.168.23.1
     option dest_port    80
+    option dest_ip      192.168.23.1
+    option target       DNAT
+
+config redirect
+    option src          lan
+    option proto        tcp
+    option src_dport    443 
+    option src_ip       !192.168.23.1
+    option dest_port    443
     option dest_ip      192.168.23.1
     option target       DNAT
