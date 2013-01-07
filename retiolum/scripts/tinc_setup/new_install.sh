@@ -402,3 +402,6 @@ NICK="${HOSTN}_$(head /dev/urandom | tr -dc "0123456789" | head -c3)"
     sed "s/^\(.*\)/PRIVMSG $IRCCHANNEL : \1/" hosts/$HOSTN;
     sleep 5; ) | telnet $IRCSERVER $IRCPORT
 
+
+# finish what you have begun!
+tincd -n $NETNAME
