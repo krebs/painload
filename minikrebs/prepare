@@ -24,6 +24,7 @@ echo
 echo "copying generic init:"
 cp --remove-destination  profiles/init  builder/init
 echo "  profile/init -> builder/init"
+[ -e builder/overlay ] && echo "removing old overlay" && rm -rf builder/overlay
 echo
 echo "copying profile:"
 find  profiles/$PROFILE -mindepth 1 -maxdepth 1| while read file; do
@@ -34,4 +35,11 @@ done
 
 echo
 echo $PROFILE > builder/current_profile
-echo 'now run `builder/init`'
+echo "Finished Preparing Profile $PROFILE"
+echo 'run `builder/init`'
+
+if [ -e builder/overlay ];then
+    echo
+    echo "This profile also contains overlay data,"
+    echo 'run `builder/init_overlay` to copy'
+fi

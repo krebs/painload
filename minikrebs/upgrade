@@ -22,8 +22,8 @@ if [ -e "$IMAGE" ];then
     sleep 1
     SERVER_PID=$!
     ssh root@$IP "wget -O /tmp/firmware.bin http://${OWN_ADDR}:${PORT}/${IMAGE} \
-        && mtd write /tmp/firmware.bin firmware \
-        && reboot"
+        && /sbin/mtd write /tmp/firmware.bin firmware \
+        && /sbin/reboot"
     kill $SERVER_PID
 else
     echo "cannot find ar71xx build, aborting"
