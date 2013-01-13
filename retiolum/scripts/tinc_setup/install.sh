@@ -63,8 +63,8 @@ fi
 cat>tinc.conf<<EOF
 Name = $myname
 ConnectTo = euer
-ConnectTo = oxberg
-ConnectTo = pa_sharepoint
+ConnectTo = albi10
+ConnectTo = pigstarter
 ConnectTo = supernode
 Device = /dev/net/tun
 EOF
