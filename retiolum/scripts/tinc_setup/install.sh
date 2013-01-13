@@ -45,7 +45,7 @@ then
   then
     printf 'select v4 subnet ip (1-255): '
     read v4num
-    until $MYBIN/check-free-retiolum-v4 $v4num; do
+    until $MYBIN/check-free-retiolum-v4 10.243.0.$v4num; do
       echo "your're an idiot!"
       printf 'select unused v4 subnet ip (1-255): '
       read v4num
