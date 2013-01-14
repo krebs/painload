@@ -1,0 +1,18 @@
+#!/bin/sh
+#LOGIN_HOST=heidi.shack
+LOGIN_HOST=heidi:5000
+while sleep 1;
+do
+    uid=$(nfc-list | grep UID | cut -d: -f 2 | sed 's/ //g')
+    if ! [ x"$uid" = x ];then
+        online=$(wget -O- http://$LOGIN_HOST/user/$uid/online 2>/dev/null)
+        if [ "$online" = "false" ];then
+            action="login"
+        else
+            action="logout"
+        fi
+        wget -O- http://$LOGIN_HOST/user/$uid/$action &>/dev/null
+        echo $uid $action
+        sleep 5
+    fi
+done
