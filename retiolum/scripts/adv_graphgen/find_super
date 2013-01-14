@@ -1,14 +1,25 @@
-#!/bin/sh
-cd /etc/tinc/retiolum/hosts
-ls -1  . | while read fname;
-do
-    for i in `sed -n 's/Address\s*=\s*\(.*\)/\1/p' $fname`;do
-        if nc -zw 5 $i 655 2>/dev/null; then
-            echo "$fname - $i reachable"
-        #else
-            #echo -n
-            #echo "$fname - $i unreachable"
+#! /bin/dash
+set -euf
+case "${1-all}" in
+  (all)
+    find /etc/tinc/retiolum/hosts -type f |
+    xargs -P 423 -n 1 "$0" one
+    ;;
+  (one)
+    hosts_file=$2
+    name=$(basename $hosts_file)
 
-        fi
-    done
-done
+    if grep -q Address $hosts_file; then
+      script="$(sed -n '
+        s/[[:space:]]*//g
+        s/^\(Address\|Port\)=\(.*\)/\1="${\1+$\1 }\2"/p
+      ' $hosts_file)"
+      eval "$script"
+      for address in ${Address-}; do
+        if nc -zw 2 $address 655 2>/dev/null; then
+          echo $name - $address reachable
+        fi &
+      done
+      wait
+    fi
+esac
