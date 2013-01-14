@@ -29,6 +29,9 @@ connect to krebs
         exit
     OWN_IP=192.168.1.3 ./upgrade 192.168.1.1
     {{reconnect power}}
+    {{password is minikrebs}}
 
+# when minikrebs is in dhcp-client mode
+    echo 'dhcp-range=192.168.0.50,192.168.0.150,12h' > /etc/dnsmasq.conf
     ifconfig eth0 192.168.0.1 && dnsmasq -d
-    
+

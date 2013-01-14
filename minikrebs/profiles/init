@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 cd $(dirname $(readlink -f $0))
 if [ ! -e Makefile ] ;then 

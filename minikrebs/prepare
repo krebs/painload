@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -euf
 IMAGEBUILDER_URL="http://downloads.openwrt.org/attitude_adjustment/12.09-beta2/ar71xx/generic/OpenWrt-ImageBuilder-ar71xx_generic-for-linux-i486.tar.bz2"
 
