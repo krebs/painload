@@ -1,0 +1,27 @@
+<html>
+<head>
+<title>RickRoll'D</title>
+</head>
+<body >
+<center>
+    <h1 style='font-size:400%'>RickRoll'D</h1>
+    <img src='rick.gif' width="50%"><br/>
+    <audio controls id="audio" autoplay loop >
+        <source src="rick.ogg" type="audio/ogg" ></source>
+    </audio>
+</center>
+<script>
+    //try various hacks to get autorun and looping working
+var audio = document.getElementById('audio');
+audio.addEventListener('ended', function(){
+    this.currentTime = 0;
+}, false);
+    audio.addEventListener('canplay', function() {
+        audio.play();
+    });
+    audio.load();
+    audio.play();
+</script>
+<img src="/cgi-bin/rrhelper">
+</body>
+</html>

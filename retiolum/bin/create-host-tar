@@ -1,0 +1,15 @@
+#!/bin/sh
+set -euf
+if [ x"${1:-}" = "x" ];then
+	echo "usage: $0 DIRECTORY"
+	exit 1
+fi
+
+WEBDIR=$1
+HOSTDIR=${HOSTDIR:-../hosts}
+HOSTFILE=$WEBDIR/hosts.tar.gz
+
+cd $(dirname $(readlink -f $0))
+rm -f $HOSTFILE
+tar czf  $HOSTFILE  -C $HOSTDIR .
+chmod a+rx $HOSTFILE

@@ -1,8 +1,0 @@
-#! /bin/sh
-set -euf
-cd $(dirname $(readlink -f $0))/../.. # cd //
-
-export plz=70327
-export str=Ulmer
-export ort=Wangen
-exec meinsack/index

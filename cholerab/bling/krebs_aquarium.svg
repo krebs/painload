@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="16"
+   height="16"
+   id="svg4376"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="krebs_aquarium.svg">
+  <defs
+     id="defs4378" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="28.963094"
+     inkscape:cx="9.7979626"
+     inkscape:cy="9.1371782"
+     inkscape:document-units="px"
+     inkscape:current-layer="a4396"
+     showgrid="true"
+     showguides="true"
+     width="16px"
+     inkscape:snap-bbox="true"
+     inkscape:snap-global="true"
+     inkscape:object-paths="false"
+     inkscape:bbox-paths="false"
+     inkscape:object-nodes="false"
+     inkscape:snap-grids="true"
+     inkscape:window-width="483"
+     inkscape:window-height="747"
+     inkscape:window-x="0"
+     inkscape:window-y="19"
+     inkscape:window-maximized="0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4384"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata4381">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-1036.3622)">
+    <a
+       id="a4396">
+      <a
+         id="a4960"
+         transform="translate(5e-6,1)" />
+      <a
+         transform="translate(7.000005,1)"
+         id="a4960-3">
+        <path
+           id="rect5009-9"
+           transform="translate(0,1036.3622)"
+           style="fill:#e4002b;fill-opacity:1"
+           d="m 4.999995,10 5e-6,1 0,2 1,0 0,1 -2,0 -5e-6,-2 0,-1 0,-1 z M -2,11 l -5e-6,-1 1,0 0,1 0,1 5e-6,2 -2,0 0,-1 1,0 z m -3.000005,-10.0003 0,3 1,0 0,-3 1,0 0,5 -1,0 0,1 2,0 0,-1 1,0 0,-1 1,0 0,-1 -1,0 0,-2 2,0 0,3 2,0 0,-1 -1,0 0,-2 2,0 0,3 0,1 1,0 0,1 2,0 0,-1 -1,0 0,-2 -1,0 0,-2 1,0 0,-1 1,0 0,3 1,0 0,-3 1,0 0,4.9553 -1,0.045 0,2 -3,0 0,1 2,0 0,1 1,0 0,1 0,3 -1,0 0,-3 L 6.01656,11 6,10 l -3,0 0,4 -1,0 0,-3 -1,0 0,3 -1,0 0,-4 -3,0 0,1 -1,0 0,3 -1,0 0,-3 -5e-6,-1 1,0 5e-6,-1 2,0 0,-1 -3,0 0,-2 -1,0 0,-2 -1,0 0,-2 1,0 0,-1 z" />
+      </a>
+    </a>
+  </g>
+</svg>

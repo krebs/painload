@@ -1,0 +1,10 @@
+#!/bin/sh 
+[ ! -e overlay/ ] && echo "profile data for external overlay does not exist, bailing out"
+   
+[ ! -e doc/overlay ] && echo "Profile demands the following partitioning of the overlay usb stick:" && cat doc/overlay
+
+if grep -q $PWD/mnt/overlay /etc/mtab;then
+     
+else
+    echo "please mount your overlay to $PWD/overlay"
+fi

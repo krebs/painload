@@ -1,0 +1,27 @@
+#!/bin/bash
+SATZ_LISTE=/krebs/ivan/satz-liste
+p="${noise_pitch-10}"
+v="${noise_lang-de}"
+k="${noise_capital-0}"
+a="${noise_amplitude-600}"
+g="${noise_gap-1}"
+RND_DELAY=3600
+#set -x
+function helpme ()
+{
+  cat << EOF 
+  $0 [-d]
+    -d   -- daemonize
+    -h   -- this help file
+EOF
+  exit 0
+}
+
+[ "${1:-}" = "-h" ] && helpme
+
+while true
+do
+  espeak -v $v -p $p -k $k -a $a -g $g "`shuf \"$SATZ_LISTE\" | tail -1`"
+  [ ! "${1:-}" = "-d" ] && exit 0   # break if not daemonized
+  sleep $((${RANDOM}%${RND_DELAY}))
+done

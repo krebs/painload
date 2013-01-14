@@ -15,7 +15,7 @@ try:
   sys.stderr.write("connecting to %s:%d"%(host,port))
   s.connect((host,port))
 except Exception as e:
-  print >>sys.stderr, "Cannot connect to graphite: " + str(e)
+  sys.stderr.write( "Cannot connect to graphite: " + str(e))
 """ TODO: Refactoring needed to pull the edges out of the node structures again,
 it should be easier to handle both structures"""
 DUMP_FILE = "/krebs/db/availability"
@@ -151,4 +151,4 @@ try:
   msg = '%s.graph.anon_build_time %d %d\r\n' % (g_path,((end-begin)*1000),end)
   s.send(msg)
   s.close()
-except Exception as e: print >>sys.stderr, e
+except Exception as e: pass

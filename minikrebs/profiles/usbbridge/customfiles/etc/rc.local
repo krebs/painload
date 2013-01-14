@@ -1,0 +1,3 @@
+insmod usbip-host
+usbip bind -b 1-1
+usbipd -D

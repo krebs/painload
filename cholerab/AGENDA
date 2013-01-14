@@ -1,9 +1,5 @@
 
 - krebs
-  - krebs.no.de/hosts.tar automatic via github POST hook
-    - same for supernode updates [vs. cron]
-    - krebscode/painload/supernode/foo 
-
   - overall
     - krebs/bin at the end of PATH
 

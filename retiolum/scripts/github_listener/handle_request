@@ -1,0 +1,23 @@
+#!/bin/sh
+# Possible Shell Vars
+#   WEBDIR 
+#   HOSTFOLDER
+set -euf
+if [ "x${2:-}" = x ];then
+	echo "usage: $0 HOSTDIRECTORY WEBDIRECTORY"
+	exit 1
+fi
+export HOSTDIR=${1:-../../hosts}
+WEBDIR=${2:-/var/www/euer.krebsco.de/retiolum/}
+echo "sorry for keeping you waiting, please be patient"
+
+cd $(dirname $(readlink -f $0))
+
+cd "$HOSTDIR"
+git pull origin master  >&2
+echo "First step done"
+cd - >&2
+../../bin/create-supernode-tar $WEBDIR
+echo "almost done..."
+../../bin/create-host-tar $WEBDIR
+echo "Thank you for your patience!"

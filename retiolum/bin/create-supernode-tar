@@ -1,0 +1,13 @@
+#!/bin/sh
+set -euf
+if [ x"${1:-}" = "x" ];then
+	echo "usage: $0 DIRECTORY"
+	exit 1
+fi
+HOSTDIR=${HOSTDIR:-../hosts}
+WEBDIR=$1
+HOSTFILE=$WEBDIR/supernodes.tar.gz
+cd $(dirname $(readlink -f $0))
+rm -f $HOSTFILE
+tar czf $HOSTFILE  -C $HOSTDIR `python ../scripts/adv_graphgen/find_super.py |cut -d\  -f1`
+chmod a+rx $HOSTFILE

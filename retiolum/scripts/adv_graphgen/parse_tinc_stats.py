@@ -2,6 +2,7 @@
 # -*- coding: utf8 -*-
 from BackwardsReader import BackwardsReader
 import sys,json
+from find_super import check_super
 try:
   from time import time
   import socket
@@ -16,10 +17,13 @@ try:
 except Exception as e:
   sys.stderr.write("Cannot connect to graphite: %s\n" % str(e))
 
-supernodes= [ "kaah","supernode","euer","pa_sharepoint","oxberg" ]
+supernodes= [ ]
+for supernode,addr in check_super():
+  supernodes.append(supernode)
 """ TODO: Refactoring needed to pull the edges out of the node structures again,
 it should be easier to handle both structures"""
 DUMP_FILE = "/krebs/db/availability"
+
 def write_digraph(nodes):
   """
   writes the complete digraph in dot format
@@ -53,8 +57,7 @@ def write_stat_node(nodes):
   try: 
     msg = '%s.num_nodes %d %d\r\n' %(g_path,num_nodes,begin)
     s.send(msg)
-    #print >>sys.stderr, msg
-  except Exception as e: print sys.stderr,e
+  except Exception as e: pass
   #except: pass
   for k,v in nodes.iteritems():
     num_conns+= len(v['to'])
@@ -82,8 +85,7 @@ def generate_stats(nodes):
 
       jlines.append(jline)
       lines_to_use -=1
-  except Exception,e:
-    sys.stderr.write(str(e))
+  except Exception,e: sys.stderr.write(str(e))
   for k,v in nodes.iteritems():
     conns = v.get('to',[])
     for c in conns: #sanitize weights
@@ -169,7 +171,11 @@ def write_node(k,v):
   for addr in v.get('internal-ip',['¯\\\\(°_o)/¯']):
     node += "internal:"+addr+"\\l"
   node +="\""
-  if k in supernodes:
+
+  # warning if node only has one connection
+  if v['num_conns'] == 1:
+    node += ",fillcolor=red"
+  elif k in supernodes:
     node += ",fillcolor=steelblue1"
   #node +=",group=\""+v['external-ip'].replace(".","")+"\""
   node += "]"

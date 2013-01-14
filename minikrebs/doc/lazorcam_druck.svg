@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448"
+   height="524.40942"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="lazorcam_druck.svg">
+  <defs
+     id="defs4">
+    <filter
+       id="filter3162"
+       inkscape:menu-tooltip="Draws a black outline around"
+       inkscape:menu="ABCs"
+       inkscape:label="Black outline"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3164"
+         stdDeviation="2"
+         in="SourceAlpha"
+         result="result0" />
+      <feComposite
+         id="feComposite3166"
+         in2="result0"
+         result="result3"
+         operator="arithmetic"
+         in="SourceGraphic"
+         k2="1"
+         k3="10" />
+      <feComposite
+         id="feComposite3168"
+         in2="result3"
+         k2="1"
+         operator="in"
+         in="result3"
+         result="result4" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="540.90757"
+     inkscape:cy="337.03064"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer2"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1364"
+     inkscape:window-height="747"
+     inkscape:window-x="0"
+     inkscape:window-y="19"
+     inkscape:window-maximized="0">
+    <sodipodi:guide
+       orientation="1,0"
+       position="58.571429,342.14286"
+       id="guide3033" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="169.70563,528.30978"
+       id="guide3069" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Layer">
+    <rect
+       style="fill:#f9f9f9;fill-opacity:1;filter:url(#filter3162)"
+       id="rect3116"
+       width="747.14288"
+       height="525.71429"
+       x="0.71427059"
+       y="0.12369233" />
+  </g>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-527.95273)">
+    <text
+       xml:space="preserve"
+       style="font-size:73.84999847px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="372.04724"
+       y="618.20862"
+       id="text2985"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan2987"
+         x="372.04724"
+         y="618.20862">LAZORCAM</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:25px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="58.57143"
+       y="710.2193"
+       id="text3001"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3003"
+         x="58.57143"
+         y="710.2193">Boot: </tspan><tspan
+         sodipodi:role="line"
+         x="58.57143"
+         y="736.48553"
+         id="tspan3011"
+         style="font-size:20px">- Lazorcam hat Stom wenn die blaue LED leuchtet</tspan><tspan
+         sodipodi:role="line"
+         x="58.57143"
+         y="761.48553"
+         id="tspan3009"
+         style="font-size:20px">- Wenn die LED vom Zustand &quot;Blinkend&quot; in den</tspan><tspan
+         sodipodi:role="line"
+         x="58.57143"
+         y="786.48553"
+         id="tspan3017"
+         style="font-size:20px">  Zustand &quot;durchgängig Leuchtend&quot; gewechselt ist,</tspan><tspan
+         sodipodi:role="line"
+         x="58.57143"
+         y="811.48553"
+         id="tspan3019"
+         style="font-size:20px">  ist der Bootvorgang abgeschlossen        </tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:25px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="372.37073"
+       y="649.85162"
+       id="text3005"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3007"
+         x="372.37073"
+         y="649.85162">Schaue dem Lazor beim Arbeiten zu</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:25px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="76.428574"
+       y="352.98083"
+       id="text3021"
+       sodipodi:linespacing="125%"
+       transform="translate(0,527.95273)"><tspan
+         sodipodi:role="line"
+         id="tspan3023"></tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:25px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="58.57143"
+       y="889.7276"
+       id="text3035"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="58.57143"
+         y="889.7276"
+         id="tspan3065">Erreichbarkeit:</tspan><tspan
+         sodipodi:role="line"
+         x="58.57143"
+         y="915.99384"
+         id="tspan3049"
+         style="font-size:20px">   HTTP: </tspan><tspan
+         sodipodi:role="line"
+         x="58.57143"
+         y="940.99384"
+         id="tspan3051"
+         style="font-size:20px" /><tspan
+         sodipodi:role="line"
+         x="58.57143"
+         y="965.99384"
+         id="tspan3039"
+         style="font-size:20px">   VLC: File -&gt; Open Network Stream -&gt;</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:20px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="169.70563"
+       y="915.99158"
+       id="text3071"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3073"
+         x="169.70563"
+         y="915.99158">http://lazorcam.shack/</tspan></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3075"
+       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Sans;font-style:normal;font-weight:normal;font-size:25px;line-height:125%;letter-spacing:0px;word-spacing:0px"><flowRegion
+         id="flowRegion3077"><rect
+           id="rect3079"
+           width="91.923882"
+           height="160.61426"
+           x="11.111678"
+           y="21.353456" /></flowRegion><flowPara
+         id="flowPara3081"></flowPara></flowRoot>    <text
+       xml:space="preserve"
+       style="font-size:20px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="169.70563"
+       y="989.73273"
+       id="text3087"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3089"
+         x="169.70563"
+         y="989.73273">http://lazorcam.shack/?action=stream</tspan><tspan
+         sodipodi:role="line"
+         x="169.70563"
+         y="1014.7327"
+         id="tspan3091" /></text>
+  </g>
+</svg>

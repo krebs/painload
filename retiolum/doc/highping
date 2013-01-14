@@ -1,0 +1,2 @@
+in der tinc.conf darf nicht zu einem Host connectet werden der einen DNS namen benutzt.
+wenn ein nicht erreichbarer DNS name versucht wird zu erreichen pausiert tinc jedesmal alle transfers bis der DNS-Request einen Timeout hat.

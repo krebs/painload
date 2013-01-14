@@ -1,0 +1,22 @@
+GITHUB_LISTENER
+===============
+
+The github listener is an application which listens for github post-receive 
+hook calls and runs a script each time currently the github listener is 
+used to create a tarball of all nodes in the retiolum darknet.  the current 
+tarball can be retrieved at http://euer.krebsco.de/retiolum/hosts.tar
+
+listen script
+=============
+
+the listen script is a quick hack which runs netcat in an e-loop together 
+with a "logger" command to signalise successful tarball generation.
+
+
+github_listener.conf
+===================
+the supervisor config file
+
+References
+==========
+also see //retiolum/doc/git_checkout_only_hosts
