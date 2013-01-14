@@ -1,25 +1,21 @@
 #! /bin/dash
-set -euf
-case "${1-all}" in
-  (all)
-    find /etc/tinc/retiolum/hosts -type f |
-    xargs -P 423 -n 1 "$0" one
-    ;;
-  (one)
-    hosts_file=$2
-    name=$(basename $hosts_file)
-
-    if grep -q Address $hosts_file; then
-      script="$(sed -n '
-        s/[[:space:]]*//g
-        s/^\(Address\|Port\)=\(.*\)/\1="${\1+$\1 }\2"/p
-      ' $hosts_file)"
-      eval "$script"
-      for address in ${Address-}; do
-        if nc -zw 2 $address 655 2>/dev/null; then
-          echo $name - $address reachable
-        fi &
-      done
-      wait
-    fi
-esac
+set -eu
+cd /etc/tinc/retiolum/hosts
+for name in `
+  grep '^[[:space:]]*Address[[:space:]]*=' * |
+    cut -d: -f1 | sort | uniq
+`; do
+  if eval "`sed -n '
+      s/[[:space:]]\+//g
+      s/^\(Address\|Port\)=\(.*\)/\1="\${\1+\$\1\n}\2"/p
+    ' $name`"; then
+    port=${Port-655}
+    for host in $Address; do
+      if nc -zw 2 $host $port 2>/dev/null; then
+        echo $name - $host reachable
+      fi &
+    done
+    wait
+  fi &
+done
+wait
