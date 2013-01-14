@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 OWN_ADDR=${OWN_ADDR:-192.168.0.1}
 PORT=8080
 IMAGE=${IMAGE:-openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-factory.bin}

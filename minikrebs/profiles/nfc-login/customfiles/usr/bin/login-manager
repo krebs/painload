@@ -1,18 +1,34 @@
 #!/bin/sh
+#!/bin/sh
 #LOGIN_HOST=heidi.shack
-LOGIN_HOST=heidi:5000
-while sleep 1;
-do
+#LOGIN_HOST=heidi:5000
+LOGIN_HOST=10.42.10.38:5000
+all_led(){
+        for i in 3g wlan lan wps;do
+                led $i $1
+        done
+}
+led(){
+        LED="$1"
+        ACTION="$2"
+        echo $ACTION > /sys/class/leds/tp-link:green:$LED/trigger
+}
+while sleep 1; do
     uid=$(nfc-list | grep UID | cut -d: -f 2 | sed 's/ //g')
     if ! [ x"$uid" = x ];then
         online=$(wget -O- http://$LOGIN_HOST/user/$uid/online 2>/dev/null)
-        if [ "$online" = "false" ];then
+        if [ x"$online" = "x" ];then
+            led lan timer
+        elif [ "$online" = "false" ];then
             action="login"
+            led 3g timer
         else
             action="logout"
+            led wlan timer
         fi
         wget -O- http://$LOGIN_HOST/user/$uid/$action &>/dev/null
         echo $uid $action
         sleep 5
+        all_led none
     fi
 done
