@@ -1,14 +1,21 @@
-#!/bin/sh
+#! /bin/dash
+set -eu
 cd /etc/tinc/retiolum/hosts
-ls -1  . | while read fname;
-do
-    for i in `sed -n 's/Address\s*=\s*\(.*\)/\1/p' $fname`;do
-        if nc -zw 5 $i 655 2>/dev/null; then
-            echo "$fname - $i reachable"
-        #else
-            #echo -n
-            #echo "$fname - $i unreachable"
-
-        fi
+for name in `
+  grep '^[[:space:]]*Address[[:space:]]*=' * |
+    cut -d: -f1 | sort | uniq
+`; do
+  if eval "`sed -n '
+      s/[[:space:]]\+//g
+      s/^\(Address\|Port\)=\(.*\)/\1="\${\1+\$\1\n}\2"/p
+    ' $name`"; then
+    port=${Port-655}
+    for host in $Address; do
+      if nc -zw 2 $host $port 2>/dev/null; then
+        echo "$name [('$host', $port)]"
+      fi &
     done
+    wait
+  fi &
 done
+wait
