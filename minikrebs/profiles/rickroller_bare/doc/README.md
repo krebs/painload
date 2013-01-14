@@ -19,3 +19,6 @@ The dnsmasq will resolve every domain request to the plugs ip-address
 26.3 --> 34   ; were no strangers to love, you know the rules and so do i
 26.3 --> 42.6 ; ... gotta make you understand
 ??   --> ??   ; refrain
+
+# Honorable Mentions
+http://www.finnie.org/2011/08/13/mobile-rickroll-appliance-6-0-released/

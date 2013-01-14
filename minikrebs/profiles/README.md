@@ -6,4 +6,4 @@ building.
 
 You may also want to include your own files into your image, adding file=customfile in your custom\_make.
 
-default password is `aidsballs`
+default password is `minikrebs`
