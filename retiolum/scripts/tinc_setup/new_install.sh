@@ -241,11 +241,6 @@ do
     esac
 done
 
-#check for OS
-if [ $OS -eq 0 ]; then
-    find_os
-fi
-
 #check if everything is installed
 if [ $OS -eq 2 ]; then
     if ! test -e /data/data/org.poirsouille.tinc_gui/files/tincd; then
