@@ -40,30 +40,6 @@ IP6=${IP6:-0}
 RAND4=1
 RAND6=1
 
-usage()
-{
-cat << EOF
-usage $0 options
-This script gets you into the KREBS Darknet
-all parameters are optional
-
-Options:
- -h          Show this message(haha)
- -4 \$ipv4   specify an ip(version 4), this also disables random ip mode, default is random
- -6 \$ipv6   specify an ip(version 6), this also disables random ip mode, default is random
- -s \$SUBNET Choose another Subnet(version4), default is 10.243
- -x \$SUBNET Choose another Subnet(version6), default is 42
- -m \$MASK   Choose another Subnet Mask(version4), default is 16
- -j \$MASK   Choose another Subnet Mask(version6), default is 16
- -t \$DIR    Choose another Temporary directory, default is /tmp/tinc-install-fu
- -o \$HOST   Choose another Hostname, default is your system hostname
- -n \$NET    Choose another tincd netname,this also specifies the path to your tinc config, default is retiolum
- -u \$URL    specify another hostsfiles.tar.gz url, default is http://euer.krebsco.de/retiolum/hosts.tar.gz
- -l \$OS     specify an OS, numeric parameter.0=Automatic 1=Linux 2=Android, disables automatic OS-finding, default is 0
- -r \$ADDR   give the node an reachable remote address, ipv4 or dns
-EOF
-}
-
 #convert hostmask to subnetmask only version 4
 host2subnet()
 {
@@ -179,67 +155,6 @@ if ! $(ping -c 1 -W 5 euer.krebsco.de 1>/dev/null) ;then
     echo "Cant reach euer, check if your internet is working"
     exit 1
 fi
-
-
-#parse options
-while getopts "h4:6:s:x:m:j:t:o:n:u:l:" OPTION
-do
-    case $OPTION in
-        h)
-            usage
-            exit 1
-            ;;
-        4)
-            IP4=$OPTARG
-            RAND4=0
-            if ! check_ip_valid4 $IP4; then echo "ipv4 is invalid" && exit 1; fi
-            ;;
-        6)
-            IP6=$OPTARG
-            RAND6=0
-            if ! check_ip_valid6 $IP6; then echo "ipv6 is invalid" && exit 1; fi
-            ;;
-        s)
-            SUBNET4=$OPTARG
-            ;;
-        x)
-            SUBNET6=$OPTARG
-            ;;
-        m)
-            MASK4=$OPTARG
-            ;;
-        j)
-            MASK6=$OPTARG
-            ;;
-        t)
-            TEMPDIR=$OPTARG
-            ;;
-        o)
-            HOSTN=$OPTARG
-            ;;
-        n)
-            NETNAME=$OPTARG
-            ;;
-        u)
-            URL=$OPTARG
-            if $(! curl -s --head $URL | head -n 1 | grep "HTTP/1.[01] [23].." > /dev/null); then
-                echo "url not reachable"
-                exit 1
-            fi
-            ;;
-        l)
-            OS=$OPTARG
-            if ! [ "$(echo $OS | awk -F"." ' $0 ~ /^[0-2]$/' )" == $OS ]; then
-                echo "invalid input for OS"
-                exit 1
-            fi
-            ;;
-        r)
-            ADDR=$OPTARG
-            ;;
-
-    esac
-done
 
 #check if everything is installed
 if [ $OS -eq 2 ]; then
