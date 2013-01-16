@@ -65,7 +65,7 @@ Name = $myname
 ConnectTo = euer
 ConnectTo = albi10
 ConnectTo = pigstarter
-ConnectTo = supernode
+ConnectTo = slowpoke
 Device = /dev/net/tun
 EOF
 

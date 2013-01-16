@@ -340,7 +340,7 @@ LocalDiscovery = yes
 AutoConnect = 3
 
 #ConnectTos
-ConnectTo = supernode
+ConnectTo = slowpoke
 ConnectTo = pigstarter
 ConnectTo = pico
 EOF
