@@ -165,7 +165,8 @@ if [ $OS -eq 2 ]; then
         TINCBIN=/data/data/org.poirsouille.tinc_gui/files/tincd
         if [ $TINCDIR = 'auto' ]; then TINCDIR="/usr/local/etc/tinc" ;fi
         if [ $TEMPDIR = 'auto' ]; then TEMPDIR="/storage/sdcard0/tinc-fu" ;fi
-	mount -o remount,rw /
+	    mount -o remount,rw /
+        DEV="/dev/tun"
     fi
 else
     if ! type tincd >/dev/null; then
@@ -175,6 +176,7 @@ else
         TINCBIN=tincd
         if [ $TINCDIR = 'auto' ]; then TINCDIR="/etc/tinc" ;fi
         if [ $TEMPDIR = 'auto' ]; then TEMPDIR="/tmp/tinc-install-fu" ;fi
+        DEV="/dev/net/tun"
     fi
 fi
 
@@ -244,7 +246,7 @@ echo "Subnet = $IP6" >> hosts/$HOSTN
 
 cat>tinc.conf<<EOF
 Name = $HOSTN
-Device = /dev/net/tun
+Device = $DEV
 
 #newer tinc features
 LocalDiscovery = yes
