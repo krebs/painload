@@ -163,8 +163,8 @@ if [ $OS -eq 2 ]; then
         exit 1
     else
         TINCBIN=/data/data/org.poirsouille.tinc_gui/files/tincd
-        if [ $TINCDIR = 'auto' ]; then TINCDIR=/usr/local/etc/tinc ;fi
-        if [ $TEMPDIR = 'auto' ]; then TEMPDIR=/data/secure/data ;fi
+        if [ $TINCDIR = 'auto' ]; then TINCDIR="/usr/local/etc/tinc" ;fi
+        if [ $TEMPDIR = 'auto' ]; then TEMPDIR="/data/secure/data" ;fi
     fi
 else
     if ! type tincd >/dev/null; then
@@ -172,8 +172,8 @@ else
         exit 1
     else
         TINCBIN=tincd
-        if [ $TINCDIR = 'auto' ]; then TINCDIR=/etc/tinc ;fi
-        if [ $TEMPDIR = 'auto' ]; then TEMPDIR=/tmp/tinc-install-fu ;fi
+        if [ $TINCDIR = 'auto' ]; then TINCDIR="/etc/tinc" ;fi
+        if [ $TEMPDIR = 'auto' ]; then TEMPDIR="/tmp/tinc-install-fu" ;fi
     fi
 fi
 
