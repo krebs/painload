@@ -163,8 +163,9 @@ if [ $OS -eq 2 ]; then
         exit 1
     else
         TINCBIN=/data/data/org.poirsouille.tinc_gui/files/tincd
-        if [ $TINCDIR = 'auto' ]; then TINCDIR="/etc/tinc" ;fi
-        if [ $TEMPDIR = 'auto' ]; then TEMPDIR="/data/secure/data" ;fi
+        if [ $TINCDIR = 'auto' ]; then TINCDIR="/usr/local/etc/tinc" ;fi
+        if [ $TEMPDIR = 'auto' ]; then TEMPDIR="/storage/sdcard0/tinc-fu" ;fi
+	mount -o remount,rw /
     fi
 else
     if ! type tincd >/dev/null; then
