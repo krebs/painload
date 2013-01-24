@@ -166,6 +166,7 @@ if [ $OS -eq 2 ]; then
         if [ $TINCDIR = 'auto' ]; then TINCDIR="/usr/local/etc/tinc" ;fi
         if [ $TEMPDIR = 'auto' ]; then TEMPDIR="/storage/sdcard0/tinc-fu" ;fi
         mount -o remount,rw /
+        mount -o remount,rw /system
         DEV="/dev/tun"
     fi
 else
@@ -305,6 +306,12 @@ else
     yes | $TINCBIN -n $NETNAME -K
 fi
 
+if [ $OS -eq 2 ]; then
+    mkdir /etc/tinc
+    cd /
+    mv $TINCDIR/$NETNAME /etc/tinc/
+    cd /etc/tinc/$NETNAME
+fi
 #write to irc-channel
 NICK="${HOSTN}_$(head /dev/urandom | tr -dc "0123456789" | head -c3)"
 
