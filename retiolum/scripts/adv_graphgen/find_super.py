@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-def find_super(path="/etc/tinc/retiolum/hosts"):
+def find_potential_super(path="/etc/tinc/retiolum/hosts"):
   import os
   import re
 
@@ -44,10 +44,10 @@ def check_one_super(ha):
       if ret: valid_addrs.append(ret)
     if valid_addrs: return (host,valid_addrs)
 
-def check_super(path="/etc/tinc/retiolum/hosts"):
+def check_all_the_super(path="/etc/tinc/retiolum/hosts"):
   from multiprocessing import Pool
   p = Pool(20)
-  return filter(None,p.map(check_one_super,find_super(path)))
+  return filter(None,p.map(check_one_super,find_potential_super(path)))
 
 
 
@@ -55,5 +55,5 @@ if __name__ == "__main__":
   """
   usage
   """
-  for host,addrs in check_super():
+  for host,addrs in check_all_the_super():
     print host,addrs
