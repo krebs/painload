@@ -32,7 +32,7 @@ test-client:
 	ssh localhost -p 1337 2>/dev/null
 
 test-server:
-	python test.py
+	./test-server.py
 
 $(host_key_file):
 	ssh-keygen -t rsa -P '' -f $@
