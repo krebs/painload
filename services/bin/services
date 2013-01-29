@@ -1,10 +1,16 @@
 #! /bin/sh
 # usage: services [user@]hostname[:port]
+# environment:
+#   services_identity_file  path to ssh(1) identity_file
 set -euf
 
 user=services
 hostname=${1-localhost}
 port=1337
+
+if test -n "${services_identity_file-}"; then
+  options="${options+$options }-i $services_identity_file"
+fi
 
 if echo $hostname | grep -q @; then
   user=`echo $hostname | cut -d@ -f1`
@@ -15,4 +21,4 @@ if echo $hostname | grep -q :; then
   hostname=`echo $hostname | cut -d: -f1`
 fi
 
-ssh $user@$hostname -p $port
+ssh $options $user@$hostname -p $port
