@@ -111,6 +111,8 @@ find_os()
         OS='android'
     elif test -e /etc/openwrt_release; then
         OS='openwrt'
+    elif uname -s | grep -qi 'darwin'; then
+        OS='osx'
     else
         echo "Cannot determine your operating system, falling back to Linux"
         OS='linux'
@@ -170,8 +172,11 @@ if [ $OS = 'android' ]; then
         mount -o remount,rw /system
         DEV="/dev/tun"
     fi
+#elif [ $OS = 'osx' ]; then
+#    echo 'this is not implemented' 
+#    exit 1
 else
-    if ! type tincd >/dev/null; then
+    if ! exists tincd >/dev/null; then
         echo "Please install tinc"
         exit 1
     else
