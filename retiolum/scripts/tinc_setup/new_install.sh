@@ -166,24 +166,31 @@ if [ $OS = 'android' ]; then
         exit 1
     else
         TINCBIN=/data/data/org.poirsouille.tinc_gui/files/tincd
+        DEV="/dev/tun"
         if [ $TINCDIR = 'auto' ]; then TINCDIR="/usr/local/etc/tinc" ;fi
         if [ $TEMPDIR = 'auto' ]; then TEMPDIR="/storage/sdcard0/tinc-fu" ;fi
         mount -o remount,rw /
         mount -o remount,rw /system
-        DEV="/dev/tun"
     fi
-#elif [ $OS = 'osx' ]; then
-#    echo 'this is not implemented' 
-#    exit 1
+elif [ $OS = 'osx' ]; then
+    if ! exists tincd >/dev/null; then
+        echo "Please install tinc"
+        exit 1
+    else
+        TINCBIN=tincd
+        DEV="/dev/net/tun"
+        if [ $TINCDIR = 'auto' ]; then TINCDIR="/usr/local/etc/tinc" ;fi
+        if [ $TEMPDIR = 'auto' ]; then TEMPDIR="/tmp/tinc-install-fu" ;fi
+    fi
 else
     if ! exists tincd >/dev/null; then
         echo "Please install tinc"
         exit 1
     else
         TINCBIN=tincd
+        DEV="/dev/net/tun"
         if [ $TINCDIR = 'auto' ]; then TINCDIR="/etc/tinc" ;fi
         if [ $TEMPDIR = 'auto' ]; then TEMPDIR="/tmp/tinc-install-fu" ;fi
-        DEV="/dev/net/tun"
     fi
 fi
 
@@ -268,7 +275,7 @@ EOF
 host2subnet $MASK4
 
 #check if ip is installed
-if type ip >/dev/null; then
+if exists ip >/dev/null; then
     echo 'dirname="`dirname "$0"`"' > tinc-up
     echo '' >> tinc-up
     echo 'conf=$dirname/tinc.conf' >> tinc-up
