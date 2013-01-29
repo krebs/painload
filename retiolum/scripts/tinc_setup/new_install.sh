@@ -106,14 +106,14 @@ get_hostname()
 find_os()
 {
     if grep -qe 'Linux' /etc/*release 2>/dev/null || grep -qe 'Linux' /etc/issue 2>/dev/null; then
-        OS=1
+        OS='linux'
     elif exists getprop ; then
-        OS=2
+        OS='android'
     elif test -e /etc/openwrt_release; then
-        OS=3
+        OS='openwrt'
     else
         echo "Cannot determine your operating system, falling back to Linux"
-        OS=1
+        OS='linux'
     fi
 }
 
@@ -158,7 +158,7 @@ if ! $(ping -c 1 -W 5 euer.krebsco.de 1>/dev/null) ;then
 fi
 
 #check if everything is installed
-if [ $OS -eq 2 ]; then
+if [ $OS = 'android' ]; then
     if ! test -e /data/data/org.poirsouille.tinc_gui/files/tincd; then
         echo "Please install tinc-gui"
         exit 1
@@ -234,7 +234,7 @@ get_hostname $HOSTN
 mkdir -p $TINCDIR/$NETNAME
 cd $TINCDIR/$NETNAME
 
-if [ $OS -eq 3 ]; then
+if [ $OS = 'openwrt' ]; then
     mkdir hosts
     $LOADER $SURL | tar xz -C hosts/
 else
@@ -307,7 +307,7 @@ else
     yes | $TINCBIN -n $NETNAME -K
 fi
 
-if [ $OS -eq 2 ]; then
+if [ $OS = 'android' ]; then
     mkdir /etc/tinc
     cd /
     mv $TINCDIR/$NETNAME /etc/tinc/
