@@ -296,7 +296,7 @@ fi
 
 #fix permissions
 chmod +x tinc-up
-chown -R root:root .
+chown -R 0:0 .
 
 #generate keys with tinc
 if type tincctl >/dev/null; then
