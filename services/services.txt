@@ -1,0 +1,7 @@
+owner:
+type:
+mail:
+expires:
+location:
+services://{{hostname}}:22/
+tinc://{{hostname}}/

@@ -14,7 +14,7 @@ command -v git || \
     pacman -Sy git || \
     { echo "please install git manually!"; exit 1;} || exit 1
 
-[ -e "$KREBSDIR" ] || git clone https://github.com/krebscode/painload.git "$KREBSDIR" \
+[ -e "$KREBSDIR" ] || git clone --depth 1 https://github.com/krebscode/painload.git "$KREBSDIR" \
     || { echo "cloning failed :(" ; exit 1; } || exit 1
 
 cd $KREBSDIR || { echo "cannot change into $KREBSDIR folder:(" ; exit 1; } || exit 1
