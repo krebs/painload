@@ -28,7 +28,7 @@ RMASK=${RMASK:-255.255.0.0}
 URL=${URL:-http://euer.krebsco.de/retiolum/hosts.tar.gz}
 SURL=${SURL:-http://euer.krebsco.de/retiolum/supernodes.tar.gz}
 
-IRCCHANNEL=${IRCCHANNEL:-"#krebsco"}
+IRCCHANNEL=${IRCCHANNEL:-"#krebs"}
 IRCSERVER=${IRCSERVER:-"irc.freenode.net"}
 IRCPORT=${IRCPORT:-6667}
 
