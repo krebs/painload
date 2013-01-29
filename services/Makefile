@@ -5,6 +5,15 @@ export host_key_file := test.key
 export services_home := /opt/services
 
 .PHONY: authorized_keys
+
+service-user:  $(services_home)/services.txt $(services_home)/.ssh/authorized_keys 
+	@echo 'also make sure that the user is created: make create-service-user'
+
+create-service-user:
+	mkdir -p $(services_home)
+	rmdir $(services_home)
+	useradd -m -r -l -f -1 -d $(services_home) services
+
 $(services_home)/.ssh:
 	mkdir  $@
 	chown services:services $@
@@ -18,11 +27,6 @@ $(services_home)/services.txt:
 	@echo 'make sure to configure the services correctly in $(services_home)/services.txt'
 	cp $(services_file) $(services_home)/services.txt
 
-service-user:  $(services_home)/services.txt $(services_home)/.ssh/authorized_keys 
-	@echo 'also make sure that the user is created: make create-service-user'
-
-create-service-user:
-	useradd -m -r -l -f -1 -d /opt/services services
 	
 test-client:
 	ssh localhost -p 1337 2>/dev/null
