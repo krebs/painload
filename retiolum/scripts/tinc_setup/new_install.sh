@@ -12,9 +12,10 @@ SUBNET4=${SUBNET4:-10.243}
 SUBNET6=${SUBNET6:-42}
 TEMPDIR=${TEMPDIR:-auto}
 TINCDIR=${TINCDIR:-auto}
+exists() { type "$1" >/dev/null 2>/dev/null; }
 
-if type hostname >/dev/null ;then SYSHOSTN=${HOSTNAME:-$(hostname)}
-elif type uci >/dev/null    ;then SYSHOSTN=$(uci get system.@system[0].hostname)
+if exists hostname ;then SYSHOSTN=${HOSTNAME:-$(hostname)}
+elif exists uci    ;then SYSHOSTN=$(uci get system.@system[0].hostname)
 elif [ -e /etc/hostname ]   ;then SYSHOSTN=$(cat /etc/hostname)
 else                              SYSHOSTN="unknown"
 fi
@@ -106,7 +107,7 @@ find_os()
 {
     if grep -qe 'Linux' /etc/*release 2>/dev/null || grep -qe 'Linux' /etc/issue 2>/dev/null; then
         OS=1
-    elif type getprop >/dev/null; then
+    elif exists getprop ; then
         OS=2
     elif test -e /etc/openwrt_release; then
         OS=3
@@ -135,13 +136,13 @@ if [ $OS -eq 0 ]; then
 fi
 
 #check if everything is installed
-if ! type awk >/dev/null; then
+if ! exists awk ; then
     echo "Please install awk"
     exit 1
 fi
 
-if ! type curl >/dev/null; then
-    if ! type wget >/dev/null; then
+if ! exists curl ; then
+    if ! exists wget ; then
         echo "Please install curl or wget"
         exit 1
     else
@@ -299,7 +300,7 @@ chmod +x tinc-up
 chown -R 0:0 .
 
 #generate keys with tinc
-if type tincctl >/dev/null; then
+if exists tincctl ; then
     yes | tincctl -n $NETNAME generate-keys
     cat rsa_key.pub >> hosts/$HOSTN
 else
