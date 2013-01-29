@@ -3,6 +3,7 @@
 from os import environ as env
 
 authorized_keys_file = env.get('authorized_keys_file', '/dev/null')
+debug_log = env.get('debug_log', 'false')
 services_file = env.get('services_file', '/dev/null')
 host_key_file = env.get('host_key_file', '/dev/null')
 host_key_pub_file = host_key_file + '.pub'
@@ -22,9 +23,10 @@ from twisted.internet.reactor import listenTCP, run
 from twisted.python.components import registerAdapter
 from zope.interface import implements
 
-from twisted.python.log import startLogging
-from sys import stderr
-startLogging(stderr)
+if debug_log == 'true':
+    from twisted.python.log import startLogging
+    from sys import stderr
+    startLogging(stderr)
 
 
 class MyRealm:

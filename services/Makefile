@@ -1,5 +1,6 @@
 help:;@cat Makefile
 export authorized_keys_file := authorized_keys
+export debug_log := true
 export services_file := services.txt
 export host_key_file := test.key
 export services_home := /opt/services
