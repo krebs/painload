@@ -8,6 +8,8 @@ user=services
 hostname=${1-localhost}
 port=1337
 
+options="${options+$options }-o ControlMaster=no"
+
 if test -n "${services_identity_file-}"; then
   options="${options+$options }-i $services_identity_file"
 fi
