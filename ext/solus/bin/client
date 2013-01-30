@@ -1,0 +1,28 @@
+#! /bin/sh
+# usage: client ACTION
+# ACTION: boot, info, reboot, shutdown, or status
+# environment:
+#   api_url   URL to the client API like https://<MASTER IP>:5656/api/client
+#   api_key
+#   api_hash
+set -euf
+
+url="$api_url/command.php"
+key="$api_key"
+hash="$api_hash"
+
+action="${1-$ACTION}"
+
+case "$action" in
+  (info)
+    # get all the information
+    action="$action&ipaddr=true&hdd=true&mem=true&bw=true";;
+esac
+
+abspath="`readlink -f "$0"`"
+bindir="`dirname "$abspath"`"
+libdir="`dirname "$bindir"`/lib"
+export PATH="$libdir:$PATH"
+
+curl -sS -d key="$key" -d hash="$hash" -d action="$action" "$url" |
+  parse-return-data
