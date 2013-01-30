@@ -13,12 +13,12 @@
 
 ### environment
 
-  - `env_dir` defines the directory where environment files are searched.
-    Default: `$HOME/.env.d`.
+  `env_dir` defines the directory where environment files are searched
+  (default: `$HOME/.env.d`).
 
 ### example
 
-    cat > ~/.with/frh-ire <<EOF
+    cat > ~/.env.d/frh-ire <<EOF
     export api_url=...
     export api_key=...
     export api_hash=...
