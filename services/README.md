@@ -10,19 +10,16 @@
 
     cp /krebs/services/etc/systemd/system/krebs-services-test-server.service \
         /etc/systemd/system/
-
     cp /krebs/services/etc/conf.d/krebs-services-test-server \
         /etc/conf.d/
 
-### create services user
+### create services user and populate it's home
 
     useradd -m -r -l -f -1 -d /opt/services -k /var/empty services
-
-### configure test-server.py
-
+    sudo -u services ssh-keygen -t rsa -P '' -f /opt/services/test.key
     $EDITOR /opt/services/services.txt
 
-### run
+### run now and every reboot
 
-    systemctl enable krebs-services-test-server
     systemctl start krebs-services-test-server
+    systemctl enable krebs-services-test-server
