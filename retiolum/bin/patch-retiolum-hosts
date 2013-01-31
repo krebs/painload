@@ -1,0 +1,13 @@
+#! /bin/sh
+#
+# Apply custom retiolum hosts patches, if any.
+#
+# usage: patch-retiolum-hosts [--reverse]
+#
+set -euf
+
+patch=/etc/tinc/retiolum/hosts.patch
+
+if test -e $patch; then
+  patch -N -d /etc/tinc/retiolum/hosts -r - "$@" < $patch
+fi
