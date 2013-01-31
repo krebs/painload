@@ -1,5 +1,5 @@
 Address = 184.154.13.15
-Subnet = 10.243.0.10
+#Subnet = 10.243.0.10
 Subnet = 42:aaa9:4ba3:8c43:bdd8:2cc8:29a0:e8e6/128
 -----BEGIN RSA PUBLIC KEY-----
 MIIBCgKCAQEA0Jz5rQ7NpIQWwhDsrZHlJYAnC1k1onl2ln/6CJbdV9t3gG2hlx/9
