@@ -1,0 +1,3 @@
+authorized_keys_file=/krebs/services/authorized_keys
+services_file=/opt/services/services.txt
+host_key_file=/opt/services/test.key

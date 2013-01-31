@@ -1,0 +1,6 @@
+#! /bin/sh
+set -euf
+ENV="${env_dir-$HOME/.env.d}/$1"
+shift
+. "$ENV"
+exec "$@"

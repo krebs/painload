@@ -1,18 +1,18 @@
 #!/bin/sh
-#!/bin/sh
 #LOGIN_HOST=heidi.shack
 #LOGIN_HOST=heidi:5000
 LOGIN_HOST=10.42.10.38:5000
 all_led(){
-        for i in 3g wlan lan wps;do
-                led $i $1
-        done
+    for i in 3g wlan lan wps;do
+        led $i $1
+        
+    done
 }
 led(){
-        LED="$1"
-        ACTION="$2"
-        echo $ACTION > /sys/class/leds/tp-link:green:$LED/trigger
+    /usr/bin/mrled $1 $2
 }
+
+# fix for mr3020 weirdness
 while sleep 1; do
     uid=$(nfc-list | grep UID | cut -d: -f 2 | sed 's/ //g')
     if ! [ x"$uid" = x ];then

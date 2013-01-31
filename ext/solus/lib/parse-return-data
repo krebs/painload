@@ -1,0 +1,20 @@
+#! /bin/sh
+set -euf
+sed '
+  # transform "XML" into lines {key}<tab>{value}-lines
+  s|</[^>]*>|\n|g
+  s|<\([^>]*\)>|\1\t|g
+' |
+sed '
+  # transform ipaddr list into multiple ipaddr_[46]<tab>{ipaddr}-lines
+  /^ipaddr\t/{
+    s|,|\nipaddr\t|g
+    s/\t\([0-9]*[.]\)/_4&/g
+    s/\t\([0-9]*[:]\)/_6&/g
+  }
+  # parse CSVs into multiple lines with proper labels
+  s:^\(hdd\|mem\|bw\)\t\([^,]*\),\([^,]*\),\([^,]*\),\([^,]*\)$:\1_total\t\2\
+\1_used\t\3\
+\1_free\t\4\
+\1_percentused\t\5:
+'
