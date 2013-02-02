@@ -28,5 +28,11 @@ _filter_public() {
     # TODO drop private IPv6 addresses
   '
 }
+_filter_online() {
+  awk '
+    {print"nc -zw 2 "$2" 655 2>/dev/null && echo "$1" "$2" &"}
+    END {print"wait"}
+  ' | sh
+}
 
-_list_hostname_address | _lookup_address | _filter_public
+_list_hostname_address | _lookup_address | _filter_public | _filter_online
