@@ -35,4 +35,4 @@ _filter_online() {
   ' | sh
 }
 
-_list_hostname_address | _lookup_address | _filter_public | _filter_online
+_list_hostname_address | _lookup_address | _filter_public
