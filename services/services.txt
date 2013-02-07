@@ -3,5 +3,5 @@ type:
 mail:
 expires:
 location:
-services://{{hostname}}:22/
-tinc://{{hostname}}/
+services://{{hostname}}:22
+tinc://{{hostname}}

@@ -7,8 +7,12 @@ if test "${nosudo-false}" != true -a `id -u` != 0; then
   exit 23 # go to hell
 fi
 
-DIRNAME=`dirname $0`
-export PATH="`readlink -f $DIRNAME`:$PATH"
+list_hosts="$(
+  basename="`readlink -f "$0"`"
+  bindir="`dirname "$basename"`"
+  echo "$bindir/hosts"
+)"
+hosts() { "$list_hosts"; }
 
 hosts="${hosts-/etc/hosts}"
 

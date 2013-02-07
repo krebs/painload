@@ -1,8 +1,0 @@
-#! /bin/sh
-set -euf
-
-patch=/etc/tinc/retiolum/hosts.patch
-
-if test -e $patch; then
-  patch -N -d /etc/tinc/retiolum/hosts -r - < $patch
-fi

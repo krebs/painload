@@ -1,0 +1,38 @@
+#! /bin/sh
+#
+# printf '%s %s\n' hostname IP-address for each known public retiolum address
+#
+set -eu
+
+_list_hostname_address() {
+  cd /etc/tinc/retiolum/hosts
+  grep --with-filename '^Address' * |
+  sed -n '
+    s/: */ /
+    s/ *= */ /
+    s/ Address \([a-zA-Z0-9.:_]*\) \?.*/ \1/p'
+}
+_lookup_address() {
+  sed '
+    /:/!{/ [0-9.]*$/!{s/ / `dig +short /;s/$/` \&/}}
+    s/^/echo /
+    $s/$/\nwait/
+  ' | sh
+}
+_filter_public() {
+  sed '
+    # drop private IPv4 addresses
+    / 10\./d
+    / 172\.\(1[6-9]\|2[0-9]\|3[01]\)\./d
+    / 192\.168\./d
+    # TODO drop private IPv6 addresses
+  '
+}
+_filter_online() {
+  awk '
+    {print"nc -zw 2 "$2" 655 2>/dev/null && echo "$1" "$2" &"}
+    END {print"wait"}
+  ' | sh
+}
+
+_list_hostname_address | _lookup_address | _filter_public

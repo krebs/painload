@@ -1,5 +1,6 @@
 help:;@cat Makefile
 export authorized_keys_file := authorized_keys
+export debug_log := true
 export services_file := services.txt
 export host_key_file := test.key
 export services_home := /opt/services
@@ -32,7 +33,7 @@ test-client:
 	ssh localhost -p 1337 2>/dev/null
 
 test-server:
-	python test.py
+	./test-server.py
 
 $(host_key_file):
 	ssh-keygen -t rsa -P '' -f $@
