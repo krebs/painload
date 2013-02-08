@@ -18,7 +18,11 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.oldnews = []
         self.sendqueue = []
         for entry in self.feed.entries:
-            self.sendqueue.append(entry.title + " " + entry.link)
+            try:
+                self.sendqueue.append(entry.title + " " + entry.link + " com: " + entry.comments)
+            except AttributeError:
+                self.sendqueue.append(entry.title + " " + entry.link)
+
             self.oldnews.append(entry.link)
 
     def start(self):
@@ -32,7 +36,10 @@ class TestBot(irc.bot.SingleServerIRCBot):
             self.feed = feedparser.parse(self.url)
             for entry in self.feed.entries:
                 if not entry.link in self.oldnews:
-                    self.send(entry.title + " " + entry.link)
+                    try:
+                        self.send(entry.title + " " + entry.link + " com: " + entry.comments)
+                    except AttributeError:
+                        self.send(entry.title + " " + entry.link)
                     self.oldnews.append(entry.link)
 
     def sendall(self):
@@ -44,8 +51,11 @@ class TestBot(irc.bot.SingleServerIRCBot):
         if len(string) < 450:
             self.connection.privmsg(self.chan, string)
         else:
-            for x in range(math.ceil(len(string)/450)):
-                self.connection.privmsg(self.chan, string[x*450:(x+1)*450])
+            space = 0
+            for x in range(math.ceil(len(string)/400)):
+                oldspace = space
+                space = string.find(" ", (x+1)*400, (x+1)*400+50)
+                self.connection.privmsg(self.chan, string[oldspace:space])
                 sleep(1)
 
 
