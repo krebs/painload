@@ -29,6 +29,14 @@ You can use the following images:
     Factory       : $PWD/bin/ar71xx/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-factory.bin
     System Upgrade: $PWD/bin/ar71xx/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin
 EOF
+elif [ -e bin/ar71xx/openwrt-ar71xx-generic-tl-mr3020-v1-squashfs-factory.bin ];
+then
+    cat << EOF
+finished building 
+You can use the following images:
+    Factory       : $PWD/bin/ar71xx/openwrt-ar71xx-generic-tl-mr3020-v1-squashfs-factory.bin
+    System Upgrade: $PWD/bin/ar71xx/openwrt-ar71xx-generic-tl-mr3020-v1-squashfs-sysupgrade.bin
+EOF
 else
     cat << EOF
 It seems like the factory image has not been created, it is most
