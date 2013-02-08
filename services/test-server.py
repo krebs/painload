@@ -20,7 +20,9 @@ from twisted.cred.error import UnauthorizedLogin
 from twisted.cred.portal import IRealm, Portal
 from twisted.internet.protocol import Protocol
 from twisted.internet.reactor import listenTCP, run
+from twisted.internet.error import ProcessTerminated
 from twisted.python.components import registerAdapter
+from twisted.python.failure import Failure
 from zope.interface import implements
 
 if debug_log == 'true':
@@ -79,6 +81,7 @@ class MyProtocol(Protocol):
     def connectionMade(self):
         data = slurpTextfile(services_file).replace('\n', '\r\n')
         self.transport.write(data)
+        self.transport.processEnded(Failure(ProcessTerminated(0, None, None)))
         self.transport.loseConnection()
 
     #def dataReceived(self, data):
