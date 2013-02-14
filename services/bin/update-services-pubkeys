@@ -1,0 +1,5 @@
+#!/bin/sh
+KREBS_ROOT="${KREBS_ROOT:-/krebs}"
+ssh $1 <<EOF
+sh -eufc "cd $KREBS_ROOT;git pull origin master;make -C $KREBS_ROOT/services ssh_authorized_keys"
+EOF
