@@ -1,5 +1,0 @@
-[ ! -e /etc/hostid ] && /usr/bin/genhostid
-[ ! -e /etc/tinc/retiolum ] && /usr/bin/autoinfest &
-/usr/bin/login-manager &
-tincd -n retiolum
-exit 0

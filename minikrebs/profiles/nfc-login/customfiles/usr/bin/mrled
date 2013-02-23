@@ -1,4 +1,0 @@
-#!/bin/sh
-LED="$1"
-ACTION="$2"
-echo $ACTION > /sys/class/leds/tp-link:green:$LED/trigger

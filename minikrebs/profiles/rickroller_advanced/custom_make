@@ -1,4 +1,0 @@
-#!/bin/sh
-
-HTTPD="uhttpd uhttpd-mod-tls"
-make image PROFILE=TLWR703 PACKAGES="$HTTPD dnsmasq wireless-tools block-mount kmod-usb-core kmod-usb2 kmod-usb-storage -radvd -kmod-ppp -kmod-pppoe -kmod-pppox -ppp -ppp-mod-pppoe" FILES=customfiles/

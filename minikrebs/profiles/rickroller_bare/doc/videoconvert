@@ -1,7 +1,0 @@
-# To be supported by android:
-ffmpeg -i rick720p.mp4 -ss 8.8 -t 8.5 -strict -2 -s 320x240 -vcodec mpeg4 -acodec aac -ac 1 -ar 16000 -r 13 -ab 32000 -aspect 3:2 output-video.mp4
-
-
-# audio convert
-ffmpeg -i rick720p.mp4 -ss 7 -t 45 -ac 1 -ar 16000 -ab 64k -vn -acodec libvorbis rick.ogg
-ffmpeg -i rick720p.mp4 -ss 7 -t 45 -ac 1 -ar 16000 -ab 64k -vn rick.mp3

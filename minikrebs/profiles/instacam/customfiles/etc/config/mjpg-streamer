@@ -1,7 +1,0 @@
-config mjpg-streamer core
-        option enabled          "1"
-        option device           "/dev/video0"
-        option resolution       "1280x720"
-        option fps              "25"
-        option www              "/www/webcam"
-        option port             "80"
