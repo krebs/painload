@@ -1,8 +1,0 @@
-config system
-        option hostname rickroller
-        option timezone UTC
-
-config 'led' 'lan_led' 
-    option 'name' 'blue-led' 
-    option 'sysfs' 'tp-link:blue:system' 
-    option 'trigger' 'default-on' 
