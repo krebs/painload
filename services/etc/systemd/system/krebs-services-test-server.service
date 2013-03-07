@@ -1,0 +1,14 @@
+[Unit]
+Description=services: provider
+After=network.target
+
+[Service]
+EnvironmentFile=/etc/conf.d/krebs-services-test-server
+ExecStart=/krebs/services/test-server.py
+KillMode=process
+User=services
+Group=services
+Restart=no
+
+[Install]
+WantedBy=multi-user.target

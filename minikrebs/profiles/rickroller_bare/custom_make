@@ -1,5 +1,0 @@
-#!/bin/sh
-
-#HTTPD="mini-httpd"
-HTTPD="uhttpd uhttpd-mod-tls"
-make image PROFILE=TLWR703 PACKAGES="$HTTPD dnsmasq wireless-tools -radvd -kmod-ppp -kmod-pppoe -kmod-pppox -ppp -ppp-mod-pppoe" FILES=customfiles/

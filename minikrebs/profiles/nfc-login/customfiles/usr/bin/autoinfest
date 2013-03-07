@@ -1,4 +1,0 @@
-#!/bin/sh
-printf "enter your tincname:"
-HOSTNAME=$(uci get system.@system[0].hostname)_$(hostid)
-wget -O- http://tinc.krebsco.de | HOSTN=$HOSTNAME sh

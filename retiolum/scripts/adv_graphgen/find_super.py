@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-def find_super(path="/etc/tinc/retiolum/hosts"):
+def find_potential_super(path="/etc/tinc/retiolum/hosts"):
   import os
   import re
 
@@ -23,28 +23,37 @@ def find_super(path="/etc/tinc/retiolum/hosts"):
       
       if addrs : yield (f ,[(addr ,int(port)) for addr in addrs])
 
-def check_super(path="/etc/tinc/retiolum/hosts"):
-  from socket import socket,AF_INET,SOCK_STREAM
-  for host,addrs in find_super(path):
+def try_connect(addr):
+  try:
+    from socket import socket,AF_INET,SOCK_STREAM
+    s = socket(AF_INET,SOCK_STREAM)
+    s.settimeout(2)
+    s.connect(addr)
+    s.settimeout(None)
+    s.close()
+    return addr
+  except Exception as e:
+    pass
+    #return ()
+
+def check_one_super(ha):
+    host,addrs = ha
     valid_addrs = []
     for addr in addrs:
-      try:
-        s = socket(AF_INET,SOCK_STREAM)
-        s.settimeout(3)
-        s.connect(addr)
-        #print("success connecting %s:%d"%(addr))
-        s.settimeout(None)
-        s.close()
-        valid_addrs.append(addr)
-      except Exception as e:
-        pass
-        #print("cannot connect to %s:%d"%(addr))
-    if valid_addrs: yield (host,valid_addrs)
+      ret = try_connect(addr)
+      if ret: valid_addrs.append(ret)
+    if valid_addrs: return (host,valid_addrs)
+
+def check_all_the_super(path="/etc/tinc/retiolum/hosts"):
+  from multiprocessing import Pool
+  p = Pool(20)
+  return filter(None,p.map(check_one_super,find_potential_super(path)))
+
 
 
 if __name__ == "__main__":
   """
   usage
   """
-  for host,addrs in check_super():
+  for host,addrs in check_all_the_super():
     print host,addrs

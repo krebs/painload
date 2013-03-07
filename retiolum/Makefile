@@ -29,3 +29,4 @@ startup:
 
 hosts:
 	bin/update-retiolum-hosts || :;
+	sudo bin/patch-retiolum-hosts

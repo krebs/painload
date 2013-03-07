@@ -9,8 +9,8 @@ LOG_FILE=${LOG_FILE:-/var/log/syslog}
 TYPE=svg
 TYPE2=png
 OPENER=/bin/true
-DOTFILE=`mktemp`
-trap 'rm $DOTFILE' INT TERM
+DOTFILE=`mktemp --suffix=anon`
+trap 'rm $DOTFILE' INT TERM KILL
 sudo -E python tinc_stats2json |\
     python parse_tinc_anon.py> $DOTFILE
 
@@ -24,7 +24,7 @@ do
   mv $tmpgraph $1/retiolum_$i.$TYPE
   i=`expr $i + 1`
 done
-#convert -resize 20% $1/retiolum_1.$TYPE  $1/retiolum_1.$TYPE2
+convert   $1/retiolum_1.$TYPE  $1/retiolum_1.$TYPE2
 #convert -resize 20% $1/retiolum_2.$TYPE  $1/retiolum_2.$TYPE2
 #convert -resize 20% $1/retiolum_3.$TYPE  $1/retiolum_3.$TYPE2
 #convert -resize 20% $1/retiolum_4.$TYPE  $1/retiolum_4.$TYPE2

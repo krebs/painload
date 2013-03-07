@@ -1,0 +1,3 @@
+#!/bin/sh
+KREBS_ROOT="${KREBS_ROOT:-/krebs}"
+ssh $1 -t "cd ${KREBS_ROOT};git pull origin master;sudo -u services make -C $KREBS_ROOT/services ssh_authorized_keys"

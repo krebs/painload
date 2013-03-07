@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 from BackwardsReader import BackwardsReader
 import sys,json
-from find_super import check_super
+from find_super import check_all_the_super
 try:
   from time import time
   import socket
@@ -18,7 +18,7 @@ except Exception as e:
   sys.stderr.write("Cannot connect to graphite: %s\n" % str(e))
 
 supernodes= [ ]
-for supernode,addr in check_super():
+for supernode,addr in check_all_the_super():
   supernodes.append(supernode)
 """ TODO: Refactoring needed to pull the edges out of the node structures again,
 it should be easier to handle both structures"""
@@ -39,6 +39,7 @@ def write_digraph(nodes):
   for k,v in nodes.iteritems():
     write_node(k,v)
   print ('}')
+
 def dump_graph(nodes):
   from time import time
   graph = {}
@@ -48,6 +49,7 @@ def dump_graph(nodes):
   json.dump(graph,f)
   f.write('\n')
   f.close()
+
 def write_stat_node(nodes):
   ''' Write a `stats` node in the corner
       This node contains infos about the current number of active nodes and connections inside the network
@@ -95,6 +97,7 @@ def generate_stats(nodes):
     v['avg_weight'] = get_node_avg_weight(conns)
     v['availability'] = get_node_availability(k,jlines)
     sys.stderr.write( "%s -> %f\n" %(k ,v['availability']))
+
 def get_node_avg_weight(conns):
   """ calculates the average weight for the given connections """
   if not conns:
@@ -143,6 +146,7 @@ def delete_unused_nodes(nodes):
       #del(new_nodes[k])
       del(k)
   return new_nodes
+
 def merge_edges(nodes):
   """ merge back and forth edges into one
   DESTRUCTS the current structure by deleting "connections" in the nodes

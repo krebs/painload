@@ -1,3 +1,0 @@
-#!/bin/sh
-[ x${:-} = x ] && echo "usage: $0 [0|1]" && exit 1
-echo $1 > /sys/class/leds/tp-link\:blue\:system/brightness

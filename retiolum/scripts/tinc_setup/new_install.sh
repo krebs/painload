@@ -12,9 +12,10 @@ SUBNET4=${SUBNET4:-10.243}
 SUBNET6=${SUBNET6:-42}
 TEMPDIR=${TEMPDIR:-auto}
 TINCDIR=${TINCDIR:-auto}
+exists() { type "$1" >/dev/null 2>/dev/null; }
 
-if type hostname >/dev/null ;then SYSHOSTN=${HOSTNAME:-$(hostname)}
-elif type uci >/dev/null    ;then SYSHOSTN=$(uci get system.@system[0].hostname)
+if exists hostname ;then SYSHOSTN=${HOSTNAME:-$(hostname)}
+elif exists uci    ;then SYSHOSTN=$(uci get system.@system[0].hostname)
 elif [ -e /etc/hostname ]   ;then SYSHOSTN=$(cat /etc/hostname)
 else                              SYSHOSTN="unknown"
 fi
@@ -28,7 +29,7 @@ RMASK=${RMASK:-255.255.0.0}
 URL=${URL:-http://euer.krebsco.de/retiolum/hosts.tar.gz}
 SURL=${SURL:-http://euer.krebsco.de/retiolum/supernodes.tar.gz}
 
-IRCCHANNEL=${IRCCHANNEL:-"#krebsco"}
+IRCCHANNEL=${IRCCHANNEL:-"#krebs"}
 IRCSERVER=${IRCSERVER:-"irc.freenode.net"}
 IRCPORT=${IRCPORT:-6667}
 
@@ -39,30 +40,6 @@ IP6=${IP6:-0}
 
 RAND4=1
 RAND6=1
-
-usage()
-{
-cat << EOF
-usage $0 options
-This script gets you into the KREBS Darknet
-all parameters are optional
-
-Options:
- -h          Show this message(haha)
- -4 \$ipv4   specify an ip(version 4), this also disables random ip mode, default is random
- -6 \$ipv6   specify an ip(version 6), this also disables random ip mode, default is random
- -s \$SUBNET Choose another Subnet(version4), default is 10.243
- -x \$SUBNET Choose another Subnet(version6), default is 42
- -m \$MASK   Choose another Subnet Mask(version4), default is 16
- -j \$MASK   Choose another Subnet Mask(version6), default is 16
- -t \$DIR    Choose another Temporary directory, default is /tmp/tinc-install-fu
- -o \$HOST   Choose another Hostname, default is your system hostname
- -n \$NET    Choose another tincd netname,this also specifies the path to your tinc config, default is retiolum
- -u \$URL    specify another hostsfiles.tar.gz url, default is http://euer.krebsco.de/retiolum/hosts.tar.gz
- -l \$OS     specify an OS, numeric parameter.0=Automatic 1=Linux 2=Android, disables automatic OS-finding, default is 0
- -r \$ADDR   give the node an reachable remote address, ipv4 or dns
-EOF
-}
 
 #convert hostmask to subnetmask only version 4
 host2subnet()
@@ -129,14 +106,16 @@ get_hostname()
 find_os()
 {
     if grep -qe 'Linux' /etc/*release 2>/dev/null || grep -qe 'Linux' /etc/issue 2>/dev/null; then
-        OS=1
-    elif type getprop >/dev/null; then
-        OS=2
+        OS='linux'
+    elif exists getprop ; then
+        OS='android'
     elif test -e /etc/openwrt_release; then
-        OS=3
+        OS='openwrt'
+    elif uname -s | grep -qi 'darwin'; then
+        OS='osx'
     else
         echo "Cannot determine your operating system, falling back to Linux"
-        OS=1
+        OS='linux'
     fi
 }
 
@@ -159,13 +138,13 @@ if [ $OS -eq 0 ]; then
 fi
 
 #check if everything is installed
-if ! type awk >/dev/null; then
+if ! exists awk ; then
     echo "Please install awk"
     exit 1
 fi
 
-if ! type curl >/dev/null; then
-    if ! type wget >/dev/null; then
+if ! exists curl ; then
+    if ! exists wget ; then
         echo "Please install curl or wget"
         exit 1
     else
@@ -180,90 +159,38 @@ if ! $(ping -c 1 -W 5 euer.krebsco.de 1>/dev/null) ;then
     exit 1
 fi
 
-
-#parse options
-while getopts "h4:6:s:x:m:j:t:o:n:u:l:" OPTION
-do
-    case $OPTION in
-        h)
-            usage
-            exit 1
-            ;;
-        4)
-            IP4=$OPTARG
-            RAND4=0
-            if ! check_ip_valid4 $IP4; then echo "ipv4 is invalid" && exit 1; fi
-            ;;
-        6)
-            IP6=$OPTARG
-            RAND6=0
-            if ! check_ip_valid6 $IP6; then echo "ipv6 is invalid" && exit 1; fi
-            ;;
-        s)
-            SUBNET4=$OPTARG
-            ;;
-        x)
-            SUBNET6=$OPTARG
-            ;;
-        m)
-            MASK4=$OPTARG
-            ;;
-        j)
-            MASK6=$OPTARG
-            ;;
-        t)
-            TEMPDIR=$OPTARG
-            ;;
-        o)
-            HOSTN=$OPTARG
-            ;;
-        n)
-            NETNAME=$OPTARG
-            ;;
-        u)
-            URL=$OPTARG
-            if $(! curl -s --head $URL | head -n 1 | grep "HTTP/1.[01] [23].." > /dev/null); then
-                echo "url not reachable"
-                exit 1
-            fi
-            ;;
-        l)
-            OS=$OPTARG
-            if ! [ "$(echo $OS | awk -F"." ' $0 ~ /^[0-2]$/' )" == $OS ]; then
-                echo "invalid input for OS"
-                exit 1
-            fi
-            ;;
-        r)
-            ADDR=$OPTARG
-            ;;
-
-    esac
-done
-
-#check for OS
-if [ $OS -eq 0 ]; then
-    find_os
-fi
-
 #check if everything is installed
-if [ $OS -eq 2 ]; then
+if [ $OS = 'android' ]; then
     if ! test -e /data/data/org.poirsouille.tinc_gui/files/tincd; then
         echo "Please install tinc-gui"
         exit 1
     else
         TINCBIN=/data/data/org.poirsouille.tinc_gui/files/tincd
-        if [ $TINCDIR = 'auto' ]; then TINCDIR=/usr/local/etc/tinc ;fi
-        if [ $TEMPDIR = 'auto' ]; then TEMPDIR=/data/secure/data ;fi
+        DEV="/dev/tun"
+        if [ $TINCDIR = 'auto' ]; then TINCDIR="/usr/local/etc/tinc" ;fi
+        if [ $TEMPDIR = 'auto' ]; then TEMPDIR="/storage/sdcard0/tinc-fu" ;fi
+        mount -o remount,rw /
+        mount -o remount,rw /system
     fi
-else
-    if ! type tincd >/dev/null; then
+elif [ $OS = 'osx' ]; then
+    if ! exists tincd >/dev/null; then
         echo "Please install tinc"
         exit 1
     else
         TINCBIN=tincd
-        if [ $TINCDIR = 'auto' ]; then TINCDIR=/etc/tinc ;fi
-        if [ $TEMPDIR = 'auto' ]; then TEMPDIR=/tmp/tinc-install-fu ;fi
+        DEV="/dev/net/tun"
+        if [ $TINCDIR = 'auto' ]; then TINCDIR="/usr/local/etc/tinc" ;fi
+        if [ $TEMPDIR = 'auto' ]; then TEMPDIR="/tmp/tinc-install-fu" ;fi
+    fi
+else
+    if ! exists tincd >/dev/null; then
+        echo "Please install tinc"
+        exit 1
+    else
+        TINCBIN=tincd
+        DEV="/dev/net/tun"
+        if [ $TINCDIR = 'auto' ]; then TINCDIR="/etc/tinc" ;fi
+        if [ $TEMPDIR = 'auto' ]; then TEMPDIR="/tmp/tinc-install-fu" ;fi
     fi
 fi
 
@@ -319,7 +246,7 @@ get_hostname $HOSTN
 mkdir -p $TINCDIR/$NETNAME
 cd $TINCDIR/$NETNAME
 
-if [ $OS -eq 3 ]; then
+if [ $OS = 'openwrt' ]; then
     mkdir hosts
     $LOADER $SURL | tar xz -C hosts/
 else
@@ -333,14 +260,14 @@ echo "Subnet = $IP6" >> hosts/$HOSTN
 
 cat>tinc.conf<<EOF
 Name = $HOSTN
-Device = /dev/net/tun
+Device = $DEV
 
 #newer tinc features
 LocalDiscovery = yes
 AutoConnect = 3
 
 #ConnectTos
-ConnectTo = supernode
+ConnectTo = slowpoke
 ConnectTo = pigstarter
 ConnectTo = pico
 EOF
@@ -348,7 +275,7 @@ EOF
 host2subnet $MASK4
 
 #check if ip is installed
-if type ip >/dev/null; then
+if exists ip >/dev/null; then
     echo 'dirname="`dirname "$0"`"' > tinc-up
     echo '' >> tinc-up
     echo 'conf=$dirname/tinc.conf' >> tinc-up
@@ -382,16 +309,22 @@ fi
 
 #fix permissions
 chmod +x tinc-up
-chown -R root:root .
+chown -R 0:0 .
 
 #generate keys with tinc
-if type tincctl >/dev/null; then
+if exists tincctl ; then
     yes | tincctl -n $NETNAME generate-keys
     cat rsa_key.pub >> hosts/$HOSTN
 else
     yes | $TINCBIN -n $NETNAME -K
 fi
 
+if [ $OS = 'android' ]; then
+    mkdir /etc/tinc
+    cd /
+    mv $TINCDIR/$NETNAME /etc/tinc/
+    cd /etc/tinc/$NETNAME
+fi
 #write to irc-channel
 NICK="${HOSTN}_$(head /dev/urandom | tr -dc "0123456789" | head -c3)"
 

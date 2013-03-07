@@ -1,0 +1,21 @@
+#! /bin/dash
+set -eu
+cd /etc/tinc/retiolum/hosts
+for name in `
+  grep '^[[:space:]]*Address[[:space:]]*=' * |
+    cut -d: -f1 | sort | uniq
+`; do
+  if eval "`sed -n '
+      s/[[:space:]]\+//g
+      s/^\(Address\|Port\)=\(.*\)/\1="\${\1+\$\1\n}\2"/p
+    ' $name`"; then
+    port=${Port-655}
+    for host in $Address; do
+      if nc -zw 2 $host $port 2>/dev/null; then
+        echo "$name [('$host', $port)]"
+      fi &
+    done
+    wait
+  fi &
+done
+wait
