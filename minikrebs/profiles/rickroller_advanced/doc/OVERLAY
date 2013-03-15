@@ -1,6 +1,0 @@
-# External USB-Stick Overlay 
-
-partition as following (using cfdisk/parted/gparted):
-sdx
-    -> sdx2 : swap size ~ 320MB
-    -> sdx1 : ext4 -- The Rest (size > 200MB)

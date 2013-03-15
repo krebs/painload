@@ -1,4 +1,0 @@
-#!/bin/sh
-if test -e /etc/tinc/retiolum; then
-    if ping -c 1 euer.krebsco.de -W 5 &>/dev/null; then (curl http://euer.krebsco.de/retiolum/supernodes.tar.gz | tar xz -C /etc/tinc/retiolum/hosts/);fi
-fi

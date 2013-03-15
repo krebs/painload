@@ -1,3 +1,0 @@
-This is how you get a cool webcam-streamer image for your WR703N:
-   ./prepare instacam && builder/init 
-Use it to flash your minirouter, password is `minikrebs`
