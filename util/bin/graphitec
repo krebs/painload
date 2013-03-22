@@ -1,0 +1,4 @@
+#!/bin/sh
+H=${GRAPHITE_HOST:-localhost}
+P=${GRAPHITE_PORT:-2003}
+printf "%s %s\r\n" $1 $2 | nc -u $H $P
