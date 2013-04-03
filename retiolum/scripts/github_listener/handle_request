@@ -2,11 +2,15 @@
 # Possible Shell Vars
 #   WEBDIR 
 #   HOSTFOLDER
+
 set -euf
+export GRAPHITE_HOST=${GRAPHITE_HOST:-no_omo}
+PATH=$PATH:../../../util/bin
 if [ "x${2:-}" = x ];then
 	echo "usage: $0 HOSTDIRECTORY WEBDIRECTORY"
 	exit 1
 fi
+NOW=$(timer)
 export HOSTDIR=${1:-../../hosts}
 WEBDIR=${2:-/var/www/euer.krebsco.de/retiolum/}
 echo "sorry for keeping you waiting, please be patient"
@@ -20,4 +24,5 @@ cd - >&2
 ../../bin/create-supernode-tar $WEBDIR
 echo "almost done..."
 ../../bin/create-host-tar $WEBDIR
-echo "Thank you for your patience!"
+echo "Thank you for your patience! I stole $(timer $NOW)ms of your time, sorry about that."
+graphitec 'retiolum.pack.build_time' $(timer $NOW)
