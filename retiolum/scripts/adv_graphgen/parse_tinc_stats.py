@@ -54,6 +54,7 @@ def write_stat_node(nodes):
   ''' Write a `stats` node in the corner
       This node contains infos about the current number of active nodes and connections inside the network
   '''
+  from time import localtime,strftime
   num_conns = 0
   num_nodes = len(nodes)
   try: 
@@ -64,6 +65,7 @@ def write_stat_node(nodes):
   for k,v in nodes.iteritems():
     num_conns+= len(v['to'])
   node_text = "  stats_node [label=\"Statistics\\l"
+  node_text += "Build Date  : %s\\l" % strftime("%Y-%m-%d %H:%M:%S",localtime())
   node_text += "Active Nodes: %s\\l" % num_nodes
   node_text += "Connections : %s\\l" % num_conns
   node_text += "\""
@@ -172,8 +174,8 @@ def write_node(k,v):
   if v.has_key('num_conns'):
     node += "Num Connects:"+str(v['num_conns'])+"\\l"
   node += "external:"+v['external-ip']+":"+v['external-port']+"\\l"
-  for addr in v.get('internal-ip',['¯\\\\(°_o)/¯']):
-    node += "internal:"+addr+"\\l"
+  for addr in v.get('internal-ip',['dunno lol']): #['¯\\\\(°_o)/¯']):
+    node += "internal:%s\\l"%addr
   node +="\""
 
   # warning if node only has one connection
