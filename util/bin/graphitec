@@ -1,4 +1,5 @@
 #!/bin/sh
 H=${GRAPHITE_HOST:-localhost}
 P=${GRAPHITE_PORT:-2003}
-printf "%s %s\r\n" $1 $2 | nc -u $H $P
+curr=$(date '+%s')
+printf "%s %s %s\n" $1 $2 $curr | nc -q0 $H $P 
