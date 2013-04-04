@@ -10,7 +10,7 @@ TYPE=svg
 TYPE2=png
 OPENER=/bin/true
 DOTFILE=`mktemp --suffix=san`
-trap 'rm $DOTFILE' INT TERM KILL
+trap 'rm $DOTFILE' INT TERM KILL EXIT
 sudo -E python tinc_stats2json |\
     python parse_tinc_stats.py > $DOTFILE
 
