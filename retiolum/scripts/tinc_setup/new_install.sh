@@ -93,7 +93,7 @@ get_hostname()
     LCOUNTER=0
     if test -e $TSTFILE; then
         while test -e $TSTFILE; do
-            $((LCOUNTER+=1))
+            : $((LCOUNTER+=1))
             TSTFILE=$TEMPDIR/hosts/$1$LCOUNTER
         done
         HOSTN=$1$LCOUNTER
