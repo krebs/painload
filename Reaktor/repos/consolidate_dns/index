@@ -9,7 +9,7 @@ import tempfile
 os.chdir (os.path.dirname (os.path.realpath (sys.argv[0])))
 dnsrecon_enabled = False
 DNSRECON = "../dnsrecon/dnsrecon.py"
-dnsrecon_wordlist="namelist.txt"
+dnsrecon_wordlist="../dnsrecon/namelist.txt"
 silent=open("/dev/null","w")
 gxfr_enabled = False
 GXFR = "../gxfr/gxfr.py"
@@ -42,7 +42,8 @@ else:
 if dnsrecon_enabled:
   dnsrecon_tmp = tempfile.NamedTemporaryFile(delete=False).name
   print ("Starting dnsrecon, this may take some time")
-  p = Popen([DNSRECON,"-d",DOMAIN,"--csv",dnsrecon_tmp,'-D',dnsrecon_wordlist,"-t","brt,srv,axfr","--skip"],stdout=silent,stderr=silent)
+  #print (" ".join([DNSRECON,"-d",DOMAIN,"--csv",dnsrecon_tmp,'-D',dnsrecon_wordlist,"-t","brt,srv,axfr","--skip"]))
+  p = Popen([DNSRECON,"-d",DOMAIN,"--csv",dnsrecon_tmp,'-D',dnsrecon_wordlist,"-t","brt,srv,axfr"] ,stdout=silent,stderr=silent)
   p.wait()
   reader = csv.reader(open(dnsrecon_tmp))
   for row in reader:
