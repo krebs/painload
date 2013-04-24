@@ -52,11 +52,13 @@ def write_stat_node(nodes):
   ''' Write a `stats` node in the corner
       This node contains infos about the current number of active nodes and connections inside the network
   '''
+  from time import localtime,strftime
   num_conns = 0
   num_nodes = len(nodes)
   for k,v in nodes.iteritems():
     num_conns+= len(v['to'])
   node_text = "  stats_node [shape=box,label=\"Statistics\\l"
+  node_text += "Build Date  : %s\\l" % strftime("%Y-%m-%d %H:%M:%S",localtime())
   node_text += "Active Nodes: %s\\l" % num_nodes
   node_text += "Connections : %s\\l" % num_conns
   node_text += "\""

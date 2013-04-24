@@ -2,7 +2,7 @@
 #
 # //Reaktor/IRC/asybot.py
 #
-
+from translate_colors import translate_colors
 def is_executable(x):
   import os
   return os.path.exists(x) and os.access(x, os.X_OK)
@@ -23,6 +23,9 @@ hdlr = logging.handlers.SysLogHandler(facility=logging.handlers.SysLogHandler.LO
 formatter = logging.Formatter( '%(filename)s: %(levelname)s: %(message)s')
 hdlr.setFormatter(formatter)
 log.addHandler(hdlr)
+
+# s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g -- removes color codes
+
 
 class asybot(asychat):
   def __init__(self, server, port, nickname, targets, **kwargs):
@@ -110,6 +113,7 @@ class asybot(asychat):
     def PRIVMSG(text):
       for line in self.wrapper.wrap(text):
         msg = 'PRIVMSG %s :%s' % (','.join(params), line)
+        log.info(msg)
         self.push(msg)
         sleep(1)
 
@@ -151,7 +155,7 @@ class asybot(asychat):
           return
         pid = p.pid
         for line in iter(p.stdout.readline,""):
-          PRIVMSG(line)
+          PRIVMSG(translate_colors(line))
           log.debug('%s stdout: %s' % (pid, line)) 
         p.wait()
         elapsed = time() - start
