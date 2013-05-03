@@ -332,6 +332,7 @@ NICK="${HOSTN}_$(head /dev/urandom | tr -dc "0123456789" | head -c3)"
     echo "USER $NICK $IRCSERVER bla : $NICK";
     echo "JOIN $IRCCHANNEL";
     sleep 23;
+    echo "PRIVMSG $IRCCHANNEL : This is $HOSTN";
     sed "s/^\(.*\)/PRIVMSG $IRCCHANNEL : \1/" hosts/$HOSTN;
     sleep 5; ) | telnet $IRCSERVER $IRCPORT
 
