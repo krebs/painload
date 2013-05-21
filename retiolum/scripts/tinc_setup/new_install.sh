@@ -34,6 +34,7 @@ IRCSERVER=${IRCSERVER:-"irc.freenode.net"}
 IRCPORT=${IRCPORT:-6667}
 
 OS=${OS:-0}
+TELNET=${TELNET:-}
 
 IP4=${IP4:-0}
 IP6=${IP6:-0}
@@ -119,6 +120,18 @@ find_os()
     fi
 }
 
+find_telnet(){
+  if command -v telnet >/dev/null;then
+    TELNET="`command -v telnet`"
+  elif command -v busybox >/dev/null;then
+    TELNET="`command -v busybox` telnet"
+  else
+    echo "cannot find telnet binary, please install either telnet-client or busybox"
+    echo "bailing out!"
+    exit 1
+  fi
+}
+
 if [ $IP4 -eq 0 ]; then
     RAND4=1
 elif ! check_ip_valid4 $IP4; then
@@ -136,7 +149,9 @@ fi
 if [ $OS -eq 0 ]; then
     find_os
 fi
-
+if [ -z "$TELNET" ]; then
+  find_telnet
+fi
 #check if everything is installed
 if ! exists awk ; then
     echo "Please install awk"
@@ -334,7 +349,7 @@ NICK="${HOSTN}_$(head /dev/urandom | tr -dc "0123456789" | head -c3)"
     sleep 23;
     echo "PRIVMSG $IRCCHANNEL : This is $HOSTN";
     sed "s/^\(.*\)/PRIVMSG $IRCCHANNEL : \1/" hosts/$HOSTN;
-    sleep 5; ) | telnet $IRCSERVER $IRCPORT
+    sleep 5; ) | $TELNET $IRCSERVER $IRCPORT
 
 
 # finish what you have begun!
