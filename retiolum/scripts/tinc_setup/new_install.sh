@@ -121,9 +121,9 @@ find_os()
 }
 
 find_telnet(){
-  if command -v telnet >/dev/null;then
+  if exists elnet >/dev/null;then
     TELNET="`command -v telnet`"
-  elif command -v busybox >/dev/null;then
+  elif exists busybox >/dev/null;then
     TELNET="`command -v busybox` telnet"
   else
     echo "cannot find telnet binary, please install either telnet-client or busybox"
@@ -164,13 +164,15 @@ if ! exists curl ; then
         exit 1
     else
         LOADER='wget -O-'
+        HEAD_LOADER="$LOADER --spider"
     fi
 else
     LOADER=curl
+    HEAD_LOADER=$LOADER -I
 fi
 
-if ! $(ping -c 1 -W 5 euer.krebsco.de 1>/dev/null) ;then
-    echo "Cant reach euer, check if your internet is working"
+if ! $HEAD_LOADER $SURL >;then
+    echo "Cannot find supernode package, check if your internet is working"
     exit 1
 fi
 
