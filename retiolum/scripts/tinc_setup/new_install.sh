@@ -171,7 +171,7 @@ else
     HEAD_LOADER=$LOADER -I
 fi
 
-if ! $HEAD_LOADER $SURL >;then
+if ! $HEAD_LOADER $SURL >/dev/null 2>/dev/null ;then
     echo "Cannot find supernode package, check if your internet is working"
     exit 1
 fi
