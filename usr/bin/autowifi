@@ -1,9 +1,12 @@
 #!/bin/sh -x
+wifi=wlan0
 iface=@wifi-iface[0]
 radio=$(uci get wireless.${iface}.device)
 connect_wifi(){
     # channel ssid encryption key
-    ifconfig wlan0 up
+    uci set wireless.${iface}.mode=sta
+
+    ifconfig $wifi up
     uci set wireless.${radio}.channel=$1
     uci set "wireless.${iface}.ssid=$2"
     if [ $3 == "none" ] ; then
@@ -13,6 +16,8 @@ connect_wifi(){
         uci set "wireless.${iface}.key=$4"
         uci set wireless.${iface}.encryption=$3
     fi 
+    uci commit wireless
     wifi up
 }
+
 connect_wifi "$@"
