@@ -1,3 +1,17 @@
-#!/usr/bin/sh
+#!/bin/sh -x
+iface=@wifi-iface[0]
+radio=$(uci get wireless.${iface}.device)
 connect_wifi(){
+    ifconfig wlan0 up
+    uci set wireless.${radio}.channel=$1
+    uci set "wireless.${iface}.ssid=$2"
+    if [ $3 == "none" ] ; then
+        uci set wireless.${iface}.encryption=none
+        uci -q delete wireless.${iface}.key
+    else
+        uci set "wireless.${iface}.key=$4"
+        uci set wireless.${iface}.encryption=$3
+    fi 
+    wifi up
 }
+connect_wifi "$@"
