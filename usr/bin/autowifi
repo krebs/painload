@@ -53,5 +53,6 @@ iwlist_scan(){
         esac
     done; echo WIFI_COUNT=$count)
 }
+
 iwlist_scan > /tmp/${wifi}.scan
-connect_wifi "$@"
+
