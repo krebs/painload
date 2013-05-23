@@ -5,7 +5,7 @@
 # www.wotan.cc
 # 
 
-MAC=$1
+MAC=${1?\$1 must be MAC}
 
 # Take the last 2 Bytes of the MAC-Address (0B:EC), and convert it to decimal.
 
