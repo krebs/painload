@@ -2,6 +2,7 @@
 iface=@wifi-iface[0]
 radio=$(uci get wireless.${iface}.device)
 connect_wifi(){
+    # channel ssid encryption key
     ifconfig wlan0 up
     uci set wireless.${radio}.channel=$1
     uci set "wireless.${iface}.ssid=$2"
