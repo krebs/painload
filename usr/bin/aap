@@ -76,7 +76,7 @@ BEGIN {
 				system("uci show wireless > /tmp/keepalive");
 				system("wifi up");
 				while(system("sleep 60; wget -q -T 30 -O /dev/null http://google.com/index.html") == 0) {
-					system("ledoff")
+					system("all_led none")
 					}
 				}
 			else {
