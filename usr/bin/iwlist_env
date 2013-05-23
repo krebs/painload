@@ -2,11 +2,11 @@
 
 count=0
 
-iwlist scan ${interface:-} 2>/dev/null | while read line;
+iwlist scan ${1:-} 2>/dev/null | ( while read line;
 do
     case "$line" in
         *"Cell "*)
-            echo
+            #echo
             : $((count+=1))
             echo MAC_${count}="${line#*Address: }"
             ;;
@@ -30,4 +30,4 @@ do
             ;;
         *);;
     esac
-done
+done; echo WIFI_COUNT=$count)
