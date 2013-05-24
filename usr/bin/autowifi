@@ -89,7 +89,7 @@ crack_wifi(){
         ret=$?
         if [ $ret -eq 0 ];then
             connect_wifi "$3" "$1" $encr "$key"
-            sleep 30
+            sleep 5
             if check_gateway; then
                 (cat /etc/autowifi/wifi_keys | grep -v "$1|$2|" ; echo "$1|$2|$key" ) | sort | uniq  > /etc/autowifi/wifi_keys2
                 mv /etc/autowifi/wifi_keys2 /etc/autowifi/wifi_keys
