@@ -21,6 +21,8 @@ connect_wifi(){
 }
 
 iwlist_scan(){
+    ifconfig $wifi up
+
     count=0
     
     iwlist scan ${1:-} 2>/dev/null | ( while read line;
@@ -60,6 +62,8 @@ crack_wifi(){
         encr=psk
     elif [ "$4" == on ]; then
         encr=wep
+    else
+        encr=open
     fi
     for hack in $(find /usr/lib/autowifi/ -type f); do
         key=$($hack $@);
@@ -68,9 +72,10 @@ crack_wifi(){
             connect_wifi $3 $1 $encr $key
             sleep 20
             if check_gateway; then
-                (cat /etc/autowifi/wifi_keys | grep -v "$1|$2|" ; echo "$1|$2|$key" ) | sort | uniq  > /etc/autowifi/wifi_keys
-                echo "yay internet"
-                return 0
+                (cat /etc/autowifi/wifi_keys | grep -v "$1|$2|" ; echo "$1|$2|$key" ) | sort | uniq  > /etc/autowifi/wifi_keys2
+                mv /etc/autowifi/wifi_keys2 /etc/autowifi/wifi_keys
+                echo "yay gateway"
+                check_internet && return 0
             fi
         fi
     done
@@ -84,11 +89,17 @@ check_internet(){
 loop_over_networks(){
     . /tmp/${wifi}.scan
     for i in `seq 1 $WIFI_COUNT`; do
+        eval grep -q \${MAC_${i}} /etc/autowifi/blacklist && continue
         eval crack_wifi \${ESSID_${i}} \${MAC_${i}} \${CHANNEL_${i}} \${ENCRYPTION_${i}} \${WPA_${i}} \${WPA2_${i}}
     done
-
 }
 
 iwlist_scan > /tmp/${wifi}.scan
 loop_over_networks
 
+while sleep 60; do
+    if ! check_internet; then
+        iwlist_scan > /tmp/${wifi}.scan
+        loop_over_networks
+    fi
+done
