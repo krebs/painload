@@ -54,12 +54,18 @@ iwlist_scan(){
     done; echo WIFI_COUNT=$count)
 }
 crack_wifi(){
-    for hack in $(ls /usr/lib/autowifi/); do
+    if $6;then
+        encr=psk2
+    elif $5; then
+        encr=psk
+    elif [ $4 == on ]; then
+        encr=wep
+    fi
+    for hack in $(find /usr/lib/autowifi/ -type f); do
         key=$($hack $@);
         if ! [ $key -eq 1 ];then
+            connect_wifi $3 $1 $encr $key
             break
-        else
-            connect_wifi $3 $1 
         fi
     done
 }
