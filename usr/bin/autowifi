@@ -73,13 +73,13 @@ iwlist_scan(){
     done; print_iwlist_env ;echo WIFI_COUNT=$count)
 }
 crack_wifi(){
-    if [ -n "$6" ];then
-        encr=psk2
+    if [ $4 == off ];then
+        encr=open
     elif [ -n "$5" ]; then
         encr=psk
-    elif [ "$4" == on ]; then
+    elif [ -n "$6" ]; then
         encr=wep
-    else
+    elif [ $4 == on ]; then
         encr=open
     fi
     for hack in $(find /usr/lib/autowifi/ -type f); do
@@ -111,13 +111,12 @@ loop_over_networks(){
     done
 }
 
-#iwlist_scan > /tmp/${wifi}.scan
-#loop_over_networks
+iwlist_scan > /tmp/${wifi}.scan
+loop_over_networks
 
-#while sleep 60; do
-#    if ! check_internet; then
-#        iwlist_scan > /tmp/${wifi}.scan
-#        loop_over_networks
-#    fi
-#done
-iwlist_scan
+while sleep 60; do
+    if ! check_internet; then
+        iwlist_scan > /tmp/${wifi}.scan
+        loop_over_networks
+    fi
+done
