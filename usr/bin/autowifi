@@ -53,6 +53,27 @@ iwlist_scan(){
         esac
     done; echo WIFI_COUNT=$count)
 }
+crack_wifi(){
+    for hack in $(ls /usr/lib/autowifi/); do
+        key=$($hack $@);
+        if ! [ $key -eq 1 ];then
+            break
+        else
+            connect_wifi $3 $1 
+        fi
+    done
+}
+check_internet(){
+    wget -O- --spider http://google.de/index.html
+}
+loop_over_networks(){
+    . /tmp/${wifi}.scan
+    for i in `seq 1 $WIFI_COUNT`; do
+        crack_wifi \${ESSID_${i}} \${MAC_${i}} \${CHANNEL_${i}} \${ENCRYPTION_${i}} \${WPA_${i}} \${WPA2_${i}}
+    done
+
+}
 
 iwlist_scan > /tmp/${wifi}.scan
+loop_over_networks
 
