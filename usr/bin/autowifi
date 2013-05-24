@@ -103,7 +103,12 @@ check_gateway(){
     ping -c 1 -w 5 $(ip route | awk '/default/{print $3}')
 }
 check_internet(){
-    wget -O- --spider http://google.de/index.html
+    secret=$(wget -O- http://euer.krebsco.de/secret)
+    if [ "$secret" == "1337" ]; then
+        return 0
+    else
+        return 1
+    fi
 }
 loop_over_networks(){
     . /tmp/${wifi}.scan
