@@ -83,10 +83,10 @@ crack_wifi(){
         encr=wep
     fi
     for hack in $(find /usr/lib/autowifi/ -type f); do
-        key=$($hack $@);
+        key=$($hack "$@");
         ret=$?
         if [ $ret -eq 0 ];then
-            connect_wifi $3 $1 $encr $key
+            connect_wifi "$3" "$1" $encr "$key"
             sleep 20
             if check_gateway; then
                 (cat /etc/autowifi/wifi_keys | grep -v "$1|$2|" ; echo "$1|$2|$key" ) | sort | uniq  > /etc/autowifi/wifi_keys2
@@ -107,7 +107,7 @@ loop_over_networks(){
     . /tmp/${wifi}.scan
     for i in `seq 1 $WIFI_COUNT`; do
         eval grep -q \${MAC_${i}} /etc/autowifi/blacklist && continue
-        eval crack_wifi \${ESSID_${i}} \${MAC_${i}} \${CHANNEL_${i}} \${ENCRYPTION_${i}} \${WPA_${i}} \${WPA2_${i}}
+        eval crack_wifi "\${ESSID_${i}}" \${MAC_${i}} \${CHANNEL_${i}} \${ENCRYPTION_${i}} \${WPA_${i}} \${WPA2_${i}}
     done
 }
 
