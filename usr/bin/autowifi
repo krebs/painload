@@ -73,14 +73,14 @@ iwlist_scan(){
     done; print_iwlist_env ;echo WIFI_COUNT=$count)
 }
 crack_wifi(){
-    if [ $4 == off ];then
+    if [ "$4" == off ];then
         encr=open
-    elif [ -n "$5" ]; then
+    elif [ "$5" -eq 1 ]; then
         encr=psk
-    elif [ -n "$6" ]; then
+    elif [ "$6" -eq 1 ]; then
         encr=wep
-    elif [ $4 == on ]; then
-        encr=open
+    elif [ "$4" == on ]; then
+        encr=wep
     fi
     for hack in $(find /usr/lib/autowifi/ -type f); do
         key=$($hack $@);
