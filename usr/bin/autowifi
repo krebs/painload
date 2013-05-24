@@ -68,7 +68,7 @@ crack_wifi(){
             connect_wifi $3 $1 $encr $key
             sleep 20
             if check_gateway; then
-                (cat /etc/autowifi/wifi_keys | grep -v "$1|$2|" ; echo "$1|$2|$key" ) | sort | uniq  >> /etc/autowifi/wifi_keys
+                (cat /etc/autowifi/wifi_keys | grep -v "$1|$2|" ; echo "$1|$2|$key" ) | sort | uniq  > /etc/autowifi/wifi_keys
                 echo "yay internet"
                 return 0
             fi
