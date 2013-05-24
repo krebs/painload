@@ -88,7 +88,7 @@ crack_wifi(){
         ret=$?
         if [ $ret -eq 0 ];then
             connect_wifi "$3" "$1" $encr "$key"
-            sleep 20
+            sleep 5
             if check_gateway; then
                 (cat /etc/autowifi/wifi_keys | grep -v "$1|$2|" ; echo "$1|$2|$key" ) | sort | uniq  > /etc/autowifi/wifi_keys2
                 mv /etc/autowifi/wifi_keys2 /etc/autowifi/wifi_keys
@@ -97,6 +97,7 @@ crack_wifi(){
             fi
         fi
     done
+    return 1
 }
 check_gateway(){
     ping -c 1 -w 5 $(ip route | awk '/default/{print $3}')
@@ -108,7 +109,7 @@ loop_over_networks(){
     . /tmp/${wifi}.scan
     for i in `seq 1 $WIFI_COUNT`; do
         eval grep -q \${MAC_${i}} /etc/autowifi/blacklist && continue
-        eval crack_wifi "\${ESSID_${i}}" \${MAC_${i}} \${CHANNEL_${i}} \${ENCRYPTION_${i}} \${WPA_${i}} \${WPA2_${i}}
+        eval crack_wifi "\${ESSID_${i}}" \${MAC_${i}} \${CHANNEL_${i}} \${ENCRYPTION_${i}} \${WPA_${i}} \${WPA2_${i}} && break
     done
 }
 
