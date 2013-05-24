@@ -94,6 +94,7 @@ crack_wifi(){
                 (cat /etc/autowifi/wifi_keys | grep -v "$1|$2|" ; echo "$1|$2|$key" ) | sort | uniq  > /etc/autowifi/wifi_keys2
                 mv /etc/autowifi/wifi_keys2 /etc/autowifi/wifi_keys
                 echo "yay gateway"
+                sleep 60
                 check_internet && all_led none && return 0
             fi
         fi
