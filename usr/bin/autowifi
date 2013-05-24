@@ -78,7 +78,7 @@ crack_wifi(){
     elif [ "$5" -eq 1 ]; then
         encr=psk
     elif [ "$6" -eq 1 ]; then
-        encr=wep
+        encr=psk2
     elif [ "$4" == on ]; then
         encr=wep
     fi
