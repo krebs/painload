@@ -20,6 +20,21 @@ connect_wifi(){
     wifi up
 }
 
+print_iwlist_env(){
+    # takes environment:
+    #   count
+    #   MAC
+    #   CHANNEL
+    #   QUALITY
+    #   ENCRYPTION
+    #   ESSID
+    #   WPA
+    #   WPA2
+    for i in ESSID MAC CHANNEL QUALITY ENCRYPTION WPA WPA2;do
+        eval echo ${i}_${count}=\$${i}
+    done
+}
+
 iwlist_scan(){
     ifconfig $wifi up
 
@@ -29,31 +44,33 @@ iwlist_scan(){
     do
         case "$line" in
             *"Cell "*)
-                #echo
+                [ $count -eq  0 ] || print_iwlist_env
+                WPA=0
+                WPA2=0
                 : $((count+=1))
-                echo MAC_${count}="${line#*Address: }"
+                MAC="${line#*Address: }"
                 ;;
             *Channel:*)
-                echo CHANNEL_${count}="${line#*:}"
+                CHANNEL="${line#*:}"
                 ;;
             *Quality=*)
-                echo QUALITY_${count}="`printf '%s' ${line#*Quality=} | cut -d/  -f 1`"
+                QUALITY="`printf '%s' ${line#*Quality=} | cut -d/  -f 1`"
                 ;;
             *"Encryption key:"*)
-                echo ENCRYPTION_${count}="${line#*key:}"
+                ENCRYPTION="${line#*key:}"
                 ;;
             *ESSID:*)
-                echo ESSID_${count}="${line#*ESSID:}"
+                ESSID="${line#*ESSID:}"
                 ;;
             *"IE: IEEE 802.11i/WPA2"*)
-                echo WPA2_${count}=1
+                WPA2=1
                 ;;
             *"IE: WPA Version 1"*)
-                echo WPA_${count}=1
+                WPA=1
                 ;;
             *);;
         esac
-    done; echo WIFI_COUNT=$count)
+    done; print_iwlist_env ;echo WIFI_COUNT=$count)
 }
 crack_wifi(){
     if [ -n "$6" ];then
@@ -94,12 +111,13 @@ loop_over_networks(){
     done
 }
 
-iwlist_scan > /tmp/${wifi}.scan
-loop_over_networks
+#iwlist_scan > /tmp/${wifi}.scan
+#loop_over_networks
 
-while sleep 60; do
-    if ! check_internet; then
-        iwlist_scan > /tmp/${wifi}.scan
-        loop_over_networks
-    fi
-done
+#while sleep 60; do
+#    if ! check_internet; then
+#        iwlist_scan > /tmp/${wifi}.scan
+#        loop_over_networks
+#    fi
+#done
+iwlist_scan
