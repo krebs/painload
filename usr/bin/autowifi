@@ -34,12 +34,12 @@ crack_wifi(){
         ret=$?
         if [ $ret -eq 0 ];then
             connect_wifi "$3" "$1" $encr "$key"
-            sleep 5
+            sleep 20
             if check_gateway; then
                 (cat /etc/autowifi/wifi_keys | grep -v "$1|$2|" ; echo "$1|$2|$key" ) | sort | uniq  > /etc/autowifi/wifi_keys2
                 mv /etc/autowifi/wifi_keys2 /etc/autowifi/wifi_keys
                 echo "yay gateway"
-                check_gateway && all_led none && return 0
+                check_internet && all_led none && return 0
             fi
         fi
     done
@@ -58,7 +58,7 @@ loop_over_networks
 
 while sleep 60; do
     if ! check_internet; then
-        all_led default-on
+        all_led on
         iwlist_scan > /tmp/${wifi}.scan
         loop_over_networks
     fi
