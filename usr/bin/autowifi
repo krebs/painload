@@ -1,77 +1,22 @@
 #!/bin/sh -x
+# States (LED):
+#   Blinking   - running wifi plugins
+#   Turned off - connected to wifi
+#   Turned on  - waiting for next scan round
+
 wifi=wlan0
 iface=@wifi-iface[0]
 radio=$(uci get wireless.${iface}.device)
-connect_wifi(){
-    # channel ssid encryption key
-    uci set wireless.${iface}.mode=sta
 
-    ifconfig $wifi up
-    uci set wireless.${radio}.channel=$1
-    uci set "wireless.${iface}.ssid=$2"
-    if [ $3 == "none" ] ; then
-        uci set wireless.${iface}.encryption=none
-        uci -q delete wireless.${iface}.key
-    else
-        uci set "wireless.${iface}.key=$4"
-        uci set wireless.${iface}.encryption=$3
-    fi 
-    uci commit wireless
-    wifi up
-}
+# for connect_wifi
+. /usr/lib/autowifi/lib/openwrt
 
-print_iwlist_env(){
-    # takes environment:
-    #   count
-    #   MAC
-    #   CHANNEL
-    #   QUALITY
-    #   ENCRYPTION
-    #   ESSID
-    #   WPA
-    #   WPA2
-    for i in ESSID MAC CHANNEL QUALITY ENCRYPTION WPA WPA2;do
-        eval echo ${i}_${count}=\$${i}
-    done
-}
+# for iwlist_scan
+. /usr/lib/autowifi/lib/iwlist
 
-iwlist_scan(){
-    ifconfig $wifi up
+# for check_internet and check_gateway
+. /usr/lib/autowifi/lib/network
 
-    count=0
-    
-    iwlist scan ${1:-} 2>/dev/null | ( while read line;
-    do
-        case "$line" in
-            *"Cell "*)
-                [ $count -eq  0 ] || print_iwlist_env
-                WPA=0
-                WPA2=0
-                : $((count+=1))
-                MAC="${line#*Address: }"
-                ;;
-            *Channel:*)
-                CHANNEL="${line#*:}"
-                ;;
-            *Quality=*)
-                QUALITY="`printf '%s' ${line#*Quality=} | cut -d/  -f 1`"
-                ;;
-            *"Encryption key:"*)
-                ENCRYPTION="${line#*key:}"
-                ;;
-            *ESSID:*)
-                ESSID="${line#*ESSID:}"
-                ;;
-            *"IE: IEEE 802.11i/WPA2"*)
-                WPA2=1
-                ;;
-            *"IE: WPA Version 1"*)
-                WPA=1
-                ;;
-            *);;
-        esac
-    done; print_iwlist_env ;echo WIFI_COUNT=$count)
-}
 crack_wifi(){
     #SSID MAC CHANNEL ENCRYPTION WPA WPA2
     all_led timer
@@ -99,17 +44,6 @@ crack_wifi(){
         fi
     done
     return 1
-}
-check_gateway(){
-    ping -c 1 -w 5 $(ip route | awk '/default/{print $3}')
-}
-check_internet(){
-    secret=$(wget -O- http://euer.krebsco.de/secret)
-    if [ "$secret" == "1337" ]; then
-        return 0
-    else
-        return 1
-    fi
 }
 loop_over_networks(){
     . /tmp/${wifi}.scan

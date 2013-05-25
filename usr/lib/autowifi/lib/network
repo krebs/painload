@@ -1,0 +1,12 @@
+#!/bin/sh
+check_gateway(){
+    ping -c 1 -w 5 $(ip route | awk '/default/{print $3}')
+}
+check_internet(){
+    secret=$(wget -O- http://euer.krebsco.de/secret)
+    if [ "$secret" == "1337" ]; then
+        return 0
+    else
+        return 1
+    fi
+}

