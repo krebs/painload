@@ -28,3 +28,6 @@
 [submodule "minikrebs"]
 	path = minikrebs
 	url = https://github.com/krebscode/minikrebs.git
+[submodule "web"]
+	path = web
+	url = git@github.com:krebscode/krebscode.github.com
