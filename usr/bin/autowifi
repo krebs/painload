@@ -84,7 +84,7 @@ crack_wifi(){
     elif [ "$4" == on ]; then
         encr=wep
     fi
-    for hack in $(find /usr/lib/autowifi/ -type f); do
+    for hack in $(find /usr/lib/autowifi/plugins -type f); do
         key=$($hack "$@");
         ret=$?
         if [ $ret -eq 0 ];then
