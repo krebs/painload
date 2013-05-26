@@ -1,0 +1,6 @@
+#!/bin/sh
+# on MANY WPS-enabled devices the pin is 12345670 , so we can give it a shot
+# http://www.wotan.cc/?p=75
+cd $(dirname $(readlink -f $0))
+. ../lib/wps
+try_wps_pin $@ 12345671
