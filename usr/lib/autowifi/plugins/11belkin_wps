@@ -13,7 +13,7 @@
 cd $(dirname $(readlink -f $0))
 . ../lib/core
 . ../lib/wps
-parse_args $@
+parse_plugin_args $@
 
 MAC=$(printf "%s" $2| sed 's/://g')
 if [ ${#MAC} -ne 12 ] ;then

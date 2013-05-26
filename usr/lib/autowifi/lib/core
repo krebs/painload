@@ -1,0 +1,9 @@
+parse_plugin_args(){
+    # convenience function to put args in ENV variables
+    ESSID="$1"
+    MAC="$2"
+    CHANNEL="$3"
+    ENC="$4"
+    WPA="$5"
+    WPA2="$6"
+}
