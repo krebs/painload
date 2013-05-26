@@ -35,17 +35,23 @@ EOF
 	    #*"WPA: Key negotiation completed"*)
             # association failed
             #    exit 1 ;;
+
     if ( tail -f $WPA_LOG & echo "TAILPID: $!" )| while read line ; do
+        bye(){
+            kill -HUP $TAILPID
+            exit $1
+        }
+        echo $line
         case "$line" in
-	    TAILPID:*)IFS=" " set -- $line; TAILPID=$2;;
+            TAILPID:*)IFS=" " set -- $line; TAILPID=$2;;
+            *"WPS-FAIL msg=10 config_error=18"*) bye 1 ;; # wrong pin
+            *"CTRL-EVENT-EAP-FAILURE EAP authentication failed"*) bye 1;; # rate limiting
             *CTRL-EVENT-DISCONNECTED*):;;
-            *CTRL-EVENT-CONNECTED*)
-		kill -HUP $TAILPID
-                exit 0;;
+            *CTRL-EVENT-CONNECTED*) bye 0;; #yay connected
 
         esac
     done ; then
-	echo "Connected!"
+	#echo "Connected!"
 	sed -n 's/[ \t]*psk="\(.*\)"$/\1/p' $WPA_CONF
 	return 0
     else

