@@ -11,15 +11,11 @@
 # belkin.XXX         09:86:3B:XX:XX:XX    F9K1104   v1000
 
 cd $(dirname $(readlink -f $0))
-. ../lib/core
+. ../lib/plugin_core
 . ../lib/wps
 parse_plugin_args $@
 
-MAC=$(printf "%s" $2| sed 's/://g')
-if [ ${#MAC} -ne 12 ] ;then
-    echo "MAC malformed"
-    exit 1
-fi
+MAC=$(printf "%s" $MAC| sed 's/://g')
 VENDOR_MAC=${MAC:0:6}
 PRIVATE_MAC=${MAC:6:12}
 if ! [ $VENDOR_MAC == "002275" -o $VENDOR_MAC == "001CDF" -o $VENDOR_MAC == "09863B" ] ;then

@@ -1,0 +1,26 @@
+parse_plugin_args(){
+    [ $# -ne 6 ] && plugin_usage && exit 1
+    # convenience function to put args in ENV variables
+    ESSID="$1"
+    MAC="$2"
+    CHANNEL="$3"
+    ENC="$4"
+    WPA="$5"
+    WPA2="$6"
+    if [ ${#MAC} -ne 17 ] ;then
+        echo "MAC malformed"
+        exit 1
+    fi
+}
+plugin_usage(){
+    cat << EOF
+usage: $0 ESSID MAC CHANNEL ENC WPA WPA2"
+
+    ESSID   - string
+    MAC     - 00:11:22:33:44:55
+    ENC     - on | off
+    WPA     - 0  | 1
+    WPA2    - 0  | 1
+EOF
+    
+}
