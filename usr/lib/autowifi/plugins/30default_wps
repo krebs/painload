@@ -3,4 +3,4 @@
 # http://www.wotan.cc/?p=75
 cd $(dirname $(readlink -f $0))
 . ../lib/wps
-try_wps_pin $@ 12345671
+try_wps_pin "$@" 12345670

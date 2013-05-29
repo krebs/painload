@@ -49,7 +49,7 @@ loop_over_networks(){
     . /tmp/${wifi}.scan
     for i in `seq 1 $WIFI_COUNT`; do
         eval grep -q \${MAC_${i}} /etc/autowifi/blacklist && continue
-        eval crack_wifi "\${ESSID_${i}}" \${MAC_${i}} \${CHANNEL_${i}} \${ENCRYPTION_${i}} \${WPA_${i}} \${WPA2_${i}} && break
+        eval crack_wifi \"\${ESSID_${i}}\" \"\${MAC_${i}}\" \${CHANNEL_${i}} \${ENCRYPTION_${i}} \${WPA_${i}} \${WPA2_${i}} && break
     done
 }
 
