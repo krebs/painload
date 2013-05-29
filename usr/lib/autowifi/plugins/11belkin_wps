@@ -13,7 +13,7 @@
 cd $(dirname $(readlink -f $0))
 . ../lib/plugin_core
 . ../lib/wps
-parse_plugin_args $@
+parse_plugin_args "$@"
 
 MAC=$(printf "%s" $MAC| sed 's/://g')
 VENDOR_MAC=${MAC:0:6}
