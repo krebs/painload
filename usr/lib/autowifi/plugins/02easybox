@@ -1,6 +1,6 @@
 #!/bin/sh
 #ESSID MAC CHANNEL ENCRYPTION WPA WPA2
-if ! echo $1 | grep -qi Easybox; then
+if ! echo "$1" | egrep -qi "(EasyBox-|Arcor-|Vodafone-)"; then
     exit 1
 else
     MAC=${2?\$2 must be MAC}
