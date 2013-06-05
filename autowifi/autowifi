@@ -18,6 +18,17 @@ EOF
 connect(){
     #mac ssid encryption key
     wpa_cli reconfigure
+
+    #INTERFACE PRE CONNECT HOOKS
+    for hook in $(find $confdir/hooks/$interface/pre -type f | sort -u); do
+        $hook $@
+    done
+
+    #PROFILE PRE CONNECT HOOKS
+    for hook in $(find "$confdir/hooks/$2/pre" -type f | sort -u); do
+        $hook $@
+    done
+
     int=$(wpa_cli add_network | tail -1)
     wpa_cli set_network $int ssid \"$2\"
     wpa_cli set_network $int bssid $1
@@ -39,6 +50,17 @@ connect(){
 
     if check_gateway && check_internet; then
         echo yay internet
+        #INTERFACE POST CONNECT HOOKS 
+        for hook in $(find $confdir/hooks/$interface/post -type f | sort -u); do
+            $hook $@
+        done
+
+        #PROFILE POST CONNECT HOOKS
+        for hook in $(find "$confdir/hooks/$2/post" -type f | sort -u); do
+            $hook $@
+        done
+
+
         bandw=$(check_bandwidth)
         (cat $confdir/wifi_stats | grep -v "|$1|" ; echo  "$2|$1|$bandw|$4" ) | sort | uniq  > $confdir/wifi_stats2
         mv $confdir/wifi_stats2 $confdir/wifi_stats
@@ -137,7 +159,7 @@ loop_over_networks(){
 loop_over_cracks(){
     i=$1
     KEY=''
-    for crack in $(find $confdir/cracks -type f); do
+    for crack in $(find $confdir/cracks -type f | sort -u); do
         KEY="$(eval root=$confdir \$crack \"\${ESSID_${i}}\" \"\${MAC_${i}}\" \${FREQ_${i}} \${ENCRYPTION_${i}})"
         if [ $? -eq 0 ]; then
             eval connect \"\${MAC_${i}}\" \"\${ESSID_${i}}\" \${ENCRYPTION_${i}} \"\${KEY}\"
