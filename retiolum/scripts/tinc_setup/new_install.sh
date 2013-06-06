@@ -29,11 +29,12 @@ RMASK=${RMASK:-255.255.0.0}
 URL=${URL:-http://euer.krebsco.de/retiolum/hosts.tar.gz}
 SURL=${SURL:-http://euer.krebsco.de/retiolum/supernodes.tar.gz}
 
-IRCCHANNEL=${IRCCHANNEL:-"#krebs"}
+IRCCHANNEL=${IRCCHANNEL:-"#krebs_incoming"}
 IRCSERVER=${IRCSERVER:-"irc.freenode.net"}
 IRCPORT=${IRCPORT:-6667}
 
 OS=${OS:-0}
+TELNET=${TELNET:-}
 
 IP4=${IP4:-0}
 IP6=${IP6:-0}
@@ -119,6 +120,18 @@ find_os()
     fi
 }
 
+find_telnet(){
+  if exists elnet >/dev/null;then
+    TELNET="`command -v telnet`"
+  elif exists busybox >/dev/null;then
+    TELNET="`command -v busybox` telnet"
+  else
+    echo "cannot find telnet binary, please install either telnet-client or busybox"
+    echo "bailing out!"
+    exit 1
+  fi
+}
+
 if [ $IP4 -eq 0 ]; then
     RAND4=1
 elif ! check_ip_valid4 $IP4; then
@@ -136,7 +149,9 @@ fi
 if [ $OS -eq 0 ]; then
     find_os
 fi
-
+if [ -z "$TELNET" ]; then
+  find_telnet
+fi
 #check if everything is installed
 if ! exists awk ; then
     echo "Please install awk"
@@ -149,13 +164,15 @@ if ! exists curl ; then
         exit 1
     else
         LOADER='wget -O-'
+        HEAD_LOADER="$LOADER --spider"
     fi
 else
     LOADER=curl
+    HEAD_LOADER=$LOADER -I
 fi
 
-if ! $(ping -c 1 -W 5 euer.krebsco.de 1>/dev/null) ;then
-    echo "Cant reach euer, check if your internet is working"
+if ! $HEAD_LOADER $SURL >/dev/null 2>/dev/null ;then
+    echo "Cannot find supernode package, check if your internet is working"
     exit 1
 fi
 
@@ -332,8 +349,9 @@ NICK="${HOSTN}_$(head /dev/urandom | tr -dc "0123456789" | head -c3)"
     echo "USER $NICK $IRCSERVER bla : $NICK";
     echo "JOIN $IRCCHANNEL";
     sleep 23;
+    echo "PRIVMSG $IRCCHANNEL : This is $HOSTN";
     sed "s/^\(.*\)/PRIVMSG $IRCCHANNEL : \1/" hosts/$HOSTN;
-    sleep 5; ) | telnet $IRCSERVER $IRCPORT
+    sleep 5; ) | $TELNET $IRCSERVER $IRCPORT
 
 
 # finish what you have begun!

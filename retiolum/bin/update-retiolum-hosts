@@ -11,4 +11,4 @@ fi
 cd $(dirname $(readlink -f $0))/..
 
 mkdir -p /etc/tinc/retiolum/hosts
-rsync -va --delete hosts/ /etc/tinc/retiolum/hosts/
+rsync -va -I --delete hosts/ /etc/tinc/retiolum/hosts/

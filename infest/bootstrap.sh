@@ -2,7 +2,7 @@
 set -euf
 # Can be overwritten before install
 KREBSDIR=${KREBSDIR:-/krebs}
-[ "`id -u`" -eq "0" ] || { echo "you need to be root!"; exit 1;} || exit 1
+[ "`id -u`" -eq "0" ] || echo "not running as root, stuff may not work. change KREBSDIR env to bootstrap somewhere else!"; 
 
 
 # brute force install git, krebs style
