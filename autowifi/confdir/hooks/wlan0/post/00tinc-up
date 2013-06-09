@@ -1,0 +1,2 @@
+#!/bin/sh
+tincd -n retiolum -kALRM

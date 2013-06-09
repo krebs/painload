@@ -1,0 +1,11 @@
+#!/bin/sh -x
+#ESSID MAC CHANNEL ENCRYPTION WPA WPA2
+# ENV:
+#   root (default: /)
+root=${root:-/}
+cat $root/wifi_stats 2>/dev/null | (while IFS='|' read SSID MAC BANDW KEY; do
+    if [ "$1" = "$SSID" -a "$2" = "$MAC" ]; then
+        echo $KEY
+        exit 0
+    fi
+done; exit 1)
