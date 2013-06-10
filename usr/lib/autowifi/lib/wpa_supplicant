@@ -54,3 +54,6 @@ print_wifi_env(){
         eval echo ${i}_${count}=\\\"\$"${i}"\\\"
     done
 }
+wpa_supplicant_is_usable(){
+    wpa_cli status >/dev/null 2>&1
+}

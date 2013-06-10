@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 cd $(dirname $(readlink -f $0))
 
 
@@ -16,7 +16,6 @@ wifi_log=$root/var/log/autowifi.log
 
 # start_wpa_supplicant()
 . $root/usr/lib/autowifi/lib/wpa_supplicant
-
 
 
 connect(){
@@ -87,10 +86,14 @@ connect_with_pw(){
 }
 
 loop_over_networks(){
+
+    wpa_supplicant_is_usable || start_wpa_supplicant /tmp/autowifi.wpa_supplicant
+    wifi_scan > /tmp/${interface}.scan
+    . /tmp/${interface}.scan
     for i in `seq 1 $WIFI_COUNT`; do
         loop_over_cracks $i
         if [ $? -eq 0 ]; then
-            exit 0
+            return 0
         fi
     done
 }
@@ -140,9 +143,6 @@ loop_over_cracks(){
 
 
 
-start_wpa_supplicant /tmp/autowifi.wpa_supplicant
-wifi_scan > /tmp/${interface}.scan
-. /tmp/${interface}.scan
 if [ -n "$2" ]; then
     echo connecting to $1 with pw $2
     connect_with_pw "$1" "$2"
@@ -152,6 +152,7 @@ elif [ -n "$1" ]; then
 else
     echo looping network now 
     check_internet || loop_over_networks
+
     while sleep 60; do
         if ! check_internet; then
             loop_over_networks
