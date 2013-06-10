@@ -6,7 +6,7 @@ start_wpa_supplicant(){
 cat>$wpa_conf<<EOF
 ctrl_interface=/var/run/wpa_supplicant
 EOF
-    wpa_supplicant -i wlan0 -c $wpa_conf -B
+    wpa_supplicant -i $interface -c $wpa_conf -B
     sleep 4
 }
 connect_wifi(){
