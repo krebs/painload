@@ -1,6 +1,7 @@
 #!/bin/sh 
 # ENV:
 # the root directory (e.g. root=$PWD/../../ if run from here )
+cd $(dirname $(readlink -f $0))
 root=${root:-/}
 wifi=${wifi:-wlan0}
 
@@ -32,7 +33,7 @@ crack_wifi(){
         ret=$?
         if [ $ret -eq 0 ];then
             echo "success!" >&2
-            echo $1:$2:$encr:$key
+            echo $1|$2|$encr|$key
             ALL_RET=0
         else
             echo "fail ..." >&2
