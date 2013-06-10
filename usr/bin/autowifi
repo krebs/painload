@@ -41,7 +41,7 @@ connect(){
 }
 write_profile(){
     bandw=$(check_bandwidth)
-    (cat $wifi_keys | grep -v "|$1|" ; echo "$2|$1|$bandw|$4" ) | sort | uniq > "${wifi_keys}2"
+    (echo "#SSID|MAC|BANDWIDTH|KEY"; cat $wifi_keys | grep -v '^#' | grep -v "|$1|" ; echo "$2|$1|$bandw|$4" ) | sort | uniq > "${wifi_keys}2"
     mv "${wifi_keys}2" "$wifi_keys"
 }
 
