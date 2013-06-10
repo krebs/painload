@@ -1,0 +1,212 @@
+#!/bin/sh -x
+
+confdir=${confdir:-"$(dirname $0)/confdir"}
+interface="wlan0"
+
+exists() { type "$1" >/dev/null 2>/dev/null; }
+
+start_wpa_supplicant(){
+    killall wpa_supplicant
+    sleep 1
+cat>wpa.conf<<EOF
+ctrl_interface=/var/run/wpa_supplicant
+EOF
+    wpa_supplicant -i wlan0 -c wpa.conf -B
+    sleep 4
+}
+
+connect(){
+    #mac ssid encryption key
+    wpa_cli reconfigure
+
+    #INTERFACE PRE CONNECT HOOKS
+    for hook in $(find $confdir/hooks/$interface/pre -type f | sort -u); do
+        $hook $@
+    done
+
+    #PROFILE PRE CONNECT HOOKS
+    for hook in $(find "$confdir/hooks/$2/pre" -type f | sort -u); do
+        $hook $@
+    done
+
+    int=$(wpa_cli add_network | tail -1)
+    wpa_cli set_network $int ssid \"$2\"
+    wpa_cli set_network $int bssid $1
+    #wpa_cli set_network $int ap_scan 1
+    if [ "$3" = "[ESS]" ]; then
+        wpa_cli set_network $int key_mgmt NONE
+    else
+        wpa_cli set_network $int key_mgmt WPA-PSK
+        wpa_cli set_network $int psk \"$4\"
+    fi
+    wpa_cli enable_network $int
+    
+    if exists dhcpcd; then 
+        dhcpcd -x $interface
+        dhcpcd -w -A $interface
+    elif exists dhclient; then
+        dhclient $interface
+    fi
+
+    if check_gateway && check_internet; then
+        echo yay internet
+        #INTERFACE POST CONNECT HOOKS 
+        for hook in $(find $confdir/hooks/$interface/post -type f | sort -u); do
+            $hook $@
+        done
+
+        #PROFILE POST CONNECT HOOKS
+        for hook in $(find "$confdir/hooks/$2/post" -type f | sort -u); do
+            $hook $@
+        done
+
+
+        bandw=$(check_bandwidth)
+        (cat $confdir/wifi_stats | grep -v "|$1|" ; echo  "$2|$1|$bandw|$4" ) | sort | uniq  > $confdir/wifi_stats2
+        mv $confdir/wifi_stats2 $confdir/wifi_stats
+        return 0
+    fi
+    return 1
+
+}
+print_iwlist_env(){
+    # takes environment:
+    # MAC
+    # FREQ
+    # QUALITY
+    # ENCRYPTION
+    # ESSID
+    for i in MAC FREQ QUALITY ENCRYPTION ESSID;do
+        eval echo ${i}_${count}=\\\"\$"${i}"\\\"
+    done
+}
+
+iwlist_scan(){
+    # usage: iwlist_scan $wifi-itf
+
+    count=0
+    wpa_cli scan >/dev/null
+    sleep 10
+    
+    wpa_cli scan_results 2>/dev/null | grep -E "^??:" | sed 's/	/ /g' | (while IFS=' ' read MAC FREQ QUALITY ENCRYPTION ESSID
+    do
+        : $((count+=1))
+        print_iwlist_env
+
+    done; echo WIFI_COUNT=$count)
+}
+
+find_count_of_ssid(){
+    c=0
+    for i in `seq 1 $WIFI_COUNT`; do
+        eval SSID=\${ESSID_${i}}
+        if [ "$SSID" = $1 ]; then
+            c+=1
+            echo $i
+        fi
+    done
+    if [ $c -eq 0 ];then
+        exit 1
+    fi
+    exit 0
+}
+
+find_unscanned_networks(){
+    for i in `seq 1 $WIFI_COUNT`; do
+        eval SSID=\${ESSID_${i}}
+        eval MAC=\${MAC_${i}}
+        cat $confdir/wifi_stats 2>/dev/null | (while IFS='|' read SSID MAC BANDW KEY; do
+            if [ "$1" = "$SSID" -a "$2" = "$MAC" ]; then
+                continue
+            fi
+        done; echo $i)
+    done
+    exit 0
+}
+
+connect_to_network_by_ssid(){
+    find_count_of_ssid "$1" | (while read i
+    do
+        loop_over_cracks $i
+    done;exit 1)
+    if [ $? -eq 0 ]; then
+        exit 0
+    fi
+    echo "no network found :("
+    exit 1
+}
+
+connect_with_pw(){
+    find_count_of_ssid "$1" | (while read i
+    do
+        KEY="$2"
+        eval connect \"\${MAC_${i}}\" \"\${ESSID_${i}}\" \${ENCRYPTION_${i}} \"\${KEY}\"
+        if [ $? -eq 0 ]; then
+            exit 0
+        fi
+    done;exit 1)
+}
+
+loop_over_networks(){
+    for i in `seq 1 $WIFI_COUNT`; do
+        loop_over_cracks $i
+        if [ $? -eq 0 ]; then
+            exit 0
+        fi
+    done
+}
+
+loop_over_cracks(){
+    i=$1
+    KEY=''
+    for crack in $(find $confdir/cracks -type f | sort -u); do
+        KEY="$(eval root=$confdir \$crack \"\${ESSID_${i}}\" \"\${MAC_${i}}\" \${FREQ_${i}} \${ENCRYPTION_${i}})"
+        if [ $? -eq 0 ]; then
+            eval connect \"\${MAC_${i}}\" \"\${ESSID_${i}}\" \${ENCRYPTION_${i}} \"\${KEY}\"
+            if [ $? -eq 0 ]; then
+                return 0
+            fi
+        fi
+    done
+    return 1
+}
+
+scan_all(){
+    for i in `seq 1 $WIFI_COUNT`; do
+        loop_over_cracks $i
+    done
+}
+
+scan_unscanned(){
+    find_unscanned_networks | (while read i
+    do
+        loop_over_cracks $i
+    done)
+}
+
+
+check_gateway(){
+    echo ping -c 1 -w 5 $(ip route | grep $interface | awk '/default/{print $3}')
+}
+
+check_internet(){
+    ping -c 1 -w 5 8.8.8.8
+}
+
+check_bandwidth(){
+    echo $(curl ftp://ftp.microsoft.com/Products/mspress/library/ANIMAT.ZIP -w "%{speed_download}" -o /dev/null 2>/dev/null | sed 's/\..*//')
+}
+
+start_wpa_supplicant
+iwlist_scan > /tmp/$interface.scan
+. /tmp/$interface.scan
+if [ -n "$2" ]; then
+    echo connecting to $1 with pw $2
+    connect_with_pw "$1" "$2"
+elif [ -n "$1" ]; then
+    echo connecting to $1
+    connect_to_network_by_ssid "$1"
+else
+    echo looping network now
+    loop_over_networks
+fi
