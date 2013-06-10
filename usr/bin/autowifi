@@ -151,4 +151,9 @@ elif [ -n "$1" ]; then
 else
     echo looping network now
     loop_over_networks
+    while sleep 60; do
+        if ! check_internet; then
+            loop_over_networks
+        fi
+    done
 fi
