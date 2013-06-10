@@ -1,0 +1,6 @@
+sort networks by bandwidth and connect
+merge curl and wget commands
+perform initial scan on startup of unscanned networks
+more intelligent autoconnect (open first, encrypted second etc.)
+profiles ala netcfg/netctl
+better profile hooks
