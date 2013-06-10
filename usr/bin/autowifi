@@ -63,9 +63,10 @@ find_count_of_ssid(){
 
 
 connect_to_network_by_ssid(){
+    wifi_init
     find_count_of_ssid "$1" | (while read i
     do
-        loop_over_cracks $i
+        loop_over_cracks "$i" && exit 0
     done;exit 1)
     if [ $? -eq 0 ]; then
         exit 0
@@ -75,6 +76,7 @@ connect_to_network_by_ssid(){
 }
 
 connect_with_pw(){
+    wifi_init
     find_count_of_ssid "$1" | (while read i
     do
         KEY="$2"
@@ -84,14 +86,16 @@ connect_with_pw(){
         fi
     done;exit 1)
 }
-
-loop_over_networks(){
-
+wifi_init(){
     wpa_supplicant_is_usable || start_wpa_supplicant /tmp/autowifi.wpa_supplicant
     wifi_scan > /tmp/${interface}.scan
     . /tmp/${interface}.scan
+}
+loop_over_networks(){
+    wifi_init
+
     for i in `seq 1 $WIFI_COUNT`; do
-        loop_over_cracks $i
+        loop_over_cracks "$i"
         if [ $? -eq 0 ]; then
             return 0
         fi
