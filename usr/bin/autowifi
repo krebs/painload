@@ -6,6 +6,7 @@ interface=${interface:-wlan0}
 root=${root:-../../}
 crackdir=$root/usr/lib/autowifi/plugins
 wifi_keys=$root/etc/autowifi/wifi_keys
+wifi_log=$root/var/log/autowifi.log
 
 # exists() run_hooks()
 . $root/usr/lib/autowifi/lib/core
@@ -21,12 +22,12 @@ wifi_keys=$root/etc/autowifi/wifi_keys
 connect(){
     #mac ssid encryption key
 
-    run_hooks interface pre
-    run_hooks profile pre
+    run_hooks interface pre 
+    run_hooks profile pre 
 
-    connect_wifi "$@"
+    connect_wifi "$@" 
 
-    ip_start dhcp
+    ip_start dhcp 
 
     if check_gateway && check_internet; then
         echo yay internet >&2
@@ -41,7 +42,7 @@ connect(){
 }
 write_profile(){
     bandw=$(check_bandwidth)
-    (echo "#SSID|MAC|BANDWIDTH|KEY"; cat $wifi_keys | grep -v '^#' | grep -v "|$1|" ; echo "$2|$1|$bandw|$4" ) | sort | uniq > "${wifi_keys}2"
+    ( cat $wifi_keys | grep -v '^#' | grep -v "|$1|" ; echo "$2|$1|$bandw|$4" ) | ( echo "#SSID|MAC|BANDWIDTH|KEY";sort )| uniq > "${wifi_keys}2"
     mv "${wifi_keys}2" "$wifi_keys"
 }
 
@@ -149,8 +150,8 @@ elif [ -n "$1" ]; then
     echo connecting to $1
     connect_to_network_by_ssid "$1"
 else
-    echo looping network now
-    loop_over_networks
+    echo looping network now 
+    check_internet || loop_over_networks
     while sleep 60; do
         if ! check_internet; then
             loop_over_networks
