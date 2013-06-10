@@ -1,5 +1,5 @@
-sort networks by bandwidth and connect
-perform initial scan on startup of unscanned networks
 more intelligent autoconnect (open first, encrypted second etc.)
+    perform initial scan on startup of unscanned networks
+    sort networks by bandwidth and connect
 profiles ala netcfg/netctl
 better profile hooks
