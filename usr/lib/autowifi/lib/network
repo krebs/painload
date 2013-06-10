@@ -1,4 +1,5 @@
 #!/bin/sh
+
 check_gateway(){
     ping -c 1 -w 5 $(ip route | awk '/default/{print $3}')
 }
@@ -9,4 +10,24 @@ check_internet(){
     else
         return 1
     fi
+}
+
+check_bandwidth(){
+    echo $(curl ftp://ftp.microsoft.com/Products/mspress/library/ANIMAT.ZIP -w "%{speed_download}" -o /dev/null 2>/dev/null | sed 's/\..*//')
+}
+
+ip_start(){
+    : ${interface?interface variable not set} ${1?please provide method to start ip}
+    # usage: method [extra parms]
+    case "$1" in
+        dhcp)
+            if exists dhcpcd; then 
+                dhcpcd -x $interface
+                dhcpcd -w -A $interface
+            elif exists dhclient; then
+                dhclient -x $interface
+                dhclient $interface
+            fi ;;
+        *) echo "do not know ip starter $1";;
+    esac
 }

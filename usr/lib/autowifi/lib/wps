@@ -1,5 +1,8 @@
 #!/bin/sh
-
+has_wps(){
+    # the-wpa_supplicant-encryption-string
+    echo "$1" | grep  -q "\[WPS\]"
+}
 try_wps_pin(){
     # 
     # ESSID MAC CHANNEL ENC WPA WPA2 PIN
@@ -7,14 +10,16 @@ try_wps_pin(){
     ESSID="$1"
     MAC="$2"
     CHANNEL="$3"
-    ENC="$4"
-    WPA="$5"
-    WPA2="$6"
-    PIN="$7"
 
-    [ "$ENC" == off ] && return 2
-    WPA_CONF=/tmp/wpa.conf
-    WPA_LOG=/tmp/wpa.log
+    # TODO  refactor to use all the encryption
+    # the wpa_supplicant encryption string
+    ENC="$4"
+
+    PIN="$5"
+
+    [ "$ENC" = "[ESS]" ] && return 2
+    WPA_CONF=/tmp/wpa_trywps.conf
+    WPA_LOG=/tmp/wpa_trywps.log
     rm $WPA_LOG
     #mkfifo $WPA_LOG
     killall wpa_supplicant 2>/dev/null && sleep 1

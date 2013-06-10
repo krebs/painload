@@ -3,7 +3,7 @@
 # ENV:
 #   root (default: /)
 root=${root:-/}
-cat $root/etc/autowifi/wifi_keys 2>/dev/null | (while IFS='|' read SSID MAC KEY; do
+cat $root/etc/autowifi/wifi_keys 2>/dev/null | (while IFS='|' read SSID MAC BANDWIDTH KEY; do
     if [ "$1" == "$SSID" -a "$2" == "$MAC" ]; then
         echo $KEY
         exit 0

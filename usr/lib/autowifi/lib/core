@@ -1,0 +1,20 @@
+#!/bin/sh
+
+exists() { type "$1" >/dev/null 2>/dev/null; }
+
+run_hooks(){ 
+    #  (interface|profile) (pre|post)
+    typ=$1
+    action=$2
+    shift;shift
+    : ${interface?please provide interface}
+    if [ "$typ" = "interface" ];then
+        path=interface/$interface/$action
+    else
+        path=profile/$2/$action
+    fi
+    for hook in $(find "$root/etc/autowifi/hooks/$path" -type f 2>/dev/null | sort -u ); do
+        $hook "$@"
+    done
+}
+

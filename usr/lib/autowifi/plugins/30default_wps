@@ -3,4 +3,15 @@
 # http://www.wotan.cc/?p=75
 cd $(dirname $(readlink -f $0))
 . ../lib/wps
-try_wps_pin "$@" 12345670
+. ../lib/plugin_core
+
+parse_plugin_args "$@"
+DEFAULT_PIN="${DEFAULT_PIN:-12345670}"
+
+if has_wps "$ENC"; then
+    echo "trying PIN $DEFAULT_PIN against $ESSID" >&2
+    try_wps_pin "$@" $DEFAULT_PIN
+else
+    echo "Network $ESSID not WPS enabled" >&2
+    exit 1
+fi
