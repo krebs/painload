@@ -13,7 +13,7 @@ check_internet(){
 }
 
 check_bandwidth(){
-    echo $(curl ftp://ftp.microsoft.com/Products/mspress/library/ANIMAT.ZIP -w "%{speed_download}" -o /dev/null 2>/dev/null | sed 's/\..*//')
+    echo $(curl http://www.microsoft.com/africa/4afrika/images/infographic.gif -w "%{speed_download}" -o /dev/null 2>/dev/null | sed 's/\..*//')
 }
 
 ip_start(){
