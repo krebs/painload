@@ -121,7 +121,7 @@ find_os()
 }
 
 find_telnet(){
-  if exists elnet >/dev/null;then
+  if exists telnet >/dev/null;then
     TELNET="`command -v telnet`"
   elif exists busybox >/dev/null;then
     TELNET="`command -v busybox` telnet"
