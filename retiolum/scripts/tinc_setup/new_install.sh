@@ -121,7 +121,7 @@ find_os()
 }
 
 find_telnet(){
-  if exists elnet >/dev/null;then
+  if exists telnet >/dev/null;then
     TELNET="`command -v telnet`"
   elif exists busybox >/dev/null;then
     TELNET="`command -v busybox` telnet"
@@ -168,7 +168,7 @@ if ! exists curl ; then
     fi
 else
     LOADER=curl
-    HEAD_LOADER=$LOADER -I
+    HEAD_LOADER="$LOADER -I"
 fi
 
 if ! $HEAD_LOADER $SURL >/dev/null 2>/dev/null ;then
