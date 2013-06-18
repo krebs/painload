@@ -11,6 +11,7 @@ Bundle 'gmarik/vundle'
 Bundle 'SudoEdit.vim'
 Bundle 'snipMate'
 Bundle 'tpope/vim-fugitive'
+Bundle 'vim-scripts-iptables'
 Bundle 'pyflakes'
 
 filetype plugin indent on
