@@ -6,13 +6,10 @@ import sys
 import json
 
 
-
 TINC_NETWORK =os.environ.get("TINC_NETWORK","retiolum")
 
 # is_legacy is the parameter which defines if the tinc config files are handled old fashioned (parse from syslog), 
 # or if the new and hip tincctl should be used
-is_legacy=    os.environ.get("TINC_LEGACY",False)
-SYSLOG_FILE = os.environ.get("LOG_FILE","/var/log/everything.log")
 
 
 # Tags and Delimiters
@@ -23,7 +20,53 @@ BEGIN_SUBNET = "Subnet list:"
 END_SUBNET = "End of subnet list"
 BEGIN_EDGES = "Edges:"
 END_EDGES = "End of edges."
+def usage():
+  from sys import argv,exit
+  print("""usage: %s
+This tool dumps all tinc node informations as json
 
+ENVIRONMENT VARIABLES:
+  TINC_NETWORK   The tinc network to dump 
+                      (default: retiolum)
+  LOG_FILE       If legacy tinc is used, defines the log file where tinc stats are dumped in
+                      (default: /var/log/everything.log)
+""" % argv[0])
+  exit(1)
+def debug(func):
+  from functools import wraps
+  @wraps(func)
+  def with_debug(*args,**kwargs):
+    print( func.__name__ + " (args: %s | kwargs %s)"% (args,kwargs))
+    return func(*args,**kwargs)
+  return with_debug
+
+
+def get_tinc_log_file():
+  # TODO parse logfile from somewhere
+  return os.environ.get("LOG_FILE","/var/log/everything.log")
+
+
+def parse_tinc_stats():
+  import subprocess
+  from time import sleep
+  from distutils.spawn import find_executable as which
+  #newest tinc
+  if which("tinc"):
+    return parse_new_input("tinc")
+  #new tinc
+  elif which("tincctl"):
+    return parse_new_input("tincctl")
+  #old tinc
+  elif which("tincd"):
+    # TODO refactor me
+    subprocess.call(["pkill","-SIGUSR2", "tincd"])
+    sleep(1)
+    return parse_input(get_tinc_block(get_tinc_log_file()))
+  #no tinc
+  else:
+    raise Exception("no tinc executable found!")
+  
+#@debug
 def get_tinc_block(log_file):
   """ returns an iterateable block from the given log file (syslog) 
       This function became obsolete with the introduction of tincctl
@@ -44,22 +87,21 @@ def get_tinc_block(log_file):
 
     if not in_block:
       continue
-
     tinc_block.append(line)
 
     if BEGIN_NODES in line:
       break
   return reversed(tinc_block)
 
-def parse_new_input():
+def parse_new_input(tinc_bin):
   nodes = {} 
-  pnodes = subprocess.Popen(["tincctl","-n",TINC_NETWORK,"dump","reachable","nodes"], stdout=subprocess.PIPE).communicate()[0]
+  pnodes = subprocess.Popen([tinc_bin,"-n",TINC_NETWORK,"dump","reachable","nodes"], stdout=subprocess.PIPE).communicate()[0]
   #pnodes = subprocess.check_output(["tincctl","-n",TINC_NETWORK,"dump","reachable","nodes"])
   for line in pnodes.split('\n'):
     if not line: continue
     l = line.split()
     nodes[l[0]]= { 'external-ip': l[2], 'external-port' : l[4] }
-  psubnets = subprocess.check_output(["tincctl","-n",TINC_NETWORK,"dump","subnets"])
+  psubnets = subprocess.check_output([tinc_bin,"-n",TINC_NETWORK,"dump","subnets"])
   for line in psubnets.split('\n'):
     if not line: continue
     l = line.split()
@@ -69,7 +111,7 @@ def parse_new_input():
       nodes[l[2]]['internal-ip'].append(l[0].split('#')[0])
     except KeyError:
       pass # node does not exist (presumably)
-  pedges = subprocess.check_output(["tincctl","-n",TINC_NETWORK,"dump","edges"])
+  pedges = subprocess.check_output([tinc_bin,"-n",TINC_NETWORK,"dump","edges"])
   for line in pedges.split('\n'):
     if not line: continue
     l = line.split()
@@ -82,6 +124,7 @@ def parse_new_input():
       pass #node does not exist
   return nodes
 
+#@debug
 def parse_input(log_data):
   nodes={}
   for line in log_data:
@@ -114,11 +157,10 @@ def parse_input(log_data):
 
 
 if __name__ == '__main__':
-  import subprocess,time
-  if is_legacy:
-    subprocess.call(["pkill","-SIGUSR2", "tincd"])
-    time.sleep(1)
-    print json.dumps(parse_input((get_tinc_block(SYSLOG_FILE))))
+  # TODO refactor me
+  from sys import argv
+  if len(argv) > 1:
+    usage()
   else:
-    print json.dumps(parse_new_input())
+    print json.dumps(parse_tinc_stats())
 
