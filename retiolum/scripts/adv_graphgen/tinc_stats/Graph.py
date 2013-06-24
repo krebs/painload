@@ -1,4 +1,43 @@
 #!/usr/bin/python
+from BackwardsReader import BackwardsReader
+from Graphite import GraphiteSender
+import sys,json,os
+from Supernodes import check_all_the_super
+from Availability import get_node_availability
+import sys,json
+from time import time
+DUMP_FILE = "/krebs/db/availability"
+def dump_graph(nodes):
+  from time import time
+  graph = {}
+  graph['nodes'] = nodes
+  graph['timestamp'] = time()
+  f = open(DUMP_FILE,'a')
+  json.dump(graph,f)
+  f.write('\n')
+  f.close()
+
+def generate_availability_stats(nodes):
+  """ generates stats of from availability
+  """
+  jlines = []
+  try:
+    f = BackwardsReader(DUMP_FILE)
+    lines_to_use = 1000
+    while True:
+      if lines_to_use == 0: break
+      line = f.readline()
+      if not line: break
+      jline = json.loads(line)
+      if not jline['nodes']: continue
+
+      jlines.append(jline)
+      lines_to_use -=1
+  except Exception,e: sys.stderr.write(str(e))
+
+  for k,v in nodes.iteritems():
+    v['availability'] = get_node_availability(k,jlines)
+    sys.stderr.write( "%s -> %f\n" %(k ,v['availability']))
 
 def generate_stats(nodes):
   """ Generates some statistics of the network and nodes
@@ -42,3 +81,139 @@ def merge_edges(nodes):
         if k == secon['name']:
           del (nodes[con['name']]['to'][i])
           con['bidirectional'] = True
+
+
+def print_head():
+  print ('digraph retiolum {')
+  print ('  graph [center packMode="clust"]')
+  print ('  node[shape=box,style=filled,fillcolor=grey]')
+  print ('  overlap=false')
+
+def print_stat_node(nodes):
+  ''' Write a `stats` node in the corner
+      This node contains infos about the current number of active nodes and connections inside the network
+  '''
+  from time import localtime,strftime
+  num_conns = 0
+  num_nodes = len(nodes)
+  try: 
+    msg = '%s.num_nodes %d %d\r\n' %(g_path,num_nodes,begin)
+    s.send(msg)
+  except Exception as e: pass
+  #except: pass
+  for k,v in nodes.iteritems():
+    num_conns+= len(v['to'])
+  node_text = "  stats_node [label=\"Statistics\\l"
+  node_text += "Build Date  : %s\\l" % strftime("%Y-%m-%d %H:%M:%S",localtime())
+  node_text += "Active Nodes: %s\\l" % num_nodes
+  node_text += "Connections : %s\\l" % num_conns
+  node_text += "\""
+  node_text += ",fillcolor=green"
+  node_text += "]"
+  print(node_text)
+
+def print_node(k,v):
+  """ writes a single node and its edges 
+      edges are weightet with the informations inside the nodes provided by
+      tinc
+  """
+
+  node = "  "+k+"[label=\""
+  node += k+"\\l"
+  node += "availability: %f\\l" % v['availability'] 
+  if v.has_key('num_conns'):
+    node += "Num Connects:"+str(v['num_conns'])+"\\l"
+  node += "external:"+v['external-ip']+":"+v['external-port']+"\\l"
+  for addr in v.get('internal-ip',['dunno lol']): 
+    node += "internal:%s\\l"%addr
+  node +="\""
+
+  if v['num_conns'] == 1:
+    node += ",fillcolor=red"
+  elif k in supernodes:
+    node += ",fillcolor=steelblue1"
+  node += "]"
+  print node
+
+def print_anonymous_node(k,v):
+  """ writes a single node and its edges 
+      edges are weightet with the informations inside the nodes provided by
+      tinc
+  """
+  
+  node = "  "+k #+"[label=\""
+  print node
+
+def print_edge(k,v):
+  for con in v.get('to',[]):
+    label  = con['weight']
+    w = int(con['weight'])
+    weight = str(1000 - (((w - 150) * (1000 - 0)) / (1000 -150 )) + 0)
+
+    length = str(float(w)/1500)
+    if float(weight) < 0 :
+      weight= "1"
+
+    edge = "  "+k+ " -> " +con['name'] + " [label="+label + " weight="+weight 
+    if con.get('bidirectional',False):
+      edge += ",dir=both"
+    edge += "]"
+    print edge
+
+def anonymize_nodes(nodes):
+  #anonymizes all nodes
+  i = "0"
+  newnodes = {}
+  for k,v in nodes.iteritems():
+    for nodek,node in nodes.iteritems():
+      for to in node['to']:
+        if to['name'] == k:
+          to['name'] = i
+    newnodes[i] = v
+    i = str(int(i)+1)
+  return newnodes
+
+if __name__ == "__main__":
+  supernodes= []
+  try:
+    gr = GraphiteSender(os.environ.get("GRAPHITE_HOST","localhost"))
+    begin = time()
+  except Exception as e:
+    sys.stderr.write( "Cannot connect to graphite: " + str(e))
+  if len(sys.argv) != 2 or  sys.argv[1] not in ["anonymous","complete"]: 
+    print("usage: %s (anonymous|complete)")
+    sys.exit(1)
+
+  nodes = json.load(sys.stdin)
+  nodes = delete_unused_nodes(nodes)
+  print_head()
+  generate_stats(nodes)
+  merge_edges(nodes)
+
+
+  if sys.argv[1] == "anonymous":
+    nodes = anonymize_nodes(nodes)
+
+    for k,v in nodes.iteritems():
+      print_anonymous_node(k,v)
+      print_edge(k,v)
+
+  elif sys.argv[1] == "complete":
+    for supernode,addr in check_all_the_super():
+      supernodes.append(supernode)
+    generate_availability_stats(nodes)
+    for k,v in nodes.iteritems():
+      print_node(k,v)
+      print_edge(k,v)
+    try:
+      dump_graph(nodes)
+    except Exception,e:
+      sys.stderr.write("Cannot dump graph: %s" % str(e))
+  else:
+    pass
+
+  print_stat_node(nodes)
+  print ('}')
+  try: 
+    gr.send("graph.anon_build_time",(time()-begin)*1000)
+  except Exception as e: pass

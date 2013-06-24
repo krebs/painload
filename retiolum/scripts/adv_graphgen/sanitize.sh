@@ -12,7 +12,7 @@ OPENER=/bin/true
 DOTFILE=`mktemp --suffix=san`
 trap 'rm $DOTFILE' INT TERM KILL EXIT
 sudo -E python tinc_stats/Log2JSON.py |\
-    python parse_tinc_stats.py > $DOTFILE
+    python tinc_stats/Graph.py complete > $DOTFILE
 
 
 i=1

@@ -9,5 +9,5 @@ WEBDIR=$1
 HOSTFILE=$WEBDIR/supernodes.tar.gz
 cd $(dirname $(readlink -f $0))
 rm -f $HOSTFILE
-tar czf $HOSTFILE  -C $HOSTDIR `python ../scripts/adv_graphgen/find_super.py |cut -d\  -f1`
+tar czf $HOSTFILE  -C $HOSTDIR `python ../scripts/adv_graphgen/tinc_stats/Supernodes.py |cut -d\  -f1`
 chmod a+rx $HOSTFILE
