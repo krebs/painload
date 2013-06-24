@@ -1,25 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
-from tinc_stats.BackwardsReader import BackwardsReader
-from tinc_stats.Graph import generate_stats,delete_unused_nodes,merge_edges
-import sys,json
-#supernodes= [ "kaah","supernode","euer","pa_sharepoint","oxberg" ]
+from tinc_stats.Graphite import GraphiteSender
+from time import time
+
 try:
-  import socket
-  from time import time
   import os
-  host = os.environ.get("GRAPHITE_HOST","localhost")
-  port = 2003
-  g_path =  os.environ.get("GRAPHITE_PATH","retiolum")
+  gr = GraphiteSender(os.environ.get("GRAPHITE_HOST","localhost"))
   begin = time()
-  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
-  sys.stderr.write("connecting to %s:%d"%(host,port))
-  s.connect((host,port))
 except Exception as e:
   sys.stderr.write( "Cannot connect to graphite: " + str(e))
-""" TODO: Refactoring needed to pull the edges out of the node structures again,
-it should be easier to handle both structures"""
-DUMP_FILE = "/krebs/db/availability"
+
 
 def write_digraph(nodes):
   """
@@ -94,12 +84,10 @@ def write_node(k,v):
       edge += ",dir=both"
     edge += "]"
     print edge
+
 if __name__ == "__main__":
   nodes = delete_unused_nodes(json.load(sys.stdin))
   write_digraph(nodes)
   try: 
-    end = time()
-    msg = '%s.graph.anon_build_time %d %d\r\n' % (g_path,((end-begin)*1000),end)
-    s.send(msg)
-    s.close()
+    gr.send("graph.anon_build_time",(time()-begin)*1000)
   except Exception as e: pass

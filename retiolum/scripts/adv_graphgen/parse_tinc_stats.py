@@ -5,25 +5,18 @@ from tinc_stats.Graph import generate_stats,delete_unused_nodes,merge_edges,get_
 from tinc_stats.Supernodes import check_all_the_super
 from tinc_stats.Availability import get_node_availability
 import sys,json
+from tinc_stats.Graphite import GraphiteSender
+from time import time
+
 try:
-  from time import time
-  import socket
   import os
-  host = os.environ.get("GRAPHITE_HOST","localhost")
-  port = 2003
-  g_path =  os.environ.get("GRAPHITE_PATH","retiolum")
+  gr = GraphiteSender(os.environ.get("GRAPHITE_HOST","localhost"))
   begin = time()
-  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
-  sys.stderr.write("connecting to %s:%d"%(host,port))
-  s.connect((host,port))
 except Exception as e:
-  sys.stderr.write("Cannot connect to graphite: %s\n" % str(e))
+  sys.stderr.write( "Cannot connect to graphite: " + str(e))
 
 supernodes= [ ]
-for supernode,addr in check_all_the_super():
-  supernodes.append(supernode)
-""" TODO: Refactoring needed to pull the edges out of the node structures again,
-it should be easier to handle both structures"""
+
 DUMP_FILE = "/krebs/db/availability"
 
 def write_digraph(nodes):
@@ -149,20 +142,16 @@ def write_node(k,v):
     edge += "]"
     print edge
 
-def decode_input(FILE):
-  return json.load(FILE)
-nodes = decode_input(sys.stdin)
-nodes = delete_unused_nodes(nodes)
-try:
-  dump_graph(nodes)
-except Exception,e:
-  sys.stderr.write("Cannot dump graph: %s" % str(e))
-write_digraph(nodes)
-
-try: 
-  end = time()
-  msg = '%s.graph.detail_build_time %d %d\r\n' % (g_path,((end-begin)*1000),end)
-  s.send(msg)
-  sys.stderr.write(msg)
-  s.close()
-except Exception as e: sys.stderr.write( str(e) + "\n")
+if __name__ == "__main__":
+  nodes = json.load(sys.stdin)
+  nodes = delete_unused_nodes(nodes)
+  for supernode,addr in check_all_the_super():
+    supernodes.append(supernode)
+  try:
+    dump_graph(nodes)
+  except Exception,e:
+    sys.stderr.write("Cannot dump graph: %s" % str(e))
+  write_digraph(nodes)
+  try: 
+    gr.send("graph.anon_build_time",(time()-begin)*1000)
+  except Exception as e: pass
