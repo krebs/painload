@@ -11,7 +11,7 @@ TYPE2=png
 OPENER=/bin/true
 DOTFILE=`mktemp --suffix=anon`
 trap 'rm $DOTFILE' INT TERM KILL EXIT
-sudo -E python tinc_stats2json |\
+sudo -E python tinc_stats/Log2JSON.py |\
     python parse_tinc_anon.py> $DOTFILE
 
 

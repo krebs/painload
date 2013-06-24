@@ -1,8 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
-from BackwardsReader import BackwardsReader
+from tinc_stats.BackwardsReader import BackwardsReader
+from tinc_stats.Graph import generate_stats,delete_unused_nodes,merge_edges,get_node_avg_weight
+from tinc_stats.Supernodes import check_all_the_super
+from tinc_stats.Availability import get_node_availability
 import sys,json
-from find_super import check_all_the_super
 try:
   from time import time
   import socket
@@ -100,65 +102,6 @@ def generate_stats(nodes):
     v['availability'] = get_node_availability(k,jlines)
     sys.stderr.write( "%s -> %f\n" %(k ,v['availability']))
 
-def get_node_avg_weight(conns):
-  """ calculates the average weight for the given connections """
-  if not conns:
-    sys.syderr.write("get_node_avg_weight: connection parameter empty")
-    return 9001
-  else:
-    return sum([float(c['weight']) for c in conns])/len(conns)
-def get_node_availability(name,jlines):
-  """ calculates the node availability by reading the generated dump file
-  adding together the uptime of the node and returning the time
-	parms:
-          name - node name
-          jlines - list of already parsed dictionaries node archive
-  """
-  begin = last = current = 0
-  uptime = 0
-  #sys.stderr.write ( "Getting Node availability of %s\n" % name)
-  for stat in jlines:
-    if not stat['nodes']:
-      continue
-    ts = stat['timestamp']
-    if not begin:
-      begin = last = ts
-    current = ts
-    if stat['nodes'].get(name,{}).get('to',[]):
-      uptime += current - last
-    else:
-      pass
-      #sys.stderr.write("%s offline at timestamp %f\n" %(name,current))
-    last = ts
-  all_the_time = last - begin
-  try:
-    return uptime/ all_the_time
-  except:
-    return 1
-
-def delete_unused_nodes(nodes):
-  new_nodes = {}
-  for k,v in nodes.iteritems():
-    if v['external-ip'] == "(null)":
-      continue
-    if v.get('to',[]):
-      new_nodes[k] = v
-  for k,v in new_nodes.iteritems():
-    if not [ i for i in v['to'] if i['name'] in new_nodes]:
-      #del(new_nodes[k])
-      del(k)
-  return new_nodes
-
-def merge_edges(nodes):
-  """ merge back and forth edges into one
-  DESTRUCTS the current structure by deleting "connections" in the nodes
-  """
-  for k,v in nodes.iteritems():
-    for con in v.get('to',[]):
-      for i,secon in enumerate(nodes.get(con['name'],{}).get('to',[])):
-        if k == secon['name']:
-          del (nodes[con['name']]['to'][i])
-          con['bidirectional'] = True
 
 
 def write_node(k,v):

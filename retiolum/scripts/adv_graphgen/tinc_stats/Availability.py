@@ -9,8 +9,9 @@ DUMP_FILE = "/krebs/db/availability"
 def get_all_nodes():
   import os
   return os.listdir("/etc/tinc/retiolum/hosts")
+
 def generate_stats():
-  """ Generates some statistics of the network and nodes
+  """ Generates availability statistics of the network and nodes
   """
   import json
   jlines = []
@@ -35,7 +36,6 @@ def get_node_availability(name,jlines):
   """
   begin = last = current = 0
   uptime = 0
-  #sys.stderr.write ( "Getting Node availability of %s\n" % name)
   for stat in jlines:
     if not stat['nodes']:
       continue
@@ -47,7 +47,6 @@ def get_node_availability(name,jlines):
       uptime += current - last
     else:
       pass
-      #sys.stderr.write("%s offline at timestamp %f\n" %(name,current))
     last = ts
   all_the_time = last - begin
   try:
@@ -55,5 +54,5 @@ def get_node_availability(name,jlines):
   except:
     return 1
 
-
-generate_stats()
+if __name__ == "__main__":
+  generate_stats()
