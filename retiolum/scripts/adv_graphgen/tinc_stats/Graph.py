@@ -7,6 +7,18 @@ from Availability import get_node_availability
 import sys,json
 from time import time
 DUMP_FILE = "/krebs/db/availability"
+
+
+def resolve_myself(nodes):
+  #resolve MYSELF to the real ip
+  for k,v in nodes.iteritems():
+    if v["external-ip"] == "MYSELF":
+      for nodek,node in nodes.iteritems():
+         for to in node['to']:
+           if to['name'] == k:
+             v["external-ip"] = to["addr"]
+  return nodes
+
 def dump_graph(nodes):
   from time import time
   graph = {}
