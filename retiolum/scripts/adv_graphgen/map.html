@@ -47,11 +47,9 @@
 
         $.getJSON("marker.json",function (data){
           $.each(data,function (k,v) {
-           jitter1=0.005 - Math.random()*0.01
-           jitter2=0.005 - Math.random()*0.01
 
             // add initial marker
-            var pt=new google.maps.LatLng(jitter1+v["latitude"],jitter2+v["longitude"])
+            var pt=new google.maps.LatLng(v["latitude"],v["longitude"])
             var marker= new google.maps.Marker({
               id: k,map:map,title: k,position:pt,content:k})
 
