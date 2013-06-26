@@ -15,13 +15,8 @@ cd $(dirname $(readlink -f $0))
 . ../lib/wps
 parse_plugin_args "$@"
 
-MAC=$(printf "%s" $MAC| sed 's/://g')
-VENDOR_MAC=${MAC:0:6}
-PRIVATE_MAC=${MAC:6:12}
-if ! [ $VENDOR_MAC == "002275" -o $VENDOR_MAC == "001CDF" -o $VENDOR_MAC == "09863B" ] ;then
-    echo "VENDOR MAC $VENDOR_MAC not affected"
-    exit 1
-fi
+
+! check_vendor_mac "$VENDOR_MAC" 002275 001CDF 09863B && echo "VENDOR MAC $VENDOR_MAC not affected" && exit 1
 
 calc_belkin(){
     PRIVATE_MAC=${1}

@@ -2,30 +2,23 @@
 # ENV:
 # the root directory (e.g. root=$PWD/../../ if run from here )
 cd $(dirname $(readlink -f $0))
-root=${root:-/}
-wifi=${wifi:-wlan0}
-
 test  "${1:-}" = 'quiet' && exec 2>&-
 
-# for iwlist_scan
-. $root/usr/lib/autowifi/lib/iwlist
+interface=${interface:-wlan0}
+root=${root:-../../}
+crackdir=$root/usr/lib/autowifi/plugins
+wifi_keys=$root/etc/autowifi/wifi_keys
+wifi_log=$root/var/log/autowifi.log
 
-# . $ROOT/usr/lib/autowifi/lib/
+# exists() run_hooks()
+. $root/usr/lib/autowifi/lib/core
 
-# for check_internet and check_gateway
-# . /usr/lib/autowifi/lib/network
+# start_wpa_supplicant()
+. $root/usr/lib/autowifi/lib/wpa_supplicant
 
 crack_wifi(){
-    #SSID MAC CHANNEL ENCRYPTION WPA WPA2
-    if [ "$4" == off ];then
-        encr=open
-    elif [ "$6" -eq 1 ]; then
-        encr=psk2
-    elif [ "$5" -eq 1 ]; then
-        encr=psk
-    elif [ "$4" == on ]; then
-        encr=wep
-    fi
+    #SSID MAC CHANNEL ENCRYPTION 
+
     ALL_RET=1
     for hack in $(find $root/usr/lib/autowifi/plugins -type f | sort -n); do
         printf "%s" "Trying $(basename $hack) against $1 : " >&2
@@ -41,13 +34,18 @@ crack_wifi(){
     done
     return $ALL_RET
 }
+wifi_init(){
+    wpa_supplicant_is_usable || start_wpa_supplicant /tmp/autowifi.wpa_supplicant
+    wifi_scan > /tmp/${interface}.scan
+    . /tmp/${interface}.scan
+}
 loop_over_networks(){
-    . /tmp/${wifi}.scan
+    wifi_init
+
     echo "SSID:MAC:CHANNEL:ENCRYPTION:key"
     for i in `seq 1 $WIFI_COUNT`; do
-        eval crack_wifi \"\${ESSID_${i}}\" \${MAC_${i}} \${CHANNEL_${i}} \${ENCRYPTION_${i}} \${WPA_${i}} \${WPA2_${i}} 
+        eval crack_wifi \"\${ESSID_${i}}\" \${MAC_${i}} \${CHANNEL_${i}} \${ENCRYPTION_${i}} 
     done
 }
 
-iwlist_scan > /tmp/${wifi}.scan
 loop_over_networks

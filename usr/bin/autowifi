@@ -114,6 +114,21 @@ loop_over_cracks(){
     done
     return 1
 }
+loop_cracks_over_networks(){
+    wifi_init
+    for crack in $(find $crackdir -type f | sort -u); do
+        for i in `seq 1 $WIFI_COUNT`; do
+            KEY="$(eval root=$root \$crack \"\${ESSID_${i}}\" \"\${MAC_${i}}\" \${FREQ_${i}} \${ENCRYPTION_${i}})"
+            if [ $? -eq 0 ]; then
+                eval connect \"\${MAC_${i}}\" \"\${ESSID_${i}}\" \${ENCRYPTION_${i}} \"\${KEY}\"
+                if [ $? -eq 0 ]; then
+                    return 0
+                fi
+            fi
+        done
+    done
+
+}
 
 #scan_all(){
 #    for i in `seq 1 $WIFI_COUNT`; do
@@ -151,11 +166,11 @@ elif [ -n "$1" ]; then
     connect_to_network_by_ssid "$1"
 else
     echo looping network now 
-    check_internet || loop_over_networks
+    check_internet || loop_cracks_over_networks
 
     while sleep 60; do
         if ! check_internet; then
-            loop_over_networks
+            loop_cracks_over_networks
         fi
     done
 fi
