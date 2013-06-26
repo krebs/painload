@@ -63,7 +63,6 @@ find_count_of_ssid(){
 
 
 connect_to_network_by_ssid(){
-    wifi_init
     find_count_of_ssid "$1" | (while read i
     do
         loop_over_cracks "$i" && exit 0
@@ -76,7 +75,6 @@ connect_to_network_by_ssid(){
 }
 
 connect_with_pw(){
-    wifi_init
     find_count_of_ssid "$1" | (while read i
     do
         KEY="$2"
@@ -92,8 +90,8 @@ wifi_init(){
     . /tmp/${interface}.scan
 }
 loop_over_networks(){
-    wifi_init
 
+    wifi_init
     for i in `seq 1 $WIFI_COUNT`; do
         loop_over_cracks "$i"
         if [ $? -eq 0 ]; then
@@ -144,9 +142,7 @@ loop_over_cracks(){
 #    exit 0
 #}
 
-
-
-
+wifi_init
 if [ -n "$2" ]; then
     echo connecting to $1 with pw $2
     connect_with_pw "$1" "$2"
