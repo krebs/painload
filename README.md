@@ -1,10 +1,12 @@
 # Autowifi
 Author: makefu,lassulus
+
 Status: Pre-Alpha - it will most likely break if you try to use it
 
 # Contact
 
 twitter: @krebsbob ,@makefoo 
+
 IRC: freenode #krebs
 
 # Goals
