@@ -17,7 +17,7 @@ wifi_log=$root/var/log/autowifi.log
 . $root/usr/lib/autowifi/lib/wpa_supplicant
 
 crack_wifi(){
-    #SSID MAC CHANNEL ENCRYPTION 
+    #SSID MAC FREQ ENCRYPTION 
 
     ALL_RET=1
     for hack in $(find $root/usr/lib/autowifi/plugins -type f | sort -n); do
@@ -42,9 +42,9 @@ wifi_init(){
 loop_over_networks(){
     wifi_init
 
-    echo "SSID:MAC:CHANNEL:ENCRYPTION:key"
+    echo "SSID:MAC:FREQ:ENCRYPTION:key"
     for i in `seq 1 $WIFI_COUNT`; do
-        eval crack_wifi \"\${ESSID_${i}}\" \${MAC_${i}} \${CHANNEL_${i}} \${ENCRYPTION_${i}} 
+        eval crack_wifi \"\${ESSID_${i}}\" \${MAC_${i}} \${FREQ_${i}} \${ENCRYPTION_${i}} 
     done
 }
 
