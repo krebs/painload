@@ -1,21 +1,20 @@
 #!/bin/sh
 #ESSID MAC CHANNEL ENCRYPTION WPA WPA2
-if ! echo "$1" | egrep -qi "(EasyBox-|Arcor-|Vodafone-)"; then
+
+cd $(dirname $(readlink -f $0))
+. ../lib/plugin_core
+parse_plugin_args "$@"
+
+if ! echo "$ESSID" | egrep -i "(EasyBox-|Arcor-|Vodafone-)" >/dev/null; then
+    echo "Essid $ESSID is not Default EasyBox|Arcor|Vodafone" 
     exit 1
 else
-    MAC=${2?\$2 must be MAC}
-
-    # Take the last 2 Bytes of the MAC-Address (0B:EC), and convert it to decimal.
-
-    take5=${MAC:12}
-    last4=${take5/:/}
 
     # Fill up to 4 places with zeros, if necessary:
-    deci=$(printf "%04d" "0x$last4" | sed 's/.*\(....\)/\1/;s/./& /g')
-    #echo M4: ${deci[@]}
+    deci=$(printf "%04d" "0x${MAC:8:4}" | sed 's/.*\(....\)/\1/;s/./& /g')
     #
     # The digits M9 to M12 are just the last digits (9.-12.) of the MAC:
-    hexi=$(echo ${MAC:12:5} | sed 's/://;s/./& /g')
+    hexi=$(echo ${MAC:8:4} | sed 's/./& /g')
     #echo 'M4 (Hex): ' ${hexi[@]}
     # K1 = last byte of (d0 + d1 + h2 + h3)
     # K2 = last byte of (h0 + h1 + d2 + d3)
