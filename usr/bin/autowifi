@@ -172,7 +172,7 @@ else
     echo looping network now 
     check_internet || loop_cracks_over_networks
 
-    while sleep 60; do
+    while sleep 10; do
         if ! check_internet; then
             loop_cracks_over_networks
         fi
