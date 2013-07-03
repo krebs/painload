@@ -1,0 +1,31 @@
+#!/bin/bash
+
+set -euf
+cd $(dirname $(readlink -f $0))
+usage(){
+    cat <<EOF 
+usage: $0 [pubkey-file] [bootstrap-file]
+    if pubkey-file is "" it will be skipped.
+
+    e.g.:
+        $0 "" ../path/to/other/bootstrap
+EOF
+    
+}
+pubfile=${1:-}
+bootfile=${2:-../etc/services/bootstrap}
+
+for i in `cat $bootfile`; do
+    # retard uriparsing but good enough for our use case
+    netloc=${i##*//}
+    host=${netloc%%:*}
+    port=${netloc##*:}
+    [ "$port" == "$host" ] && port=1337
+    echo $netloc
+    pubarg="${pubfile:+-i $pubfile}"
+    printf "[32m" 
+    ssh ${pubarg} "services@$host" -p "$port" \
+        -o PasswordAuthentication=no 2>/dev/null||:
+    printf "[0m"
+done
+
