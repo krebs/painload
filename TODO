@@ -3,3 +3,6 @@ more intelligent autoconnect (open first, encrypted second etc.)
     sort networks by bandwidth and connect
 profiles ala netcfg/netctl
 better profile hooks
+
+Implement:
+    - Droid Default WPA2 Pass for HotSpot: CVE-2013-4622: http://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2013-4622
