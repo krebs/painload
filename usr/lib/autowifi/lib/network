@@ -4,8 +4,10 @@ check_gateway(){
     ping -c 1 -w 5 $(ip route | awk '/default/{print $3}')
 }
 check_internet(){
-    secret=$(curl http://krebsco.de/secret 2>/dev/null)
+    # TODO determine the loader, either wget or curl
+    secret=$(wget -O- http://krebsco.de/secret 2>/dev/null)
     if [ "$secret" == "1337" ]; then
+        echo "cannot load secret or secret incorrect" >&2
         return 0
     else
         return 1
