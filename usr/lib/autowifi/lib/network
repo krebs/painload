@@ -27,7 +27,9 @@ ip_start(){
             elif exists dhclient; then
                 dhclient -x $interface
                 dhclient $interface
+            elif exists udhcpc; then
+                udhcpc -n -i $interface
             fi ;;
-        *) echo "do not know ip starter $1";;
+        *) echo "do not know ip starter $1" >&2;;
     esac
 }
