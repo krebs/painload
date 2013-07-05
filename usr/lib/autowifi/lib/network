@@ -30,7 +30,9 @@ ip_start(){
                 dhclient -x $interface
                 dhclient $interface
             elif exists udhcpc; then
-                udhcpc -n -i $interface
+                PIDFILE=/var/run/udhcpc-${interface}.pid
+                [ -e $PIDFILE ] && kill `cat $PIDFILE` ||:
+                udhcpc -n -i $interface -s /lib/netifd/dhcp.script -C -p /var/run/udhcpc-${interface}.pid
             fi ;;
         *) echo "do not know ip starter $1" >&2;;
     esac
