@@ -35,7 +35,7 @@ wifi_scan(){
     wpa_cli scan >/dev/null
     sleep 10
     
-    wpa_cli scan_results 2>/dev/null | grep -E "^??:" | sed 's/	/ /g' | (while IFS=' ' read MAC FREQ QUALITY ENCRYPTION ESSID
+    wpa_cli scan_results 2>/dev/null | egrep "^..:" | sed 's/	/ /g' | (while IFS=' ' read MAC FREQ QUALITY ENCRYPTION ESSID
     do
         : $((count+=1))
         print_wifi_env
