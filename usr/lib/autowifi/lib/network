@@ -32,7 +32,8 @@ ip_start(){
             elif exists udhcpc; then
                 PIDFILE=/var/run/udhcpc-${interface}.pid
                 [ -e $PIDFILE ] && kill `cat $PIDFILE` ||:
-                udhcpc -n -i $interface -s /lib/netifd/dhcp.script -C -p /var/run/udhcpc-${interface}.pid
+                udhcpc -n -p $PIDFILE -i $interface -s \
+                    "$root/usr/lib/autowifi/opt/udhcpc.run"
             fi ;;
         *) echo "do not know ip starter $1" >&2;;
     esac
