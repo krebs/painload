@@ -1,5 +1,10 @@
 # //services
 
+## install service user
+    
+    make create-service-user service-user
+    $EDITOR /opt/services/services.txt
+
 ## install and run test-server.py as systemd service
 
 ### install dependencies

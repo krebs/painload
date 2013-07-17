@@ -26,6 +26,7 @@ $(services_home)/.ssh/authorized_keys: $(services_home)/.ssh $(authorized_keys_f
 	cp $(authorized_keys_file) $(services_home)/.ssh/authorized_keys
 	@echo "restricting authorized_keys..."
 	@sed -i 's#^#command="/bin/cat $(services_home)/services.txt",no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty #' $(services_home)/.ssh/authorized_keys
+	chown services:services $(authorized_keys_file)
 
 $(services_home)/services.txt:
 	@echo 'make sure to configure the services correctly in $(services_home)/services.txt'
