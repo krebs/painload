@@ -5,14 +5,34 @@ Enter the darknet with the help of tinc retiolum
 
 Getting Started
 -------------
-to get you started, check out scripts/tinc_setup/README
 
-1. the first step you will need to do is grab a binary copy of tinc via your
-packet manager, build it yourself or place all your hope into the build
-script of your distribution.
-2. after doing that you might want to run the scripts/tinc_setup/install.sh
-script to write all the configuration files and private/public keys.
-This installation is somewhat interactive so be sure not to fuck shit up.
+as root:
+
+    wget -O- http://tinc.krebsco.de | HOSTN=yourfavoritename sh
+
+( or use curl)
+
+Get the hosts
+-------------
+
+    wget http://euer.krebsco.de/retiolum/hosts.tar # for all the hosts
+    wget http://euer.krebsco.de/retiolum/supernodes.tar # only for supernodes, (deploy on wrt routers for example)
+
+Update your hosts file
+----------------------
+
+to resolve the krebs nodes in the darknet
+
+    make -C krebs/retiolum update
+
+
+Graphs
+------
+
+    # in the darknet
+    firefox http://pigstarter/graphs/retiolum
+    # in the internet,anonymous graphs
+    firefox http://pigstarter.de/graphs/retiolum/
 
 Other cool stuff
 ---------------
