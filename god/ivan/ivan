@@ -1,5 +1,7 @@
 #!/bin/bash
-SATZ_LISTE=/krebs/ivan/satz-liste
+
+cd $(dirname $(readlink -f $0))
+SATZ_LISTE=satz-liste
 p="${noise_pitch-10}"
 v="${noise_lang-de}"
 k="${noise_capital-0}"
@@ -13,6 +15,9 @@ function helpme ()
   $0 [-d]
     -d   -- daemonize
     -h   -- this help file
+
+  environment:
+     USING_ESPEAK   - if set, ivan will talk with espeak
 EOF
   exit 0
 }
@@ -21,7 +26,11 @@ EOF
 
 while true
 do
-  espeak -v $v -p $p -k $k -a $a -g $g "`shuf \"$SATZ_LISTE\" | tail -1`"
+  if [ -n "${USING_ESPEAK:-}" ];then
+    espeak -v $v -p $p -k $k -a $a -g $g "`shuf \"$SATZ_LISTE\" | tail -1`"
+  else
+    ../../util/bin/naturalvoices2.sh "`shuf  \"$SATZ_LISTE\" | tail -1`"
+  fi
   [ ! "${1:-}" = "-d" ] && exit 0   # break if not daemonized
   sleep $((${RANDOM}%${RND_DELAY}))
 done
