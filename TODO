@@ -6,3 +6,4 @@ better profile hooks
 
 Implement:
     - Droid Default WPA2 Pass for HotSpot: CVE-2013-4622: http://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2013-4622
+    - EasyBox 802/803 default WPS Pin: http://packetstormsecurity.com/files/122698/SA-20130805-0.txt
