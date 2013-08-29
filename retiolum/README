@@ -15,8 +15,11 @@ as root:
 Get the hosts
 -------------
 
-    wget http://euer.krebsco.de/retiolum/hosts.tar # for all the hosts
-    wget http://euer.krebsco.de/retiolum/supernodes.tar # only for supernodes, (deploy on wrt routers for example)
+    wget http://euer.krebsco.de/retiolum/hosts.tar.gz # for all the hosts
+    wget http://euer.krebsco.de/retiolum/supernodes.tar.gz # only for supernodes, (deploy on wrt routers for example)
+
+    # quick update
+    curl http://euer.krebsco.de/retiolum/supernodes.tar.gz | gunzip | tar x -C /etc/tinc/retiolum/hosts
 
 Update your hosts file
 ----------------------
