@@ -1,0 +1,9 @@
+#!/bin/sh
+cd $(dirname $0)
+U="${1:-$USER}"
+H="$(grep "^$U" /etc/passwd | cut -d : -f 6)"
+echo "deploying for user $U to $H/.ssh"
+mkdir -p $H/.ssh
+chown $U $H
+chown $U $H/.ssh
+cp -vr skel/home/.ssh/authorized_keys $H/.ssh
