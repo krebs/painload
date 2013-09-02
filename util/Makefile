@@ -1,7 +1,7 @@
 usage:;cat Makefile
 
 test:
-	@export PATH="$(PWD)/bin:$(PATH)"; \
+	@export PATH="$(CURDIR)/bin:$(PATH)"; \
 		tests="`find t -type f -executable`"; \
 		i=1; \
 		n=`echo "$$tests" | wc -l`; \
