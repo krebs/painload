@@ -5,7 +5,7 @@ trap "/bin/rm -f $tempfile" EXIT INT
 
 uriparse "http://'lolwut:\"khan@domain.tld/'''" > $tempfile
 . $tempfile
-[ $HOSTN == "domain.tld" ] && \
+[ "$HOSTN" == "domain.tld" ] && \
     [ "$USERNAME" == "'lolwut" ] && \
     [ "$PASSWORD" == '"khan' ] && \
     [ "$URIPATH" == "/'''" ] 
