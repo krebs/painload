@@ -1,0 +1,12 @@
+#!/bin/sh
+set -xeuf
+tempfile="`mktemp /tmp/test.XXXXXXXX`"
+trap "/bin/rm -f $tempfile" EXIT INT
+
+urlparse "http://user:pass@domain.tld/path" > $tempfile
+. $tempfile
+[ $HOSTNAME == "domain.tld" ] && \
+    [ $USERNAME == "user" ] && \
+    [ $PASSWORD == "pass" ] && \
+    [ $URIPATH == "/path" ] 
+
