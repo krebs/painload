@@ -1,0 +1,9 @@
+# Format
+
+    DATE DESTINATION-ACCOUNT SOURCE-ACCOUNT AMOUNT UNIT [COMMENT...]
+
+# Example
+
+    2013-01-01 krebs-ml amazon 30 EUR C0DE-AAAA-BBBB-CCCC
+    2013-02-02 momo krebs-ml 50 EUR C0DE-AAAA-BBBB-CCCC
+    2013-02-02 mindfactory momo 80 EUR
