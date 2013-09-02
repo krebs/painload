@@ -1,0 +1,6 @@
+notifications:
+    irc: "chat.freenode.net#krebs_incoming"
+branches:
+    only:
+        - master
+script: "make -C util test"
