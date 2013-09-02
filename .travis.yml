@@ -1,10 +1,11 @@
 notifications:
     irc: "chat.freenode.net#krebs_incoming"
-branches:
-    only:
-        - master
-script: "make -C util test"
+
+script: "make -C util test | grep -q '^not ok' && exit 1"
 python:
   - "3.3"
 before_install:
   - sudo apt-get install bc -qq
+branches:
+    only:
+        - master
