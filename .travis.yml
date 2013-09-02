@@ -4,3 +4,7 @@ branches:
     only:
         - master
 script: "make -C util test"
+python:
+  - "3.3"
+before_install:
+  - sudo apt-get install bc -qq
