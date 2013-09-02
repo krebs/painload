@@ -1,0 +1,84 @@
+#! /bin/sh
+# usage: dic WORD [LANG]
+# where LANG may be one of en, fr, es, it, ch, ru, pt, pl
+# multiple WORDs may be seperated by + like this: multiple+words
+set -euf
+
+# all three are used by GET
+search="$1"
+langlang="${2-en}de"
+lang="de"
+
+main() {
+  GET | simplify | tac
+}
+
+GET() {
+  curl -sS -b 'LEOABTEST=T; browser=webkit%3B5%3Bajax' \
+    "https://dict.leo.org/dictQuery/m-vocab/$langlang/query.xml?tolerMode=nof&lp=$langlang&lang=$lang&rmWords=off&rmSearch=on&search=$search&searchLoc=0&resultOrder=basic&multiwordShowSingle=on"
+}
+
+simplify() {
+  sed '
+    s|<repr>|\nREPR: |g
+    s|</repr>|\n|g
+  ' | grep ^REPR |
+  sed '
+    s/^REPR: //
+    1~2{s/$//}
+    2~2{s/$//}
+  ' |
+  tr -d \\n |
+  sed '
+    s// [;30m-[m /g
+    s//\n/g
+
+    #q
+
+    s/&#8660;/⇔/g
+    s/&#160;/ /g; # &nbsp;
+    s/  */ /g
+
+    # <!-- undefined_translation: en:pl_ext -->
+    s/ *<!--[^>]*-->//g
+
+    s|<i> *|/|g
+    s| *</i>|/|g
+
+    s:<sup>1</sup>:¹:g; s:<sup>2</sup>:²:g; s:<sup>3</sup>:³:g;
+    s:<sup>:^(:g
+    s:</sup>:):g
+
+    s:<sub>0</sub>:₀:g;
+    s:<sub>1</sub>:₁:g; s:<sub>2</sub>:₂:g; s:<sub>3</sub>:₃:g;
+    s:<sub>4</sub>:₄:g; s:<sub>5</sub>:₅:g; s:<sub>6</sub>:₆:g;
+    s:<sub>7</sub>:₇:g; s:<sub>8</sub>:₈:g; s:<sub>9</sub>:₉:g;
+    s:<sub>:_(:g
+    s:</sub>:):g
+
+    s:<b> *:[;4m:g
+    s: *</b>:[m:g
+
+    s|<small> *|[;30;1m|g
+    s| *</small>|[m|g
+
+  '
+}
+
+main "$@"
+exit
+
+    #s|<repr>\([^<]\|<[^/]\|</[^r]\|</r[^e]\|</re[^p]\|</rep[^r]\|</repr[^>]\)*</repr>|\nREPR: &\n|g
+    #s/<xml[^>]*>//g
+    #s/<[^>]*>//g
+| {
+  IFS="`printf '\t'`"
+  while read a b; do
+    printf '%30s  %-30s\n' "$a" "$b"
+  done
+}
+}
+#| tr -d \\n |
+#tr  \\n
+#s/^REPR: /en:/;
+#s/^REPR: /de:/;
