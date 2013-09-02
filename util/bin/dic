@@ -4,12 +4,18 @@
 # multiple WORDs may be seperated by + like this: multiple+words
 set -euf
 
-# all three are used by GET
-search="$1"
-langlang="${2-en}de"
-lang="de"
-
 main() {
+
+  case $# in
+    1|2) :;; # ok
+    *) usage; exit 23;;
+  esac
+
+  # all three are used by GET
+  search="$1"
+  langlang="${2-en}de"
+  lang="de"
+
   GET | simplify | tac
 }
 
@@ -63,6 +69,10 @@ simplify() {
     s| *</small>|[m|g
 
   '
+}
+
+usage() {
+  sed -rn '/^# usage:/,/^[^#]/{/^#/{s/# //;p}}' "$0" >&2
 }
 
 main "$@"
