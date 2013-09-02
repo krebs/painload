@@ -1,0 +1,6 @@
+#! /bin/sh
+set -euf
+
+dic test |
+  sed 's/\[[^m]*m//g' |
+  grep -q '^test - der Test$'
