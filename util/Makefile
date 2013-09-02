@@ -1,8 +1,8 @@
 usage:;cat Makefile
 
-test: export PATH := "$(PWD)/bin:$(PATH)"
 test:
-	@tests="`find t -type f -executable`"; \
+	@export PATH="$(PWD)/bin:$(PATH)"; \
+		tests="`find t -type f -executable`"; \
 		i=1; \
 		n=`echo "$$tests" | wc -l`; \
 		echo $$i..$$n; \
