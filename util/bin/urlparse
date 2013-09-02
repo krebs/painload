@@ -1,0 +1,24 @@
+#!/usr/bin/python
+import os
+
+def uri_parser(uri):
+    try:
+        from urlparse import urlparse
+    except:
+        from urllib.parse import urlparse
+    from sys import argv,exit
+
+    return urlparse(uri)
+
+if __name__ == "__main__":
+    
+    try:
+        uri=argv[1]
+    except:
+        print('usage: %s URI')
+        exit(1)
+    for k,v in uri_parser(uri):
+        print('USERNAME='% u.username)
+        print('PASSWORD='% u.password)
+        print('HOST="%s"'% u.password)
+        print('PATH="%s"'% u.path)
