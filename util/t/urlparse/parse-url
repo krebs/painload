@@ -1,5 +1,5 @@
 #!/bin/sh
-set -xeuf
+set -euf
 tempfile="`mktemp /tmp/test.XXXXXXXX`"
 trap "/bin/rm -f $tempfile" EXIT INT
 
