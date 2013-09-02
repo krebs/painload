@@ -4,7 +4,7 @@ set -euf
 cd $(dirname $(readlink -f $0))
 . ../../lib/naturalvoices/att.sh
 
-OUTFILE="`mktemp`"
+OUTFILE="`mktemp /tmp/voice.XXXXXXXX`"
 trap "rm $OUTFILE" TERM INT EXIT
 get_tts 'hallo, welt!'
 file $OUTFILE  |grep -q WAVE
