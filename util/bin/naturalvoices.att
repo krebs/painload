@@ -6,7 +6,7 @@ cd $(dirname $(readlink -f $0))
 : ${1?please provide \$1 as text}
 
 text=$(echo $* | sed 's/ /+/g')
-voice="reiner"
+voice="${voice:-reiner}"
 
 OUTFILE="`mktemp /tmp/voice.XXXXXXXX`"
 trap "rm $OUTFILE" TERM INT EXIT
