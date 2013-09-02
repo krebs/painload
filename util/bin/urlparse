@@ -17,7 +17,12 @@ if __name__ == "__main__":
         print('usage: %s URI')
         exit(1)
     u = uri_parser(uri)
-    print('USERNAME="%s"' % u.username)
-    print('PASSWORD="%s"' % u.password)
+    
+    print('SCHEME="%s"' % u.scheme)
+    if u.username:
+        print('USERNAME="%s"' % u.username)
+    if u.password:
+        print('PASSWORD="%s"' % u.password)
+    if u.path:
+        print('URIPATH="%s"' % u.path)
     print('HOSTNAME="%s"' % u.hostname)
-    print('URIPATH="%s"' % u.path)
