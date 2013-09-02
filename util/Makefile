@@ -12,6 +12,6 @@ test:
 				case $$? in 0) result=ok;; *) result='not ok';; esac; \
 				echo $$result $$i - $$exe; \
 			} & \
-			(( i++ )); \
+			i=$$(( i+1 )); \
 		done; \
 		wait
