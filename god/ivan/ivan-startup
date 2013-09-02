@@ -1,29 +1,29 @@
 #! /bin/sh
 #
 ### BEGIN INIT INFO
-# Provides:          evan
+# Provides:          ivan
 # Required-Start:    $remote_fs $network
 # Required-Stop:     $remote_fs $network
 # Should-Start:      $syslog $named
 # Should-Stop:       $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Start evan daemons
+# Short-Description: Start ivan daemons
 # Description:       
 
 ### END INIT INFO
 #
 # Based on Lubomir Bulej's Redhat init script.
 
-DAEMON="/root/bin/evan"
-PIDFILE="/var/lock/evan"
-NAME="evan"
-DESC="evan daemons"
-TCONF="/etc/evan"
+DAEMON="/krebs/bin/ivan"
+PIDFILE="/var/lock/ivan"
+NAME="ivan"
+DESC="ivan daemons"
+TCONF="/etc/ivan"
 
 test -f $DAEMON || exit 0
 
-[ -r /etc/default/evan ] && . /etc/default/evan
+[ -r /etc/default/ivan ] && . /etc/default/ivan
 
 
 start() {
@@ -34,7 +34,7 @@ start() {
 stop() {
   [ ! -e $PIDFILE ] && echo "$PIDFILE does not exist" && return
   kill `cat $PIDFILE`
-  #killall evan
+  #killall ivan
   rm $PIDFILE
 }
 

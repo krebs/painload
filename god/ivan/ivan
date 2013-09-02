@@ -29,7 +29,7 @@ do
   if [ -n "${USING_ESPEAK:-}" ];then
     espeak -v $v -p $p -k $k -a $a -g $g "`shuf \"$SATZ_LISTE\" | tail -1`"
   else
-    ../../util/bin/naturalvoices2.sh "`shuf  \"$SATZ_LISTE\" | tail -1`"
+    ./naturalvoices_cached.sh "`shuf  \"$SATZ_LISTE\" | tail -1`"
   fi
   [ ! "${1:-}" = "-d" ] && exit 0   # break if not daemonized
   sleep $((${RANDOM}%${RND_DELAY}))

@@ -1,7 +1,7 @@
 .PHONY: infest
 BIN_DIR = ../bin
 infest:
-	cp ivan ${INSTALL_DIR}
+	ln -s ${PWD}ivan ${INSTALL_DIR}
 debian-startup:
 	cp ivan-startup /etc/init.d/ivan
-	update-rc.d evan start
+	update-rc.d ivan start
