@@ -4,10 +4,11 @@ test: export PATH := "$(PWD)/bin:$(PATH)"
 test:
 	@tests="`find t -type f -executable`"; \
 		i=1; \
-		echo $$i..`echo "$$tests" | wc -l`; \
-		for t in $$tests; do \
-			./$$t; \
-			case $$? in 0) ok=ok;; *) ok='not ok';; esac; \
-			echo $$ok $$i - $$t; \
+		n=`echo "$$tests" | wc -l`; \
+		echo $$i..$$n; \
+		for exe in $$tests; do \
+			./$$exe; \
+			case $$? in 0) result=ok;; *) result='not ok';; esac; \
+			echo $$result $$i - $$exe; \
 			(( i++ )); \
 		done
