@@ -1,44 +1,10 @@
-#! /bin/sh
-set -euf
+#!/bin/sh
+text=$(echo $* | sed 's/ /+/g')
+voice="klara"
+base_url="http://192.20.225.36"
 
-A=Mozilla
-baseURL="http://192.20.225.36"
-url="$baseURL/tts/cgi-bin/nph-talk"
+TMPFILE=`mktemp`
+trap "rm $TMPFILE" TERM INT EXIT
 
-if test -h "$0"; then
-  voice="${voice-"`basename "$0"`"}"
-fi
-
-pwd="$(dirname "$(readlink -f "$0")")"
-
-for x in \
-    "$pwd/../../submodules/github/tmpvar" \
-    "$pwd/../../submodules/github/mikeal" \
-    "$pwd/../../submodules/github/NV" \
-    "$pwd/../../submodules/github/tautologistics" \
-; do
-  export NODE_PATH="`readlink -f "$x"`${NODE_PATH+:$NODE_PATH}"
-done
-
-# ensure query is ready
-(cd "$pwd/../.." && git submodule update --init)
-
-{
-  for arg; do echo "$arg"; done | sed -n '
-    s/^--\(.*=.*\)/\1/p;t
-    s/.*/text="${text+$text }&"/p;t
-  '
-  cat<<EOF
-  query() {
-    node "$(readlink -f "$pwd/../../submodules/github/visionmedia/query")" "\$@"
-  }
-  curl -sS -A "\${A-Mozilla}"  \\
-      -d "voice=\${voice-`basename "$0"`}" \\
-      -d "txt=\$text" \\
-      -d "downloadButton=DOWNLOAD" \\
-      "$url" | 
-    query 'p a'
-EOF
-} | sh | while read url; do
-  curl -sS "$baseURL$url" | aplay -q -
-done
+ wget $base_url$( curl  -Ss  -H 'Host:192.20.225.36' -H 'Origin:http://www2.research.att.com' -e "http://www2.research.att.com/~ttsweb/tts/demo.php" -A "Mozilla/5.0 (X11; Linux x86_64; rv:23.0) Gecko/20100101 Firefox/23.0" -d "voice=$voice" -d "txt=$text" -d "speakButton=SPEAK" -H 'Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' $base_url/tts/cgi-bin/nph-nvttsdemo | grep HREF|sed 's/.*\(".*"\).*/\1/'  |sed -e 's/"//g' ) -O $TMPFILE
+aplay $TMPFILE
