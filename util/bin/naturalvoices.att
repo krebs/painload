@@ -8,7 +8,7 @@ cd $(dirname $(readlink -f $0))
 text=$(echo $* | sed 's/ /+/g')
 voice="reiner"
 
-OUTFILE=`mktemp`
+OUTFILE="`mktemp /tmp/voice.XXXXXXXX`"
 trap "rm $OUTFILE" TERM INT EXIT
 
 get_tts "$text"
