@@ -1,0 +1,13 @@
+#!/bin/sh
+set -euf
+tempfile="`mktemp /tmp/test.XXXXXXXX`"
+trap "/bin/rm -f $tempfile" EXIT INT
+
+uriparse "http://'lolwut:\"khan@domain.tld/'''" > $tempfile
+. $tempfile
+[ $HOSTN == "domain.tld" ] && \
+    [ "$USERNAME" == "'lolwut" ] && \
+    [ "$PASSWORD" == '"khan' ] && \
+    [ "$URIPATH" == "/'''" ] 
+
+
