@@ -1,0 +1,16 @@
+#! /bin/sh
+set -euf
+
+tempfile=`mktemp /tmp/test.XXXXXXXX`
+trap "rm -f $tempfile" EXIT INT
+
+anonbox.net >$tempfile
+. $tempfile
+
+{
+  echo $email
+} | {
+  IFS=@. read _logname subdomain domain
+
+  echo "$uri" | grep -q "^https://$domain/$subdomain/[0-9a-f]*/$"
+}
