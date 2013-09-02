@@ -66,19 +66,3 @@ simplify() {
 }
 
 main "$@"
-exit
-
-    #s|<repr>\([^<]\|<[^/]\|</[^r]\|</r[^e]\|</re[^p]\|</rep[^r]\|</repr[^>]\)*</repr>|\nREPR: &\n|g
-    #s/<xml[^>]*>//g
-    #s/<[^>]*>//g
-| {
-  IFS="`printf '\t'`"
-  while read a b; do
-    printf '%30s  %-30s\n' "$a" "$b"
-  done
-}
-}
-#| tr -d \\n |
-#tr  \\n
-#s/^REPR: /en:/;
-#s/^REPR: /de:/;
