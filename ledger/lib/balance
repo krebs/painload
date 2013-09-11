@@ -1,6 +1,6 @@
 #! /bin/awk -f
 #
-# usage: [colorize=false] [scale=N] //ledger/lib/balance LEDGER_FILE
+# usage: [colorize=false] [scale=N] //ledger/lib/balance LEDGER_FILE...
 # see also: //cholerab/ledger-spec.markdown
 #
 
