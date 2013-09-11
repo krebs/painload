@@ -1,7 +1,20 @@
 #! /bin/awk -f
 #
-# usage: [colorize=false] [scale=N] //ledger/lib/balance LEDGER_FILE...
-# see also: //cholerab/ledger-spec.markdown
+# ledger balance calculator
+#
+# usage:
+#   [colorize=false] [scale=N] //ledger/lib/balance LEDGER_FILE...
+#   [colorize=false] [scale=N] //ledger/lib/balance < LEDGER_FILE
+#
+# description:
+#   The ledger balance calculator computes the balance of each account it
+#   encounters in the provided ledger files.
+#
+# example:
+#   //ledger/lib/balance < //cholerab/ledger-spec.markdown
+#
+# see also:
+#   //cholerab/ledger-spec.markdown (ledger file format)
 #
 
 BEGIN {
