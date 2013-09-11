@@ -1,0 +1,73 @@
+#! /bin/awk -f
+#
+# usage: [colorize=false] [scale=N] //ledger/lib/balance LEDGER_FILE
+# see also: //cholerab/ledger-spec.markdown
+#
+
+BEGIN {
+  colorize = ENVIRON["colorize"] == "" || ENVIRON["colorize"] == "true"
+  # TODO use bc for arbitrary precision arithmetic
+  scale = ENVIRON["scale"]
+}
+
+/^[[:space:]]*[0-9]+-[0-9][0-9]-[0-9][0-9]/{
+  tx($2, $3, $4, $5)
+}
+
+END {
+  display_accounts()
+}
+
+function tx (dst, src, amt, u) {
+  withdraw(src, amt, u)
+  deposit(dst, amt, u)
+}
+
+function deposit (name, amt, u) {
+  accounts[name][u] += amt
+}
+
+function withdraw (name, amt, u) {
+  accounts[name][u] -= amt
+}
+
+function display_accounts() {
+  max_name_len = 0
+  for (name in accounts) {
+    if (length(name) > max_name_len) {
+      max_name_len = length(name)
+    }
+  }
+
+  max_balance_len = 0
+  for (name in accounts) {
+    for (u in accounts[name]) {
+      s = accounts[name][u]
+      sub(/\..*/, "", s)
+      if (length(s) > max_balance_len) {
+        max_balance_len = length(s)
+      }
+    }
+  }
+  if (scale > 0) {
+    max_balance_len += 1 + scale
+  }
+
+  for (name in accounts) {
+    for (u in accounts[name]) {
+
+      fmt = "NAME BALANCE UNIT\n"
+      balance = accounts[name][u]
+
+      if (colorize) {
+        sub("BALANCE", "[" (balance < 0 ? 31 : 32) "m&[m", fmt)
+      }
+
+      sub("NAME", "%-" max_name_len "s", fmt)
+      sub("BALANCE", "%" max_balance_len "." scale "f", fmt)
+      sub("UNIT", "%s", fmt)
+
+      printf fmt, name, balance, u
+    }
+  }
+}
