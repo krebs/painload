@@ -42,15 +42,14 @@ function display_accounts() {
   max_balance_len = 0
   for (name in accounts) {
     for (u in accounts[name]) {
-      s = accounts[name][u]
-      sub(/\..*/, "", s)
-      if (length(s) > max_balance_len) {
-        max_balance_len = length(s)
+      n = length(int(accounts[name][u]))
+      if (n > max_balance_len) {
+        max_balance_len = n
       }
     }
   }
   if (scale > 0) {
-    max_balance_len += 1 + scale
+    max_balance_len += length(".") + scale
   }
 
   for (name in accounts) {
