@@ -2,10 +2,12 @@ language: c
 notifications:
     irc: "chat.freenode.net#krebs_incoming"
 
-script: "make -C util test | grep -q '^not ok' && exit 1"
+script: "! ( make -C util test | grep -q '^not ok' )"
 before_install:
   - sudo apt-get install bc -qq
   - sudo apt-get install python -qq
 branches:
     only:
         - master
+git:
+    submodules: false
