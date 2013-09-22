@@ -8,6 +8,8 @@ k="${noise_capital-0}"
 a="${noise_amplitude-600}"
 g="${noise_gap-1}"
 RND_DELAY=3600
+CACHE_DIR=/opt/ivan-cache
+export CACHE_DIR
 #set -x
 function helpme ()
 {
@@ -29,6 +31,8 @@ do
   if [ -n "${USING_ESPEAK:-}" ];then
     espeak -v $v -p $p -k $k -a $a -g $g "`shuf \"$SATZ_LISTE\" | tail -1`"
   else
+    ./naturalvoices_cached.sh "Achtung, Achtung, es erfolgt eine Durchsage!"
+    sleep 0.3
     ./naturalvoices_cached.sh "`shuf  \"$SATZ_LISTE\" | tail -1`"
   fi
   [ ! "${1:-}" = "-d" ] && exit 0   # break if not daemonized
