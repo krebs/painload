@@ -16,7 +16,7 @@ def default(o):
        return list(iterable)
    return JSONEncoder.default(o)
 
-wsdl = dirname(realpath(__file__)) + '/soapi-re-1.24.wsdl'
+wsdl = dirname(realpath(__file__)) + '/soapi.wsdl'
 soap = WSDL.Proxy(wsdl)
 
 username = environ['KREBS_OVH_USER']
