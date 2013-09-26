@@ -170,7 +170,7 @@ else
     check_internet || loop_cracks_over_networks
 
     while sleep 10; do
-        if ! check_internet; then
+        if ! check_gateway; then
             loop_cracks_over_networks
         fi
     done

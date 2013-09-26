@@ -37,5 +37,5 @@ check_vendor_mac(){
   return 1
 }
 check_painmode(){
-    test -n "${painmode:-}" && echo "painmode required">&2 && exit 1
+    test -z "${painmode:-}" && echo "painmode required" && exit 1
 }
