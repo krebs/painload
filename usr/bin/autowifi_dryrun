@@ -58,13 +58,13 @@ connect_with_pw(){
     done;exit 1)
 }
 wifi_init(){
+    exists fortune && fortune -a
     wpa_supplicant_is_usable || start_wpa_supplicant /tmp/autowifi.wpa_supplicant
     wifi_scan > /tmp/${interface}.scan
     . /tmp/${interface}.scan
 }
 loop_over_networks(){
 
-    wifi_init
     for i in `seq 1 $WIFI_COUNT`; do
         loop_over_cracks "$i"
         if [ $? -eq 0 ]; then
@@ -85,7 +85,6 @@ loop_over_cracks(){
     return 1
 }
 loop_cracks_over_networks(){
-    wifi_init
     for crack in $(find $crackdir -type f | sort -u); do
         for i in `seq 1 $WIFI_COUNT`; do
             KEY="$(eval root=$root \$crack \"\${ESSID_${i}}\" \"\${MAC_${i}}\" \${FREQ_${i}} \${ENCRYPTION_${i}})"
