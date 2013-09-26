@@ -6,6 +6,7 @@ cd $(dirname $(readlink -f $0))
 . ../lib/plugin_core
 
 parse_plugin_args "$@"
+check_painmode
 DEFAULT_PIN="${DEFAULT_PIN:-12345670}"
 
 if has_wps "$ENC"; then

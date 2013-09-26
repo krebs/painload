@@ -15,6 +15,7 @@ cd $(dirname $(readlink -f $0))
 . ../lib/wps
 parse_plugin_args "$@"
 
+check_painmode
 
 ! check_vendor_mac "$VENDOR_MAC" 002275 001CDF 09863B && echo "VENDOR MAC $VENDOR_MAC not affected" && exit 1
 

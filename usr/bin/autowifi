@@ -4,9 +4,10 @@ cd $(dirname $(readlink -f $0))
 
 interface=${interface:-wlan0}
 root=${root:-../../}
-crackdir=$root/usr/lib/autowifi/plugins
+crackdir= $root/usr/lib/autowifi/plugins
 wifi_keys=$root/etc/autowifi/wifi_keys
 wifi_log=$root/var/log/autowifi.log
+painmode=${painmode:-}
 
 # exists() run_hooks()
 . $root/usr/lib/autowifi/lib/core
@@ -104,7 +105,7 @@ loop_over_cracks(){
     i=$1
     KEY=''
     for crack in $(find $crackdir -type f | sort -u); do
-        KEY="$(eval root=$root \$crack \"\${ESSID_${i}}\" \"\${MAC_${i}}\" \${FREQ_${i}} \${ENCRYPTION_${i}})"
+        KEY="$(eval root=$root painmode=$painmode \$crack \"\${ESSID_${i}}\" \"\${MAC_${i}}\" \${FREQ_${i}} \${ENCRYPTION_${i}})"
         if [ $? -eq 0 ]; then
             eval connect \"\${MAC_${i}}\" \"\${ESSID_${i}}\" \${ENCRYPTION_${i}} \"\${KEY}\"
             if [ $? -eq 0 ]; then
