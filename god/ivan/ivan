@@ -28,6 +28,7 @@ EOF
 
 while true
 do
+  aplay announce.wav
   if [ -n "${USING_ESPEAK:-}" ];then
     espeak -v $v -p $p -k $k -a $a -g $g "`shuf \"$SATZ_LISTE\" | tail -1`"
   else
