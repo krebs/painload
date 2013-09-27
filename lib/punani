@@ -1,0 +1,93 @@
+#!/bin/sh
+#include core
+
+## begin punani DB
+punani_pacman_=
+punani_yum_=
+punani_aptget_=
+
+punani_pacman_git=git
+punani_yum_git=git
+punani_aptget_git=git-core
+
+punani_pacman_python2=python2
+punani_yum_python2=python
+punani_aptget_python2=python
+
+punani_pacman_python3=python
+punani_aptget_python3=python3
+
+punani_pacman_hostname=inetutils
+punani_aptget_hostname=hostname
+
+punani_pacman_hostname=inetutils
+punani_aptget_hostname=hostname
+
+punani_pacman_make=make
+punani_yum_make=make
+punani_aptget_make=make
+
+punani_pacman_tinc=tinc
+punani_yum_tinc=tinc
+punani_aptget_tinc=tinc
+
+punani_pacman_nano=nano
+punani_yum_nano=nano
+punani_aptget_nano=nano
+## end punani DB
+
+punani_resolve_package(){
+  : ${PACKER_CMD?PACKER_CMD is not set,bailing out}
+  pkg=${1?please provide package name to resolve}
+  PACKER_DB=$(printf  ${PACKER_CMD}| sed 's/-//g')
+  eval printf \"\${punani_${PACKER_DB}_${pkg}-}\" | grep .
+}
+punani(){
+  ! is_root && error "punani requires super-user rights" && return 1
+  ACTION="$1"; shift
+  PKGS="$*"
+  if ! :; then : # dummy case, so the rest has a common format
+  elif exists apt-get;then
+    PACKER_CMD='apt-get'
+    INSTALL_PARAM='-y install'
+    REMOVE_PARAM='-y remove'
+  elif exists pacman;then
+    PACKER_CMD='pacman'
+    INSTALL_PARAM='--noconfirm -S --needed'
+    REMOVE_PARAM='-Rcs'
+  elif exists yum;then
+    PACKER_CMD='yum'
+    INSTALL_PARAM='-y install'
+    REMOVE_PARAM='-y remove'
+  elif exists brew;then
+    PACKER_CMD='brew'
+    INSTALL_PARAM='install'
+    REMOVE_PARAM='remove'
+  else
+    error "Error 2: no known package manager found; no punani for you!"
+    return 1
+  fi
+  info "using $PACKER_CMD for install"
+  RESOLVED=""
+  if test -n "$PKGS"; then
+    for PKG in $PKGS; do
+      RES="$(punani_resolve_package $PKG)"
+      test  -z "$RES" && error "could not resolve '$PKG'; no punani for you!"&& return 23
+      RESOLVED="${RESOLVED+$RESOLVED }$RES"
+    done
+  else
+    error "no PACKAGE specified."
+    ACTION="usage"
+  fi
+  case "$ACTION" in 
+    install)
+        eval $PACKER_CMD $INSTALL_PARAM $RESOLVED || error "Cannot install $PKG!"
+      ;;
+    remove)
+        eval $PACKER_CMD $REMOVE_PARAM $RESOLVED || error "Cannot remove $PKG!"
+      ;;
+    *)
+      error "usage: punani (install|remove) PACKAGE..."
+      return 23
+  esac
+}
