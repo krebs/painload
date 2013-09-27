@@ -13,6 +13,6 @@ if has_wps "$ENC"; then
     echo "trying PIN $DEFAULT_PIN against $ESSID" >&2
     try_wps_pin "$@" $DEFAULT_PIN
 else
-    echo "Network $ESSID not WPS enabled" >&2
+    echo "Network $ESSID not WPS enabled"
     exit 1
 fi

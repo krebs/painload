@@ -17,7 +17,7 @@ try_wps_pin(){
 
     PIN="$5"
 
-    [ "$ENC" = "[ESS]" ] && return 2
+    [ "$ENC" == "[ESS]" ] && return 2
     WPA_CONF=/tmp/wpa_trywps.conf
     WPA_LOG=/tmp/wpa_trywps.log
     rm $WPA_LOG
