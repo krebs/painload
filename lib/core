@@ -5,7 +5,9 @@ msg() { printf "$@\n" >&2 ;}
 info()   { msg "** $@" ;}
 error()  { msg "!! $@" ;}
 exists(){ type "$1" >/dev/null 2>/dev/null; }
-
+is_root(){
+  test $(id -u) -eq 0
+}
 get_hostname(){
   # finds the current hostname
   #   if ENV HOSTN is set echo $HOSTN
