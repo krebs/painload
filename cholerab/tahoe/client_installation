@@ -1,0 +1,15 @@
+#?/bin/sh
+# Tahoe installation
+pacman -S python2 python2-pip
+pip install pyasn1 zfec pycrypto zbase32 pycryptopp twisted
+pip install allmydata-tahoe
+
+# tahoe configuration
+tahoe create-client
+# replace introducer.furl = None with the one from pigstarter/tahoe/introducer.furl
+sed -i "s#^introducer\.furl.*#introducer.furl = $(curl pigstarter/tahoe/introducer.furl)#" $HOME/.tahoe/tahoe.cfg
+# you also might want to change shares.needed to 2 , shares.happy to 3 and shares.total to 6
+echo "krebs: <special krebs URI from irc>" >> $HOME/.tahoe/private/aliases
+
+tahoe start
+tahoe ls krebs:
