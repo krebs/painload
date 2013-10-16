@@ -1,0 +1,18 @@
+#?/bin/sh
+# Tahoe installation
+pacman -S python2 python2-pip net-tools
+pip2 install pyasn1 zfec pycrypto zbase32 pycryptopp twisted
+pip2 install allmydata-tahoe
+
+# tahoe configuration
+mkdir /opt/tahoe
+tahoe create-node /opt/tahoe
+useradd tahoe -d /opt/tahoe
+# change nick name
+# replace introducer.furl = None with the one from pigstarter/tahoe/introducer.furl
+sed -i "s#^introducer\.furl.*#introducer.furl = $(curl pigstarter/tahoe/introducer.furl)#" /opt/tahoe/tahoe.cfg
+# you also might want to change shares.needed to 2 , shares.happy to 3 and shares.total to 6
+#
+# optionally symlink /opt/tahoe/storage to somewhere with a lot of storage
+cp tahoe.service /usr/lib/systemd/system/tahoe.service
+systemctl enable tahoe.service
