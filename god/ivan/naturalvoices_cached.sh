@@ -7,12 +7,12 @@
 : ${1?what to say?Please provide text as parameter.}
 
 text=$(echo $* | sed -e 's/ /+/g' -e 's/\//%2F/g')
-voice="klara"
+voice="${voice:-klara}"
 
 
-CACHE_DIR="/tmp/ivan-speech"
+CACHE_DIR="${CACHE_DIR:-/tmp/ivan-speech}"
 mkdir -p "$CACHE_DIR"
-OUTFILE="$CACHE_DIR/${text}.wav"
+OUTFILE="$CACHE_DIR/${voice}_${text}.wav"
 
 
 if [ ! -e $OUTFILE ] ;then
