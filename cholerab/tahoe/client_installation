@@ -1,6 +1,6 @@
 #?/bin/sh
 # Tahoe installation
-pacman -S python2 python2-pip
+pacman -S python2 python2-pip net-tools
 pip install pyasn1 zfec pycrypto zbase32 pycryptopp twisted
 pip install allmydata-tahoe
 

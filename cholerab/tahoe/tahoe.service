@@ -1,0 +1,10 @@
+[Unit]
+Description=Tahoe LAFS
+
+[Service]
+ExecStart=/usr/bin/tahoe run /opt/tahoe
+User=tahoe
+
+[Install]
+Alias=tahoe.service
+WantedBy=multi-user.target
