@@ -1,15 +1,9 @@
 #!/bin/sh
+set -euf
 
 ###### USAGE #####
 #run in new directory(will be polluted with images
 #just run ./make-realwallpaper
-
-
-
-if ! ping -w 10 8.8.8.8 | sed -n '/time=[1-9.]* ms/{p;q}'|grep -q . ; then
-    echo "we need internet"
-    exit 1
-fi
 
 curl -z Nightmap_bare.jpg http://awka.sourceforge.net/Night_le_huge.jpg -o Nightmap_bare.jpg
 curl -z Daymap_bare.png http://www.nnvl.noaa.gov/images/globaldata/SnowIceCover_Daily.png -o Daymap_bare.png
