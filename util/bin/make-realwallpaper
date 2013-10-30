@@ -5,9 +5,20 @@ set -euf
 #run in new directory(will be polluted with images
 #just run ./make-realwallpaper
 
-curl -z Nightmap_bare.jpg http://awka.sourceforge.net/Night_le_huge.jpg -o Nightmap_bare.jpg
-curl -z Daymap_bare.png http://www.nnvl.noaa.gov/images/globaldata/SnowIceCover_Daily.png -o Daymap_bare.png
-curl -z Clouds.jpg http://user.chol.com/~winxplanet/cloud_data/clouds_2048.jpg -o Clouds.jpg
+curl -z Nightmap_bare.jpg http://awka.sourceforge.net/Night_le_huge.jpg -o Nightmap_bare.jpg &
+curl -z Daymap_bare.png http://www.nnvl.noaa.gov/images/globaldata/SnowIceCover_Daily.png -o Daymap_bare.png &
+curl -z Clouds.jpg http://user.chol.com/~winxplanet/cloud_data/clouds_2048.jpg -o Clouds.jpg &
+wait
+
+if file -ib Nightmap_bare.jpg|grep -q ^image/; then
+    rm Nightmap_bare.jpg
+fi
+if file -ib Daymap_bare.png|grep -q ^image/; then
+    rm Daymap_bare.png
+fi
+if file -ib Clouds.jpg|grep -q ^image/; then
+    rm Clouds.jpg
+fi
 
 #resize the Daymap
 convert Daymap_bare.png -scale 4000x2000 Daymap.png
