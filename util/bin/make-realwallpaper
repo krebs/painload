@@ -119,7 +119,7 @@ needs_rebuild() {
     #echo "  $a does not exist" >&2
     result=0
   else
-    result=-1
+    result=1
     for b; do
       if test "$b" -nt "$a"; then
         #echo "  $b is newer than $a" >&2
@@ -130,7 +130,7 @@ needs_rebuild() {
   #case $result in
   #  0) echo "$a needs rebuild" >&2;;
   #esac
-  (exit $result)
+  return $result
 }
 
 
