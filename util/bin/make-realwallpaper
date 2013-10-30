@@ -10,15 +10,15 @@ curl -z Daymap_bare.png http://www.nnvl.noaa.gov/images/globaldata/SnowIceCover_
 curl -z Clouds.jpg http://user.chol.com/~winxplanet/cloud_data/clouds_2048.jpg -o Clouds.jpg &
 wait
 
-if file -ib Nightmap_bare.jpg|grep -q ^image/; then
+if ! file -ib Nightmap_bare.jpg|grep -q ^image/; then
     rm Nightmap_bare.jpg
     exit 1
 fi
-if file -ib Daymap_bare.png|grep -q ^image/; then
+if ! file -ib Daymap_bare.png|grep -q ^image/; then
     rm Daymap_bare.png
     exit 1
 fi
-if file -ib Clouds.jpg|grep -q ^image/; then
+if ! file -ib Clouds.jpg|grep -q ^image/; then
     rm Clouds.jpg
     exit 1
 fi
