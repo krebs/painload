@@ -11,7 +11,7 @@ main() {
     http://awka.sourceforge.net/Night_le_huge.jpg &
   fetch daymap.png \
     http://www.nnvl.noaa.gov/images/globaldata/SnowIceCover_Daily.png &
-  fetch cloud-layer.jpg \
+  fetch clouds.jpg \
     http://user.chol.com/~winxplanet/cloud_data/clouds_2048.jpg &
   fetch krebs.sat.tle \
      http://www.celestrak.com/NORAD/elements/stations.txt  
@@ -19,12 +19,16 @@ main() {
 
   check_type nightmap.jpg image
   check_type daymap.png image
-  check_type cloud-layer.jpg image
+  check_type clouds.jpg image
 
   # downscale daymap to match nightmap
   needs_rebuild daymap-final.png \
     daymap.png \
     && convert daymap.png -scale $(image_size nightmap.jpg) daymap-final.png
+
+  needs_rebuild clouds-final.png \
+    clouds.jpg \
+    && convert clouds.jpg -scale $(image_size nightmap.jpg) clouds-final.png
 
   # create nightmap-fullsnow
   needs_rebuild nightmap-fullsnow.png \
@@ -62,7 +66,7 @@ main() {
 "Earth"
 map=daymap-final.png
 night_map=nightmap-final.png
-cloud_map=cloud-layer.jpg
+cloud_map=clouds-final.png
 EOF
 
   # create xplanet output satellite version
@@ -72,7 +76,7 @@ EOF
 "Earth"
 map=daymap-final.png
 night_map=nightmap-final.png
-cloud_map=cloud-layer.jpg
+cloud_map=clouds-final.png
 satellite_file=krebs.sat
 EOF
 
