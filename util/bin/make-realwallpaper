@@ -12,12 +12,15 @@ wait
 
 if file -ib Nightmap_bare.jpg|grep -q ^image/; then
     rm Nightmap_bare.jpg
+    exit 1
 fi
 if file -ib Daymap_bare.png|grep -q ^image/; then
     rm Daymap_bare.png
+    exit 1
 fi
 if file -ib Clouds.jpg|grep -q ^image/; then
     rm Clouds.jpg
+    exit 1
 fi
 
 #resize the Daymap
