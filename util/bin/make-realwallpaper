@@ -36,5 +36,5 @@ night_map=Nightmap.png
 cloud_map=Clouds.jpg
 EOF
 
-xplanet --num_times 1 --geometry 1366x1200 --output xplanet-output.jpg --projection merc -config xplanet-config
-convert xplanet-output.jpg -crop 1366x768+0+160 realwallpaper.png
+xplanet --num_times 1 --geometry 1466x1200 --output xplanet-output.jpg --projection merc -config xplanet-config
+convert xplanet-output.jpg -crop 1366x768+100+160 realwallpaper.png
