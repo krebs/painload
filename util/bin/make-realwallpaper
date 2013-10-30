@@ -5,50 +5,133 @@ set -euf
 #run in new directory(will be polluted with images
 #just run ./make-realwallpaper
 
-curl -sSz Nightmap_bare.jpg http://awka.sourceforge.net/Night_le_huge.jpg -o Nightmap_bare.jpg &
-curl -sSz Daymap_bare.png http://www.nnvl.noaa.gov/images/globaldata/SnowIceCover_Daily.png -o Daymap_bare.png &
-curl -sSz Clouds.jpg http://user.chol.com/~winxplanet/cloud_data/clouds_2048.jpg -o Clouds.jpg &
-wait
+main() {
+  # fetch source images in parallel
+  fetch nightmap.jpg \
+    http://awka.sourceforge.net/Night_le_huge.jpg &
+  fetch daymap.png \
+    http://www.nnvl.noaa.gov/images/globaldata/SnowIceCover_Daily.png &
+  fetch cloud-layer.jpg \
+    http://user.chol.com/~winxplanet/cloud_data/clouds_2048.jpg &
+  wait
 
-if ! file -ib Nightmap_bare.jpg|grep -q ^image/; then
-    rm Nightmap_bare.jpg
-    exit 1
-fi
-if ! file -ib Daymap_bare.png|grep -q ^image/; then
-    rm Daymap_bare.png
-    exit 1
-fi
-if ! file -ib Clouds.jpg|grep -q ^image/; then
-    rm Clouds.jpg
-    exit 1
-fi
+  check_type nightmap.jpg image
+  check_type daymap.png image
+  check_type cloud-layer.jpg image
 
-#resize the Daymap
-convert Daymap_bare.png -scale 4000x2000 Daymap.png
-#convert Daymap to a snow only alphamap
-convert Daymap.png  -threshold '95%' Daymap_snowmask.png
+  # downscale daymap to match nightmap
+  needs_rebuild daymap-final.png \
+    daymap.png \
+    && convert daymap.png -scale $(image_size nightmap.jpg) daymap-final.png
 
-#create a full snowmap in the nightcolor
-convert Daymap.png -fill '#0a3b5c' -colorize '100%' Nightmap_fullsnow.png
-#get nightlights out of Nightmap_bare
-convert Nightmap_bare.jpg -threshold '25%' -transparent '#000000' Nightmap_lightmask.png
-#composite Snowmask and Fullsnow to Nightmap_snowlayer
-convert Nightmap_fullsnow.png Daymap_snowmask.png -alpha off -compose copy_opacity -composite Nightmap_snowlayer.png
-#cut out the lights in Nightmap_lightmask and put them in Nightmap_lightlayer
-convert Nightmap_bare.jpg Nightmap_lightmask.png -alpha off -compose copy_opacity -composite Nightmap_lightlayer.png
+  # create nightmap-fullsnow
+  needs_rebuild nightmap-fullsnow.png \
+    && convert \
+        -size $(image_size nightmap.jpg) \
+        'xc:#0a3b5c' nightmap-fullsnow.png
 
-#Composite the Nightmap_snowlayer and the Nightmap_lightlayer with the Nightmap
-composite Nightmap_lightlayer.png Nightmap_snowlayer.png Nightmap_lightsnowlayer.png
-composite Nightmap_lightsnowlayer.png Nightmap_bare.jpg Nightmap.png
+  # extract daymap-snowmask from daymap-fonal
+  needs_rebuild daymap-snowmask.png \
+    daymap-final.png \
+    && convert daymap-final.png -threshold 95% daymap-snowmask.png
 
-#write the xplanet-configfile
-cat > xplanet-config << EOF
+  # extract nightmap-lightmask from nightmap
+  needs_rebuild nightmap-lightmask.png \
+    nightmap.jpg \
+    && convert nightmap.jpg -threshold 25% nightmap-lightmask.png
+
+  # create layers
+  make_layer nightmap-snowlayer.png nightmap-fullsnow.png daymap-snowmask.png
+  make_layer nightmap-lightlayer.png nightmap.jpg nightmap-lightmask.png
+
+  # apply layers
+  flatten nightmap-lightsnowlayer.png \
+    nightmap-lightlayer.png \
+    nightmap-snowlayer.png
+
+  flatten nightmap-final.png \
+    nightmap-lightsnowlayer.png \
+    nightmap.jpg
+
+  # create xplanet output
+  needs_rebuild xplanet.config \
+    && cat >xplanet.config <<EOF
 [earth]
 "Earth"
-map=Daymap.png
-night_map=Nightmap.png
-cloud_map=Clouds.jpg
+map=daymap-final.png
+night_map=nightmap-final.png
+cloud_map=cloud-layer.jpg
 EOF
+  needs_rebuild xplanet-output.png \
+    daymap-final.png \
+    nightmap-final.png \
+    cloud-layer.jpg \
+    && xplanet --num_times 1 --geometry 1466x1200 \
+        --output xplanet-output.png --projection merc -config xplanet.config
 
-xplanet --num_times 1 --geometry 1466x1200 --output xplanet-output.jpg --projection merc -config xplanet-config
-convert xplanet-output.jpg -crop 1366x768+100+160 realwallpaper.png
+  # trim xplanet output
+  needs_rebuild realwallpaper.png \
+    xplanet-output.png \
+    && convert xplanet-output.png -crop 1366x768+100+160 realwallpaper.png
+}
+
+# usage: getimg FILENAME URL
+fetch() {
+  echo "fetch $1"
+  curl -sS -z "$1" -o "$1" "$2"
+}
+
+# usage: check_type FILENAME TYPE
+check_type() {
+  if ! file -ib "$1" | grep -q "^$2/"; then
+    echo "$1 is not of type $2" >&2
+    rm "$1"
+    return 1
+  fi
+}
+
+# usage: image_size FILENAME
+image_size() {
+  identify "$1" | awk '{print$3}'
+}
+
+# usage: make_mask DST SRC MASK 
+make_layer() {
+  if needs_rebuild "$@"; then
+    echo "make $1 (apply mask)" >&2
+    convert "$2" "$3" -alpha off -compose copy_opacity -composite "$1"
+  fi
+}
+
+# usage: flatten DST HILAYER LOLAYER
+flatten() {
+  if needs_rebuild "$@"; then
+    echo "make $1 (flatten)" >&2
+    composite "$2" "$3" "$1"
+  fi
+}
+
+# usage: needs_rebuild DST SRC...
+needs_rebuild() {
+  a="$1"
+  shift
+  if ! test -e "$a"; then
+    #echo "  $a does not exist" >&2
+    result=0
+  else
+    result=-1
+    for b; do
+      if test "$b" -nt "$a"; then
+        #echo "  $b is newer than $a" >&2
+        result=0
+      fi
+    done
+  fi
+  #case $result in
+  #  0) echo "$a needs rebuild" >&2;;
+  #esac
+  (exit $result)
+}
+
+
+main "$@"
