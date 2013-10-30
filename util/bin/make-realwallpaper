@@ -7,48 +7,59 @@ set -euf
 
 main() {
   # fetch source images in parallel
-  fetch nightmap.jpg \
-    http://awka.sourceforge.net/Night_le_huge.jpg &
-  fetch daymap.png \
+  #fetch nightmap-old-raw.jpg \
+  #  http://awka.sourceforge.net/Night_le_huge.jpg &
+  fetch nightmap-raw.jpg \
+     http://www.zeitnews.org/sites/default/files/users/20/article_slideshow_images/nasa-noaa-satellite-reveals-new-views-earth-night-1354814354_0.jpg &
+  fetch daymap-raw.png \
     http://www.nnvl.noaa.gov/images/globaldata/SnowIceCover_Daily.png &
-  fetch clouds.jpg \
+  fetch clouds-raw.jpg \
     http://user.chol.com/~winxplanet/cloud_data/clouds_2048.jpg &
   fetch krebs.sat.tle \
      http://www.celestrak.com/NORAD/elements/stations.txt  
   wait
 
-  check_type nightmap.jpg image
-  check_type daymap.png image
-  check_type clouds.jpg image
+  #check_type nightmap-old-raw.jpg image
+  check_type nightmap-raw.jpg image
+  check_type daymap-raw.png image
+  check_type clouds-raw.jpg image
 
-  # downscale daymap to match nightmap
-  needs_rebuild daymap-final.png \
-    daymap.png \
-    && convert daymap.png -scale $(image_size nightmap.jpg) daymap-final.png
+  in_size=1466x1200
 
-  needs_rebuild clouds-final.png \
-    clouds.jpg \
-    && convert clouds.jpg -scale $(image_size nightmap.jpg) clouds-final.png
+  nightsnow_color='#0c1a49'  # nightmap
+  #nightsnow_color='#0a3b5c'  # nightmap-old
+
+  # normalize *-raw.* to *.png
+  for raw in \
+      nightmap-old-raw.jpg \
+      nightmap-raw.jpg \
+      daymap-raw.png \
+      clouds-raw.jpg \
+      ;
+  do
+    normal=${raw%-raw.*}.png
+    needs_rebuild $normal $raw || continue
+    echo "make $normal; normalize $raw" >&2
+    convert $raw -scale $in_size $normal
+  done
 
   # create nightmap-fullsnow
   needs_rebuild nightmap-fullsnow.png \
-    && convert \
-        -size $(image_size nightmap.jpg) \
-        'xc:#0a3b5c' nightmap-fullsnow.png
+    && convert -size $in_size xc:$nightsnow_color nightmap-fullsnow.png
 
-  # extract daymap-snowmask from daymap-fonal
+  # extract daymap-snowmask from daymap-final
   needs_rebuild daymap-snowmask.png \
-    daymap-final.png \
-    && convert daymap-final.png -threshold 95% daymap-snowmask.png
+    daymap.png \
+    && convert daymap.png -threshold 95% daymap-snowmask.png
 
   # extract nightmap-lightmask from nightmap
   needs_rebuild nightmap-lightmask.png \
-    nightmap.jpg \
-    && convert nightmap.jpg -threshold 25% nightmap-lightmask.png
+    nightmap.png \
+    && convert nightmap.png -threshold 25% nightmap-lightmask.png
 
   # create layers
   make_layer nightmap-snowlayer.png nightmap-fullsnow.png daymap-snowmask.png
-  make_layer nightmap-lightlayer.png nightmap.jpg nightmap-lightmask.png
+  make_layer nightmap-lightlayer.png nightmap.png nightmap-lightmask.png
 
   # apply layers
   flatten nightmap-lightsnowlayer.png \
@@ -57,7 +68,19 @@ main() {
 
   flatten nightmap-final.png \
     nightmap-lightsnowlayer.png \
-    nightmap.jpg
+    nightmap.png
+    # nightmap-old.png
+
+  # make all unmodified files as final
+  for normal in \
+      daymap.png \
+      clouds.png \
+      ;
+  do
+    final=${normal%.png}-final.png
+    needs_rebuild $final &&
+      ln $normal $final
+  done
 
   # create xplanet output
   needs_rebuild xplanet.config \
