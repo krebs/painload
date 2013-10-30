@@ -1,0 +1,46 @@
+#!/bin/sh
+
+###### USAGE #####
+#run in new directory(will be polluted with images
+#just run ./make-realwallpaper
+
+
+
+if ! ping -w 10 8.8.8.8 | sed -n '/time=[1-9.]* ms/{p;q}'|grep -q . ; then
+    echo "we need internet"
+    exit 1
+fi
+
+curl -z Nightmap_bare.jpg http://awka.sourceforge.net/Night_le_huge.jpg -o Nightmap_bare.jpg
+curl -z Daymap_bare.png http://www.nnvl.noaa.gov/images/globaldata/SnowIceCover_Daily.png -o Daymap_bare.png
+curl -z Clouds.jpg http://user.chol.com/~winxplanet/cloud_data/clouds_2048.jpg -o Clouds.jpg
+
+#resize the Daymap
+convert Daymap_bare.png -scale 4000x2000 Daymap.png
+#convert Daymap to a snow only alphamap
+convert Daymap.png  -threshold '95%' Daymap_snowmask.png
+
+#create a full snowmap in the nightcolor
+convert Daymap.png -fill '#0a3b5c' -colorize '100%' Nightmap_fullsnow.png
+#get nightlights out of Nightmap_bare
+convert Nightmap_bare.jpg -threshold '25%' -transparent '#000000' Nightmap_lightmask.png
+#composite Snowmask and Fullsnow to Nightmap_snowlayer
+convert Nightmap_fullsnow.png Daymap_snowmask.png -alpha off -compose copy_opacity -composite Nightmap_snowlayer.png
+#cut out the lights in Nightmap_lightmask and put them in Nightmap_lightlayer
+convert Nightmap_bare.jpg Nightmap_lightmask.png -alpha off -compose copy_opacity -composite Nightmap_lightlayer.png
+
+#Composite the Nightmap_snowlayer and the Nightmap_lightlayer with the Nightmap
+composite Nightmap_lightlayer.png Nightmap_snowlayer.png Nightmap_lightsnowlayer.png
+composite Nightmap_lightsnowlayer.png Nightmap_bare.jpg Nightmap.png
+
+#write the xplanet-configfile
+cat > xplanet-config << EOF
+[earth]
+"Earth"
+map=Daymap.png
+night_map=Nightmap.png
+cloud_map=Clouds.jpg
+EOF
+
+xplanet --num_times 1 --geometry 1366x1200 --output xplanet-output.jpg --projection merc -config xplanet-config
+convert xplanet-output.jpg -crop 1366x768+0+160 realwallpaper.png
