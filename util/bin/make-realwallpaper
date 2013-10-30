@@ -13,6 +13,8 @@ main() {
     http://www.nnvl.noaa.gov/images/globaldata/SnowIceCover_Daily.png &
   fetch cloud-layer.jpg \
     http://user.chol.com/~winxplanet/cloud_data/clouds_2048.jpg &
+  fetch krebs.sat.tle \
+     http://www.celestrak.com/NORAD/elements/stations.txt  
   wait
 
   check_type nightmap.jpg image
@@ -61,17 +63,48 @@ main() {
 map=daymap-final.png
 night_map=nightmap-final.png
 cloud_map=cloud-layer.jpg
-satellite_file=krebs.sat
-marker_file=krebs.mar
 EOF
+
+  # create xplanet output satellite version
+  needs_rebuild xplanet-sat.config \
+    && cat >xplanet-sat.config <<EOF
+[earth]
+"Earth"
+map=daymap-final.png
+night_map=nightmap-final.png
+cloud_map=cloud-layer.jpg
+satellite_file=krebs.sat
+EOF
+
+  needs_rebuild krebs.sat \
+    && cat >krebs.sat <<EOF
+25544 "ISS" Image=none trail={orbit,-2,2,1} color=grey thickness=1 fontsize=10
+37820 "T1" Image=none trail={orbit,-2,2,1} color=grey thickness=1 fontsize=10
+39175 "ATV-4" Image=none trail={orbit,-2,2,1} color=grey thickness=1 fontsize=10
+39258 "CYG" Image=none trail={orbit,-2,2,1} color=grey thickness=1 fontsize=10
+EOF
+
+  needs_rebuild krebs.mar \
+    && cat >krebs.mar <<EOF
+EOF
+
   # rebuild every time to update shadow
   xplanet --num_times 1 --geometry 1466x1200 \
     --output xplanet-output.png --projection merc -config xplanet.config
+
+  # rebuild everytime satellite version
+  xplanet --num_times 1 --geometry 1466x1200 \
+    --output xplanet-sat-output.png --projection merc -config xplanet-sat.config
 
   # trim xplanet output
   needs_rebuild realwallpaper.png \
     xplanet-output.png \
     && convert xplanet-output.png -crop 1366x768+100+160 realwallpaper.png
+
+  # trim xplanet-sat output
+  needs_rebuild realwallpaper-sat.png \
+    xplanet-sat-output.png \
+    && convert xplanet-sat-output.png -crop 1366x768+100+160 realwallpaper-sat.png
 }
 
 # usage: getimg FILENAME URL
