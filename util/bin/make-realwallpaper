@@ -61,13 +61,12 @@ main() {
 map=daymap-final.png
 night_map=nightmap-final.png
 cloud_map=cloud-layer.jpg
+satellite_file=krebs.sat
+marker_file=krebs.mar
 EOF
-  needs_rebuild xplanet-output.png \
-    daymap-final.png \
-    nightmap-final.png \
-    cloud-layer.jpg \
-    && xplanet --num_times 1 --geometry 1466x1200 \
-        --output xplanet-output.png --projection merc -config xplanet.config
+  # rebuild every time to update shadow
+  xplanet --num_times 1 --geometry 1466x1200 \
+    --output xplanet-output.png --projection merc -config xplanet.config
 
   # trim xplanet output
   needs_rebuild realwallpaper.png \
