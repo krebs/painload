@@ -31,8 +31,8 @@ main() {
   #nightsnow_color='#0a3b5c'  # nightmap-old
 
   # normalize *-raw.* to *.png
+  #nightmap-old-raw.jpg
   for raw in \
-      nightmap-old-raw.jpg \
       nightmap-raw.jpg \
       daymap-raw.png \
       clouds-raw.jpg \
