@@ -121,7 +121,7 @@ EOF
     --output xplanet-output.png --projection merc -config xplanet.config
 
   # rebuild everytime satellite version
-  xplanet --num_times 1 --geometry $in_size0 \
+  xplanet --num_times 1 --geometry $in_size \
     --output xplanet-sat-output.png --projection merc -config xplanet-sat.config
 
   # trim xplanet output
