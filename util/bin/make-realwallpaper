@@ -85,7 +85,7 @@ main() {
   done
 
   # create xplanet output
-    cat >xplanet.config <<EOF
+  cat >xplanet.config <<EOF
 [earth]
 "Earth"
 map=daymap-final.png
@@ -96,7 +96,7 @@ shade=15
 EOF
 
   # create xplanet output satellite version
-    cat >xplanet-sat.config <<EOF
+  cat >xplanet-sat.config <<EOF
 [earth]
 "Earth"
 map=daymap-final.png
