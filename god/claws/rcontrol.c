@@ -61,7 +61,7 @@ void exit_gracefully(struct ftdi_context* ftdic, char exit_code);
 int main(int argc, char **argv)
 {
   int ret=0, int_argument=0, option_flags=0, long_index=0, i=0, num_ops=0;
-  char c=0;
+  signed char c=0;
   unsigned char buf[COMMANDO_LENGTH], char_argument=0, operation=0;
   const char* ft_serial=DEFAULT_FT_SERIAL;
   double double_argument;
