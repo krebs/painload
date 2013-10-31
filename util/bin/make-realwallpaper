@@ -25,6 +25,7 @@ main() {
   check_type clouds-raw.jpg image
 
   in_size=1466x1200
+  out_geometry=1366x768+100+160
 
   nightsnow_color='#0c1a49'  # nightmap
   #nightsnow_color='#0a3b5c'  # nightmap-old
@@ -116,22 +117,22 @@ EOF
 EOF
 
   # rebuild every time to update shadow
-  xplanet --num_times 1 --geometry 1466x1200 \
+  xplanet --num_times 1 --geometry $in_size \
     --output xplanet-output.png --projection merc -config xplanet.config
 
   # rebuild everytime satellite version
-  xplanet --num_times 1 --geometry 1466x1200 \
+  xplanet --num_times 1 --geometry $in_size0 \
     --output xplanet-sat-output.png --projection merc -config xplanet-sat.config
 
   # trim xplanet output
   needs_rebuild realwallpaper.png \
     xplanet-output.png \
-    && convert xplanet-output.png -crop 1366x768+100+160 realwallpaper.png
+    && convert xplanet-output.png -crop $out_geometry realwallpaper.png
 
   # trim xplanet-sat output
   needs_rebuild realwallpaper-sat.png \
     xplanet-sat-output.png \
-    && convert xplanet-sat-output.png -crop 1366x768+100+160 realwallpaper-sat.png
+    && convert xplanet-sat-output.png -crop $out_geometry realwallpaper-sat.png
 }
 
 # usage: getimg FILENAME URL
