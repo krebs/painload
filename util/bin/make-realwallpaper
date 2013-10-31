@@ -24,7 +24,8 @@ main() {
   check_type daymap-raw.png image
   check_type clouds-raw.jpg image
 
-  in_size=1466x1200
+  in_size=2048x1024
+  xplanet_out_size=1466x1200
   out_geometry=1366x768+100+160
 
   nightsnow_color='#0c1a49'  # nightmap
@@ -117,11 +118,11 @@ EOF
 EOF
 
   # rebuild every time to update shadow
-  xplanet --num_times 1 --geometry $in_size \
+  xplanet --num_times 1 --geometry $xplanet_out_size \
     --output xplanet-output.png --projection merc -config xplanet.config
 
   # rebuild everytime satellite version
-  xplanet --num_times 1 --geometry $in_size \
+  xplanet --num_times 1 --geometry $xplanet_out_size \
     --output xplanet-sat-output.png --projection merc -config xplanet-sat.config
 
   # trim xplanet output
