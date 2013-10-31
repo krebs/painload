@@ -103,6 +103,8 @@ map=daymap-final.png
 night_map=nightmap-final.png
 cloud_map=clouds-final.png
 satellite_file=krebs.sat
+cloud_threshold=10
+shade=15
 EOF
 
   needs_rebuild krebs.sat \
