@@ -84,9 +84,11 @@ main() {
       ln $normal $final
   done
 
+  make_gcloud_cloudmask
+
   map=daymap-final.png
   night_map=nightmap-final.png
-  cloud_map=clouds-final.png
+  cloud_map=gcloud-cloudmask.png
   satellite_file=krebs.sat
 
   # create xplanet output
@@ -141,6 +143,43 @@ EOF
   needs_rebuild realwallpaper-sat.png \
     xplanet-sat-output.png \
     && convert xplanet-sat-output.png -crop $out_geometry realwallpaper-sat.png
+}
+
+# generate clouds from google maps
+make_gcloud_cloudmask() {
+  echo 'fetch gcloud-*.png tiles' >&2
+  for y in $(seq -w 0 15); do
+    for x in $(seq -w 0 15); do
+      echo "curl -sS -o gcloud-$y-$x.png -z gcloud-$y-$x.png \\\"https://mts0.google.com/vt/lyrs=h@239000000,weather_nolabels,weather_0cloud&hl=en&src=app&x=$x&y=$y&z=4&s=Galil\\\""
+    done
+  done | xargs --max-args=1 -P 10 -I @ sh -c @
+  gcloud_tiles=$(find -name 'gcloud-[0-9][0-9]-[0-9][0-9].png'|sort)
+  needs_rebuild gcloud-raw.png $gcloud_tiles &&
+      echo 'make gcloud-raw.png' &&
+      montage -mode Concatenate -background None \
+        $gcloud_tiles -tile x16 gcloud-raw.png
+
+  check_type gcloud-raw.png image
+
+  gcloud_in_size=2048x2048
+  gcloud_out_size=2048x1024
+  gcloud_out_geometry=2048x1024+0+512
+  gcloud_base_color='#ffffff'
+
+  needs_rebuild gcloud-normal.png gcloud-raw.png &&
+      echo "make gcloud-normal.png; normalize gcloud-raw.png" >&2
+      convert gcloud-raw.png -scale $gcloud_in_size gcloud-normal.png
+
+  needs_rebuild gcloud-cloudmask.png gcloud-normal.png &&
+      echo 'make gcloud-cloudmask.png' &&
+      convert -flatten gcloud-normal.png \
+        -fx 'p{i,(asinh(tan((j/h+0.5)*pi))/2.6+0.5)*h}' \
+        -crop $gcloud_out_geometry \
+        gcloud-cloudmask.png
+
+  needs_rebuild gcloud-fullcloud.png &&
+      echo 'make gcloud-fullcloud.png' &&
+      convert -size $gcloud_out_size xc:$gcloud_base_color gcloud-fullcloud.png
 }
 
 # usage: getimg FILENAME URL
