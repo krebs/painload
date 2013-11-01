@@ -14,7 +14,8 @@ get_tts(){
     : ${OUTFILE?please provide OUTFILE}
     text=$(echo $* | sed -e "s/ /+/g" -e "s/\//%2F/g")
     voice="${voice:-klara}"
-    ip="192.20.225.36"
+    # TODO grab this url from the tts demo page
+    ip="204.178.9.51"
     base_url="http://$ip"
     curl -sS $base_url$( curl  -Ss  -H "Host:$ip" \
         -H "Origin:http://www2.research.att.com" \
