@@ -16,7 +16,7 @@ main() {
   fetch clouds-raw.jpg \
     http://user.chol.com/~winxplanet/cloud_data/clouds_2048.jpg &
   fetch krebs.sat.tle \
-     http://www.celestrak.com/NORAD/elements/stations.txt  
+     http://www.celestrak.com/NORAD/elements/stations.txt &
   wait
 
   #check_type nightmap-old-raw.jpg image
