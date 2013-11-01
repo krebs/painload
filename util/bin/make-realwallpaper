@@ -84,13 +84,18 @@ main() {
       ln $normal $final
   done
 
+  map=daymap-final.png
+  night_map=nightmap-final.png
+  cloud_map=clouds-final.png
+  satellite_file=krebs.sat
+
   # create xplanet output
   cat >xplanet.config <<EOF
 [earth]
 "Earth"
-map=daymap-final.png
-night_map=nightmap-final.png
-cloud_map=clouds-final.png
+map=$map
+night_map=$night_map
+cloud_map=$cloud_map
 cloud_threshold=10
 shade=15
 EOF
@@ -99,11 +104,11 @@ EOF
   cat >xplanet-sat.config <<EOF
 [earth]
 "Earth"
-map=daymap-final.png
-night_map=nightmap-final.png
-cloud_map=clouds-final.png
-satellite_file=krebs.sat
+map=$map
+night_map=$night_map
+cloud_map=$cloud_map
 cloud_threshold=10
+satellite_file=$satellite_file
 shade=15
 EOF
 
