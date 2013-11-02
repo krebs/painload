@@ -1,0 +1,35 @@
+#! /bin/sh
+set -euf
+
+# <form action="./efaanyfield/anyfield.php" method="post" id="efaForm">
+    #s/itdDateDay=/&${3-$itdDateDay}/
+    #s/itdDateMonth=/&${4-$itdDateMonth}/
+    #s/itdDateYear=/&${5-$itdDateYear}/
+
+vvs_tmp=/tmp/vvs.tmp
+curl -Ss http://www.vvs.de/fahrplan/ |
+sed -rn "/<!-- EFA -->/,/<!-- \/EFA -->/{
+    s.*<input.*name=\"([^\"]*)\".*value=\"([^\"]*)\".*/>.*\1=\2;T
+    /itdTripDateTimeDepArr=arr/b
+    s/(name_origin=).*/\1${1-$name_origin}/
+    s/(name_destination=).*/\1${2-$name_destination}/
+    ${3+s/(itdTimeHour=).*/\1${3-$itdTimeHour}/}
+    ${4+s/(itdTimeMinute=).*/\1${4-$itdTimeMinute}/}
+    p
+}" | tr '\n' '&' | sed 's/&$//' >"$vvs_tmp"
+
+
+#while read line ; do
+#  test -z "$line" || echo "$line"
+#done >"$vvs_tmp"
+
+echo from: ${1-$name_origin}
+echo \ \ to: ${2-$name_destination}
+echo '-------------------------------------'
+w3m -cols 9423 -post "$vvs_tmp" \
+    -dump http://www.vvs.de/./efaanyfield/anyfield.php |
+sed -rn "
+  s/^ +[0-9]+ +([0-9]+:[0-9]+) +([0-9]+:[0-9]+) +([A-Z0-9 ,]+) .*$/\1 \2  \3/p
+" | tr -d ,
+
+####
