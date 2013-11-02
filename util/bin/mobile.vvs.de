@@ -1,4 +1,93 @@
 #! /bin/sh
+#
+# NAME
+#   mobile.vvs.de - web scraper for VVS departure information
+#
+# SYNOPSIS
+#   mobile.vvs.de ORIGIN [HH [MM [YYmmdd]]]
+#
+# DESCRIPTION
+#   The mobile.vvs.de utility fetches departure information from the
+#   Internet and prints the results to standard output.
+#
+# OPERANDS
+#   ORIGIN  The point of departure.
+#
+#   HH, MM, YYmmdd
+#           The time and date of departure.  Defaults to the current
+#           time and date.
+#
+# STDIN
+#   Not used.
+#
+# INPUT FILES
+#   None.
+#
+# ENVIRONMENT VARIABLES
+#   The following environment variables affect the execution of mobile.vvs.de:
+#
+#   limit   Limits the number of entries to be fetched.
+#
+#   origin, H, M, Ymd
+#           Provide defaults operands.  If origin is set, then ORIGIN
+#           becomes optional.  The order of the operands doesn't change
+#           by these variables.  These variables are overridden by the
+#           operands.
+#
+# ASYNCHRONOUS EVENTS
+#   Defaults.
+#
+# STDOUT
+#   The first line has the format:
+#
+#     "\e[4m%s:%s       %s\e[m\n", H, M, origin_real_name
+#
+#   where H and M are the corresponding provided or default operands.
+#   origin_real_name is the real name of the point of departure.
+#
+#   The subsequent lines specify the departing means of transport.
+#   Each line has the format:
+#
+#     "%s %s → %s\n", time_of_departure, line_number, destination
+#
+#   where time_of_departure is self-evident, and line_number and
+#   destination identify the route and direction.
+#
+# STDERR
+#   Not used.
+#
+# OUTPUT FILES
+#   None.
+#
+# EXTENDED DESCRIPTION
+#   None.
+#
+# EXIT STATUS
+#   0   A departure board could be fetched.
+#
+#   1   ORIGIN doesn't specify an acceptable point of departure.
+#
+# EXAMPLES
+#   1. Get the top three current departures at Stuttgart, Hauptbahnhof:
+#
+#     $ limit=3 mobile.vvs.de hauptbahnhof
+#
+# FUTURE DIRECTIONS
+#   None.
+#
+# BUGS
+#   The format of STDOUT suffers from bit rot.
+#
+# SEE ALSO
+#   vvs.de
+#
+# COPYRIGHT
+#   All departure information is copyrighted by Verkehrs- und
+#   Tarifverbund Stuttgart GmbH.  The original copyright statement can
+#   be obtained online at http://www.vvs.de/impressum .
+#
+#   The following code is your fault.
+#
 set -euf
 
 ltrim() {

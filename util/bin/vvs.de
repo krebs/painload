@@ -1,4 +1,30 @@
 #! /bin/sh
+#
+# NAME
+#   vvs.de - web scraper for VVS departure information
+#
+# SYNOPSIS
+#   vvs.de ORIGIN DESTINATION
+#
+# EXAMPLES
+#   $ vvs.de Hauptbahnhof Renningen
+#
+# CAVEATS
+#   Acceptable operands have to be found by trial and error.
+#
+# BUGS
+#   Probably bit rot.^_^
+#
+# SEE ALSO
+#   mobile.vvs.de
+#
+# COPYRIGHT
+#   All departure information is copyrighted by Verkehrs- und
+#   Tarifverbund Stuttgart GmbH.  The original copyright statement can
+#   be obtained online at http://www.vvs.de/impressum .
+#
+#   The following code is your fault.
+#
 set -euf
 
 # <form action="./efaanyfield/anyfield.php" method="post" id="efaForm">
