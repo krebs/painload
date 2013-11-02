@@ -173,13 +173,20 @@ make_gcloud_cloudmask() {
 
   if needs_rebuild gcloud-normal.png gcloud-raw.png; then
     echo "make gcloud-normal.png; normalize gcloud-raw.png" >&2
-    convert gcloud-raw.png -scale $gcloud_in_size gcloud-normal.png
+    convert -flatten gcloud-raw.png \
+      -scale $gcloud_in_size gcloud-normal.png
+  fi
+
+  if needs_rebuild gcloud-distmap.png; then
+    convert -size 2048x2048 gradient: -rotate 180 \
+      -fx "p{i, (asinh(tan((j/h+0.5)*pi))/2.6+0.5) * h }" \
+      gcloud-distmap.png
   fi
 
   if needs_rebuild gcloud-cloudmask.png gcloud-normal.png; then
     echo 'make gcloud-cloudmask.png' &&
-    convert -flatten gcloud-normal.png \
-      -fx 'p{i,(asinh(tan((j/h+0.5)*pi))/2.6+0.5)*h}' \
+    convert gcloud-normal.png gcloud-distmap \
+      -fx 'p{i,v*h}' \
       -crop $gcloud_out_geometry \
       gcloud-cloudmask.png
   fi
