@@ -1,0 +1,11 @@
+#! /bin/sh
+set -euf
+
+vvs.de Hauptbahnhof Renningen 13 37 | {
+  read from && test "x$from" = 'xfrom: Hauptbahnhof'
+  read to   && test "x$to"   = 'xto: Renningen'
+  read sep  && test "x$sep"  = 'x-------------------------------------'
+  while read line; do
+    echo "$line" | grep -q '^[0-9][0-9]:[0-9][0-9] [0-9][0-9]:[0-9][0-9]  '
+  done
+}

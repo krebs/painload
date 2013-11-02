@@ -6,6 +6,7 @@ script: "! ( make -C util test | grep -q '^not ok' )"
 before_install:
   - sudo apt-get install bc -qq
   - sudo apt-get install python -qq
+  - sudo apt-get install w3m -qq
 branches:
     only:
         - master
