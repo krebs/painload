@@ -48,7 +48,7 @@ _punanidb_aptget_vim=vim
 _punani_resolve_package(){
   : ${PACKER?PACKER is not set,bailing out}
   pkg=${1?please provide package name to resolve}
-  eval printf \"\${_punanidb_${PACKER_DB}_${pkg}-}\" | grep .
+  eval printf "%s" \"\${_punanidb_${PACKER}_${pkg}-}\" | grep .
 }
 _punani_aptget_install(){ apt-get -y install "$@" ;}
 _punani_aptget_remove(){ apt-get -y remove "$@" ;}
@@ -64,12 +64,10 @@ _punani_brew_remove(){ brew remove "$@";}
 _punani_brew_has(){ error "not implemented"; return 1 ;}
 
 punani(){
-  ! is_root && error "punani requires super-user rights" && return 1
   ACTION="$1"; shift
   PKGS="$*"
-  PACKER_DB=$(printf  ${PACKER}| sed 's/-//g')
   for p in apt-get pacman yum brew;do
-    exists "$p" && PACKER=`printf $p | sed 's/-//g'` && break
+    exists "$p" && PACKER=`printf "%s" "$p" | sed 's/-//g'` && break
   done
 
   [ -z "${PACKER:-}" ] && error "Error 2: no known package manager found; no punani for you!" && return 1
@@ -83,10 +81,12 @@ punani(){
     case "$ACTION" in 
       install)
           eval _punani_${PACKER}_has $RES && info "$RES already installed, skipping" && continue
+          ! is_root && error "punani requires super-user rights for installing" && return 1
           eval _punani_${PACKER}_install $RES || error "cannot install $RES with $PACKER"
           ;;
       remove)
             ! eval  _punani_${PACKER}_has $RES && info "$RES not installed, skipping" && continue
+            ! is_root && error "punani requires super-user rights for removing" && return 1
             eval _punani_${PACKER}_remove $RES || error "cannot install $RES with $PACKER"
             ;;
       has)
