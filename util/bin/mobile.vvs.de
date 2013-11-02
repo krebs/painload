@@ -1,0 +1,78 @@
+#! /bin/sh
+set -euf
+
+ltrim() {
+  sed "s/^[${1-$symbols}]*//"
+}
+
+POST() {
+  ## TODO url-encode, trim
+  tr '\n' '&' | sed 's/&$//' |
+      w3m -config /dev/null -cols 256 -post /dev/stdin -dump "${1-$URI}"
+}
+
+limit=${limit-10}
+origin="${1-$origin}"
+H="${2-${H-`date +%H`}}"
+M="${3-${M-`date +%M`}}"
+Ymd="${4-${Ymd-`date +%Y%m%d`}}"
+
+URI='http://mobil.vvs.de/mobile/XSLT_DM_REQUEST'
+
+echo "
+sessionID=0
+requestID=0
+language=de
+locationServerActive=1
+useRealtime=1
+anySigWhenPerfectNoOtherMatches=1
+limit=$limit
+deleteAssignedStops_dm=1
+mode=direct
+convertCrossingsITKernel2LocationServer=1
+convertStopsPTKernel2LocationServer=1
+convertAddressesITKernel2LocationServer=1
+convertPOIsITKernel2LocationServer=1
+itdLPxx_dest=
+useAllStops=1
+maxAssignedStops=1
+itOptionsActive=1
+trITMOTvalue100=5
+ptOptionsActive=1
+useProxFootSearch=0
+w_regPrefAm=1
+w_objPrefAl=2
+w_objPrefAl=12
+itdLPxx_script=true
+place_dm=
+placeState_dm=empty
+nameState_dm=empty
+nameInfo_dm=invalid
+typeInfo_dm=invalid
+placeInfo_dm=invalid
+reducedAnyWithoutAddressObjFilter_dm=103
+reducedAnyPostcodeObjFilter_dm=64
+reducedAnyTooManyObjFilter_dm=2
+anyObjFilter_dm=126
+type_dm=any
+name_dm=$origin
+itdTimeHour=`echo $H | ltrim 0`
+itdTimeMinute=`echo $M | ltrim 0`
+itdDate=$Ymd
+" | POST "$URI" | sed -rn '
+  s/^Von:[^[:alpha:]]+(.*)$/[4m'$H:$M'       \1[m/p
+  /Haltestelle/,/^ *$/{
+    /Haltestelle|^ *$/!{
+      s/[[:space:]]*\[info\][[:space:]]*$//
+      p
+    }
+  }
+' | {
+  read
+  echo "$REPLY"
+  while read time dev no dest ; do
+    printf "$time %3s → %s\n" $no "$dest"
+  done
+}
+
+####
