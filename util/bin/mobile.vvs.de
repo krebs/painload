@@ -157,7 +157,7 @@ itdDate=$Ymd
     }
   }
 ' | {
-  read
+  read REPLY
   echo "$REPLY"
   while read time dev no dest ; do
     printf "$time %3s → %s\n" $no "$dest"
