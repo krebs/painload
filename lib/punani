@@ -52,7 +52,7 @@ _punani_resolve_package(){
 }
 _punani_aptget_install(){ apt-get -y install "$@" ;}
 _punani_aptget_remove(){ apt-get -y remove "$@" ;}
-_punani_aptget_has() { dpkg -s "$1" >/dev/null 2>/dev/null ;}
+_punani_aptget_has() { dpkg -s "$1" | grep -q "Status: install";}
 _punani_yum_install(){ yum -y install "$@" ;}
 _punani_yum_remove(){ yum -y remove "$@" ;}
 _punani_yum_has() { rpm -qa --qf "%{NAME}\n"| egrep  "^${1}\$" >/dev/null ;}
