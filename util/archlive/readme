@@ -1,0 +1,7 @@
+change key in root-image/root/.ssh/authorized_keys
+change target hidden service in root-image/etc/systemd/scripts/nc_onion
+
+run build.sh (as root)
+
+archlive will send the hidden service every minute to configured targets hidden service
+stop with systemctl stop krebs-init

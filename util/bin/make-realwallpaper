@@ -16,7 +16,7 @@ main() {
   fetch clouds-raw.jpg \
     http://user.chol.com/~winxplanet/cloud_data/clouds_2048.jpg &
   fetch krebs.sat.tle \
-     http://www.celestrak.com/NORAD/elements/stations.txt  
+     http://www.celestrak.com/NORAD/elements/stations.txt &
   wait
 
   #check_type nightmap-old-raw.jpg image
@@ -24,7 +24,8 @@ main() {
   check_type daymap-raw.png image
   check_type clouds-raw.jpg image
 
-  in_size=1466x1200
+  in_size=2048x1024
+  xplanet_out_size=1466x1200
   out_geometry=1366x768+100+160
 
   nightsnow_color='#0c1a49'  # nightmap
@@ -39,24 +40,26 @@ main() {
       ;
   do
     normal=${raw%-raw.*}.png
-    needs_rebuild $normal $raw || continue
-    echo "make $normal; normalize $raw" >&2
-    convert $raw -scale $in_size $normal
+    if needs_rebuild $normal $raw; then
+      echo "make $normal; normalize $raw" >&2
+      convert $raw -scale $in_size $normal
+    fi
   done
 
   # create nightmap-fullsnow
-  needs_rebuild nightmap-fullsnow.png \
-    && convert -size $in_size xc:$nightsnow_color nightmap-fullsnow.png
+  if needs_rebuild nightmap-fullsnow.png; then
+    convert -size $in_size xc:$nightsnow_color nightmap-fullsnow.png
+  fi
 
   # extract daymap-snowmask from daymap-final
-  needs_rebuild daymap-snowmask.png \
-    daymap.png \
-    && convert daymap.png -threshold 95% daymap-snowmask.png
+  if needs_rebuild daymap-snowmask.png daymap.png; then
+    convert daymap.png -threshold 95% daymap-snowmask.png
+  fi
 
   # extract nightmap-lightmask from nightmap
-  needs_rebuild nightmap-lightmask.png \
-    nightmap.png \
-    && convert nightmap.png -threshold 25% nightmap-lightmask.png
+  if needs_rebuild nightmap-lightmask.png nightmap.png; then
+    convert nightmap.png -threshold 25% nightmap-lightmask.png
+  fi
 
   # create layers
   make_layer nightmap-snowlayer.png nightmap-fullsnow.png daymap-snowmask.png
@@ -83,58 +86,115 @@ main() {
       ln $normal $final
   done
 
+  make_gcloud_cloudmask
+
+  map=daymap-final.png
+  night_map=nightmap-final.png
+  cloud_map=gcloud-cloudmask.png
+  satellite_file=krebs.sat
+
   # create xplanet output
-    cat >xplanet.config <<EOF
+  cat >xplanet.config <<EOF
 [earth]
 "Earth"
-map=daymap-final.png
-night_map=nightmap-final.png
-cloud_map=clouds-final.png
+map=$map
+night_map=$night_map
+cloud_map=$cloud_map
 cloud_threshold=10
 shade=15
 EOF
 
   # create xplanet output satellite version
-    cat >xplanet-sat.config <<EOF
+  cat >xplanet-sat.config <<EOF
 [earth]
 "Earth"
-map=daymap-final.png
-night_map=nightmap-final.png
-cloud_map=clouds-final.png
-satellite_file=krebs.sat
+map=$map
+night_map=$night_map
+cloud_map=$cloud_map
 cloud_threshold=10
+satellite_file=$satellite_file
 shade=15
 EOF
 
-  needs_rebuild krebs.sat \
-    && cat >krebs.sat <<EOF
+  if needs_rebuild krebs.sat; then
+    cat >krebs.sat <<EOF
 25544 "ISS" Image=none trail={orbit,-2,2,1} color=grey thickness=1 fontsize=10
 37820 "T1" Image=none trail={orbit,-2,2,1} color=grey thickness=1 fontsize=10
 39175 "ATV-4" Image=none trail={orbit,-2,2,1} color=grey thickness=1 fontsize=10
 39258 "CYG" Image=none trail={orbit,-2,2,1} color=grey thickness=1 fontsize=10
 EOF
+  fi
 
-  needs_rebuild krebs.mar \
-    && cat >krebs.mar <<EOF
+  if needs_rebuild krebs.mar; then
+    cat >krebs.mar <<EOF
 EOF
+  fi
 
   # rebuild every time to update shadow
-  xplanet --num_times 1 --geometry $in_size \
+  xplanet --num_times 1 --geometry $xplanet_out_size \
     --output xplanet-output.png --projection merc -config xplanet.config
 
   # rebuild everytime satellite version
-  xplanet --num_times 1 --geometry $in_size \
+  xplanet --num_times 1 --geometry $xplanet_out_size \
     --output xplanet-sat-output.png --projection merc -config xplanet-sat.config
 
   # trim xplanet output
-  needs_rebuild realwallpaper.png \
-    xplanet-output.png \
-    && convert xplanet-output.png -crop $out_geometry realwallpaper.png
+  if needs_rebuild realwallpaper.png xplanet-output.png; then
+    convert xplanet-output.png -crop $out_geometry realwallpaper.png
+  fi
 
   # trim xplanet-sat output
-  needs_rebuild realwallpaper-sat.png \
-    xplanet-sat-output.png \
-    && convert xplanet-sat-output.png -crop $out_geometry realwallpaper-sat.png
+  if needs_rebuild realwallpaper-sat.png xplanet-sat-output.png; then
+    convert xplanet-sat-output.png -crop $out_geometry realwallpaper-sat.png
+  fi
+}
+
+# generate clouds from google maps
+make_gcloud_cloudmask() {
+  echo 'fetch gcloud-*.png tiles' >&2
+  for y in $(seq -w 0 15); do
+    for x in $(seq -w 0 15); do
+      echo "curl -sS -o gcloud-$y-$x.png -z gcloud-$y-$x.png \\\"https://mts0.google.com/vt/lyrs=h@239000000,weather_nolabels,weather_0cloud&hl=en&src=app&x=$x&y=$y&z=4&s=Galil\\\""
+    done
+  done | xargs --max-args=1 -P 10 -I @ sh -c @
+  gcloud_tiles=$(find -name 'gcloud-[0-9][0-9]-[0-9][0-9].png'|sort)
+  if needs_rebuild gcloud-raw.png $gcloud_tiles; then
+    echo 'make gcloud-raw.png' &&
+    montage -mode Concatenate -background None \
+      $gcloud_tiles -tile x16 gcloud-raw.png
+  fi
+
+  check_type gcloud-raw.png image
+
+  gcloud_in_size=2048x2048
+  gcloud_out_size=2048x1024
+  gcloud_out_geometry=2048x1024+0+512
+  gcloud_base_color='#ffffff'
+
+  if needs_rebuild gcloud-normal.png gcloud-raw.png; then
+    echo "make gcloud-normal.png; normalize gcloud-raw.png" >&2
+    convert -flatten gcloud-raw.png \
+      -scale $gcloud_in_size gcloud-normal.png
+  fi
+
+  if needs_rebuild gcloud-distmap.png; then
+    convert -size 2048x2048 gradient: -rotate 180 \
+      -fx "p{i, (asinh(tan((j/h+0.5)*pi))/2.6+0.5) * h }" \
+      gcloud-distmap.png
+  fi
+
+  if needs_rebuild gcloud-cloudmask.png gcloud-normal.png; then
+    echo 'make gcloud-cloudmask.png' &&
+    convert gcloud-normal.png gcloud-distmap \
+      -fx 'p{i,v*h}' \
+      -crop $gcloud_out_geometry \
+      gcloud-cloudmask.png
+  fi
+
+  if needs_rebuild gcloud-fullcloud.png; then
+    echo 'make gcloud-fullcloud.png' &&
+    convert -size $gcloud_out_size xc:$gcloud_base_color gcloud-fullcloud.png
+  fi
 }
 
 # usage: getimg FILENAME URL
@@ -194,6 +254,5 @@ needs_rebuild() {
   #esac
   return $result
 }
-
 
 main "$@"
