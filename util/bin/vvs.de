@@ -4,10 +4,10 @@
 #   vvs.de - web scraper for VVS departure information
 #
 # SYNOPSIS
-#   vvs.de ORIGIN DESTINATION
+#   vvs.de ORIGIN DESTINATION [HH [MM]]
 #
 # EXAMPLES
-#   $ vvs.de Hauptbahnhof Renningen
+#   $ vvs.de Hauptbahnhof Renningen 13 37
 #
 # CAVEATS
 #   Acceptable operands have to be found by trial and error.
