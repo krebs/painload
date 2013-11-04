@@ -23,9 +23,8 @@ chown -R tahoe: /opt/tahoe
 
 # change nick name
 (echo -n "nick name [$HOSTNAME]: " &&
-    read name &&
-    { test "x$name" != x || name=$HOSTNAME; } &&
-    sed -i "s/^nickname =.*/nickname = $name/" /opt/tahoe/tahoe.cfg)
+    read nn &&
+    sed -i "s/^nickname =.*/nickname = ${nn:-$HOSTNAME}/" /opt/tahoe/tahoe.cfg)
 
 # replace introducer.furl = None with the one from pigstarter/tahoe/introducer.furl
 sed -i "s#^introducer\.furl.*#introducer.furl = $(curl pigstarter/tahoe/introducer.furl)#" /opt/tahoe/tahoe.cfg
