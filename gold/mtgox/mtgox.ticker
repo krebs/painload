@@ -19,7 +19,7 @@ fi
 
 # 2012-11-17 tv /krebs/gold/mtgox/mtgox.ticker
 ticker() {
-  curl -ksS https://mtgox.com/code/data/ticker.php?Currency=$Currency
+  curl -ksS https://data.mtgox.com/code/data/ticker.php?Currency=$Currency
 }
 # 2012-11-17 tv ~mw*@iiso:Espresso-phonegap/package/bin/json-print
 print() {
