@@ -39,3 +39,6 @@ cp tahoe.service /usr/lib/systemd/system/tahoe.service
 
 systemctl enable tahoe.service
 systemctl start tahoe.service
+
+## Firewall Configuration
+# open port 46080 to allow inbound connections
