@@ -1,7 +1,8 @@
 language: c
 notifications:
     irc: "chat.freenode.net#krebs_incoming"
-
+    on_success: change
+    on_failure: always
 script: "! ( make -C util test | grep -q '^not ok' )"
 before_install:
   - sudo apt-get install bc -qq
