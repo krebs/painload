@@ -6,7 +6,7 @@ pip2 install pyasn1 zfec pycrypto zbase32 pycryptopp twisted
 pip2 install allmydata-tahoe
 
 ## Tahoe Brick Installation (Arch Linux / Expert Mode^_^)
-# if the above breaks for some reasont, but you basically know what you're
+# if the above breaks for some reason, but you basically know what you're
 # doing, then you could try something like this:
 pip2 uninstall `pip2 list | awk '{print$1}'`
 yaourt -S --asdeps --noconfirm net-tools python2 python2-zope-interface \
