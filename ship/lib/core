@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# logging
+msg() { printf "$@\n" >&2 ;}
+info()   { msg "** $@" ;}
+error()  { msg "!! $@" ;}
+exists(){ type "$1" >/dev/null 2>/dev/null; }
+is_root(){
+  test $(id -u) -eq 0
+}
+get_hostname(){
+  # finds the current hostname
+  #   if ENV HOSTN is set echo $HOSTN
+  #   We try the following:
+  #      $HOSTN
+  #      $HOSTNAME
+  #      hostname
+  #      uci system.hostname
+  #      /etc/hostname
+  #   if everything fails, it returns 1 and prints 'unknown'
+
+  if [ -n "${HOSTN:-}" ] ;     then printf "${HOSTN:-}" 
+  elif [ -n "${HOSTNAME:-}" ] ;then printf "$HOSTNAME"
+  elif exists hostname ;       then printf "$(hostname)"
+  elif exists uci    ;         then printf "$(uci get system.@system[0].hostname)"
+  elif [ -e /etc/hostname ]   ;then printf "$(cat /etc/hostname)"
+  else                              printf "unknown"; return 1
+  fi
+  return 0
+}
+
+line_to_dot(){ 
+  while read line; do printf .; done;
+}

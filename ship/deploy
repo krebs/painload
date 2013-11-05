@@ -1,0 +1,14 @@
+#!/bin/sh
+set -x
+cd $(dirname $0)
+bindir=$PWD/bin/
+libdir=$PWD/lib/
+outdir=$PWD/out/
+# Hill-Billy style package builder
+for file in `ls -1 $bindir`;do
+  # cat every lib and the file itself afterwards into outfile
+  find $libdir -type f -exec cat '{}' \; > $outdir/$file
+  cat $bindir/$file >> $outdir/$file
+  chmod 755 $outdir/$file
+done
+
