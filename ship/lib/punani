@@ -1,0 +1,104 @@
+#!/bin/sh
+#@include core
+
+## begin punani DB
+_punanidb_pacman_=
+_punanidb_yum_=
+_punanidb_aptget_=
+
+_punanidb_pacman_git=git
+_punanidb_yum_git=git
+_punanidb_aptget_git=git-core
+
+_punanidb_pacman_python2=python2
+_punanidb_yum_python2=python
+_punanidb_aptget_python2=python
+
+_punanidb_pacman_python3=python
+_punanidb_aptget_python3=python3
+
+_punanidb_pacman_hostname=inetutils
+_punanidb_aptget_hostname=hostname
+
+_punanidb_pacman_hostname=inetutils
+_punanidb_aptget_hostname=hostname
+
+_punanidb_pacman_make=make
+_punanidb_yum_make=make
+_punanidb_aptget_make=make
+
+_punanidb_pacman_tinc=tinc
+_punanidb_yum_tinc=tinc
+_punanidb_aptget_tinc=tinc
+
+_punanidb_pacman_tor=tor
+_punanidb_yum_tor=tor
+_punanidb_aptget_tor=tor
+
+_punanidb_pacman_nano=nano
+_punanidb_yum_nano=nano
+_punanidb_aptget_nano=nano
+
+_punanidb_pacman_vim=vim
+_punanidb_yum_vim=vim-enhanced
+_punanidb_aptget_vim=vim
+
+## end punani DB
+
+_punani_resolve_package(){
+  : ${PACKER?PACKER is not set,bailing out}
+  pkg=${1?please provide package name to resolve}
+  eval printf "%s" \"\${_punanidb_${PACKER}_${pkg}-}\" | grep .
+}
+_punani_aptget_install(){ apt-get -y install "$@" ;}
+_punani_aptget_remove(){ apt-get -y remove "$@" ;}
+_punani_aptget_has() { dpkg -s "$1" | grep -q "Status: install";}
+_punani_yum_install(){ yum -y install "$@" ;}
+_punani_yum_remove(){ yum -y remove "$@" ;}
+_punani_yum_has() { rpm -qa --qf "%{NAME}\n"| egrep  "^${1}\$" >/dev/null ;}
+_punani_pacman_install(){ pacman --noconfirm -S --needed "$@" ;}
+_punani_pacman_remove(){ pacman -Rcs "$@" ;}
+_punani_pacman_has(){ pacman -Q "$1" >/dev/null;}
+_punani_brew_install(){ brew install "$@"; }
+_punani_brew_remove(){ brew remove "$@";}
+_punani_brew_has(){ error "not implemented"; return 1 ;}
+
+punani(){
+  ACTION="$1"; shift
+  PKGS="$*"
+  for p in apt-get pacman yum brew;do
+    exists "$p" && PACKER=`printf "%s" "$p" | sed 's/-//g'` && break
+  done
+
+  [ -z "${PACKER:-}" ] && error "Error 2: no known package manager found; no punani for you!" && return 1
+  info "using $PACKER for install"
+  [ -z "$PKGS" ] && error "no PACKAGE specified." && ACTION="usage"
+
+
+  for PKG in $PKGS; do
+    RES="`_punani_resolve_package $PKG`"
+    test  -z "$RES" && error "could not resolve '$PKG'; no punani for you!"&& return 23
+    case "$ACTION" in 
+      install)
+          eval _punani_${PACKER}_has $RES && info "$RES already installed, skipping" && continue
+          ! is_root && error "punani requires super-user rights for installing" && return 1
+          eval _punani_${PACKER}_install $RES || error "cannot install $RES with $PACKER"
+          ;;
+      remove)
+            ! eval  _punani_${PACKER}_has $RES && info "$RES not installed, skipping" && continue
+            ! is_root && error "punani requires super-user rights for removing" && return 1
+            eval _punani_${PACKER}_remove $RES || error "cannot install $RES with $PACKER"
+            ;;
+      has)
+            if eval  _punani_${PACKER}_has $RES ;then
+              info "$RES is installed"
+            else
+              info "$RES is not installed"
+            fi
+            ;;
+      *)
+        error "usage: punani (install|remove|has) PACKAGE..."
+        return 23
+    esac
+  done
+}

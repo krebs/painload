@@ -1,18 +1,44 @@
-#?/bin/sh
-# Tahoe installation
+#? /bin/sh
+
+## Tahoe Brick Installation (Arch Linux)
 pacman -S python2 python2-pip net-tools
 pip2 install pyasn1 zfec pycrypto zbase32 pycryptopp twisted
 pip2 install allmydata-tahoe
 
-# tahoe configuration
+## Tahoe Brick Installation (Arch Linux / Expert Mode^_^)
+# if the above breaks for some reason, but you basically know what you're
+# doing, then you could try something like this:
+pip2 uninstall `pip2 list | awk '{print$1}'`
+yaourt -S --asdeps --noconfirm net-tools python2 python2-zope-interface \
+    twisted python2-pyasn1 python2-crypto pycryptopp nevow python2-foolscap \
+    python2-simplejson zfec python2-pyopenssl pyutil python2-argparse zbase32 \
+    python2-mock python2-setuptools
+yaourt -S --noconfirm tahoe-lafs
+
+## Tahoe Brick Configuration
 mkdir /opt/tahoe
 tahoe create-node /opt/tahoe
 useradd tahoe -d /opt/tahoe
+chown -R tahoe: /opt/tahoe
+
 # change nick name
+(echo -n "nick name [$HOSTNAME]: " &&
+    read nn &&
+    sed -i "s/^nickname =.*/nickname = ${nn:-$HOSTNAME}/" /opt/tahoe/tahoe.cfg)
+
 # replace introducer.furl = None with the one from pigstarter/tahoe/introducer.furl
 sed -i "s#^introducer\.furl.*#introducer.furl = $(curl pigstarter/tahoe/introducer.furl)#" /opt/tahoe/tahoe.cfg
+
 # you also might want to change shares.needed to 2 , shares.happy to 3 and shares.total to 6
-#
+sed -i 's/#shares\.needed = 3/shares.needed = 2/' /opt/tahoe/tahoe.cfg
+sed -i 's/#shares\.happy = 7/shares.happy = 3/' /opt/tahoe/tahoe.cfg
+sed -i 's/#shares\.total = 10/shares.happy = 6/' /opt/tahoe/tahoe.cfg
+
 # optionally symlink /opt/tahoe/storage to somewhere with a lot of storage
 cp tahoe.service /usr/lib/systemd/system/tahoe.service
+
 systemctl enable tahoe.service
+systemctl start tahoe.service
+
+## Firewall Configuration
+# open port $(cat /opt/tahoe/client.port) to allow inbound connections

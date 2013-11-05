@@ -1,0 +1,5 @@
+#! /bin/sh
+set -euf
+mobile.vvs.de hauptbahnhof |
+  sed -n 'p;q' |
+  grep -q '\[4m[0-9][0-9]:[0-9][0-9]       Stuttgart, Hauptbahnhof\[m'

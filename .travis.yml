@@ -1,11 +1,15 @@
 language: c
 notifications:
-    irc: "chat.freenode.net#krebs_incoming"
-
-script: "! ( make -C util test | grep -q '^not ok' )"
+  irc: "chat.freenode.net#krebs_incoming"
+  on_success: change
+  on_failure: always
+  template:
+    - "painload/%{branch} %{commit} %{author}: %{message} %{build_url}"
+script: "! ( make -C util test | grep '^not ok' )"
 before_install:
   - sudo apt-get install bc -qq
   - sudo apt-get install python -qq
+  - sudo apt-get install w3m -qq
 branches:
     only:
         - master

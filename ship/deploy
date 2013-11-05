@@ -1,0 +1,10 @@
+#!/bin/sh
+set -x
+cd $(dirname $0)
+bindir=$PWD/bin/
+libdir=$PWD/lib/
+outdir=$PWD/out/
+for file in `ls -1 $bindir`;do
+  BUILD_PATH=$libdir ./build compile bin/$file out/$file
+  chmod 755 $outdir/$file
+done

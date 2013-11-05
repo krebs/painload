@@ -1,0 +1,5 @@
+#!/bin/sh
+source_all(){
+  LIBDIR=${1:-.}
+  for i in $LIBDIR/*; do . "$i"; done
+}

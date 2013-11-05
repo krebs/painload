@@ -1,0 +1,167 @@
+#! /bin/sh
+#
+# NAME
+#   mobile.vvs.de - web scraper for VVS departure information
+#
+# SYNOPSIS
+#   mobile.vvs.de ORIGIN [HH [MM [YYmmdd]]]
+#
+# DESCRIPTION
+#   The mobile.vvs.de utility fetches departure information from the
+#   Internet and prints the results to standard output.
+#
+# OPERANDS
+#   ORIGIN  The point of departure.
+#
+#   HH, MM, YYmmdd
+#           The time and date of departure.  Defaults to the current
+#           time and date.
+#
+# STDIN
+#   Not used.
+#
+# INPUT FILES
+#   None.
+#
+# ENVIRONMENT VARIABLES
+#   The following environment variables affect the execution of mobile.vvs.de:
+#
+#   limit   Limits the number of entries to be fetched.
+#
+#   origin, H, M, Ymd
+#           Provide defaults operands.  If origin is set, then ORIGIN
+#           becomes optional.  The order of the operands doesn't change
+#           by these variables.  These variables are overridden by the
+#           operands.
+#
+# ASYNCHRONOUS EVENTS
+#   Defaults.
+#
+# STDOUT
+#   The first line has the format:
+#
+#     "\e[4m%s:%s       %s\e[m\n", H, M, origin_real_name
+#
+#   where H and M are the corresponding provided or default operands.
+#   origin_real_name is the real name of the point of departure.
+#
+#   The subsequent lines specify the departing means of transport.
+#   Each line has the format:
+#
+#     "%s %s → %s\n", time_of_departure, line_number, destination
+#
+#   where time_of_departure is self-evident, and line_number and
+#   destination identify the route and direction.
+#
+# STDERR
+#   Not used.
+#
+# OUTPUT FILES
+#   None.
+#
+# EXTENDED DESCRIPTION
+#   None.
+#
+# EXIT STATUS
+#   0   A departure board could be fetched.
+#
+#   1   ORIGIN doesn't specify an acceptable point of departure.
+#
+# EXAMPLES
+#   1. Get the top three current departures at Stuttgart, Hauptbahnhof:
+#
+#     $ limit=3 mobile.vvs.de hauptbahnhof
+#
+# FUTURE DIRECTIONS
+#   None.
+#
+# BUGS
+#   The format of STDOUT suffers from bit rot.
+#
+# SEE ALSO
+#   vvs.de
+#
+# COPYRIGHT
+#   All departure information is copyrighted by Verkehrs- und
+#   Tarifverbund Stuttgart GmbH.  The original copyright statement can
+#   be obtained online at http://www.vvs.de/impressum .
+#
+#   The following code is your fault.
+#
+set -euf
+
+ltrim() {
+  sed "s/^[${1-$symbols}]*//"
+}
+
+POST() {
+  ## TODO url-encode, trim
+  tr '\n' '&' | sed 's/&$//' |
+      w3m -config /dev/null -cols 256 -post /dev/stdin -dump "${1-$URI}"
+}
+
+limit=${limit-10}
+origin="${1-$origin}"
+H="${2-${H-`date +%H`}}"
+M="${3-${M-`date +%M`}}"
+Ymd="${4-${Ymd-`date +%Y%m%d`}}"
+
+URI='http://mobil.vvs.de/mobile/XSLT_DM_REQUEST'
+
+echo "
+sessionID=0
+requestID=0
+language=de
+locationServerActive=1
+useRealtime=1
+anySigWhenPerfectNoOtherMatches=1
+limit=$limit
+deleteAssignedStops_dm=1
+mode=direct
+convertCrossingsITKernel2LocationServer=1
+convertStopsPTKernel2LocationServer=1
+convertAddressesITKernel2LocationServer=1
+convertPOIsITKernel2LocationServer=1
+itdLPxx_dest=
+useAllStops=1
+maxAssignedStops=1
+itOptionsActive=1
+trITMOTvalue100=5
+ptOptionsActive=1
+useProxFootSearch=0
+w_regPrefAm=1
+w_objPrefAl=2
+w_objPrefAl=12
+itdLPxx_script=true
+place_dm=
+placeState_dm=empty
+nameState_dm=empty
+nameInfo_dm=invalid
+typeInfo_dm=invalid
+placeInfo_dm=invalid
+reducedAnyWithoutAddressObjFilter_dm=103
+reducedAnyPostcodeObjFilter_dm=64
+reducedAnyTooManyObjFilter_dm=2
+anyObjFilter_dm=126
+type_dm=any
+name_dm=$origin
+itdTimeHour=`echo $H | ltrim 0`
+itdTimeMinute=`echo $M | ltrim 0`
+itdDate=$Ymd
+" | POST "$URI" | sed -rn '
+  s/^Von:[^[:alpha:]]+(.*)$/[4m'$H:$M'       \1[m/p
+  /Haltestelle/,/^ *$/{
+    /Haltestelle|^ *$/!{
+      s/[[:space:]]*\[info\][[:space:]]*$//
+      p
+    }
+  }
+' | {
+  read REPLY
+  echo "$REPLY"
+  while read time dev no dest ; do
+    printf "$time %3s → %s\n" $no "$dest"
+  done
+}
+
+####
