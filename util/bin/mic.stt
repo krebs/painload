@@ -1,0 +1,12 @@
+#!/bin/sh
+set -efux
+cd $(dirname $(readlink -f $0))
+. ../lib/stt/google.sh
+duration=${1?please provide duration via \$1}
+lang=${lang:-de-DE}
+export lang
+echo "language is set to $lang"
+echo "will record for '$duration' seconds"
+f=$(record_audio ${duration})
+trap 'rm $f' TERM EXIT HUP
+stt "$f"
