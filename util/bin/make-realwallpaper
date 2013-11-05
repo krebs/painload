@@ -90,7 +90,8 @@ main() {
 
   map=daymap-final.png
   night_map=nightmap-final.png
-  cloud_map=gcloud-cloudmask.png
+  cloud_map=clouds-final.png
+  gcloud_map=gcloud-cloudmask.png
   satellite_file=krebs.sat
 
   # create xplanet output
@@ -116,36 +117,80 @@ satellite_file=$satellite_file
 shade=15
 EOF
 
-  if needs_rebuild krebs.sat; then
-    cat >krebs.sat <<EOF
+  # create xplanet output gcloud version
+  cat >xplanet-gcloud.config <<EOF
+[earth]
+"Earth"
+map=$map
+night_map=$night_map
+cloud_map=$gcloud_map
+cloud_threshold=10
+shade=15
+EOF
+
+  # create xplanet output gcloud-satellite version
+  cat >xplanet-gcloud-sat.config <<EOF
+[earth]
+"Earth"
+map=$map
+night_map=$night_map
+cloud_map=$gcloud_map
+cloud_threshold=10
+satellite_file=$satellite_file
+shade=15
+EOF
+
+  cat >krebs.sat <<EOF
 25544 "ISS" Image=none trail={orbit,-2,2,1} color=grey thickness=1 fontsize=10
 37820 "T1" Image=none trail={orbit,-2,2,1} color=grey thickness=1 fontsize=10
-39175 "ATV-4" Image=none trail={orbit,-2,2,1} color=grey thickness=1 fontsize=10
 39258 "CYG" Image=none trail={orbit,-2,2,1} color=grey thickness=1 fontsize=10
 EOF
-  fi
 
-  if needs_rebuild krebs.mar; then
-    cat >krebs.mar <<EOF
+  cat >krebs.mar <<EOF
 EOF
-  fi
 
   # rebuild every time to update shadow
   xplanet --num_times 1 --geometry $xplanet_out_size \
-    --output xplanet-output.png --projection merc -config xplanet.config
+    --output xplanet-output.png --projection merc \
+    -config xplanet.config
 
   # rebuild everytime satellite version
   xplanet --num_times 1 --geometry $xplanet_out_size \
-    --output xplanet-sat-output.png --projection merc -config xplanet-sat.config
+    --output xplanet-sat-output.png --projection merc \
+    -config xplanet-sat.config
+
+  # rebuild every time to update shadow gcloud
+  xplanet --num_times 1 --geometry $xplanet_out_size \
+    --output xplanet-gcloud-output.png --projection merc \
+    -config xplanet-gcloud.config
+
+  # rebuild everytime satellite gcloud version
+  xplanet --num_times 1 --geometry $xplanet_out_size \
+    --output xplanet-gcloud-sat-output.png --projection merc \
+    -config xplanet-gcloud-sat.config
 
   # trim xplanet output
   if needs_rebuild realwallpaper.png xplanet-output.png; then
-    convert xplanet-output.png -crop $out_geometry realwallpaper.png
+    convert xplanet-output.png -crop $out_geometry \
+      realwallpaper.png
   fi
 
   # trim xplanet-sat output
   if needs_rebuild realwallpaper-sat.png xplanet-sat-output.png; then
-    convert xplanet-sat-output.png -crop $out_geometry realwallpaper-sat.png
+    convert xplanet-sat-output.png -crop $out_geometry \
+      realwallpaper-sat.png
+  fi
+
+  # trim xplanet output
+  if needs_rebuild realwallpaper-gcloud.png xplanet-gcloud-output.png; then
+    convert xplanet-gcloud-output.png -crop $out_geometry \
+      realwallpaper-gcloud.png
+  fi
+
+  # trim xplanet-sat output
+  if needs_rebuild realwallpaper-gcloud-sat.png xplanet-gcloud-sat-output.png; then
+    convert xplanet-gcloud-sat-output.png -crop $out_geometry \
+      realwallpaper-gcloud-sat.png
   fi
 }
 
@@ -185,7 +230,7 @@ make_gcloud_cloudmask() {
 
   if needs_rebuild gcloud-cloudmask.png gcloud-normal.png; then
     echo 'make gcloud-cloudmask.png' &&
-    convert gcloud-normal.png gcloud-distmap \
+    convert gcloud-normal.png gcloud-distmap.png \
       -fx 'p{i,v*h}' \
       -crop $gcloud_out_geometry \
       gcloud-cloudmask.png
