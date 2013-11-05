@@ -1,0 +1,14 @@
+{
+  "name": "krebs-webbot",
+  "version": "0.0.1",
+  "dependencies": {
+    "connect": "2.11.0",
+    "irc": "0.3.6",
+    "sockjs": "0.3.8",
+  },
+  "scripts": {
+    "test": "tap test/*.js"
+  },
+  "author": "lassulus",
+  "license": "WTFPL"
+}
