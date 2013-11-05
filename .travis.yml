@@ -8,8 +8,9 @@ notifications:
 script: "! ( make -C util test | grep '^not ok' )"
 before_install:
   - sudo apt-get install bc -qq
-  - sudo apt-get install python -qq
   - sudo apt-get install w3m -qq
+# stt-espeak test
+  - sudo apt-get install flac espeak -qq
 branches:
     only:
         - master
