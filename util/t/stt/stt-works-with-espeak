@@ -1,0 +1,16 @@
+#!/bin/sh
+
+cd $(dirname $(readlink -f $0))
+. ../../lib/stt/google.sh
+tmp=$(mktemp)
+test_str="hello"
+trap "rm $tmp" TERM INT EXIT HUP
+espeak --stdout "$test_str" | flac --totally-silent -f -o "$tmp" -
+
+if stt "$tmp" | egrep "^$test_str\$" >/dev/null ;then
+    echo "ok"
+    exit 0
+else
+    echo "not ok"
+    exit 1
+fi
