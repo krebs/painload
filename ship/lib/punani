@@ -1,5 +1,5 @@
 #!/bin/sh
-#include core
+#@include core
 
 ## begin punani DB
 _punanidb_pacman_=

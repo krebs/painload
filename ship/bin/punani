@@ -1,4 +1,3 @@
 #!/bin/sh
-# include core
-# include punani
+#@include punani
 punani "$@"

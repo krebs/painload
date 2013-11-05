@@ -1,0 +1,81 @@
+#! /bin/sh
+set -euf
+
+## SYNOPSIS
+# build compile SRCFILE DSTFILE
+# build deps SRCFILE
+build() {
+  case "$1" in
+    compile) build_compile "$2" "$3";;
+    deps) build_deps "$2";;
+    *) echo "build: $1: bad command" >&2; return 23;;
+  esac
+}
+
+## build directives
+build_include_directive='#@include \([0-9A-Za-z]\+\)'
+
+## usage: build_compile SRCFILE DSTFILE
+build_compile() {
+  cp "$1" "$2"
+
+  while needs_compilation "$2"; do
+    script="$(make_sedscript_maker_shellscript "$2" | sh)"
+    sed -n "$script" "$2" >"$2.tmp"
+    mv "$2.tmp" "$2"
+  done
+
+  chmod +x "$2"
+}
+
+## usage: needs_compilation SRCFILE
+# Returns true if SRCFILE contains compilation directives.
+needs_compilation() {
+  grep -q "^$build_include_directive$" "$1"
+}
+
+## usage: make_sedscript_maker_shellscript SRCFILE
+# Print a shellscript that creates a sedscript that resolves all the build
+# directives in SRCFILE.
+make_sedscript_maker_shellscript() {
+  echo 'set -euf'
+  deps="$(build_deps "$1")"
+  for lib in $deps; do
+    echo "_build_include_$(basename $lib)=$lib"
+  done
+  nl -b a -s ' ' "$1" |
+  sed '
+    s:^ *::
+    s:^\([0-9]\+\) '"$build_include_directive"'$:\1a\\\\\
+# BEGIN \2\
+      \1r\$_build_include_\2\
+      \1a\\\\\
+# END \2:
+    s:^\([0-9]\+\) .*:\1p:
+  
+    1s:^:echo ":
+    $s:$:":
+  '
+}
+
+## usage: build_deps SRCFILE
+build_deps() {
+  for libname in $(sed -n 's:^'"$build_include_directive"'$:\1:p' "$1"); do
+    build_resolve "$libname"
+  done
+}
+
+## usage: build_resolve LIBNAME
+build_resolve() {
+  echo "$BUILD_PATH" | tr : \\n |
+    xargs -I: printf '%s/%s\n' : "$1" |
+    xargs -I: ls -d : 2>/dev/null |
+    head -n 1 |
+    grep . ||
+  {
+    echo "build resolve: $1: library not found" >&2
+    return 23
+  }
+}
+
+build "$@"
