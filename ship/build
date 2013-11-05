@@ -2,14 +2,24 @@
 set -euf
 
 ## SYNOPSIS
-# build compile SRCFILE DSTFILE
-# build deps SRCFILE
+# [debug=true] build compile SRCFILE DSTFILE
+# [debug=true] build deps SRCFILE
 build() {
   case "$1" in
     compile) build_compile "$2" "$3";;
     deps) build_deps "$2";;
     *) echo "build: $1: bad command" >&2; return 23;;
   esac
+}
+
+# usage: debug_script VARNAME [DESCRIPTION]
+debug_script() {
+  if test "${debug-false}" = true; then
+    printf '[35m====== %s%s[m\n%s\n' \
+        "$1" \
+        "${2+" ($2)"}" \
+        "$(eval echo \"\$$1\" | nl -b a)" >&2
+  fi
 }
 
 ## build directives
@@ -21,6 +31,7 @@ s:^ *\([0-9]\+\) "$build_info_directive"$:build_info \1:
 s:^ *\([0-9]\+\) "$build_include_directive"$:build_include \1 \2:
 t
 s:^ *\([0-9]\+\) .*:echo \1p:"
+debug_script input_parser
 
 ## usage: build_include LINENO LIBNAME
 build_include() { cat<<EOF
@@ -44,10 +55,12 @@ EOF
 ## usage: build_compile SRCFILE DSTFILE
 build_compile() {
   srcfile="$(cat "$1")"
+  debug_script srcfile 'SRCFILE'
 
   while needs_compilation "$srcfile"; do
     script="$(make_sedscript_maker_shellscript "$srcfile")"
     srcfile="$(echo "$srcfile" | sed -n "$script")"
+    debug_script srcfile 'sed sedscript srcfile'
   done
 
   echo "$srcfile" > "$2"
@@ -66,7 +79,11 @@ needs_compilation() {
 # directives in SRCFILE.
 make_sedscript_maker_shellscript() {
   sedscript_generator="$(echo "$1" | nl -b a -s ' ' | sed "$input_parser")"
+  debug_script sedscript_generator 'sed input_parser srcfile'
+
   sedscript="$(eval "$sedscript_generator")"
+  debug_script sedscript 'eval sedscript_generator'
+
   echo "$sedscript"
 }
 
