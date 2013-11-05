@@ -1,3 +1,4 @@
 #!/bin/sh
+#@info
 #@include punani
 punani "$@"
