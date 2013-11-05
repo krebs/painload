@@ -230,7 +230,7 @@ make_gcloud_cloudmask() {
 
   if needs_rebuild gcloud-cloudmask.png gcloud-normal.png; then
     echo 'make gcloud-cloudmask.png' &&
-    convert gcloud-normal.png gcloud-distmap \
+    convert gcloud-normal.png gcloud-distmap.png \
       -fx 'p{i,v*h}' \
       -crop $gcloud_out_geometry \
       gcloud-cloudmask.png
