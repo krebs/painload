@@ -28,6 +28,6 @@ a.out
 /ovh/soapi/SOAPpy
 /Reaktor/IRC/irclib.py
 /Reaktor/public_commands/*
-/ship/out
+/ship/tmp
 /webchat/node_modules
 /webchat/local_config
