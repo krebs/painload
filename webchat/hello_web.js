@@ -10,6 +10,8 @@ Clients.broadcast = function(object) {
     client.write(JSON.stringify(object));
   });
 }
+var pingTimeoutDelay = 5*60*1000
+var lastping = setTimeout(reconnect, pingTimeoutDelay)
 
 var irc_client = new irc.Client('irc.freenode.net', 'kweb', {
   channels: ['#krebs'],
@@ -21,13 +23,27 @@ var irc_client = new irc.Client('irc.freenode.net', 'kweb', {
   debug: true,
   showErrors: true,
   port: 6697,
+  autoRejoin: true,
+  autoConnect: true
 });
+
+var reconnect = function() {
+  console.log("reconnecting due to pingtimeout");
+  irc_client.disconnect();
+  irc_client.connect();
+}
+
+irc_client.on('ping', function(server) {
+  console.log("got ping from server, renewing timeout for automatic reconnect");
+  clearTimeout(lastping);
+  lastping = setTimeout(reconnect, pingTimeoutDelay);
+})
 
 irc_client.on('message#krebs', function(from, message) {
   console.log({ from: from, message: message });
   Clients.broadcast({ from: from, message: message });
+  clearTimeout(lastping);
 });
-
 
 var echo = sockjs.createServer();
 echo.on('connection', function(conn) {
