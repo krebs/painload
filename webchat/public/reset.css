@@ -21,6 +21,7 @@ time, mark, audio, video {
   border: 0;
   font-size: 100%;
   font: inherit;
+  font-family: monospace;
   vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
@@ -50,11 +51,21 @@ q:before, q:after {
   background-color: black;
   color: white;
   border: 5px solid black;
+  width: 100%;
+  height:100%;
+  opacity: 0.8;
+}
+#input{
+  width: 100%;
+  background-color: black;
+  border: 1px solid black;
+  color: white;
 }
 .chat_from {
   color:grey;
   font-weight: bold;
   text-align: right;
+  font-size:12px;
 }
 .chat_from:after {
   content: ":";
@@ -68,6 +79,21 @@ q:before, q:after {
   left: 0;
   right: 0;
 }
+#chatter {
+  width: 75%;
+}
+.chat_date,.chat_from,.chat_msg{
+}
+.chat_msg{
+  width: 100%;
+}
 a {
   color: red;
+}
+.chat_date {
+  color: green;
+}
+.chat_date:after {
+  content: "";
+  padding-right: 4px;
 }
