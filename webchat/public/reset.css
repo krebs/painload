@@ -97,3 +97,6 @@ a {
   content: "";
   padding-right: 4px;
 }
+#time {
+  color: #00FF00;
+}
