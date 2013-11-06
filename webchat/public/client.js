@@ -1,7 +1,15 @@
-function replaceURLWithHTMLLinks(text) {
+function replaceURLWithHTMLLinks (text) {
   var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
   return text.replace(exp,"<a href='$1'>$1</a>");
 }
+function setMaybeNick (input) {
+  var match = /^\/nick\s+(.+)$/.exec(input);
+  if (match) {
+    nick = match[1];
+  }
+}
+
+var nick;
 
 $(function connect() {
   sock = new SockJS('/echo');
@@ -34,14 +42,21 @@ $(function connect() {
 
 });
 $(function() {
-  $("#input").keydown(function(e) {
-    if( e.keyCode === 13) {
+  $('#input').keydown(function(e) {
+    if (e.keyCode === 13) {
       e.preventDefault();
       e.stopPropagation();
       e.stopImmediatePropagation();
-      sock.send(JSON.stringify({
+      setMaybeNick($('#input').val());
+      var sendObj = {
         message: $('#input').val(),
-      }));
+      };
+
+      if (typeof nick === 'string') {
+        sendObj.nick = nick;
+      };
+
+      sock.send(JSON.stringify(sendObj));
       $('#input').val('');
       return;
     }
