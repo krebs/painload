@@ -3,11 +3,11 @@ set -euf
 
 ## SYNOPSIS
 # [debug=true] build compile SRCFILE DSTFILE
-# [debug=true] build deps SRCFILE
+# [debug=true] build deps SRCFILE...
 build() {
   case "$1" in
     compile) build_compile "$2" "$3";;
-    deps) build_deps "$2";;
+    deps) shift; build_deps "$@";;
     *) echo "build: $1: bad command" >&2; return 23;;
   esac
 }
@@ -87,11 +87,22 @@ make_sedscript_maker_shellscript() {
   echo "$sedscript"
 }
 
-## usage: build_deps SRCFILE
+## usage: build_deps SRCFILE...
+# Print all the dependencies of SRCFILE... (in alphabetic order) to stdout.
 build_deps() {
-  for libname in $(sed -n 's:^'"$build_include_directive"'$:\1:p' "$1"); do
-    build_resolve "$libname"
-  done
+  while test $# -gt 0; do
+    deps="$(
+      for f; do
+        for d in $(sed -n 's:^'"$build_include_directive"'$:\1:p' "$f"); do
+          build_resolve $d
+        done
+      done
+    )"
+    set -- $deps
+    if test $# -gt 0; then
+      echo "$deps"
+    fi
+  done | sort | uniq
 }
 
 ## usage: build_resolve LIBNAME
