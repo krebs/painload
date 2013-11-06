@@ -49,6 +49,7 @@ q:before, q:after {
   border-spacing: 0;
   background-color: black;
   color: white;
+  border: 5px solid black;
 }
 .chat_from {
   color:grey;
