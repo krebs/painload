@@ -12,18 +12,21 @@
 
 ## Make Interface
 
-  Build all executables from `src/` into `tmp/`:
+  Put libraries into `lib`.
+  Put executables into `src`.
+
+  Build all executables from `src` into `tmp` with
 
     make [all]
 
-  Build all executables into `tmp/` and `//bin/`:
+  Build all executables from `src` into `tmp` and `//bin` with
 
     make install
 
-  Undo `make [all]`:
+  Undo `make [all]` with
 
     make clean
 
-  Undo `make install`:
+  Undo `make install` with
 
     make distclean
