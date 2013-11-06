@@ -47,7 +47,7 @@ irc_client.on('message#krebs', function(from, message) {
 
 var echo = sockjs.createServer();
 echo.on('connection', function(conn) {
-  var origin = '['+conn.remoteAddress+':'+conn.remotePort+']';
+  var origin = conn.remoteAddress;
   Clients.push(conn);
   Clients.broadcast({from: 'system', message: origin + ' has joined'})
   irc_client.say("#krebs", origin + ' has joined');
@@ -94,8 +94,8 @@ var app = connect()
     res.write('<script src="jquery-2.0.3.min.js"></script>');
     res.write('<script src="client.js"></script>');
     res.write('<div id=bg><div id=chatter>');
-    res.write('hello, this is #krebs:<br>');
-    res.write('<table id="chatbox"><tr id="foot"><td></td><td></td><td><input type="text" id="input"></td></tr></table>');
+    res.write('hello, this is the official krebs support:<br>');
+    res.write('<table id="chatbox"><tr id="foot"><td id="time"></td><td id="nick" class="chat_from"></td><td><input type="text" id="input"></td></tr></table>');
     res.end('</div></div>');
 
   })

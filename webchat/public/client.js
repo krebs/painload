@@ -6,8 +6,35 @@ function setMaybeNick (input) {
   var match = /^\/nick\s+(.+)$/.exec(input);
   if (match) {
     nick = match[1];
+    $('#nick').html(nick);
   }
 }
+
+function getCurTime () {
+  date = new Date;
+  h = date.getHours();
+  if(h<10)
+  {
+    h = "0"+h;
+  }
+  m = date.getMinutes();
+  if(m<10)
+  {
+    m = "0"+m;
+  }
+  s = date.getSeconds();
+  if(s<10)
+  {
+    s = "0"+s;
+  }
+  return ''+h+':'+m+':'+s;
+};
+
+$(function updateTime () {
+  $('#time').html(getCurTime());
+  setTimeout(updateTime,'1000');
+  return true;
+});
 
 var nick;
 
@@ -26,7 +53,7 @@ $(function connect() {
       var safe_message = $('<div/>').text(object.message).html();
       safe_message = replaceURLWithHTMLLinks(safe_message);
   var safe_from = $('<div/>').text(object.from).html();
-  $('<tr><td class="chat_date">'+(new Date).getHours() + ':' + (new Date).getMinutes() + ':' + (new Date).getSeconds()+'</td><td class="chat_from">'+safe_from+'</td><td class="chat_msg">'+safe_message+'</td></tr>').insertBefore('#foot');
+  $('<tr><td class="chat_date">'+getCurTime()+'</td><td class="chat_from">'+safe_from+'</td><td class="chat_msg">'+safe_message+'</td></tr>').insertBefore('#foot');
 
     } catch (error) {
       console.log(error);
