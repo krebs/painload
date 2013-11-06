@@ -19,7 +19,7 @@ var irc_client = new irc.Client('irc.freenode.net', 'kweb', {
   secure: true,
   userName: 'kweb',
   realName: 'kweb',
-  password: fs.readFileSync(__dirname+'/irc.key').toString(),
+  password: fs.readFileSync(__dirname+'/local_config/irc.key').toString(),
   debug: true,
   showErrors: true,
   port: 6697,
@@ -73,8 +73,8 @@ conn.on('close', function() {
 });
 
 var options = {
-  key: fs.readFileSync(__dirname+'/server_npw.key'),
-  cert: fs.readFileSync(__dirname+'/server.crt'),
+  key: fs.readFileSync(__dirname+'/local_config/server_npw.key'),
+  cert: fs.readFileSync(__dirname+'/local_config/server.crt'),
 };
 
 var app = connect()
