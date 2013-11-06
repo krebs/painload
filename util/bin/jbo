@@ -1,4 +1,5 @@
 #! /bin/sh
+# usage: jbo WORDS...
 set -euf
 
 if test $# = 0; then
