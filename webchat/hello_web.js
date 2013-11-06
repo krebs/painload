@@ -87,10 +87,11 @@ var app = connect()
     res.write('<script src="sockjs-0.3.min.js"></script>');
     res.write('<script src="jquery-2.0.3.min.js"></script>');
     res.write('<script src="client.js"></script>');
-    res.write('<img src="krebs.png"><br>');
+    res.write('<div id=bg>');
     res.write('hello, this is #krebs:<br>');
     res.write('<table id="chatbox"></table>');
     res.end('<input type="text" id="input"><br>');
+    res.write('</div>');
 
   })
 var server = http.createServer(options, app);
