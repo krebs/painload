@@ -49,8 +49,8 @@ var echo = sockjs.createServer();
 echo.on('connection', function(conn) {
   var origin = '['+conn.remoteAddress+':'+conn.remotePort+']';
   Clients.push(conn);
-  irc_client.say("#krebs", name + ' has joined');
   Clients.broadcast({from: 'system', message: origin + ' has joined'})
+  irc_client.say("#krebs", origin + ' has joined');
   conn.write(JSON.stringify({from: 'system', message: 'hello'}))
   conn.on('data', function(data) {
     console.log('data:',data);
@@ -73,8 +73,8 @@ echo.on('connection', function(conn) {
   });
 conn.on('close', function() {
   Clients.splice(Clients.indexOf(conn));
-  irc_client.say("#krebs", name + ' has quit');
   Clients.broadcast({from: 'system', message: origin + ' has quit'})
+  irc_client.say("#krebs", origin + ' has quit');
 });
 });
 
