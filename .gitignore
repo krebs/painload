@@ -29,3 +29,5 @@ a.out
 /Reaktor/IRC/irclib.py
 /Reaktor/public_commands/*
 /ship/out
+/webchat/node_modules
+/webchat/local_config
