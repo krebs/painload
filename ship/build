@@ -8,7 +8,7 @@ build() {
 
   ## Load macro definitions.
   defmacro_pattern='## usage: \(.*\) -> \([^ ]\+\) \(.*\)'
-  script='s/^'"$defmacro_pattern"'$/macro_\2='"'"'\1'"'"'/p' \
+  script='s/^'"$defmacro_pattern"'$/\2_macro='"'"'\1'"'"'/p' \
     setf defmacros '$(sed -n "$script" "$%s")' 0
   eval "$defmacros"
 
@@ -42,7 +42,7 @@ EOF
 ## usage: build_compile SRCFILE DSTFILE
 build_compile() {
 
-  script='s/^'"$defmacro_pattern"'$/macro_\2/p' \
+  script='s/^'"$defmacro_pattern"'$/\2_macro/p' \
     setf macro_names '$(sed -n "$script" "$%s")' 0
 
   setf unexpanded_macros_pattern \
@@ -73,7 +73,7 @@ build_deps() {
   while test $# -gt 0; do
     deps="$(
       for f; do
-        for d in $(sed -n 's:^'"$macro_include"'$:\1:p' "$f"); do
+        for d in $(sed -n 's:^'"$build_include_macro"'$:\1:p' "$f"); do
           build_resolve $d
         done
       done
