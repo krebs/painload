@@ -59,7 +59,7 @@ conn.write(JSON.stringify({from: 'system', message: 'hello'}))
       var object = JSON.parse(message);
       object.from = name
     console.log(object.message);
-  irc_client.say("#krebs", name + '→' + object.message);
+  irc_client.say("#krebs", name + ' → ' + object.message);
   Clients.broadcast(object);
 
     } catch (error) {
