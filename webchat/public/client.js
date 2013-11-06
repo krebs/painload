@@ -26,7 +26,7 @@ $(function connect() {
       var safe_message = $('<div/>').text(object.message).html();
       safe_message = replaceURLWithHTMLLinks(safe_message);
   var safe_from = $('<div/>').text(object.from).html();
-  $('#chatbox').append('<tr><td class="chat_from">'+safe_from+'</td><td class="chat_msg">'+safe_message+'</td></tr>');
+  $('<tr><td class="chat_date">'+(new Date).getHours() + ':' + (new Date).getMinutes() + ':' + (new Date).getSeconds()+'</td><td class="chat_from">'+safe_from+'</td><td class="chat_msg">'+safe_message+'</td></tr>').insertBefore('#foot');
 
     } catch (error) {
       console.log(error);

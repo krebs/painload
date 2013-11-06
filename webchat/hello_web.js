@@ -49,8 +49,8 @@ var echo = sockjs.createServer();
 echo.on('connection', function(conn) {
   var origin = '['+conn.remoteAddress+':'+conn.remotePort+']';
   Clients.push(conn);
-  irc_client.say("#krebs", name + ' has joined');
   Clients.broadcast({from: 'system', message: origin + ' has joined'})
+  irc_client.say("#krebs", origin + ' has joined');
   conn.write(JSON.stringify({from: 'system', message: 'hello'}))
   conn.on('data', function(data) {
     console.log('data:',data);
@@ -73,8 +73,8 @@ echo.on('connection', function(conn) {
   });
 conn.on('close', function() {
   Clients.splice(Clients.indexOf(conn));
-  irc_client.say("#krebs", name + ' has quit');
   Clients.broadcast({from: 'system', message: origin + ' has quit'})
+  irc_client.say("#krebs", origin + ' has quit');
 });
 });
 
@@ -93,11 +93,10 @@ var app = connect()
     res.write('<script src="sockjs-0.3.min.js"></script>');
     res.write('<script src="jquery-2.0.3.min.js"></script>');
     res.write('<script src="client.js"></script>');
-    res.write('<div id=bg>');
+    res.write('<div id=bg><div id=chatter>');
     res.write('hello, this is #krebs:<br>');
-    res.write('<table id="chatbox"></table>');
-    res.end('<input type="text" id="input"><br>');
-    res.write('</div>');
+    res.write('<table id="chatbox"><tr id="foot"><td></td><td></td><td><input type="text" id="input"></td></tr></table>');
+    res.end('</div></div>');
 
   })
 var server = http.createServer(options, app);
