@@ -12,25 +12,6 @@ build() {
   esac
 }
 
-## usage: init
-init() {
-  directive_pattern='s:^ *\\([0-9]\\+\\) \1$:\2 \3:'
-
-  input_parser="$(make_input_parser "$0")"
-  debug_script input_parser '$0'
-
-  build_directives="$(make_build_directives "$0")"
-  debug_script build_directives '$0'
-
-  build_x_directive_loader="$(make_build_x_directive_loader "$0")"
-  debug_script build_x_directive_loader '$0'
-
-  eval "$build_x_directive_loader"
-
-  needs_compilation_sentinel="$(make_needs_compilation_sentinel $build_directives)"
-  debug_script needs_compilation_sentinel 'build_directives'
-}
-
 # usage: debug_script VARNAME [DESCRIPTION]
 debug_script() {
   if test "${debug-false}" = true; then
@@ -65,8 +46,19 @@ build_compile() {
   srcfile="$(cat "$1")"
   debug_script srcfile 'SRCFILE'
 
-  while needs_compilation "$srcfile"; do
-    script="$(make_sedscript_maker_shellscript "$srcfile")"
+  build_directives="$(make_build_directives "$0")"
+  debug_script build_directives '$0'
+
+  build_x_directive_loader="$(make_build_x_directive_loader "$0")"
+  debug_script build_x_directive_loader '$0'
+
+  eval "$build_x_directive_loader"
+
+  input_parser="$(make_input_parser "$0")"
+  sentinel="$(make_needs_compilation_sentinel $build_directives)"
+
+  while needs_compilation "$srcfile" "$sentinel"; do
+    script="$(make_sedscript_maker_shellscript "$srcfile" "$input_parser")"
     srcfile="$(echo "$srcfile" | sed -n "$script")"
     debug_script srcfile 'sed sedscript srcfile'
   done
@@ -75,17 +67,17 @@ build_compile() {
   chmod +x "$2"
 }
 
-## usage: needs_compilation SHELLSCRIPT
+## usage: needs_compilation SHELLSCRIPT SENTINEL
 # Returns true if SRCFILE contains compilation directives.
 needs_compilation() {
-  echo "$1" | grep -q "$needs_compilation_sentinel"
+  echo "$1" | grep -q "$2"
 }
 
-## usage: make_sedscript_maker_shellscript SRCFILE
+## usage: make_sedscript_maker_shellscript SRCFILE INPUT_PARSER
 # Print a shellscript that creates a sedscript that resolves all the build
 # directives in SRCFILE.
 make_sedscript_maker_shellscript() {
-  sedscript_generator="$(echo "$1" | nl -b a -s ' ' | sed "$input_parser")"
+  sedscript_generator="$(echo "$1" | nl -b a -s ' ' | sed "$2")"
   debug_script sedscript_generator 'sed input_parser srcfile'
 
   sedscript="$(eval "$sedscript_generator")"
@@ -160,5 +152,4 @@ make_needs_compilation_sentinel() {
 }
 
 ## main
-init
 build "$@"
