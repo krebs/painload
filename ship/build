@@ -33,17 +33,29 @@ EOF
 
 ## usage: build_compile SRCFILE DSTFILE
 build_compile() {
-  setf build_directives '$(make_build_directives "$%s")' 0
-  setf build_x_directive_loader '$(make_build_x_directive_loader "$%s")' 0
 
+  usage_pattern='## usage: \(.*\) -> \([^ ]\+\) \(.*\)'
+
+  script='s/^'"$usage_pattern"'$/\2_directive/p' \
+    setf build_directives '$(sed -n "$script" "$%s")' 0
+
+  script='s/^'"$usage_pattern"'$/\2_directive='"'"'\1'"'"'/p' \
+    setf build_x_directive_loader '$(sed -n "$script" "$%s")' 0
   eval "$build_x_directive_loader"
 
-  setf input_parser '$(make_input_parser "$%s")' 0
-  setf sentinel '$(make_needs_compilation_sentinel $%s)' build_directives
+  setf incomplete_pattern '$(make_incomplete_pattern $%s)' build_directives
+
+  script='
+      s/^'"$usage_pattern"'$/s:^ *\\([0-9]\\+\\) \1$:\2 \3:/p
+      $a\
+      t\
+      s:^ *\\([0-9]\\+\\) .*:echo \\1p:
+      ' \
+    setf input_parser '$(sed -n "$script" "$%s")' 0
 
   SRCFILE="$1" setf src '$(cat "$%s")' SRCFILE
 
-  while needs_compilation "$src" "$sentinel"; do
+  while needs_compilation "$src" "$incomplete_pattern"; do
     setf sedgen '$(echo "$%s" | nl -b a -s \  | sed "$%s")' src input_parser
     setf sedscript '$(eval "$%s")' sedgen
     setf src '$(echo "$%s" | sed -n "$%s")' src sedscript
@@ -53,7 +65,7 @@ build_compile() {
   chmod +x "$2"
 }
 
-## usage: needs_compilation SHELLSCRIPT SENTINEL
+## usage: needs_compilation SHELLSCRIPT PATTERN
 # Returns true if SRCFILE contains compilation directives.
 needs_compilation() {
   echo "$1" | grep -q "$2"
@@ -90,31 +102,8 @@ build_resolve() {
   }
 }
 
-## usage: make_input_parser FILENAME
-make_input_parser() {
-  echo "$(sed -n '
-    s/^## usage: \(.*\) -> \([^ ]\+\) \(.*\)$/s:^ *\\([0-9]\\+\\) \1$:\2 \3:/p
-    $a\
-t;s:^ *\\([0-9]\\+\\) .*:echo \\1p:
-  ' "$1")"
-}
-
-## usage: make_build_directives FILENAME
-make_build_directives() {
-  echo "$(sed -n '
-    s/^## usage: \(.*\) -> \([^ ]\+\) \(.*\)$/\2_directive/p
-  ' "$0")"
-}
-
-## usage: make_build_x_directive_loader FILENAME
-make_build_x_directive_loader() {
-  sed -n '
-    s/^## usage: \(.*\) -> \([^ ]\+\) \(.*\)$/\2_directive='"'"'\1'"'"'/p
-  ' "$1"
-}
-
-## usage: make_needs_compilation_sentinel BUILD_DIRECTIVES...
-make_needs_compilation_sentinel() {
+## usage: make_incomplete_pattern BUILD_DIRECTIVES...
+make_incomplete_pattern() {
   echo "^\\($(
     for directive; do
       eval echo \"\$$directive\"
