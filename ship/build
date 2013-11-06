@@ -6,13 +6,13 @@ set -euf
 # [debug=true] build deps SRCFILE...
 build() {
 
-  # usage_pattern is used to extract build directive declarations.
-  usage_pattern='## usage: \(.*\) -> \([^ ]\+\) \(.*\)'
+  ## Load macro definitions.
+  defmacro_pattern='## usage: \(.*\) -> \([^ ]\+\) \(.*\)'
+  script='s/^'"$defmacro_pattern"'$/macro_\2='"'"'\1'"'"'/p' \
+    setf defmacros '$(sed -n "$script" "$%s")' 0
+  eval "$defmacros"
 
-  script='s/^'"$usage_pattern"'$/\2_directive='"'"'\1'"'"'/p' \
-    setf build_x_directive_loader '$(sed -n "$script" "$%s")' 0
-  eval "$build_x_directive_loader"
-
+  ## Dispatch.
   case "$1" in
     compile) build_compile "$2" "$3";;
     deps) shift; build_deps "$@";;
@@ -42,22 +42,22 @@ EOF
 ## usage: build_compile SRCFILE DSTFILE
 build_compile() {
 
-  script='s/^'"$usage_pattern"'$/\2_directive/p' \
-    setf build_directives '$(sed -n "$script" "$%s")' 0
+  script='s/^'"$defmacro_pattern"'$/macro_\2/p' \
+    setf macro_names '$(sed -n "$script" "$%s")' 0
+
+  setf unexpanded_macros_pattern \
+    '$(make_unexpanded_macros_pattern $%s)' macro_names
 
   script='
-      s/^'"$usage_pattern"'$/s:^ *\\([0-9]\\+\\) \1$:\2 \3:/p
+      s/^'"$defmacro_pattern"'$/s:^ *\\([0-9]\\+\\) \1$:\2 \3:/p
       $a\
-      t\
-      s:^ *\\([0-9]\\+\\) .*:echo \\1p:
+t;s:^ *\\([0-9]\\+\\) .*:echo \\1p:
       ' \
     setf input_parser '$(sed -n "$script" "$%s")' 0
 
-  setf incomplete_pattern '$(make_incomplete_pattern $%s)' build_directives
-
   SRCFILE="$1" setf src '$(cat "$%s")' SRCFILE
 
-  while needs_compilation "$src" "$incomplete_pattern"; do
+  while echo "$src" | grep -q "$unexpanded_macros_pattern"; do
     setf sedgen '$(echo "$%s" | nl -b a -s \  | sed "$%s")' src input_parser
     setf sedscript '$(eval "$%s")' sedgen
     setf src '$(echo "$%s" | sed -n "$%s")' src sedscript
@@ -67,19 +67,13 @@ build_compile() {
   chmod +x "$2"
 }
 
-## usage: needs_compilation SHELLSCRIPT PATTERN
-# Returns true if SRCFILE contains compilation directives.
-needs_compilation() {
-  echo "$1" | grep -q "$2"
-}
-
 ## usage: build_deps SRCFILE...
-# Print all the dependencies of SRCFILE... (in alphabetic order) to stdout.
+# Print all the dependencies of SRCFILE... to stdout. (alphabetic order)
 build_deps() {
   while test $# -gt 0; do
     deps="$(
       for f; do
-        for d in $(sed -n 's:^'"$build_include_directive"'$:\1:p' "$f"); do
+        for d in $(sed -n 's:^'"$macro_include"'$:\1:p' "$f"); do
           build_resolve $d
         done
       done
@@ -104,11 +98,11 @@ build_resolve() {
   }
 }
 
-## usage: make_incomplete_pattern BUILD_DIRECTIVES...
-make_incomplete_pattern() {
+## usage: make_unexpanded_macros_pattern BUILD_DIRECTIVES...
+make_unexpanded_macros_pattern() {
   echo "^\\($(
-    for directive; do
-      eval echo \"\$$directive\"
+    for macro; do
+      eval echo \"\$$macro\"
     done |
       tr \\n \| |
       sed 's/|/\\|/'
