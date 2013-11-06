@@ -3,7 +3,6 @@ var http = require('https');
 var sockjs = require('sockjs');
 var connect = require('connect');
 var irc = require('irc');
-var krebsimage = require('./krebs-img.js');
 var Clients = [];
 Clients.broadcast = function(object) {
   Clients.forEach(function(client) {
@@ -59,7 +58,7 @@ conn.write(JSON.stringify({from: 'system', message: 'hello'}))
       var object = JSON.parse(message);
       object.from = name
     console.log(object.message);
-  irc_client.say("#krebs", name + '→' + object.message);
+  irc_client.say("#krebs", name + ' → ' + object.message);
   Clients.broadcast(object);
 
     } catch (error) {
@@ -88,10 +87,11 @@ var app = connect()
     res.write('<script src="sockjs-0.3.min.js"></script>');
     res.write('<script src="jquery-2.0.3.min.js"></script>');
     res.write('<script src="client.js"></script>');
-    res.write(krebsimage+'<br>');
+    res.write('<div id=bg>');
     res.write('hello, this is #krebs:<br>');
     res.write('<table id="chatbox"></table>');
     res.end('<input type="text" id="input"><br>');
+    res.write('</div>');
 
   })
 var server = http.createServer(options, app);
