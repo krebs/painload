@@ -6,6 +6,17 @@ exists(){ type "$1" >/dev/null 2>/dev/null; }
 is_root(){
   test $(id -u) -eq 0
 }
+
+esudo(){
+  # becomes root with sudo powers
+  # unless nosudo env is set
+  if test "${nosudo-false}" != true || is_root; then
+    echo "we're going sudo..." >&2
+    exec sudo -E "$0" "$@"
+    exit 23 # go to hell
+  fi
+}
+
 get_hostname(){
   # finds the current hostname
   #   if ENV HOSTN is set echo $HOSTN
@@ -29,4 +40,23 @@ get_hostname(){
 
 line_to_dot(){ 
   while read line; do printf .; done;
+}
+
+
+get_os()
+{
+  # TODO: find all the release files
+  #if grep -q 'Linux' /etc/*release 2>/dev/null || grep -qe 'Linux' /etc/issue 2>/dev/null; then
+  if grep -q 'Linux' /etc/lsb-release 2>/dev/null || grep -q 'Linux' /etc/issue 2>/dev/null; then
+    echo 'linux'
+  elif exists getprop ; then
+    echo 'android'
+  elif test -e /etc/openwrt_release; then
+    echo 'openwrt'
+  elif uname -s | grep -qi 'darwin'; then
+    echo 'osx'
+  else
+    warn "Cannot determine your operating system, falling back to Linux"
+    echo 'linux'
+  fi
 }
