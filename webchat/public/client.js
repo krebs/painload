@@ -1,3 +1,8 @@
+function replaceURLWithHTMLLinks(text) {
+  var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+  return text.replace(exp,"<a href='$1'>$1</a>");
+}
+
 $(function connect() {
   sock = new SockJS('/echo');
 
@@ -10,9 +15,10 @@ $(function connect() {
     try {
       var object = JSON.parse(e.data);
       console.log(object.message);
-      var safe_message = $('<div/>').text(object.message).html()
-  var safe_from = $('<div/>').text(object.from).html()
-  $('#chatbox').append('<tr><td class="from">'+safe_from+'</td><td>'+safe_message+'</td></tr>');
+      var safe_message = $('<div/>').text(object.message).html();
+      safe_message = replaceURLWithHTMLLinks(safe_message);
+  var safe_from = $('<div/>').text(object.from).html();
+  $('#chatbox').append('<tr><td class="chat_from">'+safe_from+'</td><td class="chat_msg">'+safe_message+'</td></tr>');
 
     } catch (error) {
       console.log(error);
