@@ -1,5 +1,3 @@
-#!/bin/sh
-
 # logging
 msg() { printf "$@\n" >&2 ;}
 info()   { msg "** $@" ;}

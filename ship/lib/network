@@ -1,5 +1,4 @@
-#!/bin/sh
-#include core
+#@include core
 
 anytelnet(){
   # find Telnet or similar and executes it at the end
