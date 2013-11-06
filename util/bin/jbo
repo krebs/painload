@@ -1,0 +1,46 @@
+#! /bin/sh
+set -euf
+
+if test $# = 0; then
+  while read line; do
+    if test "${clear-}" = true; then
+      echo -n 'c'
+    fi
+    "$0" "$line"
+  done
+  exit
+fi
+
+echo "$*" |
+tr 'h' "'" |
+jbofihe -H |
+tr '\n' ' ' |
+sed -r '
+
+  s@</?(HTML|HEAD|TITLE|BODY|FONT)[^>]*>@@g
+  s@Lojban translation@@
+
+  s|<SUB>1</SUB>|₁|g
+  s|<SUB>2</SUB>|₂|g
+  s|<SUB>3</SUB>|₃|g
+  s|<SUB>4</SUB>|₄|g
+  s|<SUB>5</SUB>|₅|g
+  s|<SUB>6</SUB>|₆|g
+  s|<SUB>7</SUB>|₇|g
+  s|<SUB>8</SUB>|₈|g
+  s|<SUB>9</SUB>|₉|g
+
+  s|<B>|[32m|g; s|</B>|[m|g
+
+  s|<I> </I>|<I>_</I>|g
+  s|<I>|[31m|g; s|</I>|[m|g
+
+  #s|<U>|[4m|g; s|</U>|[m|g
+  s|<U>||g; s|</U>||g
+
+  s|&lt;|<|g
+  s|&gt;|>|g
+
+  s@^ *@@
+  $s/$/\n/
+'
