@@ -47,18 +47,24 @@ irc_client.on('message#krebs', function(from, message) {
 
 var echo = sockjs.createServer();
 echo.on('connection', function(conn) {
-  var name = '['+conn.remoteAddress+':'+conn.remotePort+']';
+  var origin = '['+conn.remoteAddress+':'+conn.remotePort+']';
   Clients.push(conn);
-  Clients.broadcast({from: 'system', message: name + ' has joined'})
   irc_client.say("#krebs", name + ' has joined');
-conn.write(JSON.stringify({from: 'system', message: 'hello'}))
-  conn.on('data', function(message) {
-    console.log('data:',message);
+  Clients.broadcast({from: 'system', message: origin + ' has joined'})
+  conn.write(JSON.stringify({from: 'system', message: 'hello'}))
+  conn.on('data', function(data) {
+    console.log('data:',data);
     try {
-      var object = JSON.parse(message);
-      object.from = name
+      var object = JSON.parse(data);
+      if (/^\/nick\s+(.+)$/.test(object.message)) {
+        object.from = origin;
+      } else if (typeof object.nick === 'string') {
+        object.from = object.nick;
+      } else {
+        object.from = origin;
+      };
     console.log(object.message);
-  irc_client.say("#krebs", name + ' → ' + object.message);
+  irc_client.say("#krebs", object.from + ' → ' + object.message);
   Clients.broadcast(object);
 
     } catch (error) {
@@ -67,8 +73,8 @@ conn.write(JSON.stringify({from: 'system', message: 'hello'}))
   });
 conn.on('close', function() {
   Clients.splice(Clients.indexOf(conn));
-  Clients.broadcast({from: 'system', message: name + ' has quit'})
   irc_client.say("#krebs", name + ' has quit');
+  Clients.broadcast({from: 'system', message: origin + ' has quit'})
 });
 });
 
