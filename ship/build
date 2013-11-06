@@ -5,6 +5,14 @@ set -euf
 # [debug=true] build compile SRCFILE DSTFILE
 # [debug=true] build deps SRCFILE...
 build() {
+
+  # usage_pattern is used to extract build directive declarations.
+  usage_pattern='## usage: \(.*\) -> \([^ ]\+\) \(.*\)'
+
+  script='s/^'"$usage_pattern"'$/\2_directive='"'"'\1'"'"'/p' \
+    setf build_x_directive_loader '$(sed -n "$script" "$%s")' 0
+  eval "$build_x_directive_loader"
+
   case "$1" in
     compile) build_compile "$2" "$3";;
     deps) shift; build_deps "$@";;
@@ -34,16 +42,8 @@ EOF
 ## usage: build_compile SRCFILE DSTFILE
 build_compile() {
 
-  usage_pattern='## usage: \(.*\) -> \([^ ]\+\) \(.*\)'
-
   script='s/^'"$usage_pattern"'$/\2_directive/p' \
     setf build_directives '$(sed -n "$script" "$%s")' 0
-
-  script='s/^'"$usage_pattern"'$/\2_directive='"'"'\1'"'"'/p' \
-    setf build_x_directive_loader '$(sed -n "$script" "$%s")' 0
-  eval "$build_x_directive_loader"
-
-  setf incomplete_pattern '$(make_incomplete_pattern $%s)' build_directives
 
   script='
       s/^'"$usage_pattern"'$/s:^ *\\([0-9]\\+\\) \1$:\2 \3:/p
@@ -52,6 +52,8 @@ build_compile() {
       s:^ *\\([0-9]\\+\\) .*:echo \\1p:
       ' \
     setf input_parser '$(sed -n "$script" "$%s")' 0
+
+  setf incomplete_pattern '$(make_incomplete_pattern $%s)' build_directives
 
   SRCFILE="$1" setf src '$(cat "$%s")' SRCFILE
 
