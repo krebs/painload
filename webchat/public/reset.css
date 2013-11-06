@@ -30,6 +30,8 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
   line-height: 1;
+  background-color: black;
+  color: white;
 }
 ol, ul {
   list-style: none;
@@ -42,14 +44,17 @@ q:before, q:after {
   content: '';
   content: none;
 }
-x-table {
+#chatbox {
   border-collapse: collapse;
   border-spacing: 0;
+  border: solid 2px black;
+  background-color: white;
+  color: black;
 }
-.from {
+.chat_from {
   font-weight: bold;
   text-align: right;
 }
-.from:after {
+.chat_from:after {
   content: ":";
 }
