@@ -47,7 +47,7 @@ irc_client.on('message#krebs', function(from, message) {
 
 var echo = sockjs.createServer();
 echo.on('connection', function(conn) {
-  var origin = '['+conn.remoteAddress+':'+conn.remotePort+']';
+  var origin = conn.remoteAddress;
   Clients.push(conn);
   Clients.broadcast({from: 'system', message: origin + ' has joined'})
   irc_client.say("#krebs", origin + ' has joined');
