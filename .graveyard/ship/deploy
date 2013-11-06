@@ -1,0 +1,9 @@
+#!/bin/sh
+set -xeuf
+cd $(dirname $0)
+exesrcdir=src
+libsrcdir=lib
+tmpoutdir=tmp
+for file in `ls $exesrcdir`; do
+  BUILD_PATH=$libsrcdir ./build compile $exesrcdir/$file $tmpoutdir/$file
+done
