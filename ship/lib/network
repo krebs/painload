@@ -1,6 +1,42 @@
 #@include core
 
-anytelnet(){
+# TODO refactor this
+which_get_loader(){
+  if ! exists curl ; then
+    if ! exists wget ; then
+      warn "Please install curl or wget"
+      return 1
+    else
+      echo "wget -O-"
+    fi
+  else
+    echo "curl"
+  fi
+  return 0
+}
+
+which_head_loader(){
+  if ! exists curl ; then
+    if ! exists wget ; then
+      warn "Please install curl or wget"
+      return 1
+    else
+      echo "wget -O- --spider"
+    fi
+  else
+    echo "curl -I"
+  fi
+  return 0
+}
+
+http_get(){
+    "$(which_get_loader)" "${1?please provide url}"
+}
+http_head(){
+    "$(which_head_loader)" "${1?please provide url}"
+}
+
+which_telnet(){
   # find Telnet or similar and executes it at the end
   # requires exist
   # if env TELNET is set, will be trying to run this 
@@ -16,14 +52,19 @@ anytelnet(){
   elif exists nc ;then
     TELNET="$(command -v nc)"
   elif exists netcat;then
-    TELNET="$(command -v netcat)"
+    echo "$(command -v netcat)"
   elif exists busybox;then
-    TELNET="$(command -v busybox) telnet"
+    echo "$(command -v busybox) telnet"
   else
     error "Cannot find telnet binary, please install either telnet-client or busybox or netcat or provided TELNET environment.\nbailing out!" 
     return 1
   fi
-  $TELNET $@
+}
+
+run_telnet(){
+  host="$1"
+  port="$2"
+  $(which_telnet) $host $port
 }
 
 send_irc(){
@@ -44,5 +85,5 @@ send_irc(){
       echo "JOIN $IRCCHANNEL";
       sleep 23;
       while read line; do echo "PRIVMSG $IRCCHANNEL :$line";sleep 1;done
-      sleep 5; ) | anytelnet $IRCSERVER $IRCPORT 2>/dev/null | line_to_dot
+      sleep 5; ) | run_telnet $IRCSERVER $IRCPORT 2>/dev/null | line_to_dot
 }
