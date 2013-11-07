@@ -33,8 +33,10 @@ var last_data = {
 function ticker_data_handler (data) {
   //console.log(data)
 
-  var ticker = data.btceltcbtc
-  var last_ticker = last_data.btceltcbtc
+  var symbol = 'btceltcbtc'
+
+  var ticker = data[symbol]
+  var last_ticker = last_data[symbol]
 
   if (ticker.date !== last_ticker.date) {
 
@@ -46,8 +48,8 @@ function ticker_data_handler (data) {
 
     var out = [
       format_date(data.now) + '+' + pad(lag, -2, '0'),
-      'btceltcbtc',
-      '\e[' + diff_color(diff) + 'm' + pad(ticker.last, 2 + 8, '0') + '\e[m',
+      symbol,
+      '\x1b[' + diff_color(diff) + 'm' + pad(ticker.last, 2 + 8, '0') + '\x1b[m',
       lag,
       freq,
     ];
@@ -57,7 +59,7 @@ function ticker_data_handler (data) {
     beeper.beep(freq, 10);
   }
 
-  last_data.btceltcbtc = data.btceltcbtc;
+  last_data[symbol] = data[symbol];
 }
 
 function diff_color (diff) {
