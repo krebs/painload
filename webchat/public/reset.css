@@ -21,6 +21,7 @@ time, mark, audio, video {
   border: 0;
   font-size: 100%;
   font: inherit;
+  font-family: monospace;
   vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
@@ -47,13 +48,21 @@ q:before, q:after {
 #chatbox {
   border-collapse: collapse;
   border-spacing: 0;
-  background-color: black;
+  color: white;
+  width: 100%;
+  vertical-align: bottom;
+}
+#input{
+  width: 100%;
+  background-color: #555555;
+  border: 1px solid black;
   color: white;
 }
 .chat_from {
   color:grey;
   font-weight: bold;
   text-align: right;
+  font-size:12px;
 }
 .chat_from:after {
   content: ":";
@@ -67,6 +76,44 @@ q:before, q:after {
   left: 0;
   right: 0;
 }
+#chatter {
+  width: 75%;
+  height: 100%;
+  background-color: black;
+  opacity: 0.8;
+  overflow: auto;
+  overflow-x: hidden;
+  vertical-align: bottom;
+}
+.chat_date,.chat_from,.chat_msg{
+}
+.chat_msg{
+  width: 100%;
+}
 a {
   color: red;
+}
+.chat_date {
+  color: green;
+}
+.chat_date:after {
+  content: "";
+  padding-right: 4px;
+}
+#time {
+  color: #00FF00;
+}
+#sideboard {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 24%;
+  background-color: black;
+  opacity: 0.8;
+}
+#links {
+  font-size: 14px;
+  position: absolute;
+  bottom: 5px;
 }

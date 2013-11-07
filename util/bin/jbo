@@ -1,0 +1,42 @@
+#! /bin/sh
+# usage: jbo WORDS...
+set -euf
+
+if test $# = 0; then
+  while read line; do
+    if test "${clear-}" = true; then
+      echo -n 'c'
+    fi
+    "$0" "$line"
+  done
+  exit
+fi
+
+echo "$*" |
+tr 'h' "'" |
+jbofihe -H |
+tr '\n' ' ' |
+sed -r '
+  s@</?(HTML|HEAD|TITLE|BODY|FONT)[^>]*>@@g
+  s@Lojban translation@@
+' | {
+  sed 's:<SUB>[^>]*</SUB>:\n&\n:g' |
+  sed '/^<SUB>/y/0123456789/₀₁₂₃₄₅₆₇₈₉/' |
+      tr -d '\n' |
+      sed 's:</\?SUB>::g'
+} |
+sed -r '
+  s|<B>|[32m|g; s|</B>|[m|g
+
+  s|<I> </I>|<I>_</I>|g
+  s|<I>|[31m|g; s|</I>|[m|g
+
+  #s|<U>|[4m|g; s|</U>|[m|g
+  s|<U>||g; s|</U>||g
+
+  s|&lt;|<|g
+  s|&gt;|>|g
+
+  s@^ *@@
+  $s/$/\n/
+'
