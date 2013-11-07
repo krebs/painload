@@ -112,3 +112,8 @@ a {
   background-color: black;
   opacity: 0.8;
 }
+#links {
+  font-size: 14px;
+  position: absolute;
+  bottom: 5px;
+}

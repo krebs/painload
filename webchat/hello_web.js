@@ -107,8 +107,9 @@ var app = connect()
     page_template+='<table id="chatbox"><tr id="foot"><td id="time"></td><td id="nick" class="chat_from"></td><td><input type="text" id="input"></td></tr></table>\n';
     page_template+='</div>';
     page_template+='<div id="sideboard"><div id="links">';
-    page_template+='<a href="http://ire:1027/">Retiolum Dashboard</a><br>';
-    page_template+='<a href="http://pigstarter/">Pigstarter network graphs</a><br>';
+    page_template+='<a href="http://gold.krebsco.de/">krebsgold browser plugin</a><br>';
+    page_template+='<a href="http://ire:1027/dashboard/">ire: Retiolum Dashboard</a><br>';
+    page_template+='<a href="http://pigstarter/">pigstarter: network graphs</a><br>';
     page_template+='</div></div></div>';
     res.end(page_template);
 
