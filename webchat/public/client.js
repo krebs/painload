@@ -52,8 +52,11 @@ $(function connect() {
       console.log(object.message);
       var safe_message = $('<div/>').text(object.message).html();
       safe_message = replaceURLWithHTMLLinks(safe_message);
-  var safe_from = $('<div/>').text(object.from).html();
-  $('<tr><td class="chat_date">'+getCurTime()+'</td><td class="chat_from">'+safe_from+'</td><td class="chat_msg">'+safe_message+'</td></tr>').insertBefore('#foot');
+      var safe_from = $('<div/>').text(object.from).html();
+      $('<tr><td class="chat_date">'+getCurTime()+'</td><td class="chat_from">'+safe_from+'</td><td class="chat_msg">'+safe_message+'</td></tr>').insertBefore('#foot');
+
+      var elem = document.getElementById('chatter');
+      elem.scrollTop = elem.scrollHeight;
 
     } catch (error) {
       console.log(error);
