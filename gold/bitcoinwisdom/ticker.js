@@ -44,7 +44,7 @@ function ticker_data_handler (data) {
 
     var lag = data.now - ticker.date;
 
-    freq = (2000 + 200 * diff * Math.sqrt(ticker.last / last_ticker.last)) | 0;
+    freq = ( Math.pow(2000, ticker.last / last_ticker.last )) | 0;
 
     var out = [
       format_date(data.now) + '+' + pad(lag, -2, '0'),
