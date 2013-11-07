@@ -48,11 +48,10 @@ function ticker_data_handler (data) {
 
     var out = [
       format_date(data.now) + '+' + pad(lag, -2, '0'),
-      symbol,
       '\x1b[' + diff_color(diff) + 'm'
         + ticker.last.toFixed(8)
         + '\x1b[m',
-      lag,
+      symbol,
       freq,
     ];
 
