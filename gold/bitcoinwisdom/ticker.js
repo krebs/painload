@@ -45,9 +45,9 @@ function ticker_data_handler (data) {
     freq = (2000 + 1000000 * diff) | 0;
 
     var out = [
-      format_date(data.now) + '+' + pad_left(lag, 2, '0'),
+      format_date(data.now) + '+' + pad(lag, -2, '0'),
       'btceltcbtc',
-      '[' + diff_color(diff) + 'm' + ticker.last + '[m',
+      '\e[' + diff_color(diff) + 'm' + pad(ticker.last, 2 + 8, '0') + '\e[m',
       lag,
       freq,
     ];
@@ -75,10 +75,18 @@ function format_date (unix) {
     .replace(/\.000Z$/, 'Z')
 }
 
-function pad_left (obj, num, char) {
+// num < 0: pad left
+// num > 0: pad right
+function pad (obj, num, char) {
   var str = obj.toString();
-  while (str.length < num) {
-    str += char;
+  if (num < 0) {
+    while (str.length < -num) {
+      str = char + str;
+    }
+  } if (num > 0) {
+    while (str.length < num) {
+      str = str + char;
+    }
   }
   return str;
 }
