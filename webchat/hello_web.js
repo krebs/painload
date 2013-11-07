@@ -65,22 +65,24 @@ echo.on('connection', function(conn) {
     console.log('data:',data);
     try {
       var object = JSON.parse(data);
-      if (/^\/nick\s+(.+)$/.test(object.message)) { //if nick is send use nick instead of ip
-        object.from = origin;
-      } else if (typeof object.nick === 'string') {
-        object.from = object.nick;
-      } else {
-        object.from = origin;
-      };
-    console.log(object.message);
-  irc_client.say("#krebs", object.from + ' → ' + object.message);
-  Clients.broadcast(object);
+      if (object.message.length > 0) { //if message is not empty
+        if (/^\/nick\s+(.+)$/.test(object.message)) { //if nick is send use nick instead of ip
+          object.from = origin;
+        } else if (typeof object.nick === 'string') {
+          object.from = object.nick;
+        } else {
+          object.from = origin;
+        };
+        console.log(object.message);
+        irc_client.say("#krebs", object.from + ' → ' + object.message);
+        Clients.broadcast(object);
+      }
 
     } catch (error) {
       console.log(error);
     }
   });
-conn.on('close', function() { //propagate if client quits the page
+  conn.on('close', function() { //propagate if client quits the page
   Clients.splice(Clients.indexOf(conn));
   Clients.broadcast({from: 'system', message: origin + ' has quit'})
 //  irc_client.say("#krebs", origin + ' has quit');
