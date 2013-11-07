@@ -49,7 +49,9 @@ function ticker_data_handler (data) {
     var out = [
       format_date(data.now) + '+' + pad(lag, -2, '0'),
       symbol,
-      '\x1b[' + diff_color(diff) + 'm' + pad(ticker.last, 2 + 8, '0') + '\x1b[m',
+      '\x1b[' + diff_color(diff) + 'm'
+        + ticker.last.toFixed(8)
+        + '\x1b[m',
       lag,
       freq,
     ];
