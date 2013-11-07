@@ -17,7 +17,7 @@ var irc_reconnect = function() { //reconnt to irc
   irc_client.connect();
 }
 
-var pingTimeoutDelay = 5*60*1000 
+var pingTimeoutDelay = 3*60*1000
 var lastping = setTimeout(irc_reconnect, pingTimeoutDelay)
 
 var irc_client = new irc.Client('irc.freenode.net', 'kweb', { //create irc_client to talk to irc
