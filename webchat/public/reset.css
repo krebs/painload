@@ -103,3 +103,12 @@ a {
 #time {
   color: #00FF00;
 }
+#sideboard {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 24%;
+  background-color: black;
+  opacity: 0.8;
+}
