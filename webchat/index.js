@@ -11,6 +11,26 @@ Clients.broadcast = function(object) { //broadcast to all clients
   });
 }
 
+var serverCommands = {};
+
+serverCommands.say = function (settings, params) {
+  var nick = settings.nick || settings.conn.remoteAddress
+  var message = params.message
+  irc_client.say("#krebs", nick + ' → ' + message);
+  return Clients.broadcast({ type: 'message', nick: nick, message: message })
+}
+
+serverCommands.nick = function (settings, params) {
+  var oldnick = settings.nick || settings.conn.remoteAddress
+  var newnick = params.nick
+  settings.nick = newnick
+  return Clients.broadcast({ type: 'nickchange', nick: oldnick, newnick: newnick })
+}
+
+serverCommands.badcommand = function (settings, params) {
+  settings.conn.write(JSON.stringify({ type: 'usererror', message: 'bad command' }))
+}
+
 var irc_reconnect = function() { //reconnt to irc
   console.log("reconnecting due to pingtimeout");
   irc_client.disconnect();
@@ -45,8 +65,22 @@ irc_client.on('ping', function(server) { //restart timer on server ping
 
 irc_client.on('message#krebs', function(from, message) {
   console.log({ from: from, message: message });
-  Clients.broadcast({ from: from, message: message }); //broadcast irc messages to all connected clients
+  Clients.broadcast({ type: 'message', from: from, message: message }); //broadcast irc messages to all connected clients
   clearTimeout(lastping);
+});
+
+irc_client.on('names#krebs', function(nicks) {
+  Clients.broadcast({type: 'nicklist', message: nicks});
+});
+
+irc_client.on('join#krebs', function(nick, msg) {
+  if (nick !== 'kweb'){
+    Clients.broadcast({type: 'join', from: nick});
+  }
+});
+
+irc_client.on('part#krebs', function(nick, rs, msg) {
+  Clients.broadcast({type: 'quit', from: nick});
 });
 
 var web_serv_options = { //certificates for https
@@ -57,26 +91,22 @@ var web_serv_options = { //certificates for https
 var echo = sockjs.createServer();
 echo.on('connection', function(conn) {
   var origin = conn.remoteAddress;
+  var settings = {
+    conn: conn
+  }
   Clients.push(conn);
-  Clients.broadcast({from: 'system', message: origin + ' has joined'})
+  Clients.broadcast({type: 'join', from: origin})
 //  irc_client.say("#krebs", origin + ' has joined');
-  conn.write(JSON.stringify({from: 'system', message: 'hello'})) //welcome message
+  if (typeof irc_client.chans['#krebs'] === 'object') {
+    conn.write(JSON.stringify({type: 'nicklist', message: irc_client.chans['#krebs'].users})); //send current nicklist
+  };
+  conn.write(JSON.stringify({type: 'message', from: 'system', message: 'hello' })) //welcome message
+  console.log(irc_client.chans['#krebs'])
   conn.on('data', function(data) {
     console.log('data:',data);
     try {
-      var object = JSON.parse(data);
-      if (object.message.length > 0) { //if message is not empty
-        if (/^\/nick\s+(.+)$/.test(object.message)) { //if nick is send use nick instead of ip
-          object.from = origin;
-        } else if (typeof object.nick === 'string') {
-          object.from = object.nick;
-        } else {
-          object.from = origin;
-        };
-        console.log(object.message);
-        irc_client.say("#krebs", object.from + ' → ' + object.message);
-        Clients.broadcast(object);
-      }
+      var command = JSON.parse(data);
+      return (serverCommands[command.method] || serverCommands.badcommand)(settings, command.params)
 
     } catch (error) {
       console.log(error);
@@ -84,7 +114,7 @@ echo.on('connection', function(conn) {
   });
   conn.on('close', function() { //propagate if client quits the page
   Clients.splice(Clients.indexOf(conn));
-  Clients.broadcast({from: 'system', message: origin + ' has quit'})
+  Clients.broadcast({type: 'quit', from: origin})
 //  irc_client.say("#krebs", origin + ' has quit');
 });
 });
@@ -99,6 +129,8 @@ var app = connect()
     page_template+='<link rel="stylesheet" type="text/css" href="reset.css">\n';
     page_template+='<script src="sockjs-0.3.min.js"></script>\n';
     page_template+='<script src="jquery-2.0.3.min.js"></script>\n';
+    page_template+='<script src="commands.js"></script>\n';
+    page_template+='<script src="functions.js"></script>\n';
     page_template+='<script src="client.js"></script>\n';
     page_template+='<div id="bg">';
     page_template+='<div id="chatter">';
@@ -106,7 +138,8 @@ var app = connect()
     page_template+='hello, this is the official krebs support:<br>\n';
     page_template+='<table id="chatbox"><tr id="foot"><td id="time"></td><td id="nick" class="chat_from"></td><td><input type="text" id="input"></td></tr></table>\n';
     page_template+='</div>';
-    page_template+='<div id="sideboard"><div id="links">';
+    page_template+='<div id="sideboard"><div id=nicklist></div>';
+    page_template+='<div id="links">';
     page_template+='<a href="http://gold.krebsco.de/">krebsgold browser plugin</a><br>';
     page_template+='<a href="http://ire:1027/dashboard/">ire: Retiolum Dashboard</a><br>';
     page_template+='<a href="http://pigstarter/">pigstarter: network graphs</a><br>';

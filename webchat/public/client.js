@@ -1,42 +1,10 @@
-function replaceURLWithHTMLLinks (text) {
-  var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-  return text.replace(exp,"<a href='$1'>$1</a>");
-}
-function setMaybeNick (input) {
-  var match = /^\/nick\s+(.+)$/.exec(input);
-  if (match) {
-    nick = match[1];
-    $('#nick').html(nick);
-  }
-}
-
-function getCurTime () {
-  date = new Date;
-  h = date.getHours();
-  if(h<10)
-  {
-    h = "0"+h;
-  }
-  m = date.getMinutes();
-  if(m<10)
-  {
-    m = "0"+m;
-  }
-  s = date.getSeconds();
-  if(s<10)
-  {
-    s = "0"+s;
-  }
-  return ''+h+':'+m+':'+s;
-};
+var settings = {}
 
 $(function updateTime () {
   $('#time').html(getCurTime());
   setTimeout(updateTime,'1000');
   return true;
 });
-
-var nick;
 
 $(function connect() {
   sock = new SockJS('/echo');
@@ -50,16 +18,11 @@ $(function connect() {
     try {
       var object = JSON.parse(e.data);
       console.log(object.message);
-      var safe_message = $('<div/>').text(object.message).html();
-      safe_message = replaceURLWithHTMLLinks(safe_message);
-      var safe_from = $('<div/>').text(object.from).html();
-      $('<tr><td class="chat_date">'+getCurTime()+'</td><td class="chat_from">'+safe_from+'</td><td class="chat_msg">'+safe_message+'</td></tr>').insertBefore('#foot');
-
-      var elem = document.getElementById('chatter');
-      elem.scrollTop = elem.scrollHeight;
+      clientParser(object);
 
     } catch (error) {
       console.log(error);
+      throw error;
     }
   };
   sock.onclose = function(event) {
@@ -77,18 +40,11 @@ $(function() {
       e.preventDefault();
       e.stopPropagation();
       e.stopImmediatePropagation();
-      setMaybeNick($('#input').val());
-      var sendObj = {
-        message: $('#input').val(),
-      };
-
-      if (typeof nick === 'string') {
-        sendObj.nick = nick;
-      };
-
-      sock.send(JSON.stringify(sendObj));
+      var input = ($('#input').val());
       $('#input').val('');
-      return;
+
+      var command = inputParser(input)
+      return (commands[command.method] || commands.badcommand)(settings, command.params)
     }
   });
 
