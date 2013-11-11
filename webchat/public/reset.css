@@ -58,14 +58,14 @@ q:before, q:after {
   border: 1px solid black;
   color: white;
 }
-.chat_from {
+.from {
   color:grey;
   font-weight: bold;
   text-align: right;
   font-size:12px;
   white-space: nowrap;
 }
-.chat_from:after {
+.from:after {
   content: ":";
   padding-right: 6px;
 }
@@ -88,16 +88,16 @@ q:before, q:after {
 }
 .chat_date,.chat_from,.chat_msg{
 }
-.chat_msg{
+.msg{
   width: 100%;
 }
 a {
   color: red;
 }
-.chat_date {
+.date {
   color: green;
 }
-.chat_date:after {
+.date:after {
   content: "";
   padding-right: 4px;
 }
@@ -117,4 +117,10 @@ a {
   font-size: 14px;
   position: absolute;
   bottom: 5px;
+}
+.join_msg {
+  color: #00FF00;
+}
+.quit_msg {
+  color: #FF0000;
 }

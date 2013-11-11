@@ -54,8 +54,8 @@ function getNicklistElement(name) {
 }
 
 function chatboxAppend (chat_from, chat_msg, type) {
-  type = type||'chat'
-  $('<tr><td class="'+type+'_date">'+getCurTime()+'</td><td class="'+type+'_from">'+chat_from+'</td><td class="'+type+'_msg">'+chat_msg+'</td></tr>').insertBefore('#foot');
+  type = type||'msg'
+  $('<tr><td class="date '+type+'_date">'+getCurTime()+'</td><td class="from '+type+'_from">'+chat_from+'</td><td class="msg '+type+'_msg">'+chat_msg+'</td></tr>').insertBefore('#foot');
 
   var elem = document.getElementById('chatter');
   elem.scrollTop = elem.scrollHeight;
