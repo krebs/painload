@@ -12,7 +12,7 @@ serverCommands.say = function (settings, params) {
 }
 
 serverCommands.nick = function (settings, params) {
-  var oldnick = settings.nick || settings.conn.remoteAddress
+  var oldnick = settings.nick
   var newnick = params.nick
   settings.nick = newnick
   return clients.notifyAll('nickchange', { nick: oldnick, newnick: newnick });
