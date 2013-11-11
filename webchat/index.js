@@ -27,9 +27,11 @@ clients.notifyAll = function (method, params) {
 serverstate.clients = clients;
 
 var irc_reconnect = function() { //reconnt to irc
-  console.log("reconnecting due to pingtimeout");
-  irc_client.disconnect();
-  irc_client.connect();
+  serverstate.connected = false
+  console.log("reconnecting due to pingtimeout")
+  irc_client.disconnect()
+  irc_client.connect()
+  serverstate.connected = true
 }
 
 var pingTimeoutDelay = 3*60*1000
@@ -66,6 +68,8 @@ irc_client.on('message#krebs', function(from, message) {
 
 irc_client.on('names#krebs', function(nicks) {
   clients.notifyAll('nicklist', { nicklist: nicks })
+  serverstate.connected = true
+  serverstate.irc_nicklist = nicks
 });
 
 irc_client.on('join#krebs', function(nick, msg) {
