@@ -6,26 +6,54 @@ $(function updateTime () {
   return true;
 });
 
-$(function connect() {
-  sock = new SockJS('/echo');
+var gensym = (function () {
+  var i = 0
+  return function () {
+    return ++i;
+  }
+})()
 
-  sock.onopen = function() {
+settings.waiting_callbacks = {}
+
+function request (settings, method, params, callback) {
+  var id = gensym()
+  settings.waiting_callbacks[id] = callback
+  settings.sock.send({method: method, params: params, id: id});
+}
+
+$(function connect() {
+  settings.sock = new SockJS('/echo');
+
+  settings.sock.onopen = function() {
     console.log('open');
-    sock.send('open');
+    request(settings, 'coi', {}, function (error, result) {
+      if (error) {
+        console.log('coi error', error)
+      } else {
+        settings.nick = result.nick //TODO: write to display
+        settings.addr = result.addr //TODO: write to display
+      }
+    })
   };
-  sock.onmessage = function(e) {
+  settings.sock.onmessage = function(e) {
     console.log('message', e.data);
     try {
       var object = JSON.parse(e.data);
       console.log(object);
-      clientParser(object);
 
     } catch (error) {
       console.log(error);
       throw error;
     }
-  };
-  sock.onclose = function(event) {
+    if (typeof object.method === 'string') {
+      return methodDispatcher(settings, object);
+    } else if (typeof object.result === 'string') {
+      return resultDispatcher(settings, object);
+    } else {
+      console.log('bad message:', object)
+    }
+  }
+  settings.sock.onclose = function(event) {
     console.log('close');
     switch (event.code) {
       case 1006: //abnormal closure

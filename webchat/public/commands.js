@@ -5,16 +5,15 @@ commands.say = function (settings, params) {
     method: 'say',
     params: { msg: params },
   };
-  sock.send(JSON.stringify(sendObj))
+  settings.sock.send(JSON.stringify(sendObj))
 }
 
 commands.nick = function (settings, params) {
-  settings.nick = params
   var sendObj = {
     method: 'nick',
     params: { nick: params },
   }
-  sock.send(JSON.stringify(sendObj))
+  settings.sock.send(JSON.stringify(sendObj))
 }
 
 commands.badcommand = function (settings, params) {

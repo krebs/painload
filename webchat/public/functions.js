@@ -8,9 +8,18 @@ function inputParser (str) {
 }
 
 
-function clientParser(object) {
+function methodDispatcher (settings, object) {
     console.log('parser: ',object)
-    return (handler[object.method] || console.log)(object.params)
+    return (handler[object.method] || console.log)(settings, object.params)
+};
+
+function resultDispatcher (settings, object) {
+    console.log('parser: ',object)
+    var callback = settings.waiting_callbacks[object.id]
+    delete settings.waiting_callbacks[object.id]
+    if (typeof callback === 'function') {
+      callback(object.error, object.result)
+    }
 };
 
 

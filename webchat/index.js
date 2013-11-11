@@ -118,7 +118,7 @@ echo.on('connection', function(conn) {
     if (!command || typeof command !== 'object') {
       command = {}
     }
-    return (serverCommands[command.method] || serverCommands.badcommand)(serverstate, settings, command.params)
+    return (serverCommands[command.method] || serverCommands.badcommand)(serverstate, settings, command.params, command.id)
   });
   conn.on('close', function() { //propagate if client quits the page
   clients.splice(clients.indexOf(conn));
