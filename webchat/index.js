@@ -7,9 +7,9 @@ var irc = require('irc');
 var serverCommands = require('./serverCommands.js');
 
 var serverstate = {
-  connected = false,
-  nicks = [],
-  lastping = 0,
+  connected: false,
+  nicks: [],
+  lastping: 0,
 }; 
 
 var clients = [];
