@@ -7,8 +7,6 @@ serverCommands.say = function (settings, params) {
   params.nick = nick
   irc_client.say("#krebs", nick + ' → ' + message);
   return clients.notifyAll('message', params)
-//  return clients.broadcast({ method: 'message', params: params })
-
 }
 
 serverCommands.nick = function (settings, params) {
@@ -16,7 +14,6 @@ serverCommands.nick = function (settings, params) {
   var newnick = params.nick
   settings.nick = newnick
   return clients.notifyAll('nickchange', { nick: oldnick, newnick: newnick });
-//  return clients.broadcast({ method: 'nickchange', params: { nick: oldnick, newnick: newnick }})
 }
 
 serverCommands.badcommand = function (settings, params) {

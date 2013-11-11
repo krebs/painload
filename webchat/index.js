@@ -61,19 +61,16 @@ irc_client.on('ping', function(server) { //restart timer on server ping
 irc_client.on('message#krebs', function(from, message) {
   console.log({ from: from, message: message });
   clients.notifyAll('message', { nick: from, msg: message });
-//  clients.broadcast({ method: 'message', params: {nick: from, msg: message} }); //broadcast irc messages to all connected clients
   clearTimeout(lastping);
 });
 
 irc_client.on('names#krebs', function(nicks) {
-//  clients.broadcast({method: 'nicklist', params: { nicklist: nicks }});
   clients.notifyAll('nicklist', { nicklist: nicks })
 });
 
 irc_client.on('join#krebs', function(nick, msg) {
   if (nick !== 'kweb'){
     clients.notifyAll('join', { from: nick })
-//    clients.broadcast({method: 'join', params: { from: nick }});
   }
 });
 
@@ -101,7 +98,6 @@ echo.on('connection', function(conn) {
   }
   clients.push(settings);
   clients.notifyAll('join', { from: settings.nick })
-//  clients.broadcast({method: 'join', params: { from: settings.nick }})
 //  irc_client.say("#krebs", origin + ' has joined');
   if (typeof irc_client.chans['#krebs'] === 'object') {
     conn.write(JSON.stringify({method: 'nicklist', params: { nicklist: irc_client.chans['#krebs'].users }})); //send current nicklist
@@ -123,7 +119,6 @@ echo.on('connection', function(conn) {
   conn.on('close', function() { //propagate if client quits the page
   clients.splice(clients.indexOf(conn));
   clients.notifyAll('quit', { from: settings.nick }) 
-//  clients.broadcast({method: 'quit', params: { from: origin }})
 //  irc_client.say("#krebs", origin + ' has quit');
 });
 });

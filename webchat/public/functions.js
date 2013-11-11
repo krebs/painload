@@ -11,18 +11,6 @@ function inputParser (str) {
 function clientParser(object) {
     console.log('parser: ',object)
     return (handler[object.method] || console.log)(object.params)
-//switch (object.method) {
-//  case 'message':
-//    return handler.message(object.params);
-//  case 'join':
-//    return handler.join(object.params);
-//  case 'quit':
-//    return handler.quit(object.params);
-//  case 'nicklist': 
-//    return handler.nicklist(object.params);
-//  case 'nickchange':
-//    return handler.nickchange(object.params);
-//}
 };
 
 
