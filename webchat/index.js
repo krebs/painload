@@ -24,7 +24,7 @@ clients.notifyAll = function (method, params) {
   });
 }
 
-
+serverstate.clients = clients;
 
 var irc_reconnect = function() { //reconnt to irc
   console.log("reconnecting due to pingtimeout");
@@ -50,7 +50,7 @@ var irc_client = new irc.Client('irc.freenode.net', 'kweb', { //create irc_clien
   autoConnect: true,
   stripColors: true
 });
-
+serverstate.irc_client = irc_client;
 
 irc_client.on('ping', function(server) { //restart timer on server ping
   console.log("got ping from server, renewing timeout for automatic reconnect");
@@ -114,7 +114,7 @@ echo.on('connection', function(conn) {
     if (!command || typeof command !== 'object') {
       command = {}
     }
-    return (serverCommands[command.method] || serverCommands.badcommand)(settings, command.params)
+    return (serverCommands[command.method] || serverCommands.badcommand)(serverstate, settings, command.params)
   });
   conn.on('close', function() { //propagate if client quits the page
   clients.splice(clients.indexOf(conn));
