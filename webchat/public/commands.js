@@ -3,7 +3,7 @@ var commands = {}
 commands.say = function (settings, params) {
   var sendObj = {
     method: 'say',
-    params: { message: params },
+    params: { msg: params },
   };
   sock.send(JSON.stringify(sendObj))
 }

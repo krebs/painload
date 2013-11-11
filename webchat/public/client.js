@@ -17,7 +17,7 @@ $(function connect() {
     console.log('message', e.data);
     try {
       var object = JSON.parse(e.data);
-      console.log(object.message);
+      console.log(object);
       clientParser(object);
 
     } catch (error) {

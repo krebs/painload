@@ -9,50 +9,22 @@ function inputParser (str) {
 
 
 function clientParser(object) {
-  console.log(object)
-  switch (object.type) {
-    case 'message':
-      return printMessage(object);
-    case 'join':
-      return handleJoin(object);
-    case 'quit':
-      return handleQuit(object);
-    case 'nicklist': 
-      return handleNicklist(object);
-    case 'nickchange':
-      return handleNickchange(object);
-  }
+    console.log('parser: ',object)
+    return (handler[object.method] || console.log)(object.params)
+//switch (object.method) {
+//  case 'message':
+//    return handler.message(object.params);
+//  case 'join':
+//    return handler.join(object.params);
+//  case 'quit':
+//    return handler.quit(object.params);
+//  case 'nicklist': 
+//    return handler.nicklist(object.params);
+//  case 'nickchange':
+//    return handler.nickchange(object.params);
+//}
 };
 
-function handleJoin(object) {
-  var safe_from = $('<div/>').text(object.from).html();
-  $('<tr><td class="chat_date">'+getCurTime()+'</td><td class="chat_from">'+safe_from+'</td><td class="chat_msg" style="color:#00FF00">joined</td></tr>').insertBefore('#foot');
-  $('#nicklist').append('<div class="name">' + safe_from + '</div>') ;
-};
-
-function handleQuit(object) {
-  var safe_from = $('<div/>').text(object.from).html();
-  $('<tr><td class="chat_date">'+getCurTime()+'</td><td class="chat_from">'+safe_from+'</td><td class="chat_msg" style="color:#FF0000">quit</td></tr>').insertBefore('#foot');
-  console.log('removing', safe_from);
-  $(getNicklistElement(safe_from)).remove();
-};
-
-function handleNicklist(object) {
-  Object.keys(object.message).forEach(function (nick) {
-//  console.log('nick',nick);
-    var hash_from = btoa(nick).replace(/=/g,'_');
-//    $('.name').each(function (i,e) { console.log(i,e); if (e.innerHTML === 'kweb') { $(e).attr("style", "color:green") } })
-    $('#nicklist').append('<div class="name">' + nick + '</div>') ;
-  });
-};
-
-function handleNickchange(object) {
-  var safe_from = $('<div/>').text(object.nick).html();
-  var safe_newnick = $('<div/>').text(object.newnick).html();
-  $('<tr><td class="chat_date">'+getCurTime()+'</td><td class="chat_from">'+safe_from+'</td><td class="chat_msg">is now known as '+object.newnick+'</td></tr>').insertBefore('#foot');
-  $(getNicklistElement(safe_from)).remove();
-  $('#nicklist').append('<div class="name">' + safe_from + '</div>') ;
-};
 
 function replaceURLWithHTMLLinks (text) {
   var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
@@ -87,13 +59,6 @@ function chatboxAppend (chat_from, chat_msg, type) {
 
   var elem = document.getElementById('chatter');
   elem.scrollTop = elem.scrollHeight;
-};
-
-function printMessage(object) {
-  var safe_message = $('<div/>').text(object.message).html();
-  safe_message = replaceURLWithHTMLLinks(safe_message);
-  var safe_from = $('<div/>').text(object.nick).html();
-  return chatboxAppend(safe_from, safe_message)
 };
 
 function getCurTime () {

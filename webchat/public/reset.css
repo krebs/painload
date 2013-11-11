@@ -63,6 +63,7 @@ q:before, q:after {
   font-weight: bold;
   text-align: right;
   font-size:12px;
+  white-space: nowrap;
 }
 .chat_from:after {
   content: ":";
