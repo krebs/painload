@@ -1,0 +1,64 @@
+#!/bin/sh
+#@include core
+set -efu
+isofile=${1:-archlinux-2013.06.01-dual.iso}
+outfile=$(basename ${isofile%.iso}.krebs.iso)
+info "outfile will be at $outfile"
+bdir=${bdir:-$HOME/build/arch}
+isodir=$bdir/iso
+isomnt=$bdir/isomount
+rootdir=$bdir/root
+outdir=$bdir/out
+info "bdir is at $bdir"
+[ ! -e "$isofile" ] && die "$isofile does not exist,bailing out"
+esudo "$@"
+
+
+#punani install genisoimage
+
+
+info "cleanup root dir"
+rm -rf $bdir
+mkdir -p $isomnt $rootdir 
+info "mounting isofile ($isofile)"
+if is_root;then
+    mount -t iso9660 -o loop,ro $isofile $isomnt
+else
+    error "we are not root enough to mount the iso. Bailing Out"
+    exit 1
+
+fi
+defer "info 'unmounting $isomnt';umount $isomnt"
+
+info "copying from '$isomnt' to '$isodir'"
+cp -a "$isomnt" "$isodir"
+defer "info 'removing $isodir';rm -rf $isodir"
+info "extracting root-image squashfs"
+# we will not touch the kernel ... yet
+
+for arch in x86_64 i686;do
+    info "unpacking $isomnt/arch/$arch/root-image.fs.sfs"
+    mkdir -p "$outdir/$arch"
+    defer "info 'removing $outdir/$arch';rm -rf $outdir/$arch"
+    mkdir -p "$rootdir/$arch"
+    defer "info 'removing $rootdir/$arch';rm -rf $rootdir/$arch"
+    unsquashfs -f -d "$outdir/$arch" "$isodir/arch/$arch/root-image.fs.sfs"
+
+    mount "$outdir/$arch/root-image.fs" "$rootdir/$arch"
+    defer "info 'unmounting $rootdir/$arch';umount $rootdir/$arch"
+
+    info "Starting of the rootdir verkrepelung"
+    # do the magic here
+    arch-chroot $rootdir/$arch <<EOF
+    uname -a
+EOF
+    info "creating squashfs at $isodir/arch/$arch/root-image.fs.sfs"
+    mksquashfs  "$outdir/$arch/root-image.fs" "$isodir/arch/$arch/root-image.fs.sfs" -noappend
+done
+
+info "creating Iso Image"
+genisoimage -l -r -J -V "ARCH_$(date +%Y%m)" \
+    -b isolinux/isolinux.bin -no-emul-boot \
+    -boot-load-size 4 -boot-info-table -c isolinux/boot.cat \
+    -o "$outdir/$outfile" "$isodir" | to_dots
+
