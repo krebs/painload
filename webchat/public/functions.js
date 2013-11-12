@@ -3,24 +3,10 @@ function inputParser (str) {
   if (match) {
     return { method: match[1], params: match[2] }
   } else {
-    return { method: 'say', params: str }
+    return { method: 'msg', params: str }
   }
 }
 
-
-function methodDispatcher (settings, object) {
-    console.log('parser: ',object)
-    return (handler[object.method] || console.log)(settings, object.params)
-};
-
-function resultDispatcher (settings, object) {
-    console.log('parser: ',object)
-    var callback = settings.waiting_callbacks[object.id]
-    delete settings.waiting_callbacks[object.id]
-    if (typeof callback === 'function') {
-      callback(object.error, object.result)
-    }
-};
 
 
 function replaceURLWithHTMLLinks (text) {
@@ -37,9 +23,9 @@ function setMaybeNick (input) {
 function sortNicklist () {
 };
 
-function getNicklistElement(name) { 
+function getNicklistElement(name, type) { 
   var el;
-  $('.name').each(function (i,e) {
+  $('.'+type+'_name').each(function (i,e) {
     if (e.innerHTML === name) {
       if (typeof el !== 'undefined') {
         throw new Error('duplicate name: ' + name);

@@ -23,44 +23,43 @@ function request (settings, method, params, callback) {
 
 $(function connect() {
   settings.sock = new SockJS('/echo');
-
-  settings.sock.onopen = function() {
-    console.log('open');
-    request(settings, 'coi', {}, function (error, result) {
-      if (error) {
-        console.log('coi error', error)
-      } else {
-        settings.nick = result.nick //TODO: write to display
-        settings.addr = result.addr //TODO: write to display
-      }
-    })
-  };
-  settings.sock.onmessage = function(e) {
-    console.log('message', e.data);
-    try {
-      var object = JSON.parse(e.data);
-      console.log(object);
-
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-    if (typeof object.method === 'string') {
-      return methodDispatcher(settings, object);
-    } else if (typeof object.result === 'string') {
-      return resultDispatcher(settings, object);
-    } else {
-      console.log('bad message:', object)
-    }
-  }
-  settings.sock.onclose = function(event) {
-    console.log('close');
-    switch (event.code) {
-      case 1006: //abnormal closure
-        return setTimeout(connect, 1000);
-    };
-  };
-
+  var transport = make_sockjs_client_transport(settings.sock)
+  var rpc = new RPC(transport)
+  rpc.register('msg', {type: 'string', nick: 'string', msg: 'string'}, function(params, callback) {
+    var safe_message = $('<div/>').text(params.msg).html();
+    safe_message = replaceURLWithHTMLLinks(safe_message);
+    var safe_from = $('<div/>').text(params.nick).html();
+    chatboxAppend(safe_from, safe_message, 'web_msg')
+    return callback(null)
+  })
+  rpc.register('nick', {type: 'string', newnick: 'string', oldnick: 'string'}, function(params, callback) {
+    var safe_oldnick = $('<div/>').text(params.oldnick).html();
+    var safe_newnick = $('<div/>').text(params.newnick).html();
+    var safe_type = $('<div/>').text(params.type).html();
+    $(getNicklistElement(safe_oldnick,safe_type)).remove();
+    $('#nicklist').append('<div class="'+safe_type+'_name">' + safe_newnick + '</div>') ;
+    chatboxAppend(safe_oldnick, 'is now known as ' + safe_newnick, 'nick');
+    return callback(null)
+  })
+  rpc.register('your_nick', {nick: 'string'}, function(params, callback) {
+    var safe_nick = $('<div/>').text(params.nick).html();
+    settings.nick = safe_nick
+    return callback(null)
+  })
+  rpc.register('join', {type: 'string', nick: 'string'}, function(params, callback) {
+    var safe_nick = $('<div/>').text(params.nick).html();
+    var safe_type = $('<div/>').text(params.type).html();
+    $('#nicklist').append('<div class="'+safe_type+'_name">' + safe_nick + '</div>') ;
+    chatboxAppend(safe_nick, 'has joined');
+    return callback(null)
+  })
+  rpc.register('part', {type: 'string', nick: 'string'}, function(params, callback) {
+    var safe_nick = $('<div/>').text(params.nick).html();
+    var safe_type = $('<div/>').text(params.type).html();
+    $(getNicklistElement(safe_nick,safe_type)).remove();
+    chatboxAppend(safe_nick, 'has parted');
+    return callback(null)
+  })
 });
 $(function() {
   $('#input').keydown(function(e) {

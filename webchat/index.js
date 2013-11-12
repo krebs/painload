@@ -4,34 +4,15 @@ var http = require('https');
 var sockjs = require('sockjs');
 var connect = require('connect');
 var irc = require('irc');
-var serverCommands = require('./serverCommands.js');
-
-var serverstate = {
-  connected: false,
-  nicks: [],
-  lastping: 0,
-}; 
+var make_sockjs_server_connection_transport = require('./sockjs_server_connection_transport.js')
+var RPC = require('./public/rpc.js');
 
 var clients = [];
 
-clients.notifyAll = function (method, params) {
-  var object = {
-    method: method,
-    params: params,
-  }
-  clients.forEach(function (client) {
-    client.conn.write(JSON.stringify(object));
-  });
-}
-
-serverstate.clients = clients;
-
 var irc_reconnect = function() { //reconnt to irc
-  serverstate.connected = false
   console.log("reconnecting due to pingtimeout")
   irc_client.disconnect()
   irc_client.connect()
-  serverstate.connected = true
 }
 
 var pingTimeoutDelay = 3*60*1000
@@ -52,7 +33,6 @@ var irc_client = new irc.Client('irc.freenode.net', 'kweb', { //create irc_clien
   autoConnect: true,
   stripColors: true
 });
-serverstate.irc_client = irc_client;
 
 irc_client.on('ping', function(server) { //restart timer on server ping
   console.log("got ping from server, renewing timeout for automatic reconnect");
@@ -62,25 +42,32 @@ irc_client.on('ping', function(server) { //restart timer on server ping
 
 irc_client.on('message#krebs', function(from, message) {
   console.log({ from: from, message: message });
-  clients.notifyAll('message', { nick: from, msg: message });
+  clients.map(pluck('rpc')).forEach(function (rpc) {
+    rpc.send('msg', {nick: from, msg: message})
+  })
   clearTimeout(lastping);
 });
 
 irc_client.on('names#krebs', function(nicks) {
-  clients.notifyAll('nicklist', { nicklist: nicks })
-  serverstate.connected = true
-  serverstate.irc_nicklist = nicks
+  clients.map(pluck('rpc')).forEach(function (rpc) {
+    Object.keys(nicks).forEach(function (nick) {
+      rpc.send('join', {type: 'irc', nick: nick})
+    })
+  })
 });
 
 irc_client.on('join#krebs', function(nick, msg) {
   if (nick !== 'kweb'){
-    clients.notifyAll('join', { from: nick })
+    clients.map(pluck('rpc')).forEach(function (rpc) {
+      rpc.send('join', {type: 'irc', nick: nick})
+    })
   }
-});
+})
 
 irc_client.on('part#krebs', function(nick, rs, msg) {
-  clients.notifyAll('quit', { from: nick })
-//  clients.broadcast({method: 'quit', params: { from: nick }});
+  clients.map(pluck('rpc')).forEach(function (rpc) {
+    rpc.send('part', {type: 'irc', nick: nick})
+  })
 });
 
 irc_client.on('error', function (error) {
@@ -93,40 +80,57 @@ var web_serv_options = { //certificates for https
 };
 
 var echo = sockjs.createServer();
-echo.on('connection', function(conn) {
-  var origin = conn.remoteAddress;
-  var settings = {
-    conn: conn,
-    addr: conn.remoteAddress,
-    nick: conn.remoteAddress
-  }
-  clients.push(settings);
-  clients.notifyAll('join', { from: settings.nick })
-//  irc_client.say("#krebs", origin + ' has joined');
-  if (typeof irc_client.chans['#krebs'] === 'object') {
-    conn.write(JSON.stringify({method: 'nicklist', params: { nicklist: irc_client.chans['#krebs'].users }})); //send current nicklist
-  };
-  conn.write(JSON.stringify({method: 'message', params: { nick: 'system', msg: 'hello' }})) //welcome message
-  console.log(irc_client.chans['#krebs'])
-  conn.on('data', function(data) {
-    console.log('data:',data);
-    try {
-      var command = JSON.parse(data);
-    } catch (error) {
-      console.log(error);
-    }
-    if (!command || typeof command !== 'object') {
-      command = {}
-    }
-    return (serverCommands[command.method] || serverCommands.badcommand)(serverstate, settings, command.params, command.id)
-  });
-  conn.on('close', function() { //propagate if client quits the page
-  clients.splice(clients.indexOf(conn));
-  clients.notifyAll('quit', { from: settings.nick }) 
-//  irc_client.say("#krebs", origin + ' has quit');
-});
-});
 
+function pluck (key) {
+  return function (object) {
+    return object[key]
+  }
+}
+var total_clients_ever_connected = 0
+
+echo.on('connection', function (connection) {
+  var client = {}
+  client.rpc = new RPC(make_sockjs_server_connection_transport(connection))
+  client.nick = 'anon'+(++total_clients_ever_connected)
+  client.rpc.send('your_nick', {nick: client.nick}) 
+  client.rpc.register('msg', {msg: 'string'}, function (params, callback) {
+    callback(null)
+    clients.map(pluck('rpc')).forEach(function (rpc) {
+      rpc.send('msg', {type: 'web', nick: client.nick, msg: params.msg})
+    })
+  })
+  client.rpc.register('nick', {nick: 'string'}, function (params, callback) {
+    if (!!~clients.map(pluck('nick')).indexOf(params.nick)) {
+      callback('name already taken')
+    } else if (/^anon[0-9]+$/.test(params.nick)) {
+      callback('bad nick')
+    } else {
+      var oldnick = client.nick
+      client.nick = params.nick
+      callback(null)
+      clients.map(pluck('rpc')).forEach(function (rpc) {
+        rpc.send('nick', {type: 'web', newnick: client.nick, oldnick: oldnick})
+      })
+    }
+  })
+  connection.on('close', function() { //propagate if client quits the page
+    clients.splice(clients.indexOf(client));
+    clients.map(pluck('rpc')).forEach(function (rpc) {
+      rpc.send('part', {type: 'web', nick: client.nick})
+    })
+  })
+  //send nicklist to newly joined client
+  clients.map(pluck('nick')).forEach(function (nick) {
+    client.rpc.send('join', {type: 'web', nick: nick}) 
+  })
+  //add new client to list
+  clients.push(client)
+  //send all including the new client the join
+  clients.map(pluck('rpc')).forEach(function (rpc) {
+    rpc.send('join', {type: 'web', nick: client.nick})
+  })
+
+})
 
 var app = connect()
   .use(connect.logger('dev'))
@@ -139,7 +143,8 @@ var app = connect()
     page_template+='<script src="jquery-2.0.3.min.js"></script>\n';
     page_template+='<script src="commands.js"></script>\n';
     page_template+='<script src="functions.js"></script>\n';
-    page_template+='<script src="handler.js"></script>\n';
+    page_template+='<script src="sockjs_client_transport.js"></script>\n';
+    page_template+='<script src="rpc.js"></script>\n';
     page_template+='<script src="client.js"></script>\n';
     page_template+='<div id="bg">';
     page_template+='<div id="chatter">';

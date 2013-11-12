@@ -1,0 +1,62 @@
+server -> client:
+#old
+type:    'message' | 'join' | 'quit' | 'nicklist' | 'nickchange' | 'usererror'
+nick:    the clients nickname ('message','nickchange')
+newnick: new nick after nickchange ('nickchange')
+from:    the clients ip ('message','quit','join')
+message: the data send ('message', 'nicklist','usererror'
+
+
+#new
+type:    'irc_msg' | 'irc_join' | 'irc_quit' | 'irc_nickchange' | 'irc_client_connect' | 'irc_client_disconnect' | 'web_welcome' |'web_msg' | 'web_join' | 'web_quit' | 'web_nickchange' | 'usererror'
+params:{ nick:, oldnick:, nicklist:, msg:, errormsg: }
+
+'irc_msg': nick, msg
+'irc_join': nick
+'irc_quit': nick
+'irc_nickchange': oldnick, nick
+'kweb_irc_connect': nicklist
+'kweb_irc_disconnect': --
+'web_welcome': msg, nicklist, nick
+'web_msg': nick, msg
+'web_join': nick
+'web_quit': nick
+'web_nickchange': oldnick, nick
+'usererror': msg
+
+
+client -> server
+#old
+method: 'say', 'nick'
+params:{ msg:, nick: }
+
+'say': msg
+'nick': nick
+
+
+##############JSON RPC################
+server->client:
+{method: 'say', params: {msg: msg}, id: id}
+-> {result: {ok: ok}, error {error muted?}, id: id}
+
+{method: 'nick', params: {nick: nick}, id: id}
+-> {result: {nick: nick}, error: {error name taken?/reserved/not allowed}, id: id}
+
+
+client->server:
+broadcast:
+  {method: 'irc_msg', params: {nick: nick, msg: msg}, id: 0} #notification
+  {method: 'irc_join', params: {nick: nick}, id: 0} #notification
+  {method: 'irc_quit', params: {nick: nick}, id: 0} #notification
+  {method: 'irc_nickchange', params: {nick: nick, oldnick: oldnick}, id: 0} #notification
+  {method: 'kweb_irc_connect', params: {nicklist: nicklist}, id: 0} #notification
+  {method: 'kweb_irc_disconnect', params: {}, id: 0} #notification
+  {method: 'web_msg', params: {nick: nick, msg: msg}, id: 0} #notification
+  {method: 'web_join', params: {nick: nick}, id: 0} #notification
+  {method: 'web_quit', params: {nick: nick}, id: 0} #notification
+  {method: 'web_nickchange', params: {nick: nick, oldnick: oldnick}, id: 0} #notification
+
+unicast:
+  {method: 'coi', params: {}, id: id}
+  -> {result: {result: {nick: nick, addr: addr}, error: {connection error?}, id: id}
+  {method: 'usererror', params: {msg: 'error type'}, id: 0} #notification

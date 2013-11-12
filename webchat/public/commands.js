@@ -1,14 +1,15 @@
 var commands = {}
 
-commands.say = function (settings, params) {
+commands.msg = function (settings, params) {
   var sendObj = {
-    method: 'say',
-    params: { msg: params },
-  };
+    method: 'msg',
+    params: { msg: params }
+  }
   settings.sock.send(JSON.stringify(sendObj))
 }
 
 commands.nick = function (settings, params) {
+  settings.nick = params
   var sendObj = {
     method: 'nick',
     params: { nick: params },
@@ -17,7 +18,7 @@ commands.nick = function (settings, params) {
 }
 
 commands.badcommand = function (settings, params) {
-  console.log("error");
+  console.log("error", params);
   chatboxAppend( '<span class="from_system">error</span>', 'command not found' )
 
   
