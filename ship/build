@@ -20,14 +20,24 @@ build() {
   esac
 }
 
-## usage: #@include \([0-9A-Za-z]\+\) -> build_include \1 \2
-build_include() { cat<<EOF
+###
+### macros
+###
+
+## usage: #@include \([0-9A-Za-z_]\+\) -> build_include \1 \2
+build_include() {
+  if buildcache_has "#@include:$2"; then
+    printf '%da\\\n##include %s: already done\n' $1 $2
+  else
+    buildcache_add "#@include:$2"
+    cat<<EOF
 $1a\\
 # begin $2
 $1r$(build_resolve $2)
 $1a\\
 # end $2
 EOF
+  fi
 }
 
 ## usage: #@info -> build_info \1
@@ -38,6 +48,10 @@ $1a\\
 #   version: $(git rev-parse HEAD)
 EOF
 }
+
+###
+### main subroutines
+###
 
 ## usage: build_compile SRCFILE DSTFILE
 build_compile() {
@@ -57,11 +71,15 @@ t;s:^ *\\([0-9]\\+\\) .*:echo \\1p:
 
   SRCFILE="$1" setf src '$(cat "$%s")' SRCFILE
 
+  buildcache_initialize "$2"
+
   while echo "$src" | grep -q "$unexpanded_macros_pattern"; do
     setf sedgen '$(echo "$%s" | nl -b a -s \  | sed "$%s")' src input_parser
     setf sedscript '$(eval "$%s")' sedgen
     setf src '$(echo "$%s" | sed -n "$%s")' src sedscript
   done
+
+  buildcache_finalize
 
   echo "$src" > "$2"
   chmod +x "$2"
@@ -84,6 +102,10 @@ build_deps() {
     fi
   done | sort | uniq
 }
+
+###
+### misc utilities
+###
 
 ## usage: build_resolve LIBNAME
 build_resolve() {
@@ -115,11 +137,48 @@ setf() {
 
   eval "$1=$value_script"
 
-  if test "${debug-false}" = true; then
+  if is_debug_mode; then
     eval 'echo "[35m$1=\"$value_script\"[m"'
     eval 'echo "'"\$$1"'"' | nl -b a
   fi >&2
 }
 
-## main
+## usage: is_debug_mode
+is_debug_mode() {
+  test "${debug-false}" = true
+}
+
+###
+### buildcache utilities
+###
+
+## usage: buildcache_initialize DESTFILE
+buildcache_initialize() {
+  buildcache="$1.buildcache"
+  cat /dev/null > "$buildcache"
+}
+
+## usage: buildcache_finalize
+buildcache_finalize() {
+  if is_debug_mode; then
+    rm "$buildcache"
+  fi
+}
+
+## usage: buildcache_has BRE
+# Check if buildcache contains a line matching BRE.
+buildcache_has() {
+  grep -q "^$1\$" "$buildcache"
+}
+
+## usage: buildcache_add LINE
+# Add LINE to buildcache.
+buildcache_add() {
+  echo "$1" >> "$buildcache"
+}
+
+###
+### main invocation
+###
+
 build "$@"
