@@ -1,34 +1,50 @@
-function replaceURLWithHTMLLinks (text) {
-  var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-  return text.replace(exp,"<a href='$1'>$1</a>");
-}
-function setMaybeNick (input) {
-  var match = /^\/nick\s+(.+)$/.exec(input);
-  if (match) {
-    nick = match[1];
-    $('#nick').html(nick);
-  }
-}
+var settings = {}
+settings.sock = new SockJS('/echo');
+settings.waiting_callbacks = {}
 
-function getCurTime () {
-  date = new Date;
-  h = date.getHours();
-  if(h<10)
-  {
-    h = "0"+h;
+var transport = make_sockjs_client_transport(settings.sock)
+settings.rpc = new RPC(transport)
+
+settings.rpc.register('msg', {type: 'string', nick: 'string', msg: 'string'}, function(params, callback) {
+  var safe_message = $('<div/>').text(params.msg).html();
+  safe_message = replaceURLWithHTMLLinks(safe_message);
+  var safe_from = $('<div/>').text(params.nick).html();
+  chatboxAppend(safe_from, safe_message, 'web_msg')
+  return callback(null)
+})
+settings.rpc.register('nick', {type: 'string', newnick: 'string', oldnick: 'string'}, function(params, callback) {
+  var safe_oldnick = $('<div/>').text(params.oldnick).html();
+  var safe_newnick = $('<div/>').text(params.newnick).html();
+  var safe_type = $('<div/>').text(params.type).html();
+  if (safe_oldnick === settings.nick){
+    settings.nick = safe_newnick
+    $('#nick').html(settings.nick)
   }
-  m = date.getMinutes();
-  if(m<10)
-  {
-    m = "0"+m;
-  }
-  s = date.getSeconds();
-  if(s<10)
-  {
-    s = "0"+s;
-  }
-  return ''+h+':'+m+':'+s;
-};
+  $(getNicklistElement(safe_oldnick,safe_type)).remove();
+  $('#nicklist').append('<div class="'+safe_type+'_name">' + safe_newnick + '</div>') ;
+  chatboxAppend(safe_oldnick, 'is now known as ' + safe_newnick, 'nick');
+  return callback(null)
+})
+settings.rpc.register('your_nick', {nick: 'string'}, function(params, callback) {
+  var safe_nick = $('<div/>').text(params.nick).html();
+  settings.nick = safe_nick
+  $('#nick').html(settings.nick)
+  return callback(null)
+})
+settings.rpc.register('join', {type: 'string', nick: 'string'}, function(params, callback) {
+  var safe_nick = $('<div/>').text(params.nick).html();
+  var safe_type = $('<div/>').text(params.type).html();
+  $('#nicklist').append('<div class="'+safe_type+'_name">' + safe_nick + '</div>') ;
+  chatboxAppend(safe_nick, 'has joined');
+  return callback(null)
+})
+settings.rpc.register('part', {type: 'string', nick: 'string'}, function(params, callback) {
+  var safe_nick = $('<div/>').text(params.nick).html();
+  var safe_type = $('<div/>').text(params.type).html();
+  $(getNicklistElement(safe_nick,safe_type)).remove();
+  chatboxAppend(safe_nick, 'has parted');
+  return callback(null)
+})
 
 $(function updateTime () {
   $('#time').html(getCurTime());
@@ -36,59 +52,18 @@ $(function updateTime () {
   return true;
 });
 
-var nick;
 
-$(function connect() {
-  sock = new SockJS('/echo');
-
-  sock.onopen = function() {
-    console.log('open');
-    sock.send('open');
-  };
-  sock.onmessage = function(e) {
-    console.log('message', e.data);
-    try {
-      var object = JSON.parse(e.data);
-      console.log(object.message);
-      var safe_message = $('<div/>').text(object.message).html();
-      safe_message = replaceURLWithHTMLLinks(safe_message);
-      var safe_from = $('<div/>').text(object.from).html();
-      $('<tr><td class="chat_date">'+getCurTime()+'</td><td class="chat_from">'+safe_from+'</td><td class="chat_msg">'+safe_message+'</td></tr>').insertBefore('#foot');
-
-      var elem = document.getElementById('chatter');
-      elem.scrollTop = elem.scrollHeight;
-
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  sock.onclose = function(event) {
-    console.log('close');
-    switch (event.code) {
-      case 1006: //abnormal closure
-        return setTimeout(connect, 1000);
-    };
-  };
-
-});
 $(function() {
   $('#input').keydown(function(e) {
     if (e.keyCode === 13) {
       e.preventDefault();
       e.stopPropagation();
       e.stopImmediatePropagation();
-      setMaybeNick($('#input').val());
-      var sendObj = {
-        message: $('#input').val(),
-      };
+      var input = ($('#input').val());
+      $('#input').val('')
 
-      if (typeof nick === 'string') {
-        sendObj.nick = nick;
-      };
-
-      sock.send(JSON.stringify(sendObj));
-      $('#input').val('');
-      return;
+      var command = inputParser(input)
+      return (commands[command.method] || commands.badcommand)(settings, command.params)
     }
   });
 
