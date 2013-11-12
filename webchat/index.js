@@ -7,7 +7,18 @@ var irc = require('irc');
 var make_sockjs_server_connection_transport = require('./sockjs_server_connection_transport.js')
 var RPC = require('./public/rpc.js');
 
+function pluck (key) {
+  return function (object) {
+    return object[key]
+  }
+}
+
 var clients = [];
+clients.broadcast = function (method, params) {
+  clients.map(pluck('rpc')).forEach(function (rpc) {
+    rpc.send(method, params)
+  })
+}
 
 var irc_reconnect = function() { //reconnt to irc
   console.log("reconnecting due to pingtimeout")
@@ -42,50 +53,32 @@ irc_client.on('ping', function(server) { //restart timer on server ping
 
 irc_client.on('message#krebs', function(from, message) {
   console.log({ from: from, message: message });
-  clients.map(pluck('rpc')).forEach(function (rpc) {
-    rpc.send('msg', {nick: from, msg: message})
-  })
+  clients.broadcast('msg', {nick: from, msg: message})
   clearTimeout(lastping);
 });
 
 irc_client.on('names#krebs', function(nicks) {
-  clients.map(pluck('rpc')).forEach(function (rpc) {
-    Object.keys(nicks).forEach(function (nick) {
-      rpc.send('join', {type: 'irc', nick: nick})
-    })
+  Object.keys(nicks).forEach(function (nick) {
+    clients.broadcast('join', {type: 'irc', nick: nick})
   })
-});
+})
 
 irc_client.on('join#krebs', function(nick, msg) {
   if (nick !== 'kweb'){
-    clients.map(pluck('rpc')).forEach(function (rpc) {
-      rpc.send('join', {type: 'irc', nick: nick})
-    })
+    clients.broadcast('join', {type: 'irc', nick: nick})
   }
 })
 
 irc_client.on('part#krebs', function(nick, rs, msg) {
-  clients.map(pluck('rpc')).forEach(function (rpc) {
-    rpc.send('part', {type: 'irc', nick: nick})
-  })
+  clients.broadcast('quit', {type: 'irc', nick: nick})
 });
 
 irc_client.on('error', function (error) {
   console.log('irc-client error', error)
 })
 
-var web_serv_options = { //certificates for https
-  key: fs.readFileSync(__dirname+'/local_config/server_npw.key'),
-  cert: fs.readFileSync(__dirname+'/local_config/server.crt'),
-};
-
 var echo = sockjs.createServer();
 
-function pluck (key) {
-  return function (object) {
-    return object[key]
-  }
-}
 var total_clients_ever_connected = 0
 
 echo.on('connection', function (connection) {
@@ -95,9 +88,7 @@ echo.on('connection', function (connection) {
   client.rpc.send('your_nick', {nick: client.nick}) 
   client.rpc.register('msg', {msg: 'string'}, function (params, callback) {
     callback(null)
-    clients.map(pluck('rpc')).forEach(function (rpc) {
-      rpc.send('msg', {type: 'web', nick: client.nick, msg: params.msg})
-    })
+    clients.broadcast('msg', {type: 'web', nick: client.nick, msg: params.msg})
   })
   client.rpc.register('nick', {nick: 'string'}, function (params, callback) {
     if (!!~clients.map(pluck('nick')).indexOf(params.nick)) {
@@ -108,16 +99,12 @@ echo.on('connection', function (connection) {
       var oldnick = client.nick
       client.nick = params.nick
       callback(null)
-      clients.map(pluck('rpc')).forEach(function (rpc) {
-        rpc.send('nick', {type: 'web', newnick: client.nick, oldnick: oldnick})
-      })
+      clients.broadcast('nick', {type: 'web', newnick: client.nick, oldnick: oldnick})
     }
   })
   connection.on('close', function() { //propagate if client quits the page
     clients.splice(clients.indexOf(client));
-    clients.map(pluck('rpc')).forEach(function (rpc) {
-      rpc.send('part', {type: 'web', nick: client.nick})
-    })
+    clients.broadcast('part', {type: 'web', nick: client.nick})
   })
   //send nicklist to newly joined client
   clients.map(pluck('nick')).forEach(function (nick) {
@@ -126,10 +113,7 @@ echo.on('connection', function (connection) {
   //add new client to list
   clients.push(client)
   //send all including the new client the join
-  clients.map(pluck('rpc')).forEach(function (rpc) {
-    rpc.send('join', {type: 'web', nick: client.nick})
-  })
-
+  clients.broadcast('join', {type: 'web', nick: client.nick})
 })
 
 var app = connect()
@@ -161,6 +145,11 @@ var app = connect()
     res.end(page_template);
 
   })
+
+var web_serv_options = { //certificates for https
+  key: fs.readFileSync(__dirname+'/local_config/server_npw.key'),
+  cert: fs.readFileSync(__dirname+'/local_config/server.crt'),
+};
 var server = http.createServer(web_serv_options, app);
 echo.installHandlers(server, {prefix:'/echo'});
 server.listen(1337, '0.0.0.0');

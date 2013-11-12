@@ -9,7 +9,6 @@ commands.msg = function (settings, params) {
 }
 
 commands.nick = function (settings, params) {
-  settings.nick = params
   var sendObj = {
     method: 'nick',
     params: { nick: params },

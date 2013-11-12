@@ -23,6 +23,10 @@ $(function connect() {
     var safe_oldnick = $('<div/>').text(params.oldnick).html();
     var safe_newnick = $('<div/>').text(params.newnick).html();
     var safe_type = $('<div/>').text(params.type).html();
+    if (safe_oldnick === settings.nick){
+      settings.nick = safe_newnick
+      $('#nick').html(settings.nick)
+    }
     $(getNicklistElement(safe_oldnick,safe_type)).remove();
     $('#nicklist').append('<div class="'+safe_type+'_name">' + safe_newnick + '</div>') ;
     chatboxAppend(safe_oldnick, 'is now known as ' + safe_newnick, 'nick');
@@ -31,6 +35,7 @@ $(function connect() {
   rpc.register('your_nick', {nick: 'string'}, function(params, callback) {
     var safe_nick = $('<div/>').text(params.nick).html();
     settings.nick = safe_nick
+    $('#nick').html(settings.nick)
     return callback(null)
   })
   rpc.register('join', {type: 'string', nick: 'string'}, function(params, callback) {
