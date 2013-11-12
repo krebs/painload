@@ -137,10 +137,15 @@ setf() {
 
   eval "$1=$value_script"
 
-  if test "${debug-false}" = true; then
+  if is_debug_mode; then
     eval 'echo "[35m$1=\"$value_script\"[m"'
     eval 'echo "'"\$$1"'"' | nl -b a
   fi >&2
+}
+
+## usage: is_debug_mode
+is_debug_mode() {
+  test "${debug-false}" = true
 }
 
 ###
@@ -155,7 +160,7 @@ buildcache_initialize() {
 
 ## usage: buildcache_finalize
 buildcache_finalize() {
-  if test "${debug-false}" != true; then
+  if is_debug_mode; then
     rm "$buildcache"
   fi
 }
