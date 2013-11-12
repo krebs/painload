@@ -1,3 +1,11 @@
+function inputParser (str) {
+  var match = /^\/([a-z]+)(?:\s+(.*\S))?\s*$/.exec(str)
+  if (match) {
+    return { method: match[1], params: match[2] }
+  } else {
+    return { method: 'msg', params: str }
+  }
+}
 
 function replaceURLWithHTMLLinks (text) {
   var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;

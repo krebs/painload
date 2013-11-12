@@ -6,6 +6,7 @@ var connect = require('connect');
 var irc = require('irc');
 var make_sockjs_server_connection_transport = require('./sockjs_server_connection_transport.js')
 var RPC = require('./public/rpc.js');
+var irc_nicks = []
 
 function pluck (key) {
   return function (object) {
@@ -21,9 +22,9 @@ clients.broadcast = function (method, params) {
 }
 
 var irc_reconnect = function() { //reconnt to irc
-  console.log("reconnecting due to pingtimeout")
-  irc_client.disconnect()
-  irc_client.connect()
+  console.log("would reconnect now")
+//  irc_client.disconnect()
+//  irc_client.connect()
 }
 
 var pingTimeoutDelay = 3*60*1000
@@ -59,21 +60,27 @@ irc_client.on('message#krebs', function(from, message) {
 
 irc_client.on('names#krebs', function(nicks) {
   Object.keys(nicks).forEach(function (nick) {
+  irc_nicks.push(nick)
     clients.broadcast('join', {type: 'irc', nick: nick})
   })
 })
 
 irc_client.on('join#krebs', function(nick, msg) {
   if (nick !== 'kweb'){
+    irc_nicks.push(nick)
     clients.broadcast('join', {type: 'irc', nick: nick})
   }
 })
 
 irc_client.on('part#krebs', function(nick, rs, msg) {
-  clients.broadcast('quit', {type: 'irc', nick: nick})
+  clients.broadcast('part', {type: 'irc', nick: nick})
 });
 
 irc_client.on('error', function (error) {
+  irc_nicks.forEach( function(nick) {
+    client.rpc.send('part', {type: 'irc', nick: nick})
+    irc_nicks.splice(irc_nicks.indexOf(nick))
+  })
   console.log('irc-client error', error)
 })
 
@@ -89,6 +96,7 @@ echo.on('connection', function (connection) {
   client.rpc.register('msg', {msg: 'string'}, function (params, callback) {
     callback(null)
     clients.broadcast('msg', {type: 'web', nick: client.nick, msg: params.msg})
+    irc_client.say('#krebs', client.nick + ' → ' + params.msg)
   })
   client.rpc.register('nick', {nick: 'string'}, function (params, callback) {
     if (!!~clients.map(pluck('nick')).indexOf(params.nick)) {
@@ -100,11 +108,17 @@ echo.on('connection', function (connection) {
       client.nick = params.nick
       callback(null)
       clients.broadcast('nick', {type: 'web', newnick: client.nick, oldnick: oldnick})
+      irc_client.say('#krebs', oldnick + ' is now known as ' + client.nick)
     }
   })
   connection.on('close', function() { //propagate if client quits the page
     clients.splice(clients.indexOf(client));
     clients.broadcast('part', {type: 'web', nick: client.nick})
+    irc_client.say('#krebs', client.nick + ' has parted')
+  })
+  //send the irc nicklist to the new joined client
+  irc_nicks.forEach( function(nick) {
+    client.rpc.send('join', {type: 'irc', nick: nick})
   })
   //send nicklist to newly joined client
   clients.map(pluck('nick')).forEach(function (nick) {
@@ -114,6 +128,8 @@ echo.on('connection', function (connection) {
   clients.push(client)
   //send all including the new client the join
   clients.broadcast('join', {type: 'web', nick: client.nick})
+  //send join to irc
+  irc_client.say('#krebs', client.nick + ' has joined')
 })
 
 var app = connect()
