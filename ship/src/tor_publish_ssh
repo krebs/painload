@@ -2,24 +2,13 @@
 #@include core
 #@include network
 #@include punani
-# can be set via env:
-# torrc              - path to torrc (default: /etc/tor/torrc )
-# hidden_service_dir - path to hidden service (default: /var/lib/tor/hidden_service/ )
+#@include tor
 
-torrc=${torrc:-/etc/tor/torrc}
-hidden_service_dir=${hidden_service_dir:-/var/lib/tor/hidden_service/}
+
 
 punani install tor
 
 test -w "$torrc" || ( error "$torrc is not writable!"; exit 1 ) || exit 1
-if ! grep -q '^HiddenService' "$torrc"  ;then
-    info "adding hidden service to $torrc"
-    cat >> "$torrc" << EOF
-HiddenServiceDir ${hidden_service_dir}
-HiddenServicePort 22 127.0.0.1:22
-EOF
-else
-    info "HiddenServiceDir or Port already in $torrc, skipping!"
-fi
 
+configure_hidden_service
 cat $hidden_service_dir/hostname | send_irc
