@@ -10,7 +10,7 @@ is_root(){
 esudo(){
   # becomes root with sudo powers
   # unless nosudo env is set
-  if test "${nosudo-false}" != true || is_root; then
+  if test "${nosudo-false}" != true && ! is_root; then
     echo "we're going sudo..." >&2
     exec sudo -E "$0" "$@"
     exit 23 # go to hell
