@@ -24,7 +24,7 @@ build() {
 ### macros
 ###
 
-## usage: #@include \([0-9A-Za-z]\+\) -> build_include \1 \2
+## usage: #@include \([0-9A-Za-z_]\+\) -> build_include \1 \2
 build_include() {
   if buildcache_has "#@include:$2"; then
     printf '%da\\\n##include %s: already done\n' $1 $2
