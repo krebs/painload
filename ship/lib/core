@@ -8,7 +8,7 @@ is_root(){
   test $(id -u) -eq 0
 } 
 
-trap_add(){
+defer(){
   #close enough
   trapstr="$1;${trapstr:-exit}"
   trap "$trapstr" INT TERM EXIT KILL
