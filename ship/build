@@ -168,7 +168,7 @@ buildcache_finalize() {
 ## usage: buildcache_has BRE
 # Check if buildcache contains a line matching BRE.
 buildcache_has() {
-  grep -q "^$1" "$buildcache"
+  grep -q "^$1\$" "$buildcache"
 }
 
 ## usage: buildcache_add LINE
