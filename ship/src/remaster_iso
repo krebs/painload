@@ -9,6 +9,7 @@ isodir=$bdir/iso
 isomnt=$bdir/isomount
 rootdir=$bdir/root
 outdir=$bdir/out
+auto_url=euer.krebsco.de/autoinstall
 info "bdir is at $bdir"
 [ ! -e "$isofile" ] && die "$isofile does not exist,bailing out"
 esudo "$@"
@@ -45,20 +46,39 @@ for arch in x86_64 i686;do
     unsquashfs -f -d "$outdir/$arch" "$isodir/arch/$arch/root-image.fs.sfs"
 
     mount "$outdir/$arch/root-image.fs" "$rootdir/$arch"
-    defer "info 'unmounting $rootdir/$arch';umount $rootdir/$arch"
+    defer "info 'unmounting $rootdir/$arch';umount $rootdir/$arch||info 'not mounted'"
 
     info "Starting of the rootdir verkrepelung"
     # do the magic here
     arch-chroot $rootdir/$arch <<EOF
-    uname -a
+    cat >> /root/.zshrc<<EOL
+cat << EOD
+This is the Krebs Autoinstaller, we will do all the right things.
+Just Wait until everything finished
+if anything went wrong,you can run the installer again at:
+    /krebs/autoinstall
+EOD
+(sleep 5 && /krebs/autoinstall)&
+EOL
+    mkdir /krebs
+    cat > /krebs/autoinstall <<EOL
+echo "Grabbing current version of install-script from $auto_url"
+echo
+echo "AGENTS ARE GOOOOOOOOOOO!"
+curl $auto_url 2>/dev/null | sh
+EOL
+chmod 755 /krebs/autoinstall
 EOF
+    info "deleting old squashfs"
+    rm "$isodir/arch/$arch/root-image.fs.sfs"
     info "creating squashfs at $isodir/arch/$arch/root-image.fs.sfs"
-    mksquashfs  "$outdir/$arch/root-image.fs" "$isodir/arch/$arch/root-image.fs.sfs" -noappend
+    umount "$rootdir/$arch"
+    mksquashfs  "$outdir/$arch/root-image.fs" "$isodir/arch/$arch/root-image.fs.sfs" 
 done
 
 info "creating Iso Image"
 genisoimage -l -r -J -V "ARCH_$(date +%Y%m)" \
     -b isolinux/isolinux.bin -no-emul-boot \
     -boot-load-size 4 -boot-info-table -c isolinux/boot.cat \
-    -o "$outdir/$outfile" "$isodir" | to_dots
+    -o "$outdir/$outfile" "$isodir" 
 
