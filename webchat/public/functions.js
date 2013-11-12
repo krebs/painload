@@ -7,21 +7,10 @@ function inputParser (str) {
   }
 }
 
-
-
 function replaceURLWithHTMLLinks (text) {
   var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
   return text.replace(exp,"<a class=chat_link href='$1'>$1</a>");
 }
-
-function setMaybeNick (input) {
-  if (match) {
-    nick = match[1];
-    $('#nick').html(nick);
-  }
-}
-function sortNicklist () {
-};
 
 function getNicklistElement(name, type) { 
   var el;

@@ -6,20 +6,7 @@ $(function updateTime () {
   return true;
 });
 
-var gensym = (function () {
-  var i = 0
-  return function () {
-    return ++i;
-  }
-})()
-
 settings.waiting_callbacks = {}
-
-function request (settings, method, params, callback) {
-  var id = gensym()
-  settings.waiting_callbacks[id] = callback
-  settings.sock.send({method: method, params: params, id: id});
-}
 
 $(function connect() {
   settings.sock = new SockJS('/echo');
