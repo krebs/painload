@@ -2,9 +2,16 @@
 msg() { printf "$@\n" >&2 ;}
 info()   { msg "** $@" ;}
 error()  { msg "!! $@" ;}
+die()  { error "$@" ;exit 1;}
 exists(){ type "$1" >/dev/null 2>/dev/null; }
 is_root(){
   test $(id -u) -eq 0
+} 
+
+trap_add(){
+  #close enough
+  trapstr="$1;${trapstr:-exit}"
+  trap "$trapstr" INT TERM EXIT KILL
 }
 
 esudo(){
