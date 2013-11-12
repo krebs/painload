@@ -23,5 +23,3 @@ function make_sockjs_client_transport (sock) {
 
   return transport
 }
-
-
