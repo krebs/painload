@@ -46,15 +46,16 @@ which_telnet(){
   #     netcat
   #     busybox telnet
   if [ -e "${TELNET:-does_not_exist}" ]; then
-    info"Will be using $TELNET as Telnet Client"
+    info "Will be using $TELNET as Telnet Client"
+    echo $TELNET
   elif exists telnet ;then
-    TELNET="$(command -v telnet)"
+    command -v telnet
   elif exists nc ;then
-    TELNET="$(command -v nc)"
+    command -v nc
   elif exists netcat;then
-    echo "$(command -v netcat)"
+    command -v netcat
   elif exists busybox;then
-    echo "$(command -v busybox) telnet"
+    echo  `command -v busybox` telnet
   else
     error "Cannot find telnet binary, please install either telnet-client or busybox or netcat or provided TELNET environment.\nbailing out!" 
     return 1
@@ -64,7 +65,7 @@ which_telnet(){
 run_telnet(){
   host="$1"
   port="$2"
-  $(which_telnet) $host $port
+  $(which_telnet) "$host" "$port"
 }
 
 send_irc(){
