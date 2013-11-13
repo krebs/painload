@@ -54,14 +54,24 @@ for arch in x86_64 i686;do
     cat >> /root/.zshrc<<EOL
 cat << EOD
 This is the Krebs Autoinstaller, we will do all the right things.
-Just Wait until everything finished
-if anything went wrong,you can run the installer again at:
+Just Wait until everything finished.
+
+- Make sure that RJ45 is connected
+- you can bail out of the progress at any time with CTRL-C
+- if anything went wrong,you can run the installer again at:
     /krebs/autoinstall
+
 EOD
-(sleep 5 && /krebs/autoinstall)&
+/krebs/autoinstall
 EOL
     mkdir /krebs
     cat > /krebs/autoinstall <<EOL
+internet() { ping -w 1 google.de >/dev/null 2>&1; }
+while ! internet;do
+  echo "no Internet yet, waiting ..."
+  sleep 3
+done
+
 echo "Grabbing current version of install-script from $auto_url"
 echo
 echo "AGENTS ARE GOOOOOOOOOOO!"
