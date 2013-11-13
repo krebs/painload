@@ -7,7 +7,9 @@ exists(){ type "$1" >/dev/null 2>/dev/null; }
 is_root(){
   test $(id -u) -eq 0
 } 
-
+internet(){
+  ping -w 1 google.de >/dev/null 2>&1
+}
 defer(){
   #close enough
   trapstr="$1;${trapstr:-exit}"
