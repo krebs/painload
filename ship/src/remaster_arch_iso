@@ -1,5 +1,7 @@
 #!/bin/sh
 #@include core
+
+## TODO: provide a parameter which defines what to be done in the new iso root
 set -efu
 isofile=${1:-archlinux-2013.06.01-dual.iso}
 outfile=$(basename ${isofile%.iso}.krebs.iso)
