@@ -2,7 +2,6 @@
 #@include _punani_db
 
 _punani_resolve_package(){
-  : ${PACKER?PACKER is not set,bailing out}
   pkg=${1?please provide package name to resolve}
   eval printf "%s" \"\${_punanidb_${PACKER}_${pkg}-}\" | grep .
 }
