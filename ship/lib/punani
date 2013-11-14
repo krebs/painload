@@ -1,24 +1,49 @@
 #@include core
 #@include _punani_db
 
-## usage: _punani_resolve_package PKGNAME
-_punani_resolve_package(){
-  eval "set -u; echo \"\${_punanidb_${PACKER}_$1}\"" 2>/dev/null
-}
+_punani_usage='punani {install,remove,has} PACKAGE...'
+punani(){
+  __punani_select_packer || die 'no package manager found; no punani for you!'
 
-KNOWN_PACKERS='pacman apt-get yum brew'
-_punani_pacman_install(){ pacman --noconfirm -S --needed "$@" ;}
-_punani_pacman_remove(){ pacman -Rcs "$@" ;}
-_punani_pacman_has(){ pacman -Q "$1" >/dev/null;}
-_punani_aptget_install(){ apt-get -y install "$@" ;}
-_punani_aptget_remove(){ apt-get -y remove "$@" ;}
-_punani_aptget_has() { dpkg -s "$1" | grep -q "Status: install";}
-_punani_yum_install(){ yum -y install "$@" ;}
-_punani_yum_remove(){ yum -y remove "$@" ;}
-_punani_yum_has() { rpm -qa --qf "%{NAME}\n"| egrep  "^${1}\$" >/dev/null ;}
-_punani_brew_install(){ brew install "$@"; }
-_punani_brew_remove(){ brew remove "$@";}
-_punani_brew_has(){ error "not implemented"; return 1 ;}
+  ACTION="$1"; shift
+
+  if test $# = 0; then
+    error 'no PACKAGE specified.'
+    die "usage: $_punani_usage"
+  fi
+
+  for PKG; do
+    RES="`_punani_resolve_package $PKG`" ||
+      die "could not resolve '$PKG'; no punani for you!"
+
+    case "$ACTION" in 
+      install)
+        if _punani_has $RES; then
+          info "$RES already installed, skipping"
+        else
+          _punani_install $RES || error "cannot install $RES with $PACKER"
+        fi
+        ;;
+      remove)
+        if ! _punani_has $RES; then
+          info "$RES not installed, skipping"
+        else
+          _punani_remove $RES || error "cannot install $RES with $PACKER"
+        fi
+        ;;
+      has)
+        if _punani_has $RES; then
+          info "$RES is installed"
+        else
+          info "$RES is not installed"
+        fi
+        ;;
+      *)
+        error "bad action: $ACTION"
+        die "usage: $_punani_usage"
+    esac
+  done
+}
 
 ## usage: _punani_has PACKAGE
 _punani_has() {
@@ -35,48 +60,27 @@ _punani_remove() {
   eval "_punani_${PACKER}_remove \"\$1\""
 }
 
-_punani_usage='punani {install,remove,has} PACKAGE...'
-punani(){
-  for p in ${KNOWN_PACKERS:-null}; do
+## usage: _punani_resolve_package PKGNAME
+_punani_resolve_package(){
+  eval "set -u; echo \"\${_punanidb_${PACKER}_$1}\"" 2>/dev/null
+}
+
+## usage: __punani_select_packer
+__punani_select_packer() {
+  for p in ${__punani_known_packers:-null}; do
     exists $p && info "using $p" && PACKER=`echo $p | tr -d -` && break
-  done || die 'Error 2: no package manager found; no punani for you!'
-
-  ACTION="$1"; shift
-
-  if test $# = 0; then
-    error 'no PACKAGE specified.'
-    die "usage: $_punani_usage"
-  fi
-
-  for PKG; do
-    RES="`_punani_resolve_package $PKG`" ||
-      die "could not resolve '$PKG'; no punani for you!"
-
-    case "$ACTION" in 
-      install)
-          if _punani_has $RES; then
-            info "$RES already installed, skipping"
-          else
-            _punani_install $RES || error "cannot install $RES with $PACKER"
-          fi
-          ;;
-      remove)
-            if ! _punani_has $RES; then
-              info "$RES not installed, skipping"
-            else
-              _punani_remove $RES || error "cannot install $RES with $PACKER"
-            fi
-            ;;
-      has)
-            if _punani_has $RES; then
-              info "$RES is installed"
-            else
-              info "$RES is not installed"
-            fi
-            ;;
-      *)
-        error "bad action: $ACTION"
-        die "usage: $_punani_usage"
-    esac
   done
 }
+__punani_known_packers='pacman apt-get yum brew'
+_punani_pacman_install(){ pacman --noconfirm -S --needed "$@" ;}
+_punani_pacman_remove(){ pacman -Rcs "$@" ;}
+_punani_pacman_has(){ pacman -Q "$1" >/dev/null;}
+_punani_aptget_install(){ apt-get -y install "$@" ;}
+_punani_aptget_remove(){ apt-get -y remove "$@" ;}
+_punani_aptget_has() { dpkg -s "$1" | grep -q "Status: install";}
+_punani_yum_install(){ yum -y install "$@" ;}
+_punani_yum_remove(){ yum -y remove "$@" ;}
+_punani_yum_has() { rpm -qa --qf "%{NAME}\n"| egrep  "^${1}\$" >/dev/null ;}
+_punani_brew_install(){ brew install "$@"; }
+_punani_brew_remove(){ brew remove "$@";}
+_punani_brew_has(){ error "not implemented"; return 1 ;}
