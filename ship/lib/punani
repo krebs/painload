@@ -34,8 +34,9 @@ punani(){
   fi
 
   for PKG; do
-    RES="`_punani_resolve_package $PKG`"
-    test  -z "$RES" && error "could not resolve '$PKG'; no punani for you!"&& return 23
+    RES="`_punani_resolve_package $PKG`" ||
+      die "could not resolve '$PKG'; no punani for you!"
+
     case "$ACTION" in 
       install)
           eval _punani_${PACKER}_has $RES && info "$RES already installed, skipping" && continue
