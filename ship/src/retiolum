@@ -38,33 +38,28 @@ main(){
   if [ $IP4 -eq 0 ]; then
     RAND4=1
   elif ! check_ip_valid4 $IP4; then
-    echo 'ip4 is invalid'
-    exit 1
+    die 'ip4 is invalid'
   fi
   if [ $IP6 -eq 0 ]; then
     RAND6=1
   elif ! check_ip_valid6 $IP6; then
-    echo 'ip6 is invalid'
-    exit 1
+    die 'ip6 is invalid'
   fi
 
   #check if everything is installed
   if ! exists awk ; then
-    echo "Please install awk"
-    exit 1
+    die 'Please install awk'
   fi
 
 
   if ! http_head $SURL >/dev/null 2>/dev/null ;then
-    echo "Cannot find supernode package, check if your internet is working"
-    exit 1
+    die 'Cannot find supernode package, check if your internet is working'
   fi
 
   #check if everything is installed
   if [ $OS = 'android' ]; then
     if ! test -e /data/data/org.poirsouille.tinc_gui/files/tincd; then
-      echo "Please install tinc-gui"
-      exit 1
+      die 'Please install tinc-gui'
     else
       TINCBIN=/data/data/org.poirsouille.tinc_gui/files/tincd
       DEV="/dev/tun"
@@ -75,8 +70,7 @@ main(){
     fi
   elif [ $OS = 'osx' ]; then
     if ! exists tincd >/dev/null; then
-      echo "Please install tinc"
-      exit 1
+      die 'Please install tinc'
     else
       TINCBIN=tincd
       DEV="/dev/net/tun"
@@ -85,8 +79,7 @@ main(){
     fi
   else
     if ! exists tincd >/dev/null; then
-      echo "Please install tinc"
-      exit 1
+      die 'Please install tinc'
     else
       TINCBIN=tincd
       DEV="/dev/net/tun"
@@ -99,8 +92,7 @@ main(){
 
   #test if tinc directory already exists
   if test -e $TINCDIR/$NETNAME; then
-    echo "tinc config directory $TINCDIR/$NETNAME does already exist. (backup and) delete config directory and restart"
-    exit 1
+    die "tinc config directory $TINCDIR/$NETNAME does already exist. (backup and) delete config directory and restart"
   fi
 
   #get tinc-hostfiles
@@ -243,7 +235,7 @@ host2subnet()
     2) FULLSUBNET=$SUBNET4.0.0 ;;
     1) FULLSUBNET=$SUBNET4.0 ;;
     0) FULLSUBNET=$SUBNET4 ;;
-    *) echo "cannot read subnet" && exit 1;;
+    *) die 'cannot read subnet';;
     esac
 }
 
