@@ -27,9 +27,7 @@ info "mounting isofile ($isofile)"
 if is_root;then
     mount -t iso9660 -o loop,ro $isofile $isomnt
 else
-    error "we are not root enough to mount the iso. Bailing Out"
-    exit 1
-
+    die 'we are not root enough to mount the iso. Bailing Out'
 fi
 defer "info 'unmounting $isomnt';umount $isomnt"
 
