@@ -13,7 +13,7 @@ punani(){
   fi
 
   for PKG; do
-    RES="`_punani_resolve_package $PKG`" ||
+    RES="`__punani_resolve_package $PKG`" ||
       die "could not resolve '$PKG'; no punani for you!"
 
     case "$ACTION" in 
@@ -60,8 +60,8 @@ _punani_remove() {
   eval "_punani_${PACKER}_remove \"\$1\""
 }
 
-## usage: _punani_resolve_package PKGNAME
-_punani_resolve_package(){
+## usage: __punani_resolve_package PKGNAME
+__punani_resolve_package(){
   eval "set -u; echo \"\${_punanidb_${PACKER}_$1}\"" 2>/dev/null
 }
 
