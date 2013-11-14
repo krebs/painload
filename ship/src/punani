@@ -2,7 +2,7 @@
 #@info
 #@include punani
 punani(){
-  _punani_usage='punani {install,remove,has} PACKAGE...'
+  _punani_usage='punani {install,remove,has,owner} PACKAGE...'
   _punani_select_packer || die 'no package manager found; no punani for you!'
 
   ACTION="$1"; shift
@@ -37,6 +37,9 @@ punani(){
         else
           info "$RES is not installed"
         fi
+        ;;
+      owner)
+        punani_owner $RES
         ;;
       *)
         error "bad action: $ACTION"
