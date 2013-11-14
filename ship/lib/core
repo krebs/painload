@@ -2,8 +2,9 @@
 msg() { echo "$*" >&2; }
 info()  { msg "** $*"; }
 error() { msg "!! $*"; }
+## usage: die [REASON...]
 die() {
-  error "$*"
+  test $# -gt 0 && error "$*"
   error 'Bailing out.'
   exit 1
 }
