@@ -3,7 +3,7 @@
 
 ## usage: _punani_resolve_package PKGNAME
 _punani_resolve_package(){
-  eval "echo \"\${_punanidb_${PACKER}_$1}\""
+  eval "set -u; echo \"\${_punanidb_${PACKER}_$1}\"" 2>/dev/null
 }
 
 KNOWN_PACKERS='pacman apt-get yum brew'
