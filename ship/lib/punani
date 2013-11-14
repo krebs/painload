@@ -20,6 +20,21 @@ _punani_brew_install(){ brew install "$@"; }
 _punani_brew_remove(){ brew remove "$@";}
 _punani_brew_has(){ error "not implemented"; return 1 ;}
 
+## usage: _punani_has PACKAGE
+_punani_has() {
+  eval "_punani_${PACKER}_has \"\$1\""
+}
+
+## usage: _punani_install PACKAGE
+_punani_install() {
+  eval "_punani_${PACKER}_install \"\$1\""
+}
+
+## usage: _punani_remove PACKAGE
+_punani_remove() {
+  eval "_punani_${PACKER}_remove \"\$1\""
+}
+
 _punani_usage='punani {install,remove,has} PACKAGE...'
 punani(){
   for p in ${KNOWN_PACKERS:-null}; do
@@ -39,17 +54,21 @@ punani(){
 
     case "$ACTION" in 
       install)
-          eval _punani_${PACKER}_has $RES && info "$RES already installed, skipping" && continue
-          ! is_root && error "punani requires super-user rights for installing" && return 1
-          eval _punani_${PACKER}_install $RES || error "cannot install $RES with $PACKER"
+          if _punani_has $RES; then
+            info "$RES already installed, skipping"
+          else
+            _punani_install $RES || error "cannot install $RES with $PACKER"
+          fi
           ;;
       remove)
-            ! eval  _punani_${PACKER}_has $RES && info "$RES not installed, skipping" && continue
-            ! is_root && error "punani requires super-user rights for removing" && return 1
-            eval _punani_${PACKER}_remove $RES || error "cannot install $RES with $PACKER"
+            if ! _punani_has $RES; then
+              info "$RES not installed, skipping"
+            else
+              _punani_remove $RES || error "cannot install $RES with $PACKER"
+            fi
             ;;
       has)
-            if eval  _punani_${PACKER}_has $RES ;then
+            if _punani_has $RES; then
               info "$RES is installed"
             else
               info "$RES is not installed"
