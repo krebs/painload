@@ -33,9 +33,7 @@ punani(){
     die "usage: $_punani_usage"
   fi
 
-  PKGS="$*"
-
-  for PKG in $PKGS; do
+  for PKG; do
     RES="`_punani_resolve_package $PKG`"
     test  -z "$RES" && error "could not resolve '$PKG'; no punani for you!"&& return 23
     case "$ACTION" in 
