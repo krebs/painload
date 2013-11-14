@@ -83,4 +83,4 @@ _punani_yum_remove(){ yum -y remove "$@" ;}
 _punani_yum_has() { rpm -qa --qf "%{NAME}\n"| egrep  "^${1}\$" >/dev/null ;}
 _punani_brew_install(){ brew install "$@"; }
 _punani_brew_remove(){ brew remove "$@";}
-_punani_brew_has() { die '_punani_brew_has not implemented'; }
+# TODO _punani_brew_has
