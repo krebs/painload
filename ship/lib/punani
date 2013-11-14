@@ -6,7 +6,7 @@ _punani_resolve_package(){
   eval "echo \"\${_punanidb_${PACKER}_$1}\""
 }
 
-KNOWN_PACKERS='pacman aptget yum brew'
+KNOWN_PACKERS='pacman apt-get yum brew'
 _punani_pacman_install(){ pacman --noconfirm -S --needed "$@" ;}
 _punani_pacman_remove(){ pacman -Rcs "$@" ;}
 _punani_pacman_has(){ pacman -Q "$1" >/dev/null;}
@@ -21,8 +21,8 @@ _punani_brew_remove(){ brew remove "$@";}
 _punani_brew_has(){ error "not implemented"; return 1 ;}
 
 punani(){
-  for PACKER in ${KNOWN_PACKERS:-null}; do
-    exists "$PACKER" && info "using $PACKER" && break
+  for p in ${KNOWN_PACKERS:-null}; do
+    exists $p && info "using $p" && PACKER=`echo $p | tr -d -` && break
   done || die 'Error 2: no package manager found; no punani for you!'
 
   ACTION="$1"; shift
