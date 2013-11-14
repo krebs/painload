@@ -1,8 +1,8 @@
 # logging
-msg() { printf "$@\n" >&2 ;}
-info()   { msg "** $@" ;}
-error()  { msg "!! $@" ;}
-die()  { error "$@" ;exit 1;}
+msg() { echo "$*" >&2; }
+info()  { msg "** $*"; }
+error() { msg "!! $*"; }
+die() { error "$*"; exit 1; }
 exists(){ type "$1" >/dev/null 2>/dev/null; }
 is_root(){
   test $(id -u) -eq 0
