@@ -40,9 +40,11 @@ _punani_pacman_owner() { pacman -Qo "$1"; }
 _punani_aptget_install(){ apt-get -y install "$@" ;}
 _punani_aptget_remove(){ apt-get -y remove "$@" ;}
 _punani_aptget_has() { dpkg -s "$1" | grep -q "Status: install";}
+_punani_aptget_owner() { dpkg-query -S "$1" | cut -d: -f1;}
 _punani_yum_install(){ yum -y install "$@" ;}
 _punani_yum_remove(){ yum -y remove "$@" ;}
 _punani_yum_has() { rpm -qa --qf "%{NAME}\n"| egrep  "^${1}\$" >/dev/null ;}
+_punani_yum_owner(){ rpm -qf "$1" ;}
 _punani_brew_install(){ brew install "$@"; }
 _punani_brew_remove(){ brew remove "$@";}
 # TODO _punani_brew_has
