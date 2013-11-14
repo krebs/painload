@@ -1,9 +1,9 @@
 #@include core
 #@include _punani_db
 
+## usage: _punani_resolve_package PKGNAME
 _punani_resolve_package(){
-  pkg=${1?please provide package name to resolve}
-  eval printf "%s" \"\${_punanidb_${PACKER}_${pkg}-}\" | grep .
+  eval "echo \"\${_punanidb_${PACKER}_$1}\""
 }
 _punani_aptget_install(){ apt-get -y install "$@" ;}
 _punani_aptget_remove(){ apt-get -y remove "$@" ;}
