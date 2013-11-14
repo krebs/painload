@@ -181,4 +181,6 @@ buildcache_add() {
 ### main invocation
 ###
 
-build "$@"
+if echo "$0" | grep -q '^\(.*/\)\?build$'; then
+  build "$@"
+fi
