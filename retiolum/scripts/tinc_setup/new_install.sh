@@ -336,7 +336,7 @@ find_os()
 {
   if grep -qe 'Linux' /etc/*release 2>/dev/null || grep -qe 'Linux' /etc/issue 2>/dev/null; then
     OS='linux'
-  elif exists getprop ; then
+  elif test -e /etc/preferred-apps/google.xml; then
     OS='android'
   elif test -e /etc/openwrt_release; then
     OS='openwrt'
