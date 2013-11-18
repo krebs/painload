@@ -1,2 +1,5 @@
 #!/bin/sh
-curl -F "p=<-" pigstarter:5000
+#usage:
+#echo aidsballs | pigbin
+
+curl -F 'p=<-' pigstarter:5000
