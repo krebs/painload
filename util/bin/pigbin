@@ -1,0 +1,2 @@
+#!/bin/sh
+curl -F "p=<-" pigstarter:5000
