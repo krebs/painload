@@ -78,7 +78,7 @@ class relaxx:
     def get_first(self):
         return json.loads(self._playlist("getPlaylistInfo","0",""))[0]
 
-    def get_first(self):
+    def get_last(self):
         return json.loads(self._playlist("getPlaylistInfo","0",""))[-1]
 
     def clear(self):
@@ -124,7 +124,7 @@ class relaxx:
         if state["status"]["state"] == "play" :
             ident = state["status"]["song"]
             current = state["playlist"]["file"][int(ident)]
-            return current.get("Name",current.get("Artist")) + " - " + current["Title"]
+            return current.get("Name",current.get("Artist","unkown artist")) + " - " + current.get("Title","unknown title")
         else:
             return ""
 
