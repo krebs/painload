@@ -1,4 +1,4 @@
-Address = kaah.ath.cx
+#Address = kaah.ath.cx
 Subnet = 42.220.181.17/32
 -----BEGIN RSA PUBLIC KEY-----
 MIIBCgKCAQEAtd9+R7NYs/5LmXoFakuoFzdO/8hy4MMeGjdDqbubKyJmIO/nvQWS
