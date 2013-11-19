@@ -67,9 +67,12 @@ function display_accounts() {
 
   for (name in accounts) {
     for (u in accounts[name]) {
+      balance = accounts[name][u]
+      if (balance == 0) {
+        continue
+      }
 
       fmt = "NAME BALANCE UNIT\n"
-      balance = accounts[name][u]
 
       if (colorize) {
         sub("BALANCE", "[" (balance < 0 ? 31 : 32) "m&[m", fmt)

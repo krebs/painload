@@ -57,8 +57,7 @@ which_telnet(){
   elif exists busybox;then
     echo  `command -v busybox` telnet
   else
-    error "Cannot find telnet binary, please install either telnet-client or busybox or netcat or provided TELNET environment.\nbailing out!" 
-    return 1
+    die 'Cannot find telnet binary, please install either telnet-client or busybox or netcat or provided TELNET environment.'
   fi
 }
 

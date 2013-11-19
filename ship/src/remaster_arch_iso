@@ -13,7 +13,7 @@ rootdir=$bdir/root
 outdir=$bdir/out
 auto_url=euer.krebsco.de/autoinstall
 info "bdir is at $bdir"
-[ ! -e "$isofile" ] && die "$isofile does not exist,bailing out"
+[ ! -e "$isofile" ] && die "$isofile does not exist."
 esudo "$@"
 
 
@@ -27,9 +27,7 @@ info "mounting isofile ($isofile)"
 if is_root;then
     mount -t iso9660 -o loop,ro $isofile $isomnt
 else
-    error "we are not root enough to mount the iso. Bailing Out"
-    exit 1
-
+    die 'we are not root enough to mount the iso.'
 fi
 defer "info 'unmounting $isomnt';umount $isomnt"
 
