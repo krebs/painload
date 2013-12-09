@@ -30,10 +30,10 @@ which_head_loader(){
 }
 
 http_get(){
-    "$(which_get_loader)" "${1?please provide url}"
+    eval "$(which_get_loader)" "${1?please provide url}"
 }
 http_head(){
-    "$(which_head_loader)" "${1?please provide url}"
+    eval "$(which_head_loader)" "${1?please provide url}"
 }
 
 which_telnet(){
