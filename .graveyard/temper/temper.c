@@ -221,7 +221,7 @@ TemperGetOtherStuff(Temper *t, char *buf, int length)
 
 
 #define USB_TIMEOUT 1000	/* milliseconds */
-#define DEBUG_MODE 0
+#define DEBUG_MODE 1
 #define SLEEP_TIMEOUT 10
 
 	int

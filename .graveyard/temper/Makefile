@@ -1,12 +1,12 @@
 
 all: infest
 infest: temper rules-install
-CFLAGS = -O2 -Wall
+CFLAGS = -O2 -Wall -DDEBUG
 
 temper:	temper.c 
 	${CC} -DUNIT_TEST -o $@ $^ -lusb
 	chmod +s temper
-	cp -a temper /usr/bin
+	#cp -a temper /usr/bin
 clean:		
 	rm -f temper *.o
 
