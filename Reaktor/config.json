@@ -1,0 +1,27 @@
+{
+  "main": {
+    "debug": true,
+    "name": "asybot"
+  },
+  "irc": {
+    "alarm_timeout": 300,
+    "hammer_interval": 10,
+    "kill_timeout": 360,
+    "nickname": "asybot",
+    "server": "irc.freenode.org",
+    "port": 6667,
+    "channels": [
+      "#krebs"
+    ],
+    "commands": [
+      { "pattern": "^{main.name}:\\s*caps\\s*$", "argv": [ "command/caps" ] },
+      { "pattern": "^{main.name}:\\s*hello\\s*$", "argv": [ "command/hello" ] },
+      { "pattern": "^{main.name}:\\s*reload\\s*$", "argv": [ "command/reload" ] },
+      { "pattern": "^{main.name}:\\s*retard\\s*$", "argv": [ "command/retard" ] },
+      { "pattern": "^{main.name}:\\s*rev\\s*$", "argv": [ "command/rev" ] },
+      { "pattern": "^{main.name}:\\s*uptime\\s*$", "argv": [ "command/uptime" ] },
+      { "pattern": "{main.name}", "argv": [ "command/say", "I'm famous" ] }
+    ]
+  }
+}
+

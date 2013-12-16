@@ -3,4 +3,4 @@ set -xeuf
 
 # cd //Reaktor
 cd $(dirname $(readlink -f $0))/..
-host=irc.freenode.net target='#krebs' python IRC/asybot.py "$@"
+exec IRC/asybot.py "$@"
