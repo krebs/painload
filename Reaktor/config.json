@@ -14,13 +14,14 @@
       "#krebs"
     ],
     "commands": [
-      { "pattern": "^{main.name}:\\s*caps\\s*$", "argv": [ "command/caps" ] },
-      { "pattern": "^{main.name}:\\s*hello\\s*$", "argv": [ "command/hello" ] },
-      { "pattern": "^{main.name}:\\s*reload\\s*$", "argv": [ "command/reload" ] },
-      { "pattern": "^{main.name}:\\s*retard\\s*$", "argv": [ "command/retard" ] },
-      { "pattern": "^{main.name}:\\s*rev\\s*$", "argv": [ "command/rev" ] },
-      { "pattern": "^{main.name}:\\s*uptime\\s*$", "argv": [ "command/uptime" ] },
-      { "pattern": "{main.name}", "argv": [ "command/say", "I'm famous" ] }
+      { "pattern": "^(?:asybot|\\*):\\s*caps\\s*$", "argv": [ "commands/caps" ] },
+      { "pattern": "^(?:asybot|\\*):\\s*hello\\s*$", "argv": [ "commands/hello" ] },
+      { "pattern": "^(?:asybot|\\*):\\s*reload\\s*$", "argv": [ "commands/reload" ] },
+      { "pattern": "^(?:asybot|\\*):\\s*badcommand\\s*$", "argv": [ "commands/badcommand" ] },
+      { "pattern": "^(?:asybot|\\*):\\s*rev\\s*$", "argv": [ "commands/rev" ] },
+      { "pattern": "^(?:asybot|\\*):\\s*uptime\\s*$", "argv": [ "commands/uptime" ] },
+      { "pattern": "^(?:asybot|\\*):\\s*nocommand\\s*$", "argv": [ "commands/nocommand" ] },
+      { "pattern": "^.*\\basybot(?:\\b[^:].*)?$", "argv": [ "commands/say", "I'm famous" ] }
     ]
   }
 }
