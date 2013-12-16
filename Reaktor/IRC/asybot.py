@@ -133,7 +133,7 @@ class asybot(asychat):
           '^(\w+|\*):\s*(\w+)(?:\s+(.*))?$', rest)
     except (ValueError, Exception):
       if search(self.nickname, rest):
-        PRIVMSG('I\'m so famous')
+        PRIVMSG('I\'m so famous'.encode(encoding='UTF-8'))
       return # ignore
 
     if _handle == self.nickname or _handle == '*':
