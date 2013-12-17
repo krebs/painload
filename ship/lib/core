@@ -56,7 +56,6 @@ line_to_dot(){
   while read line; do printf .; done;
 }
 
-
 get_os()
 {
   # TODO: find all the release files
@@ -73,4 +72,8 @@ get_os()
     warn "Cannot determine your operating system, falling back to Linux"
     echo 'linux'
   fi
+}
+# user management
+has_user(){
+    egrep "^$1:" /etc/passwd >/dev/null
 }
