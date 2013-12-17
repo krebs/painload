@@ -1,0 +1,133 @@
+#/bin/sh
+#@strict
+#@include core
+#@include color
+#@include network
+pass=shackit
+extra_pkg="xorg vim xfce4 feh chromium zsh sudo git flashplugin alsa-oss alsa-lib alsa-utils grub-bios slim ntp tor network-manager-applet networkmanager openssh"
+
+info "writing stdout to /tmp/install.log"
+exec >>/tmp/install.log
+if find /dev/disk/by-label/ -name ARCH_\* |xargs readlink |grep sda; then
+    if test -e /dev/sdb; then
+        #todo: retest or something
+        rootdisk='/dev/sdb'
+    else
+        warn "could not find rootdrive"
+        die  "You're on your own, good luck!"
+    fi
+else
+    rootdisk='/dev/sda'
+fi
+
+info "Your rootdisk is $rootdisk"
+sleep 3
+
+umount /mnt/boot ||:
+umount /mnt ||:
+info "starting partitioning"
+(printf "o\nn\np\n\n\n+256M\n\a\nn\np\n\n\n\nw\n\n") |fdisk $rootdisk
+info "done partitioning"
+sleep 1
+info "generating filesystem on /boot"
+mkfs.ext2 ${rootdisk}1
+info "Done"
+sleep 1
+info "starting LVM magic"
+vgchange -an ||:
+vgremove -f pool0 ||:
+pvcreate ${rootdisk}2
+vgcreate -ff pool0 ${rootdisk}2
+lvcreate -l 100%free -n root pool0
+info "finished creating LVM"
+sleep 1
+info "generating filesystems on the LVM"
+mkfs.ext4 /dev/mapper/pool0-root
+info "finished generating filesystems"
+sleep 1
+info "mounting"
+mount /dev/mapper/pool0-root /mnt
+mkdir /mnt/boot
+mount ${rootdisk}1 /mnt/boot
+
+info "finished mounting!"
+sleep 1
+info "installing!"
+
+info "Setting http proxy"
+if http_head heidi.shack:3142 -W 5&>/dev/null; then
+    http_proxy=heidi.shack:3142 
+    info "Heidi is reachable, will use this box as proxy"
+else
+    http_proxy=''
+    info "Will not use any proxy"
+fi
+info "Installing the following packages: $extra_pkg"
+if [ -n "${user_pkg:-}" ] ;then
+  info "User chooses additional packages: $user_pkg"
+else
+  info "No additional packages set by user (\$user_pkg unset)"
+fi
+http_proxy=${http_proxy} pacstrap /mnt base base-devel $extra_pkg ${user_pkg:-}
+info "installation done"
+sleep 1
+info "generating configs"
+genfstab -U -p /mnt > /mnt/etc/fstab
+
+info "beginning chroot!"
+arch-chroot /mnt >>/tmp/install.log  << EOF
+
+msg() { printf "\$*\n" >&2; }
+info()  { msg "$green\$*$nc"; }
+error() { msg "$green\$*$nc"; }
+
+info "generating locales"
+ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
+echo "LANG=en_US.UTF-8"  >> /etc/locale.conf
+echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+locale-gen
+echo "shackbook$RANDOM" > /etc/hostname
+sed -i 's/block/& lvm2/g' /etc/mkinitcpio.conf 
+info "Done! "
+mkinitcpio -p linux
+info "setting root password"
+printf "${pass}\n${pass}\n" | (passwd )
+info "adding user"
+useradd -d /home/shack -m -G audio,video,wheel -s /usr/bin/zsh shack
+printf "${pass}\n${pass}\n" | (passwd shack)
+
+info "editing sudoers"
+printf "root ALL=(ALL) ALL\n%s ALL=(ALL) ALL\n" %wheel >> /etc/sudoers
+info "configuring slim"
+printf "default_user\tshack\nfocus_password\tyes\nauto_login\tyes\n" >> /etc/slim.conf
+info "configuring .xinitrc"
+printf "nm-applet&\nexec startxfce4\n" >> /home/shack/.xinitrc
+
+info "enabling slim"
+systemctl enable slim
+info "enabling networkManager"
+systemctl enable NetworkManager
+info "enabling ntpd"
+systemctl enable ntpd
+info "enabling tor"
+systemctl enable tor
+info "installing grub"
+grub-install ${rootdisk} 2>/dev/null
+echo "GRUB_DISABLE_LINUX_UUID=true" >> /etc/default/grub
+grub-mkconfig > /boot/grub/grub.cfg 2>/dev/null
+
+info "installing oh-my-zsh"
+curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sudo -u shack sh
+sed -i 's/robbyrussell/afowler/g' /home/shack/.zshrc
+info "fixing chrome for incognito use"
+sed -i 's/Exec=chromium/Exec=chromium --incognito/g' /usr/share/applications/chromium.desktop
+exit
+EOF
+
+info "configuring tor"
+torrc=/mnt/etc/tor/torrc
+hidden_service_dir=/var/lib/tor/hidden_service/
+#@include tor
+configure_hidden_service
+
+info "We're all done, simply reboot!"
