@@ -22,12 +22,11 @@ defer(){
 }
 
 esudo(){
-  # becomes root with sudo powers
-  # unless nosudo env is set
-  if test "${nosudo-false}" != true && ! is_root; then
-    echo "we're going sudo..." >&2
-    exec sudo -E "$0" "$@"
-    exit 23 # go to hell
+  # weaksauce esudo, bail out if we are not root
+  if ! is_root; then
+    # for the records:
+    #    exec sudo -E "$0" "$@"
+    die "You are not root enough to run this script" 2>&1
   fi
 }
 

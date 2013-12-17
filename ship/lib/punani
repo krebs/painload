@@ -48,3 +48,51 @@ _punani_yum_owner(){ rpm -qf "$1" ;}
 _punani_brew_install(){ brew install "$@"; }
 _punani_brew_remove(){ brew remove "$@";}
 # TODO _punani_brew_has
+
+punani(){
+  # punani UI
+  _punani_usage='punani {install,remove,has,owner} PACKAGE...'
+  _punani_select_packer || die 'no package manager found; no punani for you!'
+
+  ACTION="$1"; shift
+
+  if test $# = 0; then
+    error 'no PACKAGE specified.'
+    die "usage: $_punani_usage"
+  fi
+
+  for PKG; do
+    RES="`_punani_resolve_package $PKG`" ||
+      die "could not resolve '$PKG'; no punani for you!"
+
+    case "$ACTION" in
+      install)
+        if punani_has $RES; then
+          info "$RES already installed, skipping"
+        else
+          punani_install $RES || error "cannot install $RES with $PACKER"
+        fi
+        ;;
+      remove)
+        if ! punani_has $RES; then
+          info "$RES not installed, skipping"
+        else
+          punani_remove $RES || error "cannot install $RES with $PACKER"
+        fi
+        ;;
+      has)
+        if punani_has $RES; then
+          info "$RES is installed"
+        else
+          info "$RES is not installed"
+        fi
+        ;;
+      owner)
+        punani_owner $RES
+        ;;
+      *)
+        error "bad action: $ACTION"
+        die "usage: $_punani_usage"
+    esac
+  done
+}
