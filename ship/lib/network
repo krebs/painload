@@ -10,7 +10,7 @@ which_get_loader(){
       echo "wget -O-"
     fi
   else
-    echo "curl"
+    echo "curl -s"
   fi
   return 0
 }
@@ -21,19 +21,19 @@ which_head_loader(){
       warn "Please install curl or wget"
       return 1
     else
-      echo "wget -O- --spider"
+      echo "wget -O- --spider -S -q"
     fi
   else
-    echo "curl -I"
+    echo "curl -I -s"
   fi
   return 0
 }
 
 http_get(){
-    eval "$(which_get_loader)" "${1?please provide url}"
+    eval "$(which_get_loader)" "${1?please provide url}" 2>&1
 }
 http_head(){
-    eval "$(which_head_loader)" "${1?please provide url}"
+    eval "$(which_head_loader)" "${1?please provide url}" 2>&1
 }
 
 which_telnet(){

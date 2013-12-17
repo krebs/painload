@@ -1,4 +1,5 @@
 #! /bin/sh
+exec echo 'TODO: need access to config.json'
 set -euf
 cd public_commands
 echo `ls`

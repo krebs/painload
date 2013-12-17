@@ -23,7 +23,7 @@ COLOR_MAP = {
   }
 def translate_colors (line):
   for color,replace in COLOR_MAP.items():
-    line = line.replace(color,replace)
+    line = line.replace(color.encode(encoding='UTF-8'),replace.encode(encoding='UTF-8'))
   return line
 
 if __name__ == "__main__":
