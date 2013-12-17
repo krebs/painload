@@ -1,0 +1,34 @@
+#@include core
+#@include network
+#@include punani
+
+tahoe_home=/home/tahoe
+tahoe_dir=$tahoe_home/.tahoe
+tahoe_init(){
+    # installs dependencies, user and a virtual environment for the tahoe user
+    punani install gpp pip2 python2_dev python2  virtualenv
+    has_user tahoe || useradd -r -m -b $tahoe_home -s /bin/false
+    cd $tahoe_home
+    virtualenv --no-site-packages -p "`type -p python2.7`"
+    . bin/activate
+    pip install  twisted pyasn1
+    pip install allmydata-tahoe
+    chown tahoe -R $tahoe_home
+}
+tahoe_create_node(){
+    # requires tahoe_init
+    sudo -u tahoe create-node  $tahoe_dir
+    sudo -u tahoe cat  > $tahoe_dir/tahoe.cfg <<EOF
+[node]
+nickname = $(get_hostname)
+web.port = 
+web.static = public_html
+
+[client]
+introducer.furl = $(http_get http://pigstarter/tahoe/introducer.furl)
+helper.furl = $(http_get http://pigstarter/tahoe/helper.furl)
+[storage]
+enabled = true
+reserved_space = 1G
+EOF
+}

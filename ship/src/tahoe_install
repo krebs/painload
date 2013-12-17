@@ -1,0 +1,15 @@
+#!/bin/sh
+#@strict
+#@core
+#@color
+#@include tahoe
+esudo "$@"
+tahoe_init
+tahoe_create_node
+if sudo -u tahoe tahoe start ;then
+    info "everything went fine, autostart tahoe somewhere with: 'sudo -u tahoe tahoe start'"
+else
+    error "somewhere something went wrong, could not start tahoe daemon"
+    error "tahoe should be installed under /home/tahoe/.tahoe"
+    die "sorry :("
+fi
