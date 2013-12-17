@@ -2,4 +2,4 @@
 #usage:
 #echo aidsballs | pigbin
 
-curl -F 'p=<-' pigstarter:5000
+curl -F 'p=<-' note
