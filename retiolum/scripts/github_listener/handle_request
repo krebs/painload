@@ -4,7 +4,7 @@
 #   HOSTFOLDER
 
 set -euf
-export GRAPHITE_HOST=${GRAPHITE_HOST:-no_omo}
+#export GRAPHITE_HOST=${GRAPHITE_HOST:-no_omo}
 PATH=$PATH:../../../util/bin
 if [ "x${2:-}" = x ];then
 	echo "usage: $0 HOSTDIRECTORY WEBDIRECTORY"
@@ -14,15 +14,16 @@ NOW=$(timer)
 export HOSTDIR=${1:-../../hosts}
 WEBDIR=${2:-/var/www/euer.krebsco.de/retiolum/}
 echo "sorry for keeping you waiting, please be patient"
-
+logger "github_listener: received hook"
 cd $(dirname $(readlink -f $0))
 
 cd "$HOSTDIR"
-git pull origin master  >&2
+git pull origin master | logger 
 echo "First step done"
 cd - >&2
 ../../bin/create-supernode-tar $WEBDIR
 echo "almost done..."
 ../../bin/create-host-tar $WEBDIR
 echo "Thank you for your patience! I stole $(timer $NOW)ms of your time, sorry about that."
-graphitec 'retiolum.pack.build_time' $(timer $NOW)
+#graphitec 'retiolum.pack.build_time' $(timer $NOW)
+logger "github_listener: finished"
