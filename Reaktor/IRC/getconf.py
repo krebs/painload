@@ -2,19 +2,29 @@
 #getconf(key) -> value                    
 #oder error                               
 
-import json
+import imp
+import os
+
 
 def make_getconf(filename):
+
+    config = load_config(filename)
+
     def getconf(prop):
         prop_split = prop.split('.')
         string = ''
-        file = open(filename)
-        for line in file.readlines():
-            string+=line
-        parsed = json.loads(string)
-        tmp = parsed
+        imp.reload(config)
+        tmp = config.__dict__
         for pr in prop_split:
             tmp = tmp[pr]
-
         return tmp
+
     return getconf
+
+
+def load_config(filename):
+    dirname = os.path.dirname(filename)
+    modname, ext = os.path.splitext(os.path.basename(filename))
+    file, pathname, description = imp.find_module(modname, [ dirname ])
+    return imp.load_module(modname, file, pathname, description)
+

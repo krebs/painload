@@ -19,13 +19,13 @@ from re import split, search, match
 from textwrap import TextWrapper
 import logging,logging.handlers
 from getconf import make_getconf
-getconf = make_getconf('config.json')
+getconf = make_getconf('config.py')
 log = logging.getLogger('asybot')
 hdlr = logging.handlers.SysLogHandler(facility=logging.handlers.SysLogHandler.LOG_DAEMON)
 formatter = logging.Formatter( '%(filename)s: %(levelname)s: %(message)s')
 hdlr.setFormatter(formatter)
 log.addHandler(hdlr)
-logging.basicConfig(level = logging.DEBUG if getconf('main.debug') else logging.INFO)
+logging.basicConfig(level = logging.DEBUG if getconf('debug') else logging.INFO)
 
 # s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g -- removes color codes
 
@@ -33,14 +33,14 @@ logging.basicConfig(level = logging.DEBUG if getconf('main.debug') else logging.
 class asybot(asychat):
   def __init__(self):
     asychat.__init__(self)
-    self.server = getconf('irc.server')
-    self.port = getconf('irc.port')
-    self.channels = getconf('irc.channels')
-    self.realname = getconf('irc.nickname')
-    self.nickname = getconf('irc.nickname')
-    self.username = getconf('irc.nickname')
-    self.hostname = getconf('irc.nickname')
-    self.ircname = getconf('irc.nickname')
+    self.server = getconf('irc_server')
+    self.port = getconf('irc_port')
+    self.channels = getconf('irc_channels')
+    self.realname = getconf('irc_nickname')
+    self.nickname = getconf('irc_nickname')
+    self.username = getconf('irc_nickname')
+    self.hostname = getconf('irc_nickname')
+    self.ircname = getconf('irc_nickname')
     self.data = ''
     self.set_terminator('\r\n'.encode(encoding='UTF-8'))
     self.create_socket(AF_INET, SOCK_STREAM)
@@ -52,8 +52,8 @@ class asybot(asychat):
     # When we don't receive data for alarm_timeout seconds then issue a
     # PING every hammer_interval seconds until kill_timeout seconds have
     # passed without a message.  Any incoming message will reset alarm.
-    self.alarm_timeout = getconf('irc.alarm_timeout')
-    self.hammer_interval = getconf('irc.hammer_interval')
+    self.alarm_timeout = getconf('irc_alarm_timeout')
+    self.hammer_interval = getconf('irc_hammer_interval')
     self.kill_timeout = 360
     signal(SIGALRM, lambda signum, frame: self.alarm_handler())
     self.reset_alarm()
@@ -125,7 +125,7 @@ class asybot(asychat):
     def ME(text):
       PRIVMSG(('ACTION ' + text + '').encode(encoding='UTF-8'))
 
-    for command in getconf('irc.commands'):
+    for command in getconf('irc_commands'):
       y = match(command['pattern'], rest)
       if y:
         self.execute_command(command, y, PRIVMSG, ME)
