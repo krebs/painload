@@ -1,5 +1,7 @@
 
 debug = True
+
+# CAVEAT name should not contains regex magic
 name = 'kwasybot'
 
 irc_alarm_timeout = 300
@@ -25,6 +27,10 @@ irc_commands = [
   default_command('rev'),
   default_command('uptime'),
   default_command('nocommand'),
-  { 'pattern': '^.*\\b' + name + '(?:\\b[^:].*)?$',
+  # command not found
+  { 'pattern': '^(?:' + name + '|\\*):.*',
+    'argv': [ 'commands/say', '{TODO:fromname}: you are made of stupid!' ] },
+  # "highlight"
+  { 'pattern': '\\b' + name + '\\b',
     'argv': [ 'commands/say', 'I\'m famous' ] }
 ]
