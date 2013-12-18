@@ -8,12 +8,5 @@ def load_config(filename):
   file, pathname, description = imp.find_module(modname, [ dirname ])
   return imp.load_module(modname, file, pathname, description)
 
-def not_none(x):
-  return x != None
-
-def pluck(name):
-  return lambda x: name in x.keys() and x[name] or None
-
 config = load_config(os.environ['config_filename'])
-
-print(' '.join(filter(not_none, map(pluck('capname'), config.irc_commands))))
+print(' '.join(filter(None,[ x.get('capname',None) for x in config.irc_commands])))
