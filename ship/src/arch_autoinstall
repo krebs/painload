@@ -4,10 +4,11 @@
 #@include color
 #@include network
 pass=shackit
-extra_pkg="xorg vim xfce4 feh chromium zsh sudo git flashplugin alsa-oss alsa-lib alsa-utils grub-bios slim ntp tor network-manager-applet networkmanager openssh"
+shack_printer_ip=10.42.0.135
+extra_pkg="xorg vim xfce4 feh chromium zsh sudo git flashplugin alsa-oss alsa-lib alsa-utils grub-bios slim ntp tor network-manager-applet networkmanager openssh cups cups-filters"
 
 info "writing stdout to /tmp/install.log"
-exec >>/tmp/install.log
+exec | tee -a /tmp/install.log
 if find /dev/disk/by-label/ -name ARCH_\* |xargs readlink |grep sda; then
     if test -e /dev/sdb; then
         #todo: retest or something
@@ -75,7 +76,7 @@ info "generating configs"
 genfstab -U -p /mnt > /mnt/etc/fstab
 
 info "beginning chroot!"
-arch-chroot /mnt >>/tmp/install.log  << EOF
+arch-chroot /mnt | tee -a /tmp/install.log  << EOF
 
 msg() { printf "\$*\n" >&2; }
 info()  { msg "$green\$*$nc"; }
@@ -101,16 +102,35 @@ printf "root ALL=(ALL) ALL\n%s ALL=(ALL) ALL\n" %wheel >> /etc/sudoers
 info "configuring slim"
 printf "default_user\tshack\nfocus_password\tyes\nauto_login\tyes\n" >> /etc/slim.conf
 info "configuring .xinitrc"
-printf "nm-applet&\nexec startxfce4\n" >> /home/shack/.xinitrc
+printf "exec startxfce4\n" >> /home/shack/.xinitrc
 
-info "enabling slim"
-systemctl enable slim
-info "enabling networkManager"
-systemctl enable NetworkManager
-info "enabling ntpd"
-systemctl enable ntpd
-info "enabling tor"
-systemctl enable tor
+for i in slim NetworkManager ntpd tor cups; do
+    info "enabling \$i"
+    systemctl enable \$i
+done
+
+### CUPS
+mkdir -p /etc/cups
+cat >>/etc/cups/printers.conf<<EOF
+<Printer HP_LaserJet_5000_Series>
+Info Shack Printer HP 5000
+Location lounge
+MakeModel HP LaserJet Series PCL 6 CUPS
+DeviceURI socket://$shack_printer_ip
+State Idle
+StateTime 1387400063
+Type 8400964
+Accepting Yes
+Shared No
+JobSheets none none
+QuotaPeriod 0
+PageLimit 0
+KLimit 0
+OpPolicy default
+ErrorPolicy stop-printer
+</Printer>
+EOF
+
 info "installing grub"
 grub-install ${rootdisk} 2>/dev/null
 echo "GRUB_DISABLE_LINUX_UUID=true" >> /etc/default/grub
