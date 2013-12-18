@@ -4,7 +4,7 @@
 BINARY=./rcontrol
 
 install: all
-	ln -snf $$PWD/$(BINARY) ../bin/
+	ln -snf $$PWD/$(BINARY) ../../bin/
 
 all:$(BINARY)
 	chown root.root $(BINARY)
