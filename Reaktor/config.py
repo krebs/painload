@@ -31,6 +31,6 @@ irc_commands = [
   { 'pattern': '^(?:' + name + '|\\*):.*',
     'argv': [ 'commands/say', '{TODO:fromname}: you are made of stupid!' ] },
   # "highlight"
-  { 'pattern': '\\b' + name + '\\b',
+  { 'pattern': '.*\\b' + name + '\\b.*',
     'argv': [ 'commands/say', 'I\'m famous' ] }
 ]
