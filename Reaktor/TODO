@@ -4,6 +4,4 @@ commands/caps: replace map/filter with more pythonic way
 
 getconf: reload inotify
 
-apropros caps: commands need access to config
-
 provide arguments to commands
