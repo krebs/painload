@@ -2,6 +2,7 @@
 #
 # //Reaktor/IRC/asybot.py
 #
+import os
 from translate_colors import translate_colors
 def is_executable(x):
   import os
@@ -18,8 +19,11 @@ from sys import exit
 from re import split, search, match
 from textwrap import TextWrapper
 import logging,logging.handlers
+
+config_filename = 'config.py'
+
 from getconf import make_getconf
-getconf = make_getconf('config.py')
+getconf = make_getconf(config_filename)
 log = logging.getLogger('asybot')
 hdlr = logging.handlers.SysLogHandler(facility=logging.handlers.SysLogHandler.LOG_DAEMON)
 formatter = logging.Formatter( '%(filename)s: %(levelname)s: %(message)s')
@@ -142,6 +146,7 @@ class asybot(asychat):
 
     env = {}
     env['_from'] = prefix.split('!', 1)[0]
+    env['config_filename'] = os.path.abspath(config_filename)
     start = time()
     try:
       p = popen(myargv, bufsize=1, stdout=PIPE, stderr=PIPE, env=env)

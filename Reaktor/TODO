@@ -1,3 +1,7 @@
+commands/caps: merge load_config with IRC/getconf.py
+commands/caps: generalize for UDP
+commands/caps: replace map/filter with more pythonic way
+
 getconf: reload inotify
 
 apropros caps: commands need access to config

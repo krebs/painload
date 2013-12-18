@@ -1,5 +1,19 @@
-#! /bin/sh
-exec echo 'TODO: need access to config.json'
-set -euf
-cd public_commands
-echo `ls`
+#! /usr/bin/env python
+import imp
+import os
+
+def load_config(filename):
+  dirname = os.path.dirname(filename)
+  modname, ext = os.path.splitext(os.path.basename(filename))
+  file, pathname, description = imp.find_module(modname, [ dirname ])
+  return imp.load_module(modname, file, pathname, description)
+
+def not_none(x):
+  return x != None
+
+def pluck(name):
+  return lambda x: name in x.keys() and x[name] or None
+
+config = load_config(os.environ['config_filename'])
+
+print(' '.join(filter(not_none, map(pluck('capname'), config.irc_commands))))
