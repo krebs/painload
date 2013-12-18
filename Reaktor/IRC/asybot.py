@@ -129,6 +129,7 @@ class asybot(asychat):
       y = match(command['pattern'], rest)
       if y:
         self.execute_command(command, y, PRIVMSG, ME)
+        break
 
   def execute_command(self, command, match, PRIVMSG, ME):
     from os.path import realpath, dirname, join
