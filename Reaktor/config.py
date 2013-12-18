@@ -30,7 +30,7 @@ commands = [
   default_command('nocommand'),
   # command not found
   { 'pattern': '^(?:' + name + '|\\*):.*',
-    'argv': [ 'commands/say', '{TODO:fromname}: you are made of stupid!' ] },
+    'argv': [ 'commands/respond','You are made of stupid!'] },
   # "highlight"
   { 'pattern': '.*\\b' + name + '\\b.*',
     'argv': [ 'commands/say', 'I\'m famous' ] }
