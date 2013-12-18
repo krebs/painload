@@ -36,6 +36,16 @@ http_head(){
     eval "$(which_head_loader)" "${1?please provide url}" 2>&1
 }
 
+internet(){
+    secret=$(http_get http://krebsco.de/secret 2>/dev/null)
+    if [ "$secret" == "1337" ]; then
+        return 0
+    else
+        echo "cannot load secret or secret incorrect" >&2
+        return 1
+    fi
+}
+
 which_telnet(){
   # find Telnet or similar and executes it at the end
   # requires exist
