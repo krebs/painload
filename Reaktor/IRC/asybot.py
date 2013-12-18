@@ -128,10 +128,10 @@ class asybot(asychat):
     for command in getconf('irc_commands'):
       y = match(command['pattern'], rest)
       if y:
-        self.execute_command(command, y, PRIVMSG, ME)
+        self.execute_command(command, y, prefix, PRIVMSG, ME)
         break
 
-  def execute_command(self, command, match, PRIVMSG, ME):
+  def execute_command(self, command, match, prefix, PRIVMSG, ME):
     from os.path import realpath, dirname, join
     from subprocess import Popen as popen, PIPE
     from time import time
@@ -141,6 +141,7 @@ class asybot(asychat):
     myargv = [exe] + command['argv'][1:]
 
     env = {}
+    env['_from'] = prefix.split('!', 1)[0]
     start = time()
     try:
       p = popen(myargv, bufsize=1, stdout=PIPE, stderr=PIPE, env=env)
