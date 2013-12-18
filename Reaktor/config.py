@@ -12,13 +12,19 @@ irc_channels = [
   '#krebs'
 ]
 
+def default_command(cmd):
+  return {
+    'pattern': '^(?:' + name + '|\\*):\\s*' + cmd + '\\s*$',
+    'argv': [ 'commands/' + cmd ] }
+
 irc_commands = [
-  { 'pattern': '^(?:asybot|\\*):\\s*caps\\s*$', 'argv': [ 'commands/caps' ] },
-  { 'pattern': '^(?:asybot|\\*):\\s*hello\\s*$', 'argv': [ 'commands/hello' ] },
-  { 'pattern': '^(?:asybot|\\*):\\s*reload\\s*$', 'argv': [ 'commands/reload' ] },
-  { 'pattern': '^(?:asybot|\\*):\\s*badcommand\\s*$', 'argv': [ 'commands/badcommand' ] },
-  { 'pattern': '^(?:asybot|\\*):\\s*rev\\s*$', 'argv': [ 'commands/rev' ] },
-  { 'pattern': '^(?:asybot|\\*):\\s*uptime\\s*$', 'argv': [ 'commands/uptime' ] },
-  { 'pattern': '^(?:asybot|\\*):\\s*nocommand\\s*$', 'argv': [ 'commands/nocommand' ] },
-  { 'pattern': '^.*\\basybot(?:\\b[^:].*)?$', 'argv': [ 'commands/say', 'I\'m famous' ] }
+  default_command('caps'),
+  default_command('hello'),
+  default_command('reload'),
+  default_command('badcommand'),
+  default_command('rev'),
+  default_command('uptime'),
+  default_command('nocommand'),
+  { 'pattern': '^.*\\b' + name + '(?:\\b[^:].*)?$',
+    'argv': [ 'commands/say', 'I\'m famous' ] }
 ]
