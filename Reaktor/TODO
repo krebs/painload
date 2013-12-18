@@ -2,7 +2,4 @@ getconf: reload inotify
 
 apropros caps: commands need access to config
 
-commands need access to from (eg as env var): 
-  _from = prefix.split('!', 1)[0]
-
 provide arguments to commands
