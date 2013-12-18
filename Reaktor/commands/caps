@@ -9,4 +9,4 @@ def load_config(filename):
   return imp.load_module(modname, file, pathname, description)
 
 config = load_config(os.environ['config_filename'])
-print(' '.join(filter(None,[ x.get('capname',None) for x in config.irc_commands])))
+print(' '.join(filter(None,[ x.get('capname',None) for x in config.commands])))

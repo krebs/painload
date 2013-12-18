@@ -20,7 +20,7 @@ from re import split, search, match
 from textwrap import TextWrapper
 import logging,logging.handlers
 
-config_filename = 'config.py'
+config_filename = './config.py'
 
 from getconf import make_getconf
 getconf = make_getconf(config_filename)
@@ -129,7 +129,7 @@ class asybot(asychat):
     def ME(text):
       PRIVMSG(('ACTION ' + text + '').encode(encoding='UTF-8'))
 
-    for command in getconf('irc_commands'):
+    for command in getconf('commands'):
       y = match(command['pattern'], rest)
       if y:
         self.execute_command(command, y, prefix, PRIVMSG, ME)

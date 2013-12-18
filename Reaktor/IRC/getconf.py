@@ -8,12 +8,12 @@ import os
 
 def make_getconf(filename):
 
-    config = load_config(filename)
 
     def getconf(prop):
         prop_split = prop.split('.')
         string = ''
-        imp.reload(config)
+        config = load_config(filename)
+        #imp.reload(config)
         tmp = config.__dict__
         for pr in prop_split:
             tmp = tmp[pr]

@@ -1,5 +1,4 @@
 commands/caps: merge load_config with IRC/getconf.py
-commands/caps: generalize for UDP
 
 getconf: reload inotify
 

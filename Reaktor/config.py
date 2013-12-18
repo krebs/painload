@@ -2,7 +2,7 @@
 debug = True
 
 # CAVEAT name should not contains regex magic
-name = 'kwasybot'
+name = 'crabmanner'
 
 irc_alarm_timeout = 300
 irc_hammer_interval = 10
@@ -20,7 +20,7 @@ def default_command(cmd):
     'pattern': '^(?:' + name + '|\\*):\\s*' + cmd + '\\s*$',
     'argv': [ 'commands/' + cmd ] }
 
-irc_commands = [
+commands = [
   default_command('caps'),
   default_command('hello'),
   default_command('reload'),
