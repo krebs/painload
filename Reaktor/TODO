@@ -1,5 +1,3 @@
-{ "pattern": "^(?:asybot|\\*):.*", "argv": [ "commands/say", "{{from.nickname}}: you are made of stupid" ], only_match: true }
-
 getconf: reload inotify
 
 apropros caps: commands need access to config
