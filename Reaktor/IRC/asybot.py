@@ -54,7 +54,7 @@ class asybot(asychat):
     # passed without a message.  Any incoming message will reset alarm.
     self.alarm_timeout = getconf('irc_alarm_timeout')
     self.hammer_interval = getconf('irc_hammer_interval')
-    self.kill_timeout = 360
+    self.kill_timeout = getconf('irc_kill_timeout')
     signal(SIGALRM, lambda signum, frame: self.alarm_handler())
     self.reset_alarm()
 
