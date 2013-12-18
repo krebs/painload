@@ -8,13 +8,14 @@ die() {
   error 'Bailing out.'
   exit 1
 }
-exists(){ type "$1" >/dev/null 2>/dev/null; }
+exists(){ 
+  type "$1" >/dev/null 2>/dev/null; 
+}
+
 is_root(){
   test $(id -u) -eq 0
-} 
-internet(){
-  ping -w 1 google.de >/dev/null 2>&1
 }
+
 defer(){
   #close enough
   trapstr="$1;${trapstr:-exit}"
@@ -56,13 +57,12 @@ line_to_dot(){
   while read line; do printf .; done;
 }
 
-get_os()
-{
+get_os(){
   # TODO: find all the release files
   #if grep -q 'Linux' /etc/*release 2>/dev/null || grep -qe 'Linux' /etc/issue 2>/dev/null; then
   if grep -q 'Linux' /etc/lsb-release 2>/dev/null || grep -q 'Linux' /etc/issue 2>/dev/null; then
     echo 'linux'
-  elif exists getprop ; then
+  elif test -e /etc/preferred-apps/google.xml; then
     echo 'android'
   elif test -e /etc/openwrt_release; then
     echo 'openwrt'
@@ -73,6 +73,7 @@ get_os()
     echo 'linux'
   fi
 }
+
 # user management
 has_user(){
     egrep "^$1:" /etc/passwd >/dev/null
