@@ -19,6 +19,7 @@ from sys import exit
 from re import split, search, match
 from textwrap import TextWrapper
 import logging,logging.handlers
+import shlex
 
 config_filename = './config.py'
 
@@ -145,6 +146,9 @@ class asybot(asychat):
     #TODO: allow only commands below ./commands/
     exe = join(dirname(realpath(dirname(__file__))), command['argv'][0])
     myargv = [exe] + command['argv'][1:]
+    print(match.groupdict())
+    if 'args' in match.groupdict():
+      myargv += shlex.split(match.groupdict()['args'])
 
     env = {}
     env['_from'] = prefix.split('!', 1)[0]

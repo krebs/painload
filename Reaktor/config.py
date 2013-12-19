@@ -17,7 +17,7 @@ irc_channels = [
 def default_command(cmd):
   return {
     'capname': cmd,
-    'pattern': '^(?:' + name + '|\\*):\\s*' + cmd + '\\s*$',
+    'pattern': '^(?:' + name + '|\\*):\\s*' + cmd + '\\s*(?:\\s+(?P<args>.*))?$',
     'argv': [ 'commands/' + cmd ] }
 
 commands = [
