@@ -46,7 +46,8 @@ class asybot(asychat):
     self.hostname = getconf('irc_nickname')
     self.ircname = getconf('irc_nickname')
     self.data = ''
-    self.set_terminator('\r\n'.encode(encoding='UTF-8'))
+    self.myterminator = '\r\n'
+    self.set_terminator(self.myterminator.encode())
     self.create_socket(AF_INET, SOCK_STREAM)
     self.connect((self.server, self.port))
     self.wrapper = TextWrapper(subsequent_indent=" ",width=400)
@@ -108,7 +109,8 @@ class asybot(asychat):
     self.reset_alarm()
 
   def push(self, message):
-    msg = (message + self.get_terminator().decode(encoding='UTF-8')).encode(encoding='UTF-8')
+    log.debug('>> %s' % message)
+    msg = (message + self.myterminator).encode()
     log.debug('>> %s' % msg)
     asychat.push(self, msg)
 
@@ -120,14 +122,14 @@ class asybot(asychat):
 
   def on_privmsg(self, prefix, command, params, rest):
     def PRIVMSG(text):
-      for line in self.wrapper.wrap(text.decode(encoding='UTF-8')):
+      for line in self.wrapper.wrap(text):
         msg = 'PRIVMSG %s :%s' % (','.join(params), line)
         log.info(msg)
         self.push(msg)
         sleep(1)
 
     def ME(text):
-      PRIVMSG(('ACTION ' + text + '').encode(encoding='UTF-8'))
+      PRIVMSG(('ACTION ' + text + ''))
 
     for command in getconf('commands'):
       y = match(command['pattern'], rest)
@@ -155,9 +157,9 @@ class asybot(asychat):
       log.error('OSError@%s: %s' % (myargv, error))
       return
     pid = p.pid
-    for line in iter(p.stdout.readline, ''.encode(encoding='UTF-8')):
+    for line in iter(p.stdout.readline, ''.encode()):
       try:
-        PRIVMSG(translate_colors(line))
+        PRIVMSG(translate_colors(line.decode()))
       except Exception as error:
         log.error('no send: %s' % error)
       log.debug('%s stdout: %s' % (pid, line))
