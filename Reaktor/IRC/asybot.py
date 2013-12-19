@@ -146,8 +146,7 @@ class asybot(asychat):
     #TODO: allow only commands below ./commands/
     exe = join(dirname(realpath(dirname(__file__))), command['argv'][0])
     myargv = [exe] + command['argv'][1:]
-    print(match.groupdict())
-    if 'args' in match.groupdict():
+    if match.groupdict().get('args',None):
       myargv += shlex.split(match.groupdict()['args'])
 
     env = {}
