@@ -3,3 +3,5 @@ commands/caps: merge load_config with IRC/getconf.py
 getconf: reload inotify
 
 provide arguments to commands
+
+check own username
