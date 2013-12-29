@@ -14,7 +14,7 @@ install: upgrade
 upgrade: update
 	if ! diff -u scripts/tinc_setup/tinc-up /etc/tinc/retiolum/tinc-up; then \
 		sudo cp scripts/tinc_setup/tinc-up /etc/tinc/retiolum/tinc-up; \
-		sudo pkill -HUP tincd || :; 
+		sudo pkill -HUP tincd || :; \
 	fi
 
 update: hosts
