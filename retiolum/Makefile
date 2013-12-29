@@ -9,8 +9,6 @@ links:
 
 
 install: upgrade
-	../punani/bin/punani install tinc python
-	scripts/tinc_setup/install.sh
 	sudo cp scripts/tinc_setup/tinc-up /etc/tinc/retiolum/tinc-up
 
 upgrade: update
