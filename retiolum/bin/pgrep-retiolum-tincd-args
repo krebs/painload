@@ -1,2 +1,0 @@
-#! /bin/sh
-ps -e -o args | grep -E '(^|[ /])tincd +([^ ].* )?(-n +|--net=)retiolum'

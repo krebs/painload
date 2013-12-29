@@ -11,14 +11,9 @@ host=$dirname/hosts/$name
 ip link set $INTERFACE up
 
 addr4=`sed -n 's|^ *Subnet *= *\(10[.][^ ]*\) *$|\1|p' $host`
-if [ "$addr4" != '' ];then
-    ip -4 addr add $addr4 dev $INTERFACE
-    ip -4 route add 10.243.0.0/16 dev $INTERFACE
-else
-    addr4=`sed -n 's|^ *Subnet *= *\(42[.][^ ]*\) *$|\1|p' $host`
-    ip -4 addr add $addr4 dev $INTERFACE
-    ip -4 route add 42.0.0.0/16 dev $INTERFACE
-fi
+ip -4 addr add $addr4 dev $INTERFACE
+ip -4 route add 10.243.0.0/16 dev $INTERFACE
+ip -4 route add 172.22.0.0/15 dev $INTERFACE
 
 addr6=`sed -n 's|^ *Subnet *= *\(42[:][^ ]*\) *$|\1|p' $host`
 ip -6 addr add $addr6 dev $INTERFACE

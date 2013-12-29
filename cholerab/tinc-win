@@ -1,0 +1,7 @@
+install tinc in windows
+add tap device
+Interface instead of device in tinc.conf
+fix ip in windows network device
+generate key
+propagate hosts
+
