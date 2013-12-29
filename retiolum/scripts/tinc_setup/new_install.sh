@@ -218,6 +218,8 @@ EOF
     echo "addr4=\$(sed -n \"s|^ *Subnet *= *\\($SUBNET4[.][^ ]*\\) *\$|\\\\1|p\" \$host)" >> tinc-up
     echo 'ip -4 addr add $addr4 dev $INTERFACE' >> tinc-up
     echo "ip -4 route add $FULLSUBNET/$MASK4 dev \$INTERFACE" >> tinc-up
+    #TODO: variable for network announced
+    echo "ip -4 route add 172.22.0.0/15 dev \$INTERFACE" >> tinc-up
     echo '' >> tinc-up
     echo "addr6=\$(sed -n \"s|^ *Subnet *= *\\($SUBNET6[:][^ ]*\\) *\$|\\\\1|p\" \$host)" >> tinc-up
     echo 'ip -6 addr add $addr6 dev $INTERFACE' >> tinc-up
