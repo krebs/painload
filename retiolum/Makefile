@@ -12,7 +12,7 @@ install: upgrade
 	sudo cp scripts/tinc_setup/tinc-up /etc/tinc/retiolum/tinc-up
 
 upgrade: update
-	if ! diff -u scripts/tinc_setup/tinc-up /etc/tinc/retiolum/tinc-up; then \
+	if ! sudo diff -u scripts/tinc_setup/tinc-up /etc/tinc/retiolum/tinc-up; then \
 		sudo cp scripts/tinc_setup/tinc-up /etc/tinc/retiolum/tinc-up; \
 		sudo pkill -HUP tincd || :; \
 	fi
