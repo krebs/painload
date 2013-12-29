@@ -9,4 +9,4 @@ all nodes which announce dn42 via //retiolum/hosts/ file by having the line
 in the configuration are potential dn42 gateways.
 tell your host to use this node via
 
-    route add -net 172.22.0.0/15 gw 10.243.232.121
+    route add -net 172.22.0.0/15 dev retiolum
