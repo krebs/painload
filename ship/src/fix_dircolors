@@ -1,0 +1,11 @@
+#!/bin/sh
+#@core
+exists dircolors || die "no dircolors in PATH, bailing out"
+
+info "fixing dircolors for $(id -un)"
+dircolors -p > $HOME/.dircolors
+sed -i 's/\(DIR \).*/\101;35/' $HOME/.dircolors
+! grep -q 'dircolors' $HOME/.profile && \
+	info "adding dircolors line to $HOME/.profile" && \
+	echo 'eval `dircolors -b $HOME/.dircolors`' >> $HOME/.profile
+info "done"
