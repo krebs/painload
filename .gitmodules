@@ -26,7 +26,7 @@
 	path = Reaktor/repos/whatweb
 	url = https://github.com/urbanadventurer/WhatWeb.git
 [submodule "minikrebs"]
-	path = minikrebs
+	path = Cancer/minikrebs
 	url = https://github.com/krebscode/minikrebs.git
 [submodule "web"]
 	path = web
