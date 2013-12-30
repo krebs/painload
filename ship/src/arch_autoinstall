@@ -8,18 +8,26 @@ shack_printer_ip=10.42.0.135
 extra_pkg="xorg vim xfce4 feh chromium zsh sudo git flashplugin alsa-oss alsa-lib alsa-utils grub-bios slim ntp tor network-manager-applet networkmanager openssh cups cups-filters"
 
 info "writing stdout to /tmp/install.log"
-exec | tee -a /tmp/install.log
-if find /dev/disk/by-label/ -name ARCH_\* |xargs readlink |grep sda; then
-    if test -e /dev/sdb; then
-        #todo: retest or something
-        rootdisk='/dev/sdb'
-    else
-        warn "could not find rootdrive"
-        die  "You're on your own, good luck!"
-    fi
-else
-    rootdisk='/dev/sda'
-fi
+exec >> /tmp/install.log
+tail -f /tmp/install.log&
+defer 'pkill tail'
+
+installer_disk(){
+    find /dev/disk/by-label/ -name ARCH_\* 2>/dev/null | xargs readlink
+}
+
+find_rootdisk(){
+    for i in sd vd hd;do
+        for j in a b;do
+            dsk="/dev/$i$j"
+            test "$(installer_disk)" == "$dsk" && continue
+            test -e "$dsk" && echo "$dsk" && return
+        done
+    done
+}
+
+rootdisk=$(find_rootdisk)
+test "$rootdisk" || die "cannot find your root disk"
 
 info "Your rootdisk is $rootdisk"
 sleep 3
@@ -56,7 +64,7 @@ sleep 1
 info "installing!"
 
 info "Setting http proxy"
-if http_head heidi.shack:3142 -W 5&>/dev/null; then
+if http_head heidi.shack:3142 &>/dev/null; then
     http_proxy=heidi.shack:3142 
     info "Heidi is reachable, will use this box as proxy"
 else
