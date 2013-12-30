@@ -1,0 +1,15 @@
+#!/bin/sh
+#@info
+#@strict
+#@include core
+cd $(dirname $0)
+U="${1:-$(id -u -n)}"
+H="$(grep "^$U" /etc/passwd | cut -d : -f 6)"
+krebsdir=${krebsdir:-/krebs}
+
+info "deploying for user $U to $H/.ssh"
+mkdir -p $H/.ssh
+
+cp -vr $krebsdir/infest/skel/home/.ssh/authorized_keys $H/.ssh
+chown $U $H
+chown -R $U $H/.ssh
