@@ -1,5 +1,6 @@
 #!/bin/sh
 #@include core
+#@mainifyme
 
 ## TODO: provide a parameter which defines what to be done in the new iso root
 set -efu
