@@ -1,0 +1,17 @@
+# Tests in Painload
+every subdir in // `should` contain a Makefile which supports 'make test'.
+The exit code must be 0 if all tests went fine, not 1 if some tests of the
+subdirectory fucked up.
+
+//util //retiolum and //ship are currently using an asynchronous test runner
+which outputs test results in TAP (test anything protocol) format. 
+
+# Docker Tests
+Some Tests are using docker as a container testing facility. These tests 
+contain of a runner script for the make test command and a script which 
+will be run in the docker container. 
+For examples see //retiolum/t/docker/
+
+# Continuous Integration
+currently we are running CI with buildbot on http://cband:8010 . 
+Configuration is in krebs:ci/buildbot .
