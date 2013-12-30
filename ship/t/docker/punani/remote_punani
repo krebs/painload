@@ -1,4 +1,11 @@
 #!/bin/sh
 rhost=http://conf.krebsco.de
 
-curl $rhost/punani | sh -
+exec 2>/dev/null
+apt-get install -y wget
+# testing if make does not exist, installs it
+! (  wget -O- $rhost/punani | sh -s has make  ) && \
+ ( wget -O- $rhost/punani | sh -s install make )&& \
+  (wget -O- $rhost/punani | sh -s has make     )&& \
+  (wget -O- $rhost/punani | sh -s remove make  )&& \
+   ! ( wget -O- $rhost/punani | sh -s has make )
