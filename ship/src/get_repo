@@ -1,0 +1,22 @@
+#!/bin/sh
+#@info
+#@strict
+#@include punani
+# Can be overwritten before install
+
+KREBSDIR=${KREBSDIR:-/krebs}
+( is_root || ! test "$KREBSDIR" = "/krebs" ) || die "not running as root, stuff may not work. change KREBSDIR env to bootstrap somewhere else!"; 
+
+info "installing git to clone repo"
+punani install git
+
+[ -e "$KREBSDIR" ] && die "krebs dir already exists"
+
+git clone --depth 1 https://github.com/krebscode/painload.git "$KREBSDIR" || die "cloning failed :(" 
+
+cd $KREBSDIR || die "cannot change into $KREBSDIR folder:(" ;
+
+info "installing make"
+punani install make
+
+info "have a nice day"

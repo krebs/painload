@@ -1,5 +1,7 @@
 #!/bin/sh
-#@core
+#@info
+#@strict
+#@include core
 exists dircolors || die "no dircolors in PATH, bailing out"
 
 info "fixing dircolors for $(id -un)"
