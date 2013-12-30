@@ -1,0 +1,4 @@
+#!/bin/sh
+rhost=http://conf.krebsco.de
+
+curl $rhost/punani | sh -
