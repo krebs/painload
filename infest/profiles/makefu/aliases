@@ -1,4 +1,0 @@
-alias s=sudo
-alias t=task
-alias ll="ls -al"
-alias psg="ps aux | grep"

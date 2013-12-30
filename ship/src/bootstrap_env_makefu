@@ -1,0 +1,172 @@
+#!/bin/sh
+# TODO: modularize zsh configuration and vim configuration
+#@info
+#@strict
+#@include core
+#@include punani
+info "Configuring environment for $(id -un)"
+cd $(readlink -f $(dirname $0))
+info "Using punani to install git vim and zsh"
+punani install git vim zsh || error "cannot install some shit"
+
+info "writing dotfiles"
+# deploying zshrc
+# TODO modularize zshrc
+cat > $HOME/.zshrc <<EOF
+# Path to your oh-my-zsh configuration.
+export ZSH=\$HOME/.oh-my-zsh
+
+# Look in ~/.oh-my-zsh/themes/
+export ZSH_THEME="gallifrey"
+
+# Comment this out to disable weekly auto-update checks
+export DISABLE_AUTO_UPDATE="true"
+
+plugins=(git ssh-agent)
+. \$ZSH/oh-my-zsh.sh
+test -e \$HOME/.aliases && source \$HOME/.aliases
+
+# Customize to your needs...
+export PATH=/usr/sbin:/krebs/bin:\$HOME/bin:\$PATH:/sbin
+HISTFILE=~/.histfile
+HISTSIZE=9000001
+SAVEHIST=9000001
+
+export EDITOR=vim
+
+export JAVA_HOME=\$JAVA_HOME:/opt/java/jre
+
+GREP_COLOR="1;33"
+alias grep='grep --color=auto'
+alias vi=vim
+
+export MANPATH=\$MANPATH:\$HOME/man
+
+if [ -f "\$HOME/.dircolors" ] ; then
+  eval \$(dircolors -b "\$HOME/.dircolors")
+  export LS_COLORS
+fi
+
+which fortune >/dev/null && fortune -a
+which task >/dev/null && task
+echo "--"
+test -r ~/TODO  && cat ~/TODO 
+
+setopt menu_complete
+unsetopt correct_all
+EOF
+
+info "deploying vim config"
+if [ -e $HOME/.vim ] ; then
+  oldvim=$HOME/.vim.`date +%Y%M%d`
+  info "Backing up old vim folder to $oldvim"
+  mv -v $HOME/.vim $oldvim
+fi
+
+mkdir -p $HOME/.vim
+
+# TODO modilarize vimconfig
+
+cat > $HOME/.vim/vimrc <<EOF 
+set nocompatible
+filetype off
+set rtp+=~/.vim/bundle/vundle
+call vundle#rc()
+
+" TODO refactor this
+Bundle 'gmarik/vundle'
+Bundle 'SudoEdit.vim'
+Bundle 'snipMate'
+Bundle 'tpope/vim-fugitive'
+Bundle 'vim-scripts-iptables'
+Bundle 'pyflakes'
+
+filetype plugin indent on
+syntax on
+
+set vb
+let g:snips_author = 'Bob Ross <root@syntax-fehler.de>'
+let g:makefu_author = 'makefu'
+
+set foldenable
+set foldmethod=syntax
+" shows matching braches etc
+set showmatch
+set matchtime=3
+" highlight search
+set hlsearch
+
+" set noswapfile
+" set nobackup
+set backupdir=~/.vim/backup
+set directory=~/.vim/backup
+
+" turn off F1
+inoremap <F1> <ESC>
+nnoremap <F1> <ESC>
+vnoremap <F1> <ESC>
+" pasting
+nnoremap <F2> :set invpaste paste?<CR>
+set pastetoggle=<F2>
+set showmode
+
+" save on focus lost
+au FocusLost * :wa
+
+set spelllang=en
+" use set spell to enable spelling
+
+" press ttt to rot16 the whole file
+nmap ttt ggg?G
+
+colorscheme darkblue
+set background=dark
+
+set number
+set mouse=
+set textwidth=9001
+set ignorecase
+set incsearch
+set wildignore=*.o,*.obj,*.bak,*.exe,*.os
+
+set shiftwidth=2
+set tabstop=2
+set et
+set sw=2
+set smarttab
+set autoindent
+" end tabstop
+set backspace=indent,eol,start
+set nocp
+autocmd BufRead *.json set filetype=json
+EOF
+
+ln -vs $HOME/.vim/vimrc $HOME/.vimrc
+
+#install all the vim stuff with the help of vundle
+cd $HOME/.vim
+mkdir bundle
+mkdir backup
+info "Fetching vim-vundle"
+git clone https://github.com/gmarik/vundle.git bundle/vundle > /dev/null && \
+  info "Vim Vundle deployed"
+info "Installing Vundle Bundles"
+vim "+:BundleInstall" "+:qall"
+cd -
+
+info "configuring zsh"
+if exists zsh; then
+  if [ "$SHELL" != "`which zsh`" ] ;then
+    info "setting zsh as new shell,please enter your user password"
+    chsh -s `which zsh` 
+  else
+    info "zsh already set as default shell"
+  fi
+  if [ ! -d ~/.oh-my-zsh ] ; then
+    git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh > /dev/null && info "oh-my-zsh deployed"
+  else
+    info "oh-my-zsh already installed"
+  fi
+else
+  error "cannot find zsh :("
+fi

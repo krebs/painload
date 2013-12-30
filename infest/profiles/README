@@ -1,8 +1,0 @@
-Install different profiles for a user on the system
-
-UseCase:
-./deploy-profile bob
-  [write dotfiles of profile bob for logged-in users ~]
-
-./deploy-profile system
-  [write krebs additions to /etc and /root]
