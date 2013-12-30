@@ -1,5 +1,3 @@
 # punani
 
-- error code should be false when package cannot be removed because it is not
-  installed
-- error code should be false when checking if a package is installed
+- pacman cannot automagically remove packages

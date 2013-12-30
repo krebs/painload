@@ -70,14 +70,14 @@ punani(){
         if punani_has $RES; then
           info "$RES already installed, skipping"
         else
-          punani_install $RES || error "cannot install $RES with $PACKER"
+          punani_install $RES || die "cannot install $RES with $PACKER"
         fi
         ;;
       remove)
         if ! punani_has $RES; then
           info "$RES not installed, skipping"
         else
-          punani_remove $RES || error "cannot install $RES with $PACKER"
+          punani_remove $RES || die "cannot install $RES with $PACKER"
         fi
         ;;
       has)
@@ -85,6 +85,7 @@ punani(){
           info "$RES is installed"
         else
           info "$RES is not installed"
+          exit 1
         fi
         ;;
       owner)
