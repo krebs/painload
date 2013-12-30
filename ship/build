@@ -59,6 +59,18 @@ $1a\\
 EOF
 }
 
+## usage: #@mainifyme\( \([A-Za-z_][A-Za-z0-9_]*\)\)\? -> build_mainifyme \1 \3
+build_mainifyme() {
+  mainifyme_name="${2:-main}"
+  cat<<EOF
+  $1a\\
+$mainifyme_name(){
+  \$a\\
+}\\
+$mainifyme_name "\$@"
+EOF
+}
+
 ###
 ### main subroutines
 ###
