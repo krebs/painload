@@ -5,5 +5,6 @@ Abstract:
   ====>
   - Proper documentation
   - Proper repository
+    - automatically maintained, because the awesome happens in //
+      - by git hooks or something or else it will rot away
   - Proper homepage
-
