@@ -6,7 +6,7 @@ import math
 from time import sleep
 
 class TestBot(irc.bot.SingleServerIRCBot):
-    def __init__(self, rss, name, server='10.243.231.66', port=6667, chan='#news', timeout=60):
+    def __init__(self, rss, name, server='ire', port=6667, chan='#news', timeout=60):
         irc.bot.SingleServerIRCBot.__init__(self, [(server, port)], name, name)
         self.url = rss
         self.feed = feedparser.parse(self.url)
