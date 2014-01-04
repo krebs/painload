@@ -1,10 +1,6 @@
 import irc.bot
 import _thread
 import rssbot
-#
-#def startall():
-#    for bot in botarray:
-#        bot.start()
 
 class NewsBot(irc.bot.SingleServerIRCBot):
     def __init__(self, name, server='ire', port=6667, chan='#news', timeout=60):
@@ -53,10 +49,12 @@ class NewsBot(irc.bot.SingleServerIRCBot):
                 bots[args[1]] = bot
                 bot.start()
                 return "bot " + args[1] + " added"
+
             elif args[0] == 'del':
-                bots[args[1]].die()
-                del bots[args1]
+                bots[args[1]].stop()
+                del bots[args[1]]
                 return "bot " + args[1] + " deleted"
+
             elif args[0] == 'save':
                 output_buffer = ''
                 for bot in bots:
@@ -67,7 +65,8 @@ class NewsBot(irc.bot.SingleServerIRCBot):
                 F.close()
 
                 return "bots saved to " + feedfile
-
+            elif args[0] == 'caps':
+                return "add del save caps"
 
             else:
                 return "unknown command"
@@ -86,6 +85,7 @@ lines = F.readlines()
 F.close()
 
 for line in lines:
+    line = line.strip('\n')
     linear = line.split('|')
     bot = rssbot.RssBot(linear[1], linear[0])
     bot.start()
