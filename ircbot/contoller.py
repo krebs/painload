@@ -33,7 +33,11 @@ class NewsBot(irc.bot.SingleServerIRCBot):
         args_array = event.arguments[0].split()
         if args_array[0][:-1]==self.name:
             answer = self.read_message(args_array[1:])
-            self.connection.privmsg(self.chan, answer)
+            self.send(answer)
+
+    def send(self, string):
+        for line in string.split('\n'):
+            self.connection.privmsg(self.chan, line)
         
 
     def on_pubmsg(self, connection, event):
@@ -63,7 +67,19 @@ class NewsBot(irc.bot.SingleServerIRCBot):
 
                 return "bots saved to " + feedfile
             elif args[0] == 'caps':
-                return "add del save caps"
+                return "add del save caps list"
+
+            elif args[0] == 'list':
+                output_buffer = ''
+                for bot in bots:
+                    output_buffer += bot + ' url: ' + bots[bot].url + '\n'
+                return output_buffer
+
+            elif args[0] == 'info':
+                if args[1] in bots:
+                    return 'title: ' + bots[args[1]].feed.feed.title + '\n' + 'size: ' + len(bots[args[1]].feed.entries)
+                else:
+                    return 'bot not found'
 
             else:
                 return "unknown command"
