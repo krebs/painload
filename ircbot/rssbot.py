@@ -5,7 +5,7 @@ import _thread
 import math
 from time import sleep
 
-class TestBot(irc.bot.SingleServerIRCBot):
+class RssBot(irc.bot.SingleServerIRCBot):
     def __init__(self, rss, name, server='ire', port=6667, chan='#news', timeout=60):
         irc.bot.SingleServerIRCBot.__init__(self, [(server, port)], name, name)
         self.url = rss
@@ -65,17 +65,17 @@ class TestBot(irc.bot.SingleServerIRCBot):
 #    def on_privmsg(self, connection, event):
 #        print event.source().split('!')[0], event.arguments()
 
-F = open("feeds", "r")
-lines = F.readlines()
-F.close()
-
-botarray = []
-for line in lines:
-    lineArray = line.split('|')
-    bot = TestBot(lineArray[1], lineArray[0])
-    #bot.start()
-    botarray.append(bot)
-
-def startall():
-    for bot in botarray:
-        bot.start()
+#F = open("feeds", "r")
+#lines = F.readlines()
+#F.close()
+#
+#botarray = []
+#for line in lines:
+#    lineArray = line.split('|')
+#    bot = TestBot(lineArray[1], lineArray[0])
+#    #bot.start()
+#    botarray.append(bot)
+#
+#def startall():
+#    for bot in botarray:
+#        bot.start()
