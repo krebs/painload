@@ -1,0 +1,17 @@
+#! /bin/sh
+# usage: GfindFeeds4bot QUERY
+set -euf
+
+export query="$1"
+export data="$(
+  curl -sS "https://www.google.com/uds/GfindFeeds?v=1.0&q=$query"
+)"
+
+node <<EOF
+  query = process.env.query
+  data = JSON.parse(process.env.data)
+
+  data.responseData.entries.forEach(function (entry, index) {
+    console.log(query + index + '|' + entry.url)
+  })
+EOF
