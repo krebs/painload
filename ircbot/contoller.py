@@ -30,9 +30,7 @@ class NewsBot(irc.bot.SingleServerIRCBot):
         connection.join(self.chan)
 
     def on_privmsg(self, connection, event):
-        print(event.source)
         args_array = event.arguments[0].split()
-        print(args_array)
         if args_array[0][:-1]==self.name:
             answer = self.read_message(args_array[1:])
             self.connection.privmsg(self.chan, answer)
@@ -42,7 +40,6 @@ class NewsBot(irc.bot.SingleServerIRCBot):
         self.on_privmsg(connection, event)
 
     def read_message(self, args):
-        print('reading message')
         try:
             if args[0] == 'add':
                 bot = rssbot.RssBot(args[2], args[1])
