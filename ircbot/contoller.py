@@ -38,7 +38,7 @@ class NewsBot(irc.bot.SingleServerIRCBot):
     def send(self, string):
         for line in string.split('\n'):
             self.connection.privmsg(self.chan, line)
-        
+            sleep(0.5)
 
     def on_pubmsg(self, connection, event):
         self.on_privmsg(connection, event)
