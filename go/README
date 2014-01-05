@@ -16,7 +16,7 @@ go - minimalistic uri shortener
 
 # resolve uri
 
-  curl http://localhost:1337/shortened-relative-uri
+  curl -L http://localhost:1337/shortened-relative-uri
 
 # clear database
 
