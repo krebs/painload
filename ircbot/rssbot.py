@@ -31,6 +31,12 @@ class RssBot(irc.bot.SingleServerIRCBot):
         self.disconnect()
 
     def updateloop(self):
+        try:
+            self.feed = feedparser.parse(self.url)
+        except:
+            print(self.name + ': rss timeout occured')
+        for entry in self.feed.entries:
+            self.oldnews.append(entry.link)
         while self.loop:
             try:
                 self.feed = feedparser.parse(self.url)
@@ -46,15 +52,11 @@ class RssBot(irc.bot.SingleServerIRCBot):
                     self.lastpull = datetime.now()
             sleep(self.to)
 
-    def sendall(self):
-        while len(self.sendqueue) > 0:
-            sleep(1)
-            self.send(self.sendqueue.pop())
 
     def send(self, string):
         urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', string)
         for url in urls:
-            shorturl = subprocess.check_output(["curl", "-F", "uri=" + url, "http://127.0.0.1:1337"])
+            shorturl = subprocess.check_output(["curl", "-F", "uri=" + url, "http://wall:1337"]).decode()
             string = string.replace(url, shorturl)
         if self.connection.connected:
             for line in string.split('\n'):
