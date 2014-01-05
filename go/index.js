@@ -1,5 +1,13 @@
+var hostname = process.env.HOSTN;
 var httpPort = process.env.PORT || 1337;
 var redisPrefix = 'go:';
+var uriPrefix = '';
+if (hostname) {
+  uriPrefix += 'http://' + hostname;
+  if (httpPort != 80) {
+    uriPrefix += ':' + httpPort;
+  }
+}
 
 var http = require('http');
 var formidable = require('formidable');
@@ -41,8 +49,9 @@ function create (req, res) {
 
       var uri = fields.uri;
       // TODO check uri(?)
-      var shortUri = '/' + reply;
-      var key = redisPrefix + shortUri;
+      var shortPath = '/' + reply;
+      var shortUri = uriPrefix + shortPath;
+      var key = redisPrefix + shortPath;
 
       redisClient.set(key, uri, function (error) {
         if (error) {

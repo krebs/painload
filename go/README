@@ -7,16 +7,18 @@ go - minimalistic uri shortener
     npm install hiredis
 
 # run service
-    PORT=1337 node .
+    HOSTN=go PORT=80 node .
+
+  if you omit `HOSTN`, then relative shortened uris will be generated.
 
 # add uri
-    curl -F uri=https://mywaytoolonguri http://localhost:1337
+    curl -F uri=https://mywaytoolonguri http://go
 
-  this will give you a relative shortened uri.
+  this will give you a shortened uri.
 
 # resolve uri
 
-  curl -L http://localhost:1337/shortened-relative-uri
+  curl -L http://go/1
 
 # clear database
 
