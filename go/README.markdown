@@ -15,6 +15,7 @@
     HOSTN=go PORT=80 node .
 
   if you omit `HOSTN`, then relative shortened uris will be generated.
+  if you omit `PORT`, then it's `1337`.
 
 ## add uri
 
