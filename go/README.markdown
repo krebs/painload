@@ -1,26 +1,32 @@
-go - minimalistic uri shortener
+# go - minimalistic uri shortener
 
-# installation
+## install dependencies
+
     npm install
 
-  optionally
+  apparently you can also
+
     npm install hiredis
 
-# run service
+  for more awesome.
+
+## run service
+
     HOSTN=go PORT=80 node .
 
   if you omit `HOSTN`, then relative shortened uris will be generated.
 
-# add uri
+## add uri
+
     curl -F uri=https://mywaytoolonguri http://go
 
   this will give you a shortened uri.
 
-# resolve uri
+## resolve uri
 
-  curl -L http://go/1
+    curl -L http://go/1
 
-# clear database
+## clear database
 
     redis-cli keys 'go:*' | xargs redis-cli del
 
