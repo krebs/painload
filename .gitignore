@@ -20,6 +20,7 @@ a.out
 *.o
 *.a
 .svn/
+/go/node_modules
 /god/Reaktor/tmp/
 /bin/
 /node/src

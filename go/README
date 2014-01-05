@@ -1,1 +1,16 @@
 go - minimalistic uri shortener
+
+# installation
+    npm install
+
+  optionally
+    npm install hiredis
+
+# run service
+    node .
+
+# clear database
+
+    redis-cli keys 'go:*' | xargs redis-cli del
+
+  if you have changed `redisPrefix`, then use that instead of `go:`.
