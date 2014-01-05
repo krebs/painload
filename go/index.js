@@ -1,6 +1,10 @@
+// configuration (and defaults)
 var hostname = process.env.HOSTN;
 var httpPort = process.env.PORT || 1337;
 var redisPrefix = 'go:';
+
+
+// automatic configuration
 var uriPrefix = '';
 if (hostname) {
   uriPrefix += 'http://' + hostname;
@@ -8,14 +12,20 @@ if (hostname) {
     uriPrefix += ':' + httpPort;
   }
 }
-
+
+
+// load libraries
 var http = require('http');
 var formidable = require('formidable');
 var redis = require('redis');
-
+
+
+// instantiate components
 var redisClient = redis.createClient();
 var httpServer = http.createServer(listener);
-
+
+
+// setup compoments
 redisClient.on('error', function (err) {
   console.log('redis made a bubu:', err.message);
   process.exit(23);
@@ -23,7 +33,9 @@ redisClient.on('error', function (err) {
 httpServer.listen(httpPort, function () {
   console.log('http server listening on port', httpPort);
 });
-
+
+
+// http handler
 function listener (req, res) {
   if (req.method === 'POST' && req.url === '/') {
     return create(req, res);
@@ -33,7 +45,7 @@ function listener (req, res) {
     return methodNotAllowed(req, res);
   }
 }
-
+
 function create (req, res) {
   redisClient.incr(redisPrefix + 'index', function (err, reply) {
     if (err) {
@@ -64,7 +76,7 @@ function create (req, res) {
     });
   });
 }
-
+
 function retrieve (req, res) {
   var key = redisPrefix + req.url;
   redisClient.get(key, function (error, reply) {
@@ -84,7 +96,7 @@ function retrieve (req, res) {
     return res.end();
   });
 }
-
+
 function methodNotAllowed (req, res) {
   res.writeHead(405, { 'content-type': 'text/plain' });
   return res.end('method not allowed\r\n');
