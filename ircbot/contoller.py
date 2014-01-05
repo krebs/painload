@@ -125,7 +125,7 @@ class commands():
             for data in ['title', 'link', 'updated']:
                 if data in bots[args[1]].feed.feed:
                     output_buffer += data + ': ' + bots[args[1]].feed.feed[data] + '\n'
-            print(output_buffer)
+            output_buffer += 'lastpull: ' + bots[args[1]].lastpull.isoformat()
             return output_buffer
         else:
             return 'bot not found'
