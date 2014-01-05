@@ -11,8 +11,8 @@ class NewsBot(irc.bot.SingleServerIRCBot):
         self.chan = chan
         self.to = timeout
 
-    def start(self):
-        self.bot = _thread.start_new_thread(irc.bot.SingleServerIRCBot.start, (self,))
+#    def start(self):
+#        self.bot = _thread.start_new_thread(irc.bot.SingleServerIRCBot.start, (self,))
 
 #   def send(self, string):
 #       if len(string) < 450:
@@ -90,7 +90,6 @@ feedfile = 'new_feeds'
 
 bots = {}
 knews = NewsBot('knews')
-knews.start()
 
 #config file reading
 F = open(feedfile, "r")
@@ -103,3 +102,5 @@ for line in lines:
     bot = rssbot.RssBot(linear[1], linear[0])
     bot.start()
     bots[linear[0]] = bot
+
+knews.start()
