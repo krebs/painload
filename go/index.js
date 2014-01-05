@@ -68,8 +68,11 @@ function retrieve (req, res) {
       return res.end('not found\r\n');
     }
 
-    res.writeHead(200, { 'content-type': 'text/plain' });
-    return res.end(reply + '\r\n');
+    res.writeHead(302, {
+      'content-type': 'text/plain',
+      'location': reply,
+    });
+    return res.end();
   });
 }
 
