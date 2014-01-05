@@ -56,7 +56,7 @@ class RssBot(irc.bot.SingleServerIRCBot):
     def send(self, string):
         urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', string)
         for url in urls:
-            shorturl = subprocess.check_output(["curl", "-F", "uri=" + url, "http://wall:1337"]).decode()
+            shorturl = subprocess.check_output(["curl", "-sS", "-F", "uri=" + url, "http://wall:1337"]).decode()
             string = string.replace(url, shorturl)
         if self.connection.connected:
             for line in string.split('\n'):
