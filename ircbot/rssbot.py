@@ -27,7 +27,10 @@ class RssBot(irc.bot.SingleServerIRCBot):
         self.disconnect()
 
     def updateloop(self):
-        self.feed = feedparser.parse(self.url)
+        try:
+            self.feed = feedparser.parse(self.url)
+        except:
+            print(self.name + ': rss timeout occured')
         for entry in self.feed.entries:
             #try:
             #    self.sendqueue.append(entry.title + " " + entry.link + " com: " + entry.comments)
@@ -38,7 +41,10 @@ class RssBot(irc.bot.SingleServerIRCBot):
 
         while self.loop:
             sleep(self.to)
-            self.feed = feedparser.parse(self.url)
+            try:
+                self.feed = feedparser.parse(self.url)
+            except:
+                print(self.name + ': rss timeout occured')
             for entry in self.feed.entries:
                 if not entry.link in self.oldnews:
                     #try:
@@ -52,17 +58,19 @@ class RssBot(irc.bot.SingleServerIRCBot):
             sleep(1)
             self.send(self.sendqueue.pop())
 
-    def send(self, string):
+    def send(self, string=''):
         if self.connection.connected:
-            if len(string) < 450:
-                self.connection.privmsg(self.chan, string)
-            else:
-                space = 0
-                for x in range(math.ceil(len(string)/400)):
-                    oldspace = space
-                    space = string.find(" ", (x+1)*400, (x+1)*400+50)
-                    self.connection.privmsg(self.chan, string[oldspace:space])
-                    sleep(1)
+            for line in string.split('\n'):
+                if len(line) < 450:
+                    self.connection.privmsg(self.chan, line)
+                else:
+                    space = 0
+                    for x in range(math.ceil(len(line)/400)):
+                        oldspace = space
+                        space = line.find(" ", (x+1)*400, (x+1)*400+50)
+                        self.connection.privmsg(self.chan, line[oldspace:space])
+                        sleep(1)
+                sleep(1)
         else:
             self.connection.reconnect()
             self.send(string)
