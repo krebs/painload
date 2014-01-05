@@ -3,6 +3,8 @@ import irc.bot
 import feedparser
 import _thread
 import math
+import re
+from datetime import datetime
 from time import sleep
 
 class RssBot(irc.bot.SingleServerIRCBot):
@@ -17,6 +19,7 @@ class RssBot(irc.bot.SingleServerIRCBot):
         self.oldnews = []
         self.sendqueue = []
         self.loop = True
+        self.lastpull = datetime.now()
 
     def start(self):
         self.upd_loop = _thread.start_new_thread(self.updateloop, ())
@@ -27,20 +30,7 @@ class RssBot(irc.bot.SingleServerIRCBot):
         self.disconnect()
 
     def updateloop(self):
-        try:
-            self.feed = feedparser.parse(self.url)
-        except:
-            print(self.name + ': rss timeout occured')
-        for entry in self.feed.entries:
-            #try:
-            #    self.sendqueue.append(entry.title + " " + entry.link + " com: " + entry.comments)
-            #except AttributeError:
-            self.sendqueue.append(entry.title + " " + entry.link)
-
-            self.oldnews.append(entry.link)
-
         while self.loop:
-            sleep(self.to)
             try:
                 self.feed = feedparser.parse(self.url)
             except:
@@ -52,13 +42,19 @@ class RssBot(irc.bot.SingleServerIRCBot):
                     #except AttributeError:
                     self.send(entry.title + " " + entry.link)
                     self.oldnews.append(entry.link)
+                    self.lastpull = datetime.now()
+            sleep(self.to)
 
     def sendall(self):
         while len(self.sendqueue) > 0:
             sleep(1)
             self.send(self.sendqueue.pop())
 
-    def send(self, string=''):
+    def send(self, string):
+        urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', string)
+        for url in urls:
+            shorturl = subprocess.check_output(["curl", "-F", "uri=" + url, "http://127.0.0.1:1337"])
+            string = string.replace(url, shorturl)
         if self.connection.connected:
             for line in string.split('\n'):
                 if len(line) < 450:
