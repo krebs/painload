@@ -20,7 +20,7 @@ class RssBot(irc.bot.SingleServerIRCBot):
         self.oldnews = []
         self.sendqueue = []
         self.loop = True
-        self.lastpull = datetime.now()
+        self.lastnew = datetime.now()
 
     def start(self):
         self.upd_loop = _thread.start_new_thread(self.updateloop, ())
@@ -49,7 +49,7 @@ class RssBot(irc.bot.SingleServerIRCBot):
                     #except AttributeError:
                     self.send(entry.title + " " + entry.link)
                     self.oldnews.append(entry.link)
-                    self.lastpull = datetime.now()
+                    self.lastnew = datetime.now()
             sleep(self.to)
 
 

@@ -36,13 +36,14 @@ class NewsBot(irc.bot.SingleServerIRCBot):
             sleep(1)
 
     def on_privmsg(self, connection, event):
+        answer = self.read_message(args_array)
+        self.send(answer)
+
+    def on_pubmsg(self, connection, event):
         args_array = event.arguments[0].split()
         if args_array[0][:-1]==self.name:
             answer = self.read_message(args_array[1:])
             self.send(answer)
-
-    def on_pubmsg(self, connection, event):
-        self.on_privmsg(connection, event)
 
     def read_message(self, args):
         try:
@@ -125,7 +126,7 @@ class commands():
             for data in ['title', 'link', 'updated']:
                 if data in bots[args[1]].feed.feed:
                     output_buffer += data + ': ' + bots[args[1]].feed.feed[data] + '\n'
-            print(output_buffer)
+            output_buffer += 'lastnew: ' + bots[args[1]].lastnew.isoformat()
             return output_buffer
         else:
             return 'bot not found'
