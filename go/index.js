@@ -3,6 +3,7 @@ var hostname = process.env.HOSTN;
 var httpPort = process.env.PORT;
 var uriPrefix = process.env.URI_PREFIX;
 var redisPrefix = process.env.REDIS_KEY_PREFIX;
+var appendDomainToUri = process.env.NOT_SO_SHORT === 'true';
 
 
 // automatic configuration
@@ -25,6 +26,7 @@ if (!redisPrefix) {
 
 // load libraries
 var http = require('http');
+var url = require('url');
 var formidable = require('formidable');
 var redis = require('redis');
 
@@ -79,6 +81,10 @@ function create (req, res) {
           return internalError(err, req, res);
         }
 
+        if (appendDomainToUri) {
+          shortUri += '#' + url.parse(uri).host
+        }
+
         res.writeHead(200, { 'content-type': 'text/plain' });
         return res.end(shortUri + '\r\n');
       });
@@ -87,7 +93,7 @@ function create (req, res) {
 }
 
 function retrieve (req, res) {
-  var key = redisPrefix + req.url;
+  var key = redisPrefix + url.parse(req.url).path;
   redisClient.get(key, function (error, reply) {
     if (error) {
       return internalError(err, req, res);
