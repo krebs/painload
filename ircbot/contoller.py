@@ -114,7 +114,7 @@ class commands():
 
 
 feedfile = 'new_feeds'
-url_shortener = 'http://localhost'
+url_shortener = 'http://localhost:1337'
 init_channels = ['#news']
 
 if 'FEEDFILE' in os.environ:
