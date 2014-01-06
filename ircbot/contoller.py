@@ -2,6 +2,35 @@ from time import sleep
 import irc.bot
 import _thread
 import rssbot
+import os
+
+feedfile = 'new_feeds'
+url_shortener = 'http://localhost'
+
+if FEEDFILE in os.environ:
+    feedfile = os.environ['FEEDFILE']
+
+if URLSHORT in os.environ:
+    url_shortener = os.environ['URLSHORT']
+
+bots = {}
+knews = NewsBot('knews')
+
+#config file reading
+F = open(feedfile, "r")
+lines = F.readlines()
+F.close()
+
+for line in lines:
+    line = line.strip('\n')
+    linear = line.split('|')
+    bot = rssbot.RssBot(linear[1], linear[0], url_shortener)
+    bot.start()
+    bots[linear[0]] = bot
+
+knews.start()
+
+
 
 class NewsBot(irc.bot.SingleServerIRCBot):
     def __init__(self, name, server='ire', port=6667, chan='#news', timeout=60):
@@ -61,24 +90,6 @@ class NewsBot(irc.bot.SingleServerIRCBot):
         except:
             return "mimimimi"
 
-feedfile = 'new_feeds'
-
-bots = {}
-knews = NewsBot('knews')
-
-#config file reading
-F = open(feedfile, "r")
-lines = F.readlines()
-F.close()
-
-for line in lines:
-    line = line.strip('\n')
-    linear = line.split('|')
-    bot = rssbot.RssBot(linear[1], linear[0])
-    bot.start()
-    bots[linear[0]] = bot
-
-knews.start()
 
 
 class commands():

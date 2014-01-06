@@ -9,7 +9,7 @@ from datetime import datetime
 from time import sleep
 
 class RssBot(irc.bot.SingleServerIRCBot):
-    def __init__(self, rss, name, server='ire', port=6667, chan='#news', timeout=60):
+    def __init__(self, rss, name, url_shortener="http://localhost", server='ire', port=6667, chan='#news', timeout=60):
         irc.bot.SingleServerIRCBot.__init__(self, [(server, port)], name, name)
         self.url = rss
         self.name = name
@@ -47,7 +47,7 @@ class RssBot(irc.bot.SingleServerIRCBot):
                     #try:
                     #    self.send(entry.title + " " + entry.link + " com: " + entry.comments)
                     #except AttributeError:
-                    shorturl = subprocess.check_output(["curl", "-sS", "-F", "uri=" + entry.link, "http://wall:1337"]).decode()
+                    shorturl = subprocess.check_output(["curl", "-sS", "-F", "uri=" + entry.link, url_shortener]).decode()
                     self.send(entry.title + " " + shorturl)
                     self.oldnews.append(entry.link)
                     self.lastnew = datetime.now()
