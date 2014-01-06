@@ -2,7 +2,7 @@
 var hostname = process.env.HOSTN;
 var httpPort = process.env.PORT;
 var uriPrefix = process.env.URI_PREFIX;
-var redisPrefix = 'go:';
+var redisPrefix = process.env.REDIS_KEY_PREFIX;
 
 
 // automatic configuration
@@ -17,6 +17,9 @@ if (!uriPrefix) {
       uriPrefix += ':' + httpPort;
     }
   }
+}
+if (!redisPrefix) {
+  redisPrefix = 'go:';
 }
 
 

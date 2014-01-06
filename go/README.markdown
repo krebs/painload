@@ -18,6 +18,11 @@
   if you omit `PORT`, then it's `1337`.
   if you omit `URI_PREFIX`, then it will be generated from `HOSTN` änd `PORT`.
 
+  there's also the possibility to change the Redis key prefix which
+  defaults to `go:` with
+
+    REDIS_KEY_PREFIX=foobarmyprefix/
+
 ## add uri
 
     curl -F uri=https://mywaytoolonguri http://go
