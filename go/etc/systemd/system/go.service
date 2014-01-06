@@ -1,0 +1,14 @@
+[Unit]
+Description=go uri shortener
+After=redis.service
+
+[Service]
+EnvironmentFile=/etc/conf.d/go.env
+ExecStart=/usr/bin/node /krebs/go
+KillMode=process
+User=go
+Group=go
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
