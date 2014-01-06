@@ -48,8 +48,3 @@
   and finally start the service with
 
     systemctl start go
-
-  if you want to run as an unprivileged user but still want to use
-  port `80`, then maybe try something like
-
-    iptables -t nat -A PREROUTING -p tcp --dport 1337 -j REDIRECT --to-ports 80
