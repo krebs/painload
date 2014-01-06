@@ -7,4 +7,5 @@ install: \
 
 /etc/%: etc/%
 	@! test -e $@ || { echo file already exists: $@; exit 23; }
+	mkdir -p $(dir $@)
 	cp $< $@
