@@ -49,6 +49,7 @@
 
     systemctl start go
 
-  this can fail you haven't configured or useradd the user,
-  or if you haven't changed the port and the user isn't allowed to
-  listen to fancy ports like `80`.
+  if you want to run as an unprivileged user but still want to use
+  port `80`, then maybe try something like
+
+    iptables -t nat -A PREROUTING -p tcp --dport 1337 -j REDIRECT --to-ports 80
