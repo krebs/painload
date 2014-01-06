@@ -32,3 +32,20 @@
     redis-cli keys 'go:*' | xargs redis-cli del
 
   if you have changed `redisPrefix`, then use that instead of `go:`.
+
+## use systemd
+
+  run
+
+    make install
+
+  to install the systemd service and configuration files.
+  this will fail if the files are already installed and modified.
+
+  maybe you want to customize the configuration with
+
+    $EDITOR /etc/conf.d/go.env
+
+  and finally start the service
+
+    systemctl start go
