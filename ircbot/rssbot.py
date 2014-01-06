@@ -47,17 +47,14 @@ class RssBot(irc.bot.SingleServerIRCBot):
                     #try:
                     #    self.send(entry.title + " " + entry.link + " com: " + entry.comments)
                     #except AttributeError:
-                    self.send(entry.title + " " + entry.link)
+                    shorturl = subprocess.check_output(["curl", "-sS", "-F", "uri=" + entry.link, "http://wall:1337"]).decode()
+                    self.send(entry.title + " " + shorturl)
                     self.oldnews.append(entry.link)
                     self.lastnew = datetime.now()
             sleep(self.to)
 
 
     def send(self, string):
-        urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', string)
-        for url in urls:
-            shorturl = subprocess.check_output(["curl", "-sS", "-F", "uri=" + url, "http://wall:1337"]).decode()
-            string = string.replace(url, shorturl)
         if self.connection.connected:
             for line in string.split('\n'):
                 if len(line) < 450:
