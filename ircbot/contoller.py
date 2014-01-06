@@ -35,9 +35,15 @@ class NewsBot(irc.bot.SingleServerIRCBot):
             self.connection.privmsg(self.chan, line)
             sleep(1)
 
+    def sendq(self, target, string):
+        for line in string.split('\n'):
+            self.connection.privmsg(target, line)
+            sleep(1)
+
     def on_privmsg(self, connection, event):
+        args_array = event.arguments[0].split()
         answer = self.read_message(args_array)
-        self.send(answer)
+        self.sendq(event.source.nick, answer)
 
     def on_pubmsg(self, connection, event):
         args_array = event.arguments[0].split()
