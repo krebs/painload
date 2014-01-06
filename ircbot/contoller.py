@@ -4,64 +4,27 @@ import _thread
 import rssbot
 import os
 
-feedfile = 'new_feeds'
-url_shortener = 'http://localhost'
-
-if FEEDFILE in os.environ:
-    feedfile = os.environ['FEEDFILE']
-
-if URLSHORT in os.environ:
-    url_shortener = os.environ['URLSHORT']
-
-bots = {}
-knews = NewsBot('knews')
-
-#config file reading
-F = open(feedfile, "r")
-lines = F.readlines()
-F.close()
-
-for line in lines:
-    line = line.strip('\n')
-    linear = line.split('|')
-    bot = rssbot.RssBot(linear[1], linear[0], url_shortener)
-    bot.start()
-    bots[linear[0]] = bot
-
-knews.start()
-
 
 
 class NewsBot(irc.bot.SingleServerIRCBot):
-    def __init__(self, name, server='ire', port=6667, chan='#news', timeout=60):
+    def __init__(self, name, chans=['#news'], server='ire', port=6667, timeout=60):
         irc.bot.SingleServerIRCBot.__init__(self, [(server, port)], name, name)
         self.name = name
         self.server = server
         self.port = port
-        self.chan = chan
+        self.chans = chans
         self.to = timeout
 
     def start(self):
         self.bot = _thread.start_new_thread(irc.bot.SingleServerIRCBot.start, (self,))
 
-#   def send(self, string):
-#       if len(string) < 450:
-#           self.connection.privmsg(self.chan, string)
-#       else:
-#           space = 0
-#           for x in range(math.ceil(len(string)/400)):
-#               oldspace = space
-#               space = string.find(" ", (x+1)*400, (x+1)*400+50)
-#               self.connection.privmsg(self.chan, string[oldspace:space])
-#               sleep(1)
-
-
     def on_welcome(self, connection, event):
-        connection.join(self.chan)
+        for chan in self.chans:
+            connection.join(chan)
 
-    def send(self, string):
+    def send(self, target, string):
         for line in string.split('\n'):
-            self.connection.privmsg(self.chan, line)
+            self.connection.privmsg(target, line)
             sleep(1)
 
     def sendq(self, target, string):
@@ -78,7 +41,7 @@ class NewsBot(irc.bot.SingleServerIRCBot):
         args_array = event.arguments[0].split()
         if args_array[0][:-1]==self.name:
             answer = self.read_message(args_array[1:])
-            self.send(answer)
+            self.send(event.target, answer)
 
     def read_message(self, args):
         try:
@@ -120,7 +83,7 @@ class commands():
     def save(args):
         output_buffer = ''
         for bot in bots:
-           output_buffer += bot + '|' + bots[bot].url + '\n'
+           output_buffer += bot + '|' + bots[bot].url + '|' + ' '.join(bots[bot].channels) + '\n'
 
         F = open(feedfile, "w")
         F.writelines(output_buffer)
@@ -147,3 +110,33 @@ class commands():
             return output_buffer
         else:
             return 'bot not found'
+
+
+
+feedfile = 'new_feeds'
+url_shortener = 'http://localhost'
+init_channels = ['#news']
+
+if 'FEEDFILE' in os.environ:
+    feedfile = os.environ['FEEDFILE']
+
+if 'URLSHORT' in os.environ:
+    url_shortener = os.environ['URLSHORT']
+
+bots = {}
+knews = NewsBot('knews')
+
+#config file reading
+F = open(feedfile, "r")
+lines = F.readlines()
+F.close()
+
+for line in lines:
+    line = line.strip('\n')
+    linear = line.split('|')
+    bot = rssbot.RssBot(linear[1], linear[0], init_channels + linear[2].split(), url_shortener)
+    bot.start()
+    bots[linear[0]] = bot
+
+knews.start()
+

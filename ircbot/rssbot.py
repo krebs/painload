@@ -9,18 +9,19 @@ from datetime import datetime
 from time import sleep
 
 class RssBot(irc.bot.SingleServerIRCBot):
-    def __init__(self, rss, name, url_shortener="http://localhost", server='ire', port=6667, chan='#news', timeout=60):
+    def __init__(self, rss, name, chans=['#news'], url_shortener="http://localhost", server='ire', port=6667, timeout=60):
         irc.bot.SingleServerIRCBot.__init__(self, [(server, port)], name, name)
         self.url = rss
         self.name = name
         self.server = server
         self.port = port
-        self.chan = chan
+        self.chans = chans
         self.to = timeout
         self.oldnews = []
         self.sendqueue = []
         self.loop = True
         self.lastnew = datetime.now()
+        self.url_shortener = url_shortener
 
     def start(self):
         self.upd_loop = _thread.start_new_thread(self.updateloop, ())
@@ -47,7 +48,7 @@ class RssBot(irc.bot.SingleServerIRCBot):
                     #try:
                     #    self.send(entry.title + " " + entry.link + " com: " + entry.comments)
                     #except AttributeError:
-                    shorturl = subprocess.check_output(["curl", "-sS", "-F", "uri=" + entry.link, url_shortener]).decode()
+                    shorturl = subprocess.check_output(["curl", "-sS", "-F", "uri=" + entry.link, self.url_shortener]).decode()
                     self.send(entry.title + " " + shorturl)
                     self.oldnews.append(entry.link)
                     self.lastnew = datetime.now()
@@ -58,18 +59,25 @@ class RssBot(irc.bot.SingleServerIRCBot):
         if self.connection.connected:
             for line in string.split('\n'):
                 if len(line) < 450:
-                    self.connection.privmsg(self.chan, line)
+                    for chan in self.channels:
+                        self.connection.privmsg(chan, line)
                 else:
                     space = 0
                     for x in range(math.ceil(len(line)/400)):
                         oldspace = space
                         space = line.find(" ", (x+1)*400, (x+1)*400+50)
-                        self.connection.privmsg(self.chan, line[oldspace:space])
+                        for chan in self.channels:
+                            self.connection.privmsg(chan, line[oldspace:space])
                         sleep(1)
                 sleep(1)
         else:
             self.connection.reconnect()
             self.send(string)
 
+    def on_invite(self, connection, event):
+        for chan in event.arguments:
+            connection.join(chan)
+
     def on_welcome(self, connection, event):
-        connection.join(self.chan)
+        for chan in self.chans:
+            connection.join(chan)
