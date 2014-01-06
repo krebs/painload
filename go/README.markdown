@@ -42,10 +42,13 @@
   to install the systemd service and configuration files.
   this will fail if the files are already installed and modified.
 
-  maybe you want to customize the configuration with
+  configure `HOSTN` and `PORT` in `/etc/conf.d/go.env` and the user
+  and/or group in `/etc/systemd/system/go.service`.
 
-    $EDITOR /etc/conf.d/go.env
-
-  and finally start the service
+  and finally start the service with
 
     systemctl start go
+
+  this can fail you haven't configured or useradd the user,
+  or if you haven't changed the port and the user isn't allowed to
+  listen to fancy ports like `80`.
