@@ -1,15 +1,21 @@
-// configuration (and defaults)
+// configuration
 var hostname = process.env.HOSTN;
-var httpPort = process.env.PORT || 1337;
+var httpPort = process.env.PORT;
+var uriPrefix = process.env.URI_PREFIX;
 var redisPrefix = 'go:';
 
 
 // automatic configuration
-var uriPrefix = '';
-if (hostname) {
-  uriPrefix += 'http://' + hostname;
-  if (httpPort != 80) {
-    uriPrefix += ':' + httpPort;
+if (!httpPort) {
+  httpPort = 1337;
+}
+if (!uriPrefix) {
+  uriPrefix = '';
+  if (hostname) {
+    uriPrefix += 'http://' + hostname;
+    if (httpPort != 80) {
+      uriPrefix += ':' + httpPort;
+    }
   }
 }
 

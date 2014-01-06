@@ -12,10 +12,11 @@
 
 ## run service
 
-    HOSTN=go PORT=80 node .
+    HOSTN=go PORT=80 URI_PREFIX=http://go node .
 
   if you omit `HOSTN`, then relative shortened uris will be generated.
   if you omit `PORT`, then it's `1337`.
+  if you omit `URI_PREFIX`, then it will be generated from `HOSTN` änd `PORT`.
 
 ## add uri
 
