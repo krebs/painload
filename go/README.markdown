@@ -12,11 +12,9 @@
 
 ## run service
 
-    HOSTN=go PORT=80 URI_PREFIX=http://go node .
+    PORT=80 node .
 
-  if you omit `HOSTN`, then relative shortened uris will be generated.
   if you omit `PORT`, then it's `1337`.
-  if you omit `URI_PREFIX`, then it will be generated from `HOSTN` änd `PORT`.
 
   there's also the possibility to change the Redis key prefix which
   defaults to `go:` with
@@ -29,13 +27,13 @@
 
 ## add uri
 
-    curl -F uri=https://mywaytoolonguri http://go
+    curl -F uri=https://mywaytoolonguri http://localhost:1337
 
   this will give you a shortened uri.
 
 ## resolve uri
 
-    curl -L http://go/1
+    curl -L http://localhost:1337/1
 
 ## clear database
 
