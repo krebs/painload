@@ -21,10 +21,6 @@
 
     REDIS_KEY_PREFIX=foobarmyprefix/
 
-  to generate slightly more informative shortened uris set
-
-    NOT_SO_SHORT=true
-
 ## add uri
 
     curl -F uri=https://mywaytoolonguri http://localhost:1337
