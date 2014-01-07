@@ -58,7 +58,7 @@ class RssBot(irc.bot.SingleServerIRCBot):
                     #    self.send(entry.title + " " + entry.link + " com: " + entry.comments)
                     #except AttributeError:
                     shorturl = subprocess.check_output(["curl", "-sS", "-F", "uri=" + entry.link, self.url_shortener]).decode()
-                    self.send(entry.title + " " + shorturl + '#' + entry.link.partition('://')[2].partition('/')[0])
+                    self.send(entry.title + " " + shorturl.strip('\n') + '#' + entry.link.partition('://')[2].partition('/')[0])
                     self.oldnews.append(entry.link)
                     self.lastnew = datetime.now()
             sleep(self.to)
