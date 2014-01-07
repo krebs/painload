@@ -80,5 +80,13 @@ by a `subshell and pipe` pattern :
 
 painload example: `//retiolum/bin/announce_pubkey`
 
+Enterprise Waiting
+------------------
+Quietly wait until someone else solves the problem.
+Passive variant of Complainterprise Waiting.
 
+Complainterprise Waiting
+------------------------
+Submit a bug report and do Enterprise Waiting.
+Active variant of Enterprise Waiting.
 
