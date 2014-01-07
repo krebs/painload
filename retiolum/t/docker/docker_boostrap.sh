@@ -1,3 +1,5 @@
 #!/bin/sh
 cd $(dirname $(readlink -f $0))
-docker run -v $PWD/docker_tests/:/test  ubuntu /bin/sh /test/bootstrap >/dev/null
+docker_id=$(docker run -d -v $PWD/docker_tests/:/test  ubuntu /bin/sh /test/bootstrap )
+trap "docker rm $docker_id" INT TERM EXIT QUIT
+docker wait $docker_id
