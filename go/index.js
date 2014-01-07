@@ -1,23 +1,11 @@
 // configuration
-var hostname = process.env.HOSTN;
 var httpPort = process.env.PORT;
-var uriPrefix = process.env.URI_PREFIX;
 var redisPrefix = process.env.REDIS_KEY_PREFIX;
-var appendDomainToUri = process.env.NOT_SO_SHORT === 'true';
 
 
 // automatic configuration
 if (!httpPort) {
   httpPort = 1337;
-}
-if (!uriPrefix) {
-  uriPrefix = '';
-  if (hostname) {
-    uriPrefix += 'http://' + hostname;
-    if (httpPort != 80) {
-      uriPrefix += ':' + httpPort;
-    }
-  }
 }
 if (!redisPrefix) {
   redisPrefix = 'go:';
@@ -73,16 +61,12 @@ function create (req, res) {
       var uri = fields.uri;
       // TODO check uri(?)
       var shortPath = '/' + reply;
-      var shortUri = uriPrefix + shortPath;
+      var shortUri = 'http://' + req.headers.host + shortPath;
       var key = redisPrefix + shortPath;
 
       redisClient.set(key, uri, function (error) {
         if (error) {
           return internalError(err, req, res);
-        }
-
-        if (appendDomainToUri) {
-          shortUri += '#' + url.parse(uri).host
         }
 
         res.writeHead(200, { 'content-type': 'text/plain' });
