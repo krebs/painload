@@ -5,5 +5,4 @@ apt-get -y install redis-server nodejs npm
 npm config set registry http://registry.npmjs.org/
 cd /krebs/go
 npm install
-HOSTN=go PORT=80 URI_PREFIX=http://go node .
-
+node .
