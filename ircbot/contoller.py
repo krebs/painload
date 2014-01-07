@@ -43,6 +43,10 @@ class NewsBot(irc.bot.SingleServerIRCBot):
             answer = self.read_message(args_array[1:])
             self.send(event.target, answer)
 
+    def on_invite(self, connection, event):
+        for chan in event.arguments:
+            connection.join(chan)
+
     def read_message(self, args):
         try:
             if args[0] in [x for x in commands.__dict__.keys() if x.find('_')]:

@@ -54,7 +54,6 @@ class RssBot(irc.bot.SingleServerIRCBot):
                     self.lastnew = datetime.now()
             sleep(self.to)
 
-
     def send(self, string):
         if self.connection.connected:
             for line in string.split('\n'):
