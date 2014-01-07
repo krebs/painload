@@ -1,7 +1,11 @@
 #!/bin/sh
 echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
 apt-get update
-apt-get -y install redis-server nodejs npm
+sudo apt-get update
+sudo apt-get install -y python-software-properties python g++ make
+sudo add-apt-repository -y ppa:chris-lea/node.js
+sudo apt-get update
+sudo apt-get -y install nodejs redis-server
 npm config set registry http://registry.npmjs.org/
 cd /krebs/go
 npm install
