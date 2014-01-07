@@ -1,7 +1,8 @@
 #!/usr/bin/python
 import irc.bot
+from irc.client import IRC
 import feedparser
-import _thread
+import threading
 import math
 import re
 import subprocess
@@ -23,13 +24,21 @@ class RssBot(irc.bot.SingleServerIRCBot):
         self.lastnew = datetime.now()
         self.url_shortener = url_shortener
 
+        def better_loop(timeout=0.2):
+            while self.loop:
+                self.ircobj.process_once(timeout)
+        self.ircobj.process_forever = better_loop
+
+
     def start(self):
-        self.upd_loop = _thread.start_new_thread(self.updateloop, ())
-        self.bot = _thread.start_new_thread(irc.bot.SingleServerIRCBot.start, (self,))
+        self.upd_loop = threading.Thread(target=self.updateloop)
+        self.bot = threading.Thread(target=irc.bot.SingleServerIRCBot.start, args=(self,))
+        self.upd_loop.start()
+        self.bot.start()
 
     def stop(self):
+        self.ircobj.disconnect_all()
         self.loop = False
-        self.disconnect()
 
     def updateloop(self):
         try:
@@ -71,6 +80,7 @@ class RssBot(irc.bot.SingleServerIRCBot):
                 sleep(1)
         else:
             self.connection.reconnect()
+            sleep(1)
             self.send(string)
 
     def on_invite(self, connection, event):
