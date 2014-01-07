@@ -10,7 +10,7 @@ i=0
 max_wait=20
 echo "waiting for install (takes about 3 minutes)"
 sleep 240
-while ! curl -s localhost:$rnd_port >/dev/null;do
+while ! curl -s localhost:$rnd_port >/dev/null ;do
     i=$((i+1))
     test $i -gt $max_wait && echo "timeout for installation reached, bailing out" && exit 1
     echo "http port not yet reachable ($i of $max_wait). waiting"
