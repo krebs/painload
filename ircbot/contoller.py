@@ -61,7 +61,7 @@ class NewsBot(irc.bot.SingleServerIRCBot):
 
 class commands():
     def add(args): 
-        bot = rssbot.RssBot(args[2], args[1])
+        bot = rssbot.RssBot(args[2], args[1], url_shortener=url_shortener)
         bots[args[1]] = bot
         bot.start()
         return "bot " + args[1] + " added"
