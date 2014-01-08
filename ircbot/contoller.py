@@ -61,7 +61,7 @@ class NewsBot(irc.bot.SingleServerIRCBot):
 
 class commands():
     def add(args): 
-        bot = rssbot.RssBot(args[2], args[1])
+        bot = rssbot.RssBot(args[2], args[1], url_shortener=url_shortener)
         bots[args[1]] = bot
         bot.start()
         return "bot " + args[1] + " added"
@@ -118,7 +118,7 @@ class commands():
 
 
 feedfile = 'new_feeds'
-url_shortener = 'http://localhost:1337'
+url_shortener = 'http://wall'
 init_channels = ['#news']
 
 if 'FEEDFILE' in os.environ:
