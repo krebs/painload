@@ -38,7 +38,7 @@ http_head(){
 
 internet(){
     secret=$(http_get http://krebsco.de/secret 2>/dev/null)
-    if [ "$secret" == "1337" ]; then
+    if [ "$secret" = "1337" ]; then
         return 0
     else
         echo "cannot load secret or secret incorrect" >&2
