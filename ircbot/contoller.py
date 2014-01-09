@@ -116,7 +116,6 @@ class commands():
             return 'bot not found'
 
 
-
 feedfile = 'new_feeds'
 url_shortener = 'http://wall'
 init_channels = ['#news']

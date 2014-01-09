@@ -57,11 +57,24 @@ class RssBot(irc.bot.SingleServerIRCBot):
                     #try:
                     #    self.send(entry.title + " " + entry.link + " com: " + entry.comments)
                     #except AttributeError:
-                    shorturl = subprocess.check_output(["curl", "-sS", "-F", "uri=" + entry.link, self.url_shortener]).decode()
-                    self.send(entry.title + " " + shorturl.strip('\n').strip('\r') + '#' + entry.link.partition('://')[2].partition('/')[0])
+                    shorturl = self.shortenurl(entry.link)
+                    self.send(entry.title + ' ' + shorturl)
                     self.oldnews.append(entry.link)
                     self.lastnew = datetime.now()
             sleep(self.to)
+
+    def shortenurl(self, url):
+      while True:
+          try:
+              shorturl = subprocess.check_output(["curl", "-sS", "-F", "uri=" + url, self.url_shortener]).decode().strip('\n').strip('\r') + '#' + url.partition('://')[2].partition('/')[0]
+              return shorturl
+          except:
+              print('url shortener error')
+              sleep(1)
+
+    def last(self, num):
+        for feed in reversed([x for x in reversed(self.feed.entries)][:num]):
+            self.send(feed.title + ' ' + self.shortenurl(feed.link))
 
     def send(self, string):
         if self.connection.connected:
