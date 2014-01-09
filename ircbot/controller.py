@@ -33,7 +33,7 @@ class NewsBot(irc.bot.SingleServerIRCBot):
 
     def on_pubmsg(self, connection, event):
         args_array = event.arguments[0].split()
-        if args_array[0][:-1]==self.name:
+        if len(args_array[0]) > 0 and args_array[0][:-1]==self.name:
             answer = self.read_message(args_array[1:])
             self.send(event.target, answer)
 
