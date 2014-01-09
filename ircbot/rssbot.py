@@ -39,6 +39,7 @@ class RssBot(irc.bot.SingleServerIRCBot):
     def stop(self):
         self.ircobj.disconnect_all()
         self.loop = False
+        del self
 
     def updateloop(self):
         failcount=0
