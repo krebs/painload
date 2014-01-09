@@ -41,6 +41,7 @@ class RssBot(irc.bot.SingleServerIRCBot):
         self.loop = False
 
     def updateloop(self):
+        failcount=0
         while True:
           try:
               self.feed = feedparser.parse(self.url)
@@ -49,6 +50,10 @@ class RssBot(irc.bot.SingleServerIRCBot):
               break
           except:
               print(self.name + ': rss timeout occured')
+              failcount+=1
+              if failcount>20:
+                  print(self.name + ' is broken, going to die')
+                  self.stop()
         while self.loop:
             try:
                 self.feed = feedparser.parse(self.url)
