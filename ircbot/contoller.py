@@ -3,8 +3,7 @@ import irc.bot
 import _thread
 import rssbot
 import os
-
-
+import subprocess
 
 class NewsBot(irc.bot.SingleServerIRCBot):
     def __init__(self, name, chans=['#news'], server='ire', port=6667, timeout=60):
@@ -27,15 +26,10 @@ class NewsBot(irc.bot.SingleServerIRCBot):
             self.connection.privmsg(target, line)
             sleep(1)
 
-    def sendq(self, target, string):
-        for line in string.split('\n'):
-            self.connection.privmsg(target, line)
-            sleep(1)
-
     def on_privmsg(self, connection, event):
         args_array = event.arguments[0].split()
         answer = self.read_message(args_array)
-        self.sendq(event.source.nick, answer)
+        self.send(event.source.nick, answer)
 
     def on_pubmsg(self, connection, event):
         args_array = event.arguments[0].split()
@@ -115,6 +109,9 @@ class commands():
         else:
             return 'bot not found'
 
+    def search(args):
+        output = subprocess.check_output(['./GfindFeeds4bot', args[1]]).decode()
+        return output
 
 feedfile = 'new_feeds'
 url_shortener = 'http://wall'
