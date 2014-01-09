@@ -55,6 +55,7 @@ class RssBot(irc.bot.SingleServerIRCBot):
               if failcount>20:
                   print(self.name + ' is broken, going to die')
                   self.stop()
+                  return
         while self.loop:
             try:
                 self.feed = feedparser.parse(self.url)
