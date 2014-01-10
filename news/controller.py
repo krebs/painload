@@ -114,6 +114,10 @@ class commands():
         output = subprocess.check_output(['./GfindFeeds4bot', args[1]]).decode()
         return output
 
+    def uptime(args):
+        output = subprocess.check_output(['uptime']).decode()
+        return output
+
 feedfile = 'new_feeds'
 url_shortener = 'http://wall'
 init_channels = ['#news']
