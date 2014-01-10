@@ -33,7 +33,7 @@ class NewsBot(irc.bot.SingleServerIRCBot):
 
     def on_pubmsg(self, connection, event):
         args_array = event.arguments[0].split()
-        if len(args_array[0]) > 0 and args_array[0][:-1]==self.name:
+        if len(args_array) > 0 and args_array[0][:-1]==self.name:
             answer = self.read_message(args_array[1:])
             self.send(event.target, answer)
 
@@ -106,6 +106,7 @@ class commands():
                 if data in bots[args[1]].feed.feed:
                     output_buffer += data + ': ' + bots[args[1]].feed.feed[data] + '\n'
             output_buffer += 'lastnew: ' + bots[args[1]].lastnew.isoformat()
+            output_buffer += 'rssurl: ' + bots[args[1]].url
             return output_buffer
         else:
             return 'bot not found'
