@@ -81,7 +81,7 @@ class commands():
     def save(args):
         output_buffer = ''
         for bot in bots:
-            if bot.loop:
+            if bots[bot].loop:
                 output_buffer += bot + '|' + bots[bot].url + '|' + ' '.join(bots[bot].channels) + '\n'
 
         F = open(feedfile, "w")
