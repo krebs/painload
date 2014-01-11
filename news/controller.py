@@ -108,7 +108,7 @@ class commands():
             for data in ['title', 'link', 'updated']:
                 if data in bots[args[1]].feed.feed:
                     output_buffer += data + ': ' + bots[args[1]].feed.feed[data] + '\n'
-            output_buffer += 'lastnew: ' + bots[args[1]].lastnew.isoformat()
+            output_buffer += 'lastnew: ' + bots[args[1]].lastnew.isoformat() + '\n'
             output_buffer += 'rssurl: ' + bots[args[1]].url
             return output_buffer
         else:
