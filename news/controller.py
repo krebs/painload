@@ -55,7 +55,7 @@ class NewsBot(irc.bot.SingleServerIRCBot):
 
 class commands():
     def add(args): 
-        if args[1] not in bots:
+        if args[1] not in bots and not knews.name:
             bot = rssbot.RssBot(args[2], args[1], url_shortener=url_shortener)
             bots[args[1]] = bot
             bot.start()
