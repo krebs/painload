@@ -55,10 +55,13 @@ class NewsBot(irc.bot.SingleServerIRCBot):
 
 class commands():
     def add(args): 
-        bot = rssbot.RssBot(args[2], args[1], url_shortener=url_shortener)
-        bots[args[1]] = bot
-        bot.start()
-        return "bot " + args[1] + " added"
+        if args[1] not in bots:
+            bot = rssbot.RssBot(args[2], args[1], url_shortener=url_shortener)
+            bots[args[1]] = bot
+            bot.start()
+            return "bot " + args[1] + " added"
+        else:
+            return args[1] + ' does already exist'
 
     def delete(args):
         bots[args[1]].stop()
