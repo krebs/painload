@@ -3,8 +3,7 @@ import irc.bot
 import _thread
 import rssbot
 import os
-
-
+import subprocess
 
 class NewsBot(irc.bot.SingleServerIRCBot):
     def __init__(self, name, chans=['#news'], server='ire', port=6667, timeout=60):
@@ -24,22 +23,17 @@ class NewsBot(irc.bot.SingleServerIRCBot):
 
     def send(self, target, string):
         for line in string.split('\n'):
-            self.connection.privmsg(target, line)
-            sleep(1)
-
-    def sendq(self, target, string):
-        for line in string.split('\n'):
-            self.connection.privmsg(target, line)
+            self.connection.action(target, line)
             sleep(1)
 
     def on_privmsg(self, connection, event):
         args_array = event.arguments[0].split()
         answer = self.read_message(args_array)
-        self.sendq(event.source.nick, answer)
+        self.send(event.source.nick, answer)
 
     def on_pubmsg(self, connection, event):
         args_array = event.arguments[0].split()
-        if args_array[0][:-1]==self.name:
+        if len(args_array) > 0 and args_array[0][:-1]==self.name:
             answer = self.read_message(args_array[1:])
             self.send(event.target, answer)
 
@@ -61,10 +55,13 @@ class NewsBot(irc.bot.SingleServerIRCBot):
 
 class commands():
     def add(args): 
-        bot = rssbot.RssBot(args[2], args[1], url_shortener=url_shortener)
-        bots[args[1]] = bot
-        bot.start()
-        return "bot " + args[1] + " added"
+        if args[1] not in bots and not args[1]==knews.name:
+            bot = rssbot.RssBot(args[2], args[1], url_shortener=url_shortener)
+            bots[args[1]] = bot
+            bot.start()
+            return "bot " + args[1] + " added"
+        else:
+            return args[1] + ' does already exist'
 
     def delete(args):
         bots[args[1]].stop()
@@ -87,7 +84,8 @@ class commands():
     def save(args):
         output_buffer = ''
         for bot in bots:
-           output_buffer += bot + '|' + bots[bot].url + '|' + ' '.join(bots[bot].channels) + '\n'
+            if bots[bot].loop:
+                output_buffer += bot + '|' + bots[bot].url + '|' + ' '.join(bots[bot].channels) + '\n'
 
         F = open(feedfile, "w")
         F.writelines(output_buffer)
@@ -110,12 +108,19 @@ class commands():
             for data in ['title', 'link', 'updated']:
                 if data in bots[args[1]].feed.feed:
                     output_buffer += data + ': ' + bots[args[1]].feed.feed[data] + '\n'
-            output_buffer += 'lastnew: ' + bots[args[1]].lastnew.isoformat()
+            output_buffer += 'lastnew: ' + bots[args[1]].lastnew.isoformat() + '\n'
+            output_buffer += 'rssurl: ' + bots[args[1]].url
             return output_buffer
         else:
             return 'bot not found'
 
+    def search(args):
+        output = subprocess.check_output(['./GfindFeeds4bot', args[1]]).decode()
+        return output
 
+    def uptime(args):
+        output = subprocess.check_output(['uptime']).decode()
+        return output
 
 feedfile = 'new_feeds'
 url_shortener = 'http://wall'
