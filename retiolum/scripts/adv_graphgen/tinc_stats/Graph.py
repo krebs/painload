@@ -1,6 +1,5 @@
 #!/usr/bin/python
 from BackwardsReader import BackwardsReader
-from Graphite import GraphiteSender
 import sys,json,os
 from Supernodes import check_all_the_super
 from Availability import get_node_availability
@@ -187,11 +186,6 @@ def anonymize_nodes(nodes):
 
 if __name__ == "__main__":
   supernodes= []
-  try:
-    gr = GraphiteSender(os.environ.get("GRAPHITE_HOST","localhost"))
-    begin = time()
-  except Exception as e:
-    sys.stderr.write( "Cannot connect to graphite: " + str(e))
   if len(sys.argv) != 2 or  sys.argv[1] not in ["anonymous","complete"]: 
     print("usage: %s (anonymous|complete)")
     sys.exit(1)
@@ -226,6 +220,3 @@ if __name__ == "__main__":
 
   print_stat_node(nodes)
   print ('}')
-  try: 
-    gr.send("graph.anon_build_time",(time()-begin)*1000)
-  except Exception as e: pass
