@@ -117,6 +117,10 @@ class asybot(asychat):
     self.log.debug('>> %s' % msg)
     asychat.push(self, msg)
 
+  def disconnect(self):
+    self.push('QUIT')
+    self.close()
+
   def reconnect(self):
     self.push('QUIT')
     self.close()
