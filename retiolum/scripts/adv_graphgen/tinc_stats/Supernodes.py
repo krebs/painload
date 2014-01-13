@@ -56,4 +56,4 @@ if __name__ == "__main__":
   usage
   """
   for host,addrs in check_all_the_super():
-    print host,addrs
+    print(host,addrs)

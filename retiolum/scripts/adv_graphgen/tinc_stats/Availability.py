@@ -20,7 +20,7 @@ def generate_stats():
     for line in f:
       jlines.append(json.loads(line))
     f.close()
-  except Exception,e:
+  except Exception as e:
     pass
   all_nodes = {}
   for k in get_all_nodes():
