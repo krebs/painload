@@ -109,6 +109,9 @@ class asybot(asychat):
       self.nickname = nickname + str(int + 1)
       self.handle_connect()
 
+    elif command == '376':
+      self.on_welcome(prefix, command, params, rest)
+
     self.reset_alarm()
 
   def push(self, message):
@@ -131,16 +134,12 @@ class asybot(asychat):
     self.push('NICK %s' % self.nickname)
     self.push('USER %s %s %s :%s' %
         (self.username, self.hostname, self.server, self.realname))
-    self.push('JOIN %s' % ','.join(self.channels))
 
   def handle_disconnect(self):
     if self.retry:
       self.reconnect()
     else:
       self.log.error('No retry set, giving up')
-
-  def on_privmsg(self, prefix, command, params, rest):
-    pass
 
   def PRIVMSG(self, target, text):
     for line in self.wrapper.wrap(text):
@@ -151,3 +150,9 @@ class asybot(asychat):
 
   def ME(self, target, text):
     self.PRIVMSG(target, ('ACTION ' + text + ''))
+
+  def on_privmsg(self, prefix, command, params, rest):
+    pass
+
+  def on_welcome(self, prefix, command, params, rest):
+    self.push('JOIN %s' % ','.join(self.channels))
