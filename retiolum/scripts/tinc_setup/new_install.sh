@@ -209,9 +209,7 @@ EOF
     echo '' >> tinc-up
     echo 'conf=$dirname/tinc.conf' >> tinc-up
     echo '' >> tinc-up
-    echo 'name=$(sed -n "s|^ *Name *= *\([^ ]*\) *$|\\1|p" $conf)' >> tinc-up
-    echo '' >> tinc-up
-    echo 'host=$dirname/hosts/$name' >> tinc-up
+    echo 'host=$dirname/hosts/$NAME' >> tinc-up
     echo '' >> tinc-up
     echo 'ip link set $INTERFACE up' >> tinc-up
     echo '' >> tinc-up
@@ -222,7 +220,7 @@ EOF
     echo "ip -4 route add 172.22.0.0/15 dev \$INTERFACE" >> tinc-up
     echo '' >> tinc-up
     echo "addr6=\$(sed -n \"s|^ *Subnet *= *\\($SUBNET6[:][^ ]*\\) *\$|\\\\1|p\" \$host)" >> tinc-up
-    echo 'ip -6 addr add $addr6 dev $INTERFACE' >> tinc-up
+    echo 'ip -6 addr add $addr6 dev $INTERFACE || exit 0' >> tinc-up
     echo "ip -6 route add $SUBNET6::/$MASK6 dev \$INTERFACE" >> tinc-up
   else
     echo 'dirname="`dirname "$0"`"' > tinc-up
