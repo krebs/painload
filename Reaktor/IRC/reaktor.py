@@ -20,8 +20,7 @@ logging.basicConfig(level = logging.DEBUG if getconf('debug') else logging.INFO)
 
 class Reaktor(asybot):
   def __init__(self):
-    nick = getconf('irc_nickname')
-    asybot.__init__(self, getconf('irc_server'), getconf('irc_port'), getconf('irc_channels'), nick, nick, nick, nick, nick, getconf('irc_hammer_interval'), getconf('irc_alarm_timeout'), getconf('irc_kill_timeout'))
+    asybot.__init__(self, getconf('irc_server'), getconf('irc_port'), getconf('irc_nickname'), getconf('irc_channels'), hammer_interval=getconf('irc_hammer_interval'), alarm_timeout=getconf('irc_alarm_timeout'), kill_timeout=getconf('irc_kill_timeout'))
 
   def on_privmsg(self, prefix, command, params, rest):
     for command in getconf('commands'):
