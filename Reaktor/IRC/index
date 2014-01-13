@@ -3,4 +3,4 @@ set -xeuf
 
 # cd //Reaktor
 cd $(dirname $(readlink -f $0))/..
-exec IRC/asybot.py "$@"
+exec IRC/reaktor.py "$@"
