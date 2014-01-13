@@ -4,9 +4,7 @@ dirname="`dirname "$0"`"
 
 conf=$dirname/tinc.conf
 
-name=`sed -n 's|^ *Name *= *\([^ ]*\) *$|\1|p' $conf`
-
-host=$dirname/hosts/$name
+host=$dirname/hosts/$NAME
 
 ip link set $INTERFACE up
 
@@ -16,5 +14,5 @@ ip -4 route add 10.243.0.0/16 dev $INTERFACE
 ip -4 route add 172.22.0.0/15 dev $INTERFACE
 
 addr6=`sed -n 's|^ *Subnet *= *\(42[:][^ ]*\) *$|\1|p' $host`
-ip -6 addr add $addr6 dev $INTERFACE
+ip -6 addr add $addr6 dev $INTERFACE || exit 0
 ip -6 route add 42::/16 dev $INTERFACE
