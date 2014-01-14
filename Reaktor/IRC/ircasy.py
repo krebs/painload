@@ -21,7 +21,7 @@ class asybot(asychat):
   def __init__(self, server, port, nickname, channels, realname=False, username=False, hostname=False, hammer_interval=10, alarm_timeout=300, kill_timeout=360, loglevel=logging.ERROR):
     asychat.__init__(self)
     #logger magic
-    self.log = logging.getLogger('asybot')
+    self.log = logging.getLogger('asybot_' + nickname)
     hdlr = logging.handlers.SysLogHandler(facility=logging.handlers.SysLogHandler.LOG_DAEMON)
     formatter = logging.Formatter( '%(filename)s: %(levelname)s: %(message)s')
     hdlr.setFormatter(formatter)
