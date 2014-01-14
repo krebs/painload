@@ -96,7 +96,7 @@ def merge_edges(nodes):
 
 def print_head():
   print ('digraph retiolum {')
-  print ('  graph [center packMode="clust"]')
+  print ('  graph [center=true packMode="clust"]')
   print ('  node[shape=box,style=filled,fillcolor=grey]')
   print ('  overlap=false')
 
