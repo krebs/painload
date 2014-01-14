@@ -34,3 +34,6 @@
 [submodule "sites/paste.retiolum/bump"]
 	path = sites/paste.retiolum/bump
 	url = git@github.com:makefu/bump.git
+[submodule "sites/mediengewitter.krebsco.de/magnets/magnets"]
+	path = sites/mediengewitter.krebsco.de/magnets/magnets
+	url = https://github.com/makefu/magnets.git
