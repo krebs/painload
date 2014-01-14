@@ -41,11 +41,6 @@ def debug(func):
   return with_debug
 
 
-def get_tinc_log_file():
-  # TODO parse logfile from somewhere
-  return os.environ.get("LOG_FILE","/var/log/everything.log")
-
-
 def parse_tinc_stats():
   import subprocess
   from time import sleep
@@ -89,13 +84,16 @@ def get_tinc_block(log_file):
 
 def parse_new_input(tinc_bin):
   nodes = {} 
-  pnodes = subprocess.Popen([tinc_bin,"-n",TINC_NETWORK,"dump","reachable","nodes"], stdout=subprocess.PIPE).communicate()[0]
+  pnodes = subprocess.Popen(
+          [tinc_bin,"-n",TINC_NETWORK,"dump","reachable","nodes"],
+          stdout=subprocess.PIPE).communicate()[0].decode()
   #pnodes = subprocess.check_output(["tincctl","-n",TINC_NETWORK,"dump","reachable","nodes"])
   for line in pnodes.split('\n'):
     if not line: continue
     l = line.split()
     nodes[l[0]]= { 'external-ip': l[2], 'external-port' : l[4] }
-  psubnets = subprocess.check_output([tinc_bin,"-n",TINC_NETWORK,"dump","subnets"])
+  psubnets = subprocess.check_output(
+          [tinc_bin,"-n",TINC_NETWORK,"dump","subnets"]).decode()
   for line in psubnets.split('\n'):
     if not line: continue
     l = line.split()
@@ -105,12 +103,13 @@ def parse_new_input(tinc_bin):
       nodes[l[2]]['internal-ip'].append(l[0].split('#')[0])
     except KeyError:
       pass # node does not exist (presumably)
-  pedges = subprocess.check_output([tinc_bin,"-n",TINC_NETWORK,"dump","edges"])
+  pedges = subprocess.check_output(
+          [tinc_bin,"-n",TINC_NETWORK,"dump","edges"]).decode()
   for line in pedges.split('\n'):
     if not line: continue
     l = line.split()
     try:
-      if not nodes[l[0]].has_key('to') :
+      if not 'to' in nodes[l[0]] :
         nodes[l[0]]['to'] = []
       nodes[l[0]]['to'].append(
           {'name':l[2],'addr':l[4],'port':l[6],'weight' : l[10] })
