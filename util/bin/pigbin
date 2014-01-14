@@ -2,4 +2,4 @@
 #usage:
 #echo aidsballs | pigbin
 
-curl -F 'p=<-' note
+curl -F 'p=<-' paste
