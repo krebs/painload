@@ -7,7 +7,7 @@ docker_id=$(docker run -p $rnd_port:80 -d -v  /krebs/go/t/docker/../../../:/kreb
 echo $docker_id on $rnd_port
 trap "docker stop $docker_id;docker rm $docker_id" INT TERM EXIT QUIT
 i=0
-max_wait=30
+max_wait=60
 echo "waiting for install (takes about 3 minutes)"
 sleep 240
 while ! curl -s localhost:$rnd_port >/dev/null ;do

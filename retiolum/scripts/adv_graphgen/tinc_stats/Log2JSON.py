@@ -41,11 +41,6 @@ def debug(func):
   return with_debug
 
 
-def get_tinc_log_file():
-  # TODO parse logfile from somewhere
-  return os.environ.get("LOG_FILE","/var/log/everything.log")
-
-
 def parse_tinc_stats():
   import subprocess
   from time import sleep
@@ -57,12 +52,6 @@ def parse_tinc_stats():
   elif which("tincctl"):
     return parse_new_input("tincctl")
   #old tinc
-  elif which("tincd"):
-    # TODO refactor me
-    subprocess.call(["pkill","-SIGUSR2", "tincd"])
-    sleep(1)
-    return parse_input(get_tinc_block(get_tinc_log_file()))
-  #no tinc
   else:
     raise Exception("no tinc executable found!")
   
@@ -95,13 +84,16 @@ def get_tinc_block(log_file):
 
 def parse_new_input(tinc_bin):
   nodes = {} 
-  pnodes = subprocess.Popen([tinc_bin,"-n",TINC_NETWORK,"dump","reachable","nodes"], stdout=subprocess.PIPE).communicate()[0]
+  pnodes = subprocess.Popen(
+          [tinc_bin,"-n",TINC_NETWORK,"dump","reachable","nodes"],
+          stdout=subprocess.PIPE).communicate()[0].decode()
   #pnodes = subprocess.check_output(["tincctl","-n",TINC_NETWORK,"dump","reachable","nodes"])
   for line in pnodes.split('\n'):
     if not line: continue
     l = line.split()
     nodes[l[0]]= { 'external-ip': l[2], 'external-port' : l[4] }
-  psubnets = subprocess.check_output([tinc_bin,"-n",TINC_NETWORK,"dump","subnets"])
+  psubnets = subprocess.check_output(
+          [tinc_bin,"-n",TINC_NETWORK,"dump","subnets"]).decode()
   for line in psubnets.split('\n'):
     if not line: continue
     l = line.split()
@@ -111,12 +103,13 @@ def parse_new_input(tinc_bin):
       nodes[l[2]]['internal-ip'].append(l[0].split('#')[0])
     except KeyError:
       pass # node does not exist (presumably)
-  pedges = subprocess.check_output([tinc_bin,"-n",TINC_NETWORK,"dump","edges"])
+  pedges = subprocess.check_output(
+          [tinc_bin,"-n",TINC_NETWORK,"dump","edges"]).decode()
   for line in pedges.split('\n'):
     if not line: continue
     l = line.split()
     try:
-      if not nodes[l[0]].has_key('to') :
+      if not 'to' in nodes[l[0]] :
         nodes[l[0]]['to'] = []
       nodes[l[0]]['to'].append(
           {'name':l[2],'addr':l[4],'port':l[6],'weight' : l[10] })
@@ -124,43 +117,9 @@ def parse_new_input(tinc_bin):
       pass #node does not exist
   return nodes
 
-#@debug
-def parse_input(log_data):
-  nodes={}
-  for line in log_data:
-    if BEGIN_NODES in line :
-      nodes={}
-      for line in log_data:
-        if END_NODES in line :
-          break
-        l = line.replace('\n','').split() #TODO unhack me
-        nodes[l[0]]= { 'external-ip': l[2], 'external-port' : l[4] }
-    if BEGIN_SUBNET in line :
-      for line in log_data:
-        if END_SUBNET in line :
-          break
-        l = line.replace('\n','').split() 
-        if not nodes[l[2]].get('internal-ip',False):
-           nodes[l[2]]['internal-ip'] = []
-        nodes[l[2]]['internal-ip'].append(l[0].split('#')[0])
-    if BEGIN_EDGES in line :
-      edges = {}
-      for line in log_data:
-        if END_EDGES in line :
-          break
-        l = line.replace('\n','').split() 
-        if not nodes[l[0]].has_key('to') :
-          nodes[l[0]]['to'] = []
-        nodes[l[0]]['to'].append(
-            {'name':l[2],'addr':l[4],'port':l[6],'weight' : l[10] })
-  return nodes
-
-
 if __name__ == '__main__':
-  # TODO refactor me
   from sys import argv
   if len(argv) > 1:
     usage()
   else:
-    print json.dumps(parse_tinc_stats())
-
+    print (json.dumps(parse_tinc_stats()))
