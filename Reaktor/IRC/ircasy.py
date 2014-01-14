@@ -64,7 +64,10 @@ class asybot(asychat):
     self.alarm_timeout = alarm_timeout
     self.hammer_interval = hammer_interval
     self.kill_timeout = kill_timeout
-    signal(SIGALRM, lambda signum, frame: self.alarm_handler())
+    try:
+      signal(SIGALRM, lambda signum, frame: self.alarm_handler())
+    except Exception as e:
+      print('asybot: ' + str(e))
     self.reset_alarm()
 
   def reset_alarm(self):
