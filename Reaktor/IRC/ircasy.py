@@ -131,7 +131,8 @@ class asybot(asychat):
     self.close()
 
   def reconnect(self):
-    self.push('QUIT')
+    if self.connected:
+      self.push('QUIT')
     self.close()
     self.create_socket(AF_INET, SOCK_STREAM)
     self.connect((self.server, self.port))
