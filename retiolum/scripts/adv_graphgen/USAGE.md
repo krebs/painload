@@ -1,5 +1,6 @@
 # Example usage
-  
+make sure you have the correct permissions!
+
 # High Level
 
     # creates all graphs with predefined paths (see source code of this script)
@@ -23,5 +24,4 @@
     tinc_stats/Log2JSON.py | tinc_stats/Geo.py
 
     # creates a grapviz file from current graph, pipes into a timpfile
-    tinc_stats/Log2JSON.py | tinc_stats/Graph.py > /tmp/out.graphviz
-
+    tinc_stats/Log2JSON.py | tinc_stats/Graph.py complete > /tmp/out.graphviz
