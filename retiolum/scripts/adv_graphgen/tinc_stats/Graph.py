@@ -10,9 +10,9 @@ DUMP_FILE = "/krebs/db/availability"
 
 def resolve_myself(nodes):
   #resolve MYSELF to the real ip
-  for k,v in nodes.iteritems():
+  for k,v in nodes.items():
     if v["external-ip"] == "MYSELF":
-      for nodek,node in nodes.iteritems():
+      for nodek,node in nodes.items():
          for to in node['to']:
            if to['name'] == k:
              v["external-ip"] = to["addr"]
@@ -44,16 +44,16 @@ def generate_availability_stats(nodes):
 
       jlines.append(jline)
       lines_to_use -=1
-  except Exception,e: sys.stderr.write(str(e))
+  except Exception as e: sys.stderr.write(str(e))
 
-  for k,v in nodes.iteritems():
+  for k,v in nodes.items():
     v['availability'] = get_node_availability(k,jlines)
     sys.stderr.write( "%s -> %f\n" %(k ,v['availability']))
 
 def generate_stats(nodes):
   """ Generates some statistics of the network and nodes
   """
-  for k,v in nodes.iteritems():
+  for k,v in nodes.items():
     conns = v.get('to',[])
     for c in conns: #sanitize weights
       if float(c['weight']) > 9000: c['weight'] = str(9001)
@@ -72,12 +72,12 @@ def get_node_avg_weight(conns):
 def delete_unused_nodes(nodes):
   """ Deletes all the nodes which are currently not connected to the network"""
   new_nodes = {}
-  for k,v in nodes.iteritems():
+  for k,v in nodes.items():
     if v['external-ip'] == "(null)":
       continue
     if v.get('to',[]):
       new_nodes[k] = v
-  for k,v in new_nodes.iteritems():
+  for k,v in new_nodes.items():
     if not [ i for i in v['to'] if i['name'] in new_nodes]:
       del(k)
   return new_nodes
@@ -86,7 +86,7 @@ def merge_edges(nodes):
   """ merge back and forth edges into one
   DESTRUCTS the current structure by deleting "connections" in the nodes
   """
-  for k,v in nodes.iteritems():
+  for k,v in nodes.items():
     for con in v.get('to',[]):
       for i,secon in enumerate(nodes.get(con['name'],{}).get('to',[])):
         if k == secon['name']:
@@ -111,8 +111,7 @@ def print_stat_node(nodes):
     msg = '%s.num_nodes %d %d\r\n' %(g_path,num_nodes,begin)
     s.send(msg)
   except Exception as e: pass
-  #except: pass
-  for k,v in nodes.iteritems():
+  for k,v in nodes.items():
     num_conns+= len(v['to'])
   node_text = "  stats_node [label=\"Statistics\\l"
   node_text += "Build Date  : %s\\l" % strftime("%Y-%m-%d %H:%M:%S",localtime())
@@ -144,7 +143,7 @@ def print_node(k,v):
   elif k in supernodes:
     node += ",fillcolor=steelblue1"
   node += "]"
-  print node
+  print(node)
 
 def print_anonymous_node(k,v):
   """ writes a single node and its edges 
@@ -153,7 +152,7 @@ def print_anonymous_node(k,v):
   """
   
   node = "  "+k #+"[label=\""
-  print node
+  print(node)
 
 def print_edge(k,v):
   for con in v.get('to',[]):
@@ -169,14 +168,14 @@ def print_edge(k,v):
     if con.get('bidirectional',False):
       edge += ",dir=both"
     edge += "]"
-    print edge
+    print(edge)
 
 def anonymize_nodes(nodes):
   #anonymizes all nodes
   i = "0"
   newnodes = {}
-  for k,v in nodes.iteritems():
-    for nodek,node in nodes.iteritems():
+  for k,v in nodes.items():
+    for nodek,node in nodes.items():
       for to in node['to']:
         if to['name'] == k:
           to['name'] = i
@@ -200,7 +199,7 @@ if __name__ == "__main__":
   if sys.argv[1] == "anonymous":
     nodes = anonymize_nodes(nodes)
 
-    for k,v in nodes.iteritems():
+    for k,v in nodes.items():
       print_anonymous_node(k,v)
       print_edge(k,v)
 
@@ -208,12 +207,12 @@ if __name__ == "__main__":
     for supernode,addr in check_all_the_super():
       supernodes.append(supernode)
     generate_availability_stats(nodes)
-    for k,v in nodes.iteritems():
+    for k,v in nodes.items():
       print_node(k,v)
       print_edge(k,v)
     try:
       dump_graph(nodes)
-    except Exception,e:
+    except Exception as e:
       sys.stderr.write("Cannot dump graph: %s" % str(e))
   else:
     pass
