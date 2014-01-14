@@ -131,7 +131,7 @@ def print_node(k,v):
   node = "  "+k+"[label=\""
   node += k+"\\l"
   node += "availability: %f\\l" % v['availability'] 
-  if v.has_key('num_conns'):
+  if 'num_conns' in v:
     node += "Num Connects:"+str(v['num_conns'])+"\\l"
   node += "external:"+v['external-ip']+":"+v['external-port']+"\\l"
   for addr in v.get('internal-ip',['dunno lol']): 
