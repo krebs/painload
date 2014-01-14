@@ -31,3 +31,6 @@
 [submodule "web"]
 	path = web
 	url = https://github.com/krebscode/krebscode.github.com
+[submodule "sites/paste.retiolum/bump"]
+	path = sites/paste.retiolum/bump
+	url = git@github.com:makefu/bump.git

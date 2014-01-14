@@ -21,7 +21,7 @@ class asybot(asychat):
   def __init__(self, server, port, nickname, channels, realname=False, username=False, hostname=False, hammer_interval=10, alarm_timeout=300, kill_timeout=360, loglevel=logging.ERROR):
     asychat.__init__(self)
     #logger magic
-    self.log = logging.getLogger('asybot')
+    self.log = logging.getLogger('asybot_' + nickname)
     hdlr = logging.handlers.SysLogHandler(facility=logging.handlers.SysLogHandler.LOG_DAEMON)
     formatter = logging.Formatter( '%(filename)s: %(levelname)s: %(message)s')
     hdlr.setFormatter(formatter)
@@ -64,7 +64,10 @@ class asybot(asychat):
     self.alarm_timeout = alarm_timeout
     self.hammer_interval = hammer_interval
     self.kill_timeout = kill_timeout
-    signal(SIGALRM, lambda signum, frame: self.alarm_handler())
+    try:
+      signal(SIGALRM, lambda signum, frame: self.alarm_handler())
+    except Exception as e:
+      print('asybot: ' + str(e))
     self.reset_alarm()
 
   def reset_alarm(self):
@@ -128,7 +131,8 @@ class asybot(asychat):
     self.close()
 
   def reconnect(self):
-    self.push('QUIT')
+    if self.connected:
+      self.push('QUIT')
     self.close()
     self.create_socket(AF_INET, SOCK_STREAM)
     self.connect((self.server, self.port))
