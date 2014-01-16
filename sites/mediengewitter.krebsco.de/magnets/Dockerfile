@@ -6,7 +6,7 @@ RUN apt-get update
 RUN apt-get install -y python-software-properties python g++ make
 RUN add-apt-repository -y ppa:chris-lea/node.js
 RUN apt-get update
-RUN apt-get -y install nodejs
+RUN apt-get -y install nodejs curl
 RUN mkdir -p /opt/magnets
 Add magnets/ /magnets
 RUN cd /magnets && npm install 
