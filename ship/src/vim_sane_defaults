@@ -2,7 +2,7 @@
 #@strict
 #@include core
 #@include vim
-#@punani
+#@include punani
 #@mainifyme
 info "installing punani"
 punani install vim

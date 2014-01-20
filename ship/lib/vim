@@ -3,6 +3,7 @@
 vimrc=$HOME/.vimrc
 
 vim_conf_sane_defaults(){
+    # TODO - make stuff more modular?
     cat >>$vimrc<<EOF
 set nocompatible
 filetype plugin indent on
@@ -34,4 +35,5 @@ set autoindent
 set backspace=indent,eol,start
 set nocp
 EOF
+    mkdir -p $HOME/.vim/backup
 }
