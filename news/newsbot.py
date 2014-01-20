@@ -221,7 +221,7 @@ url_shortener = 'http://wall'
 init_channels = ['#news']
 
 bots = {}
-knews = NewsBot('knews')
+knews = NewsBot('knews', init_channels)
 
 #config file reading
 F = open(feedfile, "r")
