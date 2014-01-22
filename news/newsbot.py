@@ -39,6 +39,7 @@ class NewsBot(asybot):
     def on_invite(self, prefix, command, params, rest):
         for chan in rest.split():
             self.push('JOIN ' + chan)
+            self.channels.append(chan)
 
     def read_message(self, args):
         try:
