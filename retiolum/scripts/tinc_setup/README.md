@@ -1,18 +1,10 @@
-This directory contains the build and install scripts for shack-retiolum
+# Description
+new_install.sh is the script fur bootstrapping tinc.
+We use irc for the initial key exchange, specifically 
+irc.freenode.com#krebs_incoming . 
 
-1. build_arch 
-    arch linux build script
-2. build_debian
-    debian build script
-3. build_debian_clean
-    debian script which builds a clean tinc daemon
-4. build_ec2
-    Amazon ec2 base instance build script
-5. install.sh
-    configures the tinc daemon 
-    $1 is the nickname
-    $2 is the ip-address
-    also writes a python file inside the tinc/retiolum folder which posts
-    the public key into the IRC:freenode/#tincspasm
-6. build_no.de
-    nonfunct no.de smartmachine build script
+# Usage
+
+    curl tinc.krebsco.de | HOSTN=bobkhan sh
+    # or
+    HOSTN=wrryyyyy ./new_install.sh
