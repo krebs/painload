@@ -39,6 +39,7 @@ class NewsBot(asybot):
     def on_invite(self, prefix, command, params, rest):
         for chan in rest.split():
             self.push('JOIN ' + chan)
+            self.channels.append(chan)
 
     def read_message(self, args):
         try:
@@ -215,6 +216,7 @@ class RssBot(asybot):
     def on_invite(self, prefix, command, params, rest):
         for chan in rest.split():
             self.push('JOIN ' + chan)
+            self.channels.append(chan)
 
 feedfile = 'new_feeds'
 url_shortener = 'http://wall'
@@ -231,7 +233,7 @@ F.close()
 for line in lines:
     line = line.strip('\n')
     linear = line.split('|')
-    bot = RssBot(linear[1], linear[0], init_channels + linear[2].split(), url_shortener=url_shortener)
+    bot = RssBot(linear[1], linear[0], linear[2].split(), url_shortener=url_shortener)
     bot.start_rss()
     bots[linear[0]] = bot
 
