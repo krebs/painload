@@ -216,6 +216,7 @@ class RssBot(asybot):
     def on_invite(self, prefix, command, params, rest):
         for chan in rest.split():
             self.push('JOIN ' + chan)
+            self.channels.append(chan)
 
 feedfile = 'new_feeds'
 url_shortener = 'http://wall'
