@@ -107,6 +107,9 @@ class asybot(asychat):
     elif command == 'INVITE':
       self.on_invite(prefix, command, params, rest)
 
+    elif command == 'KICK':
+      self.on_kick(prefix, command, params, rest)
+
     elif command == '433':
       # ERR_NICKNAMEINUSE, retry with another name
       _, nickname, int, _ = split('^.*[^0-9]([0-9]+)$', self.nickname) \
@@ -158,11 +161,15 @@ class asybot(asychat):
   def ME(self, target, text):
     self.PRIVMSG(target, ('ACTION ' + text + ''))
 
-  def on_privmsg(self, prefix, command, params, rest):
-    pass
-
   def on_welcome(self, prefix, command, params, rest):
     self.push('JOIN %s' % ','.join(self.channels))
+
+  def on_kick(self, prefix, command, params, rest):
+    for chan in params:
+      self.channels.remove(chan)
+
+  def on_privmsg(self, prefix, command, params, rest):
+    pass
 
   def on_invite(self, prefix, command, params, rest):
     pass

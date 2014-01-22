@@ -231,7 +231,7 @@ F.close()
 for line in lines:
     line = line.strip('\n')
     linear = line.split('|')
-    bot = RssBot(linear[1], linear[0], init_channels + linear[2].split(), url_shortener=url_shortener)
+    bot = RssBot(linear[1], linear[0], linear[2].split(), url_shortener=url_shortener)
     bot.start_rss()
     bots[linear[0]] = bot
 
