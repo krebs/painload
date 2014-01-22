@@ -165,8 +165,10 @@ class asybot(asychat):
     self.push('JOIN %s' % ','.join(self.channels))
 
   def on_kick(self, prefix, command, params, rest):
-    for chan in params:
-      self.channels.remove(chan)
+    self.log.debug(params)
+    if params[-1] == self.nickname:
+      for chan in params[:-1]:
+        self.channels.remove(chan)
 
   def on_privmsg(self, prefix, command, params, rest):
     pass
