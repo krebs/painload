@@ -3,7 +3,7 @@
 set -euf
 
 port=${port-1028}
-local_painload=/krebs;  remote_painload="git@github.com:krebscode/painload.git"
+local_painload=/krebs;  remote_painload="https://github.com/krebscode/painload"
 local_hosts=/tmp/hosts; remote_hosts="git@github.com:krebscode/hosts.git"
 
 main() {
