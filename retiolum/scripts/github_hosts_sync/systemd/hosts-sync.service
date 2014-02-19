@@ -3,7 +3,7 @@ Description=retiolum github hosts sync
 After=network.target
 
 [Service]
-EnvironmentFile=/etc/conf.d/retiolum-github-hosts-sync.conf
+EnvironmentFile=/etc/conf.d/hosts-sync.conf
 ExecStart=/krebs/retiolum/scripts/github_hosts_sync/index
 KillMode=process
 User=hosts-sync
