@@ -2,7 +2,7 @@
 # TODO do_work should retry until success
 set -euf
 
-port=1028
+port=${port-1028}
 local_painload=/krebs;  remote_painload="git@github.com:krebscode/painload.git"
 local_hosts=/tmp/hosts; remote_hosts="git@github.com:krebscode/hosts.git"
 

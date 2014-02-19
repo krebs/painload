@@ -1,0 +1,15 @@
+[Unit]
+Description=retiolum github hosts sync
+After=network.target
+
+[Service]
+EnvironmentFile=/etc/conf.d/retiolum-github-hosts-sync.conf
+ExecStart=/krebs/retiolum/scripts/github_hosts_sync/index
+KillMode=process
+User=hosts-sync
+Group=hosts-sync
+Restart=yes
+
+[Install]
+WantedBy=multi-user.target
+
