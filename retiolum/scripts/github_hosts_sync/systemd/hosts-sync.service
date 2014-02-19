@@ -8,7 +8,6 @@ ExecStart=/krebs/retiolum/scripts/github_hosts_sync/index
 KillMode=process
 User=hosts-sync
 Group=hosts-sync
-Restart=yes
 
 [Install]
 WantedBy=multi-user.target
