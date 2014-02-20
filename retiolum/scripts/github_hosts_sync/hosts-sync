@@ -1,0 +1,64 @@
+#! /bin/sh
+# TODO do_work should retry until success
+set -euf
+
+port=${port-1028}
+local_painload=$HOME/painload
+remote_painload="https://github.com/krebscode/painload"
+local_hosts=$HOME/hosts
+remote_hosts="git@github.com:krebscode/hosts.git"
+
+main() {
+  ensure_local_painload
+  ensure_local_hosts
+  is_worker && do_work || become_server
+}
+
+ensure_local_painload() {
+  test -d "$local_painload" || git clone "$remote_painload" "$local_painload"
+}
+
+ensure_local_hosts() {
+  test -d "$local_hosts" || git clone "$remote_hosts" "$local_hosts"
+}
+
+become_server() {
+  exec socat "TCP-LISTEN:$port,reuseaddr,fork" "EXEC:$0"
+}
+
+is_worker() {
+  test "${SOCAT_SOCKPORT-}" = "$port"
+}
+
+do_work() {
+  # read request
+  req_line="$(read line && echo "$line")"
+  req_hdrs="$(sed -n '/^\r$/q;p')"
+
+  set -x
+
+  cd "$local_hosts"
+  git pull >&2
+
+  cd "$local_hosts"
+  find . -name .git -prune -o -type f -exec git rm \{\} \; >/dev/null
+
+  cd "$local_painload"
+  git pull >&2
+
+  find "$local_painload/retiolum/hosts" -type f -exec cp \{\} "$local_hosts" \;
+
+  cd "$local_hosts"
+  find . -name .git -prune -o -type f -exec git add \{\} \; >&2
+  if git status --porcelain | grep -q .; then
+    git commit -m bump >&2
+    git push >&2
+  fi
+
+  echo "HTTP/1.1 200 OK"
+  echo
+  echo "https://github.com/krebscode/hosts/archive/master.tar.gz"
+  echo "https://github.com/krebscode/hosts/archive/master.zip"
+}
+
+main "$@"
