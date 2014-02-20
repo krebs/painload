@@ -4,4 +4,4 @@ here=$(dirname `readlink -f $0`)
 whatweb_bin="$here/../repos/whatweb/whatweb"
 [ ! -e "$whatweb_bin" ] &&  echo "!! Whatweb app does not exist" && exit 1 
 [ -z "${1:-}" ] &&  echo "!! no host given" && exit 1
-exec $whatweb_bin -a 3 "$1" 2>&1
+exec $whatweb_bin --user-agent="Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0" -a 3 "$1" 2>&1
