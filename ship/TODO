@@ -1,0 +1,2 @@
+- refresh-supers: somehow test if a real tinc connection is possible to new
+  given supernodes
