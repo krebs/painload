@@ -1,0 +1,6 @@
+#!/bin/sh
+#@include core
+#@include retiolum
+
+find_supernodes | cut -d\  -f 1 | shuf | head -n 5 \
+  | xargs -n1 printf "ConnectTo=%s\n"
