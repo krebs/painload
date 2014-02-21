@@ -1,0 +1,26 @@
+#!/bin/sh
+#@info
+# usage: [DEBUG=1] [tincconf=/not/tinc/retiolum/tinc.conf] $0 
+#@include core
+#@include retiolum
+  # using find_supernodes
+  #       tinc_path
+  #       netname
+
+#@strict
+#@mainifyme
+
+max_connect_to=${max_connect_to:-5}
+tincconf=${tincconf:-$tinc_path/$netname/tinc.conf}
+tmp_tincconf=$(mktemp)
+defer "rm -f $tmp_tincconf"
+
+sed '/[  ]*ConnectTo=/d' "$tincconf" > "$tmp_tincconf"
+
+find_supernodes | cut -d\  -f 1 | shuf \
+  | head -n "${max_connect_to}" \
+  | xargs -n1 printf "ConnectTo=%s\n" >> "$tmp_tincconf"
+
+info "replacing old tinc.conf with one"
+test "${DEBUG:-}" && diff "$tincconf" "$tmp_tincconf"
+mv "$tmp_tincconf" "$tincconf"
