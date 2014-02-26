@@ -30,4 +30,4 @@ info "replacing old tinc.conf with one"
 test "${DEBUG:-}" && diff "$tincconf" "$tmp_tincconf"
 mv "$tmp_tincconf" "$tincconf"
 
-tinc_reload
+reload_tinc
