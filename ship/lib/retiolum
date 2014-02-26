@@ -1,31 +1,50 @@
 #!/bin/sh
 # retiolum host functions
 #@include core
+#@include network
 tinc_path=${tinc_path:-/etc/tinc}
 netname=${netname:-retiolum}
 hosts_dir=${hosts_dir:-$tinc_path/$netname/hosts}
+supernode_urls="http://euer.krebsco.de/retiolum/supernodes.tar.gz"
+reload_tinc(){
+  info "reloading tinc configuration"
+  pkill -HUP tincd || tinc -n $netname reload;
+}
 
-check_free_v4(){
-  myipv4=${1-10.243.0.-1}
-  v4num=${myipv4##*.}
-  printf "Retard check: "
-  if [ "$v4num" -gt 0 -a "$v4num" -lt "256" ];
-  then 
-    info "No retard detected\n"
-    cd $hosts_dir
-    info "Check if ip is still free: "
-    for i in `ls -1`; do
-      if grep -q -e $myipv4\$ $i ;then
-        warn "Host IP already taken by $i! "
-        return 1
-      fi
-    done
-    info "Passed\n"
-    return 0
-  else
-    error "you are made of stupid. bailing out\n" 
-    return 1
-  fi
+refresh_supernode_keys(){
+  for url in $supernode_urls;do
+    info "Trying $url to retrieve supernodes"
+    if http_get "$url" \
+       | tar xvz -C $hosts_dir | xargs -n1 echo "refreshed:" ;then
+      info "refreshed supernode keys"
+      return 0
+    else
+      error "$url unusable for retrieving supernode host files"
+    fi
+  done && return 1
+}
+
+find_supernodes(){
+  cd $hosts_dir
+  set +f
+  for name in `
+    grep '^[  ]*Address[  ]*=' * |
+      cut -d: -f1 | sort | uniq
+  `; do
+    if eval "`sed -n '
+        s/[   ]\+//g
+        s/^\(Address\|Port\)=\(.*\)/\1="\${\1+\$\1\n}\2"/p
+      ' $name`"; then
+      port=${Port-655}
+      for host in $Address; do
+        if nc -zw 2 $host $port 2>/dev/null; then
+          echo "$name [('$host', $port)]"
+        fi &
+      done
+      wait
+    fi &
+  done
+  wait
   cd - >/dev/null
 }
 
@@ -54,26 +73,27 @@ find_active_nodes(){
   wait
   cd - >/dev/null
 }
-find_supernodes(){
-  cd $hosts_dir
-  set +f
-  for name in `
-    grep '^[  ]*Address[  ]*=' * |
-      cut -d: -f1 | sort | uniq
-  `; do
-    if eval "`sed -n '
-        s/[   ]\+//g
-        s/^\(Address\|Port\)=\(.*\)/\1="\${\1+\$\1\n}\2"/p
-      ' $name`"; then
-      port=${Port-655}
-      for host in $Address; do
-        if nc -zw 2 $host $port 2>/dev/null; then
-          echo "$name [('$host', $port)]"
-        fi &
-      done
-      wait
-    fi &
-  done
-  wait
+
+check_free_v4(){
+  myipv4=${1-10.243.0.-1}
+  v4num=${myipv4##*.}
+  printf "Retard check: "
+  if [ "$v4num" -gt 0 -a "$v4num" -lt "256" ];
+  then 
+    info "No retard detected\n"
+    cd $hosts_dir
+    info "Check if ip is still free: "
+    for i in `ls -1`; do
+      if grep -q -e $myipv4\$ $i ;then
+        error "Host IP already taken by $i! "
+        return 1
+      fi
+    done
+    info "Passed\n"
+    return 0
+  else
+    error "you are made of stupid. bailing out\n" 
+    return 1
+  fi
   cd - >/dev/null
 }

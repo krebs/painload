@@ -139,6 +139,8 @@ class RssBot(asybot):
         self.loop = True
         self.lastnew = datetime.now()
         self.url_shortener = url_shortener
+        self.retry = True
+        self.on_nickinuse = lambda: None
 
     def start_rss(self):
         self.upd_loop = threading.Thread(target=self.updateloop)
@@ -175,8 +177,8 @@ class RssBot(asybot):
                         self.sendall(entry.title + ' ' + shorturl)
                         self.oldnews.append(entry.link)
                         self.lastnew = datetime.now()
-            except:
-                print(self.nickname + ': rss timeout occured')
+            except Exception as e:
+                print(str(datetime.now().hour) + ':' + str(datetime.now().minute) + ' ' + self.nickname + ': ' + str(e))
             sleep(self.to)
 
     def shortenurl(self, url):
@@ -193,7 +195,10 @@ class RssBot(asybot):
             self.send_msg(target, feed.title + ' ' + self.shortenurl(feed.link))
 
     def sendall(self, string):
-        self.send_msg(self.channels, string)
+        try:
+            self.send_msg(self.channels, string)
+        except Exception as e:
+            print(self.nickname + ': failed sending all to ' + str(self.channels) + ' because of ' + str(e));
 
     def send_msg(self, target, string):
         if self.connected:
@@ -209,9 +214,9 @@ class RssBot(asybot):
         else:
             self.reconnect()
             while not self.connected:
-               sleep(3)
-               print('waiting for reconnect')
-            self.send_msg(string)
+               sleep(10)
+               print(self.nickname + ' waiting for reconnect')
+            self.send_msg(target, string)
 
     def on_invite(self, prefix, command, params, rest):
         for chan in rest.split():
@@ -237,5 +242,12 @@ for line in lines:
     bot.start_rss()
     bots[linear[0]] = bot
 
-th = threading.Thread(target=loop)
+def thread_handler():
+    while True:
+        try:
+            loop()
+        except Exception as e:
+            print('ohoh ' + e)
+
+th = threading.Thread(target=thread_handler)
 th.start()
