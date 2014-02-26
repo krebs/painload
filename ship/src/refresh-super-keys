@@ -1,0 +1,5 @@
+#!/bin/sh
+#@info
+#@include retiolum
+#@mainifyme
+refresh_supernode_keys

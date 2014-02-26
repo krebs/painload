@@ -1,10 +1,28 @@
 #!/bin/sh
 # retiolum host functions
 #@include core
+#@include network
 tinc_path=${tinc_path:-/etc/tinc}
 netname=${netname:-retiolum}
 hosts_dir=${hosts_dir:-$tinc_path/$netname/hosts}
+supernode_urls="http://euer.krebsco.de/retiolum/supernodes.tar.gz"
+reload_tinc(){
+  info "reloading tinc configuration"
+  pkill -HUP tincd || tinc -n $netname reload;
+}
 
+refresh_supernode_keys(){
+  for url in $supernode_urls;do
+    info "Trying $url to retrieve supernodes"
+    if http_get "$url" \
+       | tar xvz -C $hosts_dir | xargs -n1 echo "refreshed:" ;then
+      info "refreshed supernode keys"
+      return 0
+    else
+      error "$url unusable for retrieving supernode host files"
+    fi
+  done && return 1
+}
 
 find_supernodes(){
   cd $hosts_dir
@@ -67,7 +85,7 @@ check_free_v4(){
     info "Check if ip is still free: "
     for i in `ls -1`; do
       if grep -q -e $myipv4\$ $i ;then
-        warn "Host IP already taken by $i! "
+        error "Host IP already taken by $i! "
         return 1
       fi
     done

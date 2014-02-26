@@ -1,6 +1,9 @@
 #!/bin/sh
 #@info
 # usage: [DEBUG=1] [tincconf=/not/tinc/retiolum/tinc.conf] $0 
+# This is the implementation of the proposal how to update tinc supernode
+# connections 
+
 #@include core
 #@include retiolum
   # using find_supernodes
@@ -10,12 +13,14 @@
 #@strict
 #@mainifyme
 
+refresh_supernode_keys
+
 max_connect_to=${max_connect_to:-5}
 tincconf=${tincconf:-$tinc_path/$netname/tinc.conf}
 tmp_tincconf=$(mktemp)
 defer "rm -f $tmp_tincconf"
 
-sed '/[  ]*ConnectTo=/d' "$tincconf" > "$tmp_tincconf"
+sed '/^[  ]*ConnectTo/d' "$tincconf" > "$tmp_tincconf"
 
 find_supernodes | cut -d\  -f 1 | shuf \
   | head -n "${max_connect_to}" \
@@ -24,3 +29,5 @@ find_supernodes | cut -d\  -f 1 | shuf \
 info "replacing old tinc.conf with one"
 test "${DEBUG:-}" && diff "$tincconf" "$tmp_tincconf"
 mv "$tmp_tincconf" "$tincconf"
+
+tinc_reload
