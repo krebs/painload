@@ -112,11 +112,7 @@ class asybot(asychat):
 
     elif command == '433':
       # ERR_NICKNAMEINUSE, retry with another name
-      _, nickname, int, _ = split('^.*[^0-9]([0-9]+)$', self.nickname) \
-          if search('[0-9]$', self.nickname) \
-          else ['', self.nickname, 0, '']
-      self.nickname = nickname + str(int + 1)
-      self.handle_connect()
+      self.on_nickinuse(prefix, command, params, rest)
 
     elif command == '376':
       self.on_welcome(prefix, command, params, rest)
@@ -175,3 +171,10 @@ class asybot(asychat):
 
   def on_invite(self, prefix, command, params, rest):
     pass
+
+  def on_nickinuse(self, prefix, command, params, rest):
+      _, nickname, int, _ = split('^.*[^0-9]([0-9]+)$', self.nickname) \
+          if search('[0-9]$', self.nickname) \
+          else ['', self.nickname, 0, '']
+      self.nickname = nickname + str(int + 1)
+      self.handle_connect()
