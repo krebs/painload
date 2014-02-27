@@ -7,14 +7,12 @@ test:
 		n=`echo "$$tests" | wc -l`; \
 		echo $$i..$$n; \
 		for exe in $$tests; do \
-			{ \
-				./$$exe; \
-				case $$? in \
-					0) result=ok;; \
-					*) result='not ok'; touch .test-not-ok;; \
-				esac; \
-				echo $$result $$i - $$exe; \
-			} & \
+			if ./$$exe; then \
+				echo ok $$i - $$exe; \
+			else \
+				echo not ok $$i - $$exe; \
+				touch .test-not-ok; \
+			fi & \
 			i=$$(( i+1 )); \
 		done; \
 		wait; \
