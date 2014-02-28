@@ -4,6 +4,9 @@
 #@strict
 #@include core
 #@include punani
+#@include vim
+#@mainifyme
+
 info "Configuring environment for $(id -un)"
 cd $(readlink -f $(dirname $0))
 info "Using punani to install git vim and zsh"
@@ -68,43 +71,22 @@ mkdir -p $HOME/.vim
 # TODO modilarize vimconfig
 
 cat > $HOME/.vim/vimrc <<EOF 
-set nocompatible
 filetype off
 set rtp+=~/.vim/bundle/vundle
 call vundle#rc()
-
 " TODO refactor this
 Bundle 'gmarik/vundle'
 Bundle 'SudoEdit.vim'
 Bundle 'snipMate'
 Bundle 'tpope/vim-fugitive'
-Bundle 'vim-scripts-iptables'
-Bundle 'pyflakes'
+Bundle 'Valloric/YouCompleteMe'
+Bundle 'scrooloose/syntastic'
 
 filetype plugin indent on
-syntax on
 
-set vb
 let g:snips_author = 'Bob Ross <root@syntax-fehler.de>'
 let g:makefu_author = 'makefu'
 
-set foldenable
-set foldmethod=syntax
-" shows matching braches etc
-set showmatch
-set matchtime=3
-" highlight search
-set hlsearch
-
-" set noswapfile
-" set nobackup
-set backupdir=~/.vim/backup
-set directory=~/.vim/backup
-
-" turn off F1
-inoremap <F1> <ESC>
-nnoremap <F1> <ESC>
-vnoremap <F1> <ESC>
 " pasting
 nnoremap <F2> :set invpaste paste?<CR>
 set pastetoggle=<F2>
@@ -114,34 +96,13 @@ set showmode
 au FocusLost * :wa
 
 set spelllang=en
-" use set spell to enable spelling
 
-" press ttt to rot16 the whole file
-nmap ttt ggg?G
-
-colorscheme darkblue
-set background=dark
-
-set number
-set mouse=
 set textwidth=9001
-set ignorecase
-set incsearch
-set wildignore=*.o,*.obj,*.bak,*.exe,*.os
-
-set shiftwidth=2
-set tabstop=2
-set et
-set sw=2
-set smarttab
-set autoindent
-" end tabstop
-set backspace=indent,eol,start
-set nocp
 autocmd BufRead *.json set filetype=json
 EOF
 
 ln -vs $HOME/.vim/vimrc $HOME/.vimrc
+vim_conf_sane_defaults
 
 #install all the vim stuff with the help of vundle
 cd $HOME/.vim
