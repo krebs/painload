@@ -39,6 +39,10 @@ _punanidb_pacman_tinc=tinc
 _punanidb_yum_tinc=tinc
 _punanidb_aptget_tinc=tinc
 
+_punanidb_pacman_zsh=zsh
+_punanidb_yum_zsh=zsh
+_punanidb_aptget_zsh=zsh
+
 _punanidb_pacman_tor=tor
 _punanidb_yum_tor=tor
 _punanidb_aptget_tor=tor
