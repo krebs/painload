@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 def find_potential_super(path="/etc/tinc/retiolum/hosts"):
   import os
@@ -56,4 +56,4 @@ if __name__ == "__main__":
   usage
   """
   for host,addrs in check_all_the_super():
-    print(host,addrs)
+    print("%s %s" %(host,str(addrs)))

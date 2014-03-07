@@ -5,12 +5,23 @@
 #@include core
 #@include punani
 #@include vim
+
+# vim +python
+_punanidb_pacman_vim_python=gvim
+_punanidb_yum_vim_python=vim-enhanced
+_punanidb_aptget_vim_python=vim
+
+# TODO pull out youcompleteme into a vim function
+# cmake ,make,g++,python-dev for youcompleteme 
+_punanidb_pacman_cmake=cmake
+_punanidb_yum_cmake=cmake
+_punanidb_aptget_cmake=cmake
 #@mainifyme
 
 info "Configuring environment for $(id -un)"
 cd $(readlink -f $(dirname $0))
 info "Using punani to install git vim and zsh"
-punani install git vim zsh || error "cannot install some shit"
+punani install git vim_python zsh gpp cmake make python2_dev || die "cannot install some shit"
 
 info "writing dotfiles"
 # deploying zshrc
@@ -100,19 +111,27 @@ set spelllang=en
 set textwidth=9001
 autocmd BufRead *.json set filetype=json
 EOF
-
+if [ -e $HOME/.vimrc ] ; then
+  oldvim=$HOME/.vimrc.`date +%Y%M%d`
+  info "Backing up old vimrc file to $oldvim"
+  mv -v $HOME/.vimrc $oldvim
+fi
+info "Symlinking .vimrc to .vim/vimrc"
 ln -vs $HOME/.vim/vimrc $HOME/.vimrc
 vim_conf_sane_defaults
 
 #install all the vim stuff with the help of vundle
 cd $HOME/.vim
-mkdir bundle
-mkdir backup
+mkdir -p bundle
 info "Fetching vim-vundle"
 git clone https://github.com/gmarik/vundle.git bundle/vundle > /dev/null && \
   info "Vim Vundle deployed"
 info "Installing Vundle Bundles"
 vim "+:BundleInstall" "+:qall"
+
+info "building youcompleteme libs"
+cd $HOME/.vim/bundle/YouCompleteMe
+./install.sh
 cd -
 
 info "configuring zsh"
