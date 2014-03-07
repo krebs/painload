@@ -1,5 +1,9 @@
 #? /bin/sh
 
+## tahoe brick installation (ubuntu1304)
+sudo apt-get install python-dev python-pip gcc libssl-dev
+
+
 ## Tahoe Brick Installation (Arch Linux)
 pacman -S python2 python2-pip net-tools
 pip2 install pyasn1 zfec pycrypto zbase32 pycryptopp twisted
