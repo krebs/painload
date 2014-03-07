@@ -22,6 +22,7 @@ inoremap <F1> <ESC>
 nnoremap <F1> <ESC>
 vnoremap <F1> <ESC>
 set wildignore=*.o,*.obj,*.bak,*.exe,*.os
+cmap w!! w !sudo tee > /dev/null %
 colorscheme darkblue
 set background=dark
 set number
