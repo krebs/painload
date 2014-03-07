@@ -2,7 +2,7 @@
 cd $(dirname $(readlink -f $0))
 set -xeuf
 rnd_port=$(shuf -i 2000-65000 -n 1)
-docker_id=$(docker run -rm=true -p $rnd_port:80 -d -v  /krebs/go/t/docker/../../../:/krebs ubuntu /bin/bash /krebs/go/t/docker/dockertest/deploy)
+docker_id=$(docker run -p $rnd_port:80 -d -v  /krebs/go/t/docker/../../../:/krebs ubuntu /bin/bash /krebs/go/t/docker/dockertest/deploy)
 #docker run -p $rnd_port:80  -v  /krebs/go/t/docker/../../../:/krebs ubuntu /bin/bash /krebs/go/t/docker/dockertest/deploy
 echo $docker_id on $rnd_port
 trap "docker stop $docker_id;docker rm $docker_id" INT TERM EXIT QUIT

@@ -22,6 +22,8 @@ defer "rm -f $tmp_tincconf"
 
 sed '/^[  ]*ConnectTo/d' "$tincconf" > "$tmp_tincconf"
 
+
+# TODO find_supernodes requires netcat
 find_supernodes | cut -d\  -f 1 | shuf \
   | head -n "${max_connect_to}" \
   | xargs -n1 printf "ConnectTo=%s\n" >> "$tmp_tincconf"
