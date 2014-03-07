@@ -40,3 +40,6 @@
 [submodule "sites/mediengewitter.krebsco.de/mediengewitter/mediengewitter"]
 	path = sites/mediengewitter.krebsco.de/mediengewitter/mediengewitter
 	url = https://github.com/makefu/mediengewitter.git
+[submodule "https:/github.com/makefu/view-website.git"]
+	path = https:/github.com/makefu/view-website.git
+	url = ./Reaktor/repos/view-website
