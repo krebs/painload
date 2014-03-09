@@ -1,14 +1,12 @@
 #@include core
-
-netshare=
-dc_hub=${dc_hub:-adcs://localhost:2781}
 ncdc_user=${ncdc_user:-hooker}
-
+ncdc_bin=${ncdc_bin:-/usr/bin/ncdc}
 
 ncdc_config(){
     # maybe we want to use the running ncdc process and communicate via tmux send-keys ?
-   (sleep 1;cat;printf "/quit\n") | sudo -u $ncdc_user
+   (sleep 1;cat;printf "/quit\n") | sudo -u $ncdc_user "$ncdc_bin"
 }
+
 ncdc_configure_netshare(){
     :${1?provide path to share}
     rnd=`hexdump -n 2 -e '/2 "%u"' /dev/urandom`
@@ -25,15 +23,19 @@ ncdc_configure_nick(){
     echo "/nick $nick" | ncdc_config
 }
 ncdc_configure_hub(){
-    hub=${1:-$dc_hub}
+    rnd=`hexdump -n 2 -e '/2 "%u"' /dev/urandom`
+    hubname="hub_$rnd"
+    hub=${1?adcs://localhost:2781}
     info "configuring DC Hub: $hub, activating autconnect"
-    (echo "/open c1 ${hub}" ;
+    (echo "/open ${hubname} ${hub}" ;
     echo "/hset autoconnect true") | ncdc_config
 }
 
 
 ncdc_install(){
-curl http://dev.yorhel.nl/download/ncdc-linux-x86_64-1.19.tar.gz | tar xz -C /usr/bin/
+install_dir="$(dirname "${ncdc_bin}")"
+info "installing ncdc to $install_dir"
+curl http://dev.yorhel.nl/download/ncdc-linux-x86_64-1.19.tar.gz | tar xz -C "$install_dir"
 useradd -m $ncdc_user ||:
 }
 
