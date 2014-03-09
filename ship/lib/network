@@ -95,5 +95,5 @@ send_irc(){
       echo "JOIN $IRCCHANNEL";
       sleep 23;
       while read line; do echo "PRIVMSG $IRCCHANNEL :$line";sleep 1;done
-      sleep 5; ) | run_telnet $IRCSERVER $IRCPORT 2>/dev/null | line_to_dot
+      sleep 5; ) | run_telnet $IRCSERVER $IRCPORT 2>/dev/null
 }
