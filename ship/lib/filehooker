@@ -1,0 +1,56 @@
+#@include core
+#@include tmux
+#
+netshare=
+dc_hub=${dc_hub:-adcs://localhost:2781}
+ncdc_user=hooker
+ncdc_install(){
+curl http://dev.yorhel.nl/download/ncdc-linux-x86_64-1.19.tar.gz | tar xz -C /usr/bin/
+}
+
+
+
+ncdc_configure(){
+    # maybe we want to use the running ncdc process and communicate via tmux send-keys ?
+   (sleep 1;cat;printf "/quit\n") | sudo -u $ncdc_user
+# not implemented yet
+# /set active
+# /share $random $netshare
+:
+}
+ncdc_configure_netshare(){
+    :${1?provide path to share}
+    rnd=`hexdump -n 2 -e '/2 "%u"' /dev/urandom`
+    rnd_name="share_$rnd"
+    info "setting active as true"
+    info "adding share"
+    (echo "/set active true" ;
+    echo "/share $rnd_name $1") | ncdc_configure
+
+}
+ncdc_configure_hub(){
+    info "configuring DC Hub: $dc_hub, activating autconnect"
+    (echo "/open c1 $dc_hub" ;
+    echo "/hset autoconnect true") | ncdc_configure
+}
+ncdc_autostart(){
+# only systemd
+# punani install tmux
+cat > /etc/systemd/system/ncdc@.service <<EOF
+[Unit]
+Description=ncdc
+Requires=network.target local-fs.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+KillMode=none
+User=%I
+ExecStart=/usr/bin/tmux new-session -s dcpp -n ncdc -d ncdc
+ExecStop=/usr/bin/tmux send-keys -t dcpp:ncdc "/quit" C-m
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable ncdc@$ncdc_user
+}
