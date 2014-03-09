@@ -12,7 +12,7 @@ isodir=$bdir/iso
 isomnt=$bdir/isomount
 rootdir=$bdir/root
 outdir=$bdir/out
-auto_url=euer.krebsco.de/autoinstall
+auto_url=euer.krebsco.de/filepimp_installer
 info "bdir is at $bdir"
 [ ! -e "$isofile" ] && die "$isofile does not exist."
 esudo "$@"
