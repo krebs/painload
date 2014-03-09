@@ -1,0 +1,118 @@
+#/bin/sh
+#@strict
+#@include core
+#@include color
+#@include network
+#@include filehooker
+pass=lolwut.aidsballs
+admin=pimp
+extra_pkg="vim sudo grub-bios ntp tor openssh btrfs-progs tmux"
+
+info "writing stdout to /tmp/install.log"
+
+
+rootdisk=${1?please provide the root disk via \$1}
+test "$rootdisk" || die "cannot find your root disk"
+
+info "Your rootdisk is $rootdisk"
+sleep 3
+
+umount /mnt/boot ||:
+umount /mnt ||:
+info "overwriting partitioning"
+dd if=/dev/zero of=$rootdisk bs=2k count=10
+info "starting partitioning"
+(printf "o\nn\np\n\n\n+128M\n\a\nn\np\n\n\n\nw\n\n") |fdisk $rootdisk ||:
+partprobe $rootdisk
+info "done partitioning"
+sleep 1
+info "generating filesystem on /boot"
+mkfs.ext2 ${rootdisk}1
+info "Done"
+sleep 1
+info "starting LVM magic"
+vgchange -an ||:
+vgremove -f pool0 ||:
+pvcreate ${rootdisk}2
+vgcreate -ff pool0 ${rootdisk}2
+lvcreate -l 100%free -n root pool0
+info "finished creating LVM"
+sleep 1
+info "generating filesystems on the LVM"
+mkfs.ext4 /dev/mapper/pool0-root
+info "finished generating filesystems"
+sleep 1
+info "mounting"
+mount /dev/mapper/pool0-root /mnt
+mkdir /mnt/boot
+mount ${rootdisk}1 /mnt/boot
+
+info "finished mounting!"
+sleep 1
+info "installing!"
+
+info "Setting http proxy"
+
+info "Installing the following packages: $extra_pkg"
+if [ -n "${user_pkg:-}" ] ;then
+  info "User chooses additional packages: $user_pkg"
+else
+  info "No additional packages set by user (\$user_pkg unset)"
+fi
+pacstrap /mnt base base-devel $extra_pkg ${user_pkg:-}
+info "installation done"
+sleep 1
+info "generating configs"
+genfstab -U -p /mnt > /mnt/etc/fstab
+
+info "beginning chroot!"
+arch-chroot /mnt << EOF
+
+msg() { printf "\$*\n" >&2; }
+info()  { msg "$green\$*$nc"; }
+error() { msg "$green\$*$nc"; }
+
+info "generating locales"
+ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
+echo "LANG=en_US.UTF-8"  >> /etc/locale.conf
+echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+locale-gen
+echo "filehooker$RANDOM" > /etc/hostname
+sed -i 's/block/& lvm2/g' /etc/mkinitcpio.conf 
+info "Done! "
+mkinitcpio -p linux
+info "setting root password"
+printf "${pass}\n${pass}\n" | (passwd )
+info "adding user"
+useradd -m -G audio,video,wheel $admin
+printf "${pass}\n${pass}\n" | (passwd $admin)
+
+info "editing sudoers"
+printf "root ALL=(ALL) ALL\n%s ALL=(ALL)NOPASSWD: ALL\n" %wheel >> /etc/sudoers
+for i in dhcpcd ntpd tor sshd ; do
+    info "enabling \$i"
+    systemctl enable \$i
+done
+
+info "installing grub"
+grub-install ${rootdisk} 2>/dev/null
+#echo "GRUB_DISABLE_LINUX_UUID=true" >> /etc/default/grub
+grub-mkconfig > /boot/grub/grub.cfg 2>/dev/null
+# prepare ncdc
+useradd -m hooker
+exit
+EOF
+
+info "configuring tor"
+torrc=/mnt/etc/tor/torrc
+hidden_service_dir=/var/lib/tor/hidden_service/
+#@include tor
+configure_hidden_service
+info "publishing hidden service address"
+cat $hidden_service_dir/hostname | send_irc
+info "configure ncdc"
+ncdc_install
+netshare=
+dc_hub=adcs://elch.nsupdate.info:2781
+configure_ncdc 
+info "We're all done, simply reboot!"

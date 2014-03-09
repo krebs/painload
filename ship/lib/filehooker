@@ -1,22 +1,13 @@
 #@include core
-#@include tmux
-#
+
 netshare=
 dc_hub=${dc_hub:-adcs://localhost:2781}
-ncdc_user=hooker
-ncdc_install(){
-curl http://dev.yorhel.nl/download/ncdc-linux-x86_64-1.19.tar.gz | tar xz -C /usr/bin/
-}
+ncdc_user=${ncdc_user:-hooker}
 
 
-
-ncdc_configure(){
+ncdc_config(){
     # maybe we want to use the running ncdc process and communicate via tmux send-keys ?
    (sleep 1;cat;printf "/quit\n") | sudo -u $ncdc_user
-# not implemented yet
-# /set active
-# /share $random $netshare
-:
 }
 ncdc_configure_netshare(){
     :${1?provide path to share}
@@ -25,14 +16,27 @@ ncdc_configure_netshare(){
     info "setting active as true"
     info "adding share"
     (echo "/set active true" ;
-    echo "/share $rnd_name $1") | ncdc_configure
+    echo "/share $rnd_name $1") | ncdc_config
+}
 
+ncdc_configure_nick(){
+    nick=${1?nick must be provided}
+    info "configuring DC Nick: $nick"
+    echo "/nick $nick" | ncdc_config
 }
 ncdc_configure_hub(){
-    info "configuring DC Hub: $dc_hub, activating autconnect"
-    (echo "/open c1 $dc_hub" ;
-    echo "/hset autoconnect true") | ncdc_configure
+    hub=${1:-$dc_hub}
+    info "configuring DC Hub: $hub, activating autconnect"
+    (echo "/open c1 ${hub}" ;
+    echo "/hset autoconnect true") | ncdc_config
 }
+
+
+ncdc_install(){
+curl http://dev.yorhel.nl/download/ncdc-linux-x86_64-1.19.tar.gz | tar xz -C /usr/bin/
+useradd -m $ncdc_user ||:
+}
+
 ncdc_autostart(){
 # only systemd
 # punani install tmux
