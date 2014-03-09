@@ -1,8 +1,15 @@
 #/bin/sh
+#@info
 #@strict
 #@include core
+## colored logging
 #@include color
 #@include network
+
+## for tor hidden service
+#@include tor
+
+## for ncdc
 #@include filehooker
 pass=lolwut.aidsballs
 admin=pimp
@@ -66,8 +73,9 @@ info "generating configs"
 genfstab -U -p /mnt > /mnt/etc/fstab
 
 info "beginning chroot!"
+########### BEGIN CHROOT #####
 arch-chroot /mnt << EOF
-
+#@strict
 msg() { printf "\$*\n" >&2; }
 info()  { msg "$green\$*$nc"; }
 error() { msg "$green\$*$nc"; }
@@ -102,17 +110,14 @@ grub-mkconfig > /boot/grub/grub.cfg 2>/dev/null
 useradd -m hooker
 exit
 EOF
+######## END CHROOT ##########
 
 info "configuring tor"
 torrc=/mnt/etc/tor/torrc
 hidden_service_dir=/var/lib/tor/hidden_service/
-#@include tor
 configure_hidden_service
 info "publishing hidden service address"
 cat $hidden_service_dir/hostname | send_irc
 info "configure ncdc"
-ncdc_install
-netshare=
-dc_hub=adcs://elch.nsupdate.info:2781
-configure_ncdc 
+curl conf.krebsco.de/filehooker_configure_ncdc | arch-chroot /mnt
 info "We're all done, simply reboot!"
