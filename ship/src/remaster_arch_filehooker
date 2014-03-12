@@ -5,23 +5,20 @@
 
 ## TODO: provide a parameter which defines what to be done in the new iso root
 set -efu
-isofile="${1:-archlinux-2013.06.01-dual.iso}"
-outfile="$(basename "${isofile%.iso}".krebs.iso)"
+isofile=${1:-archlinux-2013.06.01-dual.iso}
+outfile=$(basename ${isofile%.iso}.krebs.iso)
 info "outfile will be at $outfile"
-bdir="${bdir:-$HOME/build/arch}"
-isodir="$bdir/iso"
-isomnt="$bdir/isomount"
-rootdir="$bdir/root"
-outdir="$bdir/out"
-echo "$outdir/$outfile"
-auto_url=euer.krebsco.de/arch_autoinstall
+bdir=${bdir:-$HOME/build/arch}
+isodir=$bdir/iso
+isomnt=$bdir/isomount
+rootdir=$bdir/root
+outdir=$bdir/out
+auto_url=conf.krebsco.de/filehooker_install
 info "bdir is at $bdir"
 [ ! -e "$isofile" ] && die "$isofile does not exist."
+esudo "$@"
 arch_label="$(get_volid "$isofile")"
 info "Arch iso label is ${arch_label}"
-esudo "$@"
-
-#punani install genisoimage
 
 
 info "cleanup root dir"
@@ -29,18 +26,17 @@ rm -rf $bdir
 mkdir -p $isomnt $rootdir 
 info "mounting isofile ($isofile)"
 if is_root;then
-    mount -t iso9660 -o loop,ro "$isofile" "$isomnt"
+    mount -t iso9660 -o loop,ro $isofile $isomnt
 else
     die 'we are not root enough to mount the iso.'
 fi
-defer "info 'unmounting $isomnt';umount \"$isomnt\""
+defer "info 'unmounting $isomnt';umount $isomnt"
 
 info "copying from '$isomnt' to '$isodir'"
 cp -a "$isomnt" "$isodir"
 defer "info 'removing $isodir';rm -rf $isodir"
-
 info "extracting root-image squashfs"
-
+# we will not touch the kernel ... yet
 
 for arch in x86_64 i686;do
     info "unpacking $isomnt/arch/$arch/root-image.fs.sfs"
@@ -55,7 +51,7 @@ for arch in x86_64 i686;do
 
     info "Starting of the rootdir verkrepelung"
     # do the magic here
-    arch-chroot "$rootdir/$arch" <<EOF
+    arch-chroot $rootdir/$arch <<EOF
     cat >> /root/.zshrc<<EOL
 cat << EOD
 This is the Krebs Autoinstaller, we will do all the right things.
@@ -63,12 +59,13 @@ Just Wait until everything finished.
 
 - Make sure that RJ45 is connected
 - you can bail out of the progress at any time with CTRL-C
-- if anything went wrong,you can run the installer again at:
-    /krebs/autoinstall
 
+    /krebs/autoinstall <install-disk (/dev/sdx)>
 EOD
-/krebs/autoinstall
+# /krebs/autoinstall
 EOL
+
+    : \${1?\$0 <install-disk (/dev/sdx)>}
     mkdir /krebs
     cat > /krebs/autoinstall <<EOL
 internet() { ping -w 1 google.de >/dev/null 2>&1; }
@@ -80,7 +77,7 @@ done
 echo "Grabbing current version of install-script from $auto_url"
 echo
 echo "AGENTS ARE GOOOOOOOOOOO!"
-curl $auto_url 2>/dev/null | sh
+curl $auto_url 2>/dev/null | sh -s "\\\$@"
 EOL
 chmod 755 /krebs/autoinstall
 EOF
@@ -88,26 +85,22 @@ EOF
     rm "$isodir/arch/$arch/root-image.fs.sfs"
     info "creating squashfs at $isodir/arch/$arch/root-image.fs.sfs"
     umount "$rootdir/$arch"
-    mksquashfs  "$outdir/$arch/root-image.fs" "$isodir/arch/$arch/root-image.fs.sfs" 
+    mksquashfs  "$outdir/$arch/root-image.fs" "$isodir/arch/$arch/root-image.fs.sfs"
 done
 
 info "creating Iso Image"
-#genisoimage -l -r -J -V "ARCH_$(date +%Y%m)" \
-#    -b isolinux/isolinux.bin -no-emul-boot \
-#    -boot-load-size 4 -boot-info-table -c isolinux/boot.cat \
-#    -o "$outdir/$outfile" "$isodir" 
 rm -f "${outdir}/${outfile}"
 xorriso -as mkisofs \
     -iso-level 3 \
     -full-iso9660-filenames \
-    -volid "$arch_label" \
+    -volid "ARCH_201311" \
     -appid "Shackspace Krebs Installer" \
     -publisher "Shackspace/Krebs" \
     -preparer "prepared by krebs" \
     -eltorito-boot isolinux/isolinux.bin \
     -eltorito-catalog isolinux/boot.cat \
     -no-emul-boot -boot-load-size 4 -boot-info-table \
-    -isohybrid-mbr "${isomnt}/isolinux/isohdpfx.bin" \
+    -isohybrid-mbr ${isomnt}/isolinux/isohdpfx.bin \
     -output "${outdir}/${outfile}" \
     "$isodir"
 
