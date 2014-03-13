@@ -1,0 +1,54 @@
+#! /bin/sh
+#
+# usage:
+#   export PATH="//services/lib:$PATH"
+#   cd services
+#   ls | filter owner == $LOGNAME | filter hasnt mail
+#
+set -euf
+
+main() {
+  case $# in
+    2) op1 "$@";;
+    3) op2 "$@";;
+    *) echo 'You are made of stupid!' >&2; exit 23;;
+  esac
+}
+
+# op1 OP SCHEMA
+op1() {
+  case "$1" in
+    has)
+      xargs grep -H "^$2:" \
+        | cut -d: -f1 
+      ;;
+    hasnt)
+      a=$(mktemp)
+      b=$(mktemp)
+      trap "rm $a $b; trap - EXIT INT QUIT" EXIT INT QUIT
+      cat > $a
+      cat $a | xargs grep -H "^$2:" | cut -d: -f1 > $b
+      diff -u $b $a | sed -n '/^++/d;s/^+\(.*\)/\1/p' | grep .
+  esac
+}
+
+# op2 SCHEMA OP RHS
+op2() {
+  case "$2" in
+    ==)
+      xargs grep -H "^$1:$3$" \
+        | cut -d: -f1
+      ;;
+    !=)
+      xargs grep -H "^$1:" \
+        | grep -v ":$1:$3" \
+        | cut -d: -f1
+      ;;
+    ~=)
+      xargs grep -H "^$1:.*$3.*$" \
+        | cut -d: -f1
+      ;;
+  esac
+}
+
+main "$@"
