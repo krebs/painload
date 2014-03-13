@@ -35,16 +35,16 @@ op1() {
 # op2 SCHEMA OP RHS
 op2() {
   case "$2" in
-    ==)
+    ==|is)
       xargs grep -H "^$1:$3$" \
         | cut -d: -f1
       ;;
-    !=)
+    !=|isnt)
       xargs grep -H "^$1:" \
         | grep -v ":$1:$3" \
         | cut -d: -f1
       ;;
-    ~=)
+    contains)
       xargs grep -H "^$1:.*$3.*$" \
         | cut -d: -f1
       ;;
