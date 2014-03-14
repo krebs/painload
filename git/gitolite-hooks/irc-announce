@@ -57,6 +57,19 @@ cat2() { tee /dev/stderr; }
 # privmsg_cat transforms stdin to a privmsg
 privmsg_cat() { awk '{ print "PRIVMSG "ENVIRON["IRC_CHANNEL"]" :"$0 }'; }
 
+# ircin is used to feed the output of netcat back to the "irc client"
+# so we can implement expect-like behavior with sed^_^
+# XXX mkselfdestructingtmpfifo would be nice instead of this cruft
+tmpdir="$(mktemp -d irc-announce_XXXXXXXX)"
+cd "$tmpdir"
+mkfifo ircin
+trap "
+  rm ircin
+  cd '$OLDPWD'
+  rmdir '$tmpdir'
+  trap - EXIT INT QUIT
+" EXIT INT QUIT
+
 #
 #
 #
@@ -65,8 +78,7 @@ privmsg_cat() { awk '{ print "PRIVMSG "ENVIRON["IRC_CHANNEL"]" :"$0 }'; }
   echo2 "NICK $IRC_NICK"
 
   # wait for MODE message
-  # CAVEAT 10 second was enough while testing...^_^
-  sleep 10
+  sed -n '/^:[^ ]* MODE /q'
 
   echo2 "JOIN $IRC_CHANNEL"
 
@@ -102,5 +114,5 @@ privmsg_cat() { awk '{ print "PRIVMSG "ENVIRON["IRC_CHANNEL"]" :"$0 }'; }
   printf 
   sleep 1
   exit
-} \
-  | nc "$IRC_SERVER" "$IRC_PORT"
+} < ircin \
+  | nc "$IRC_SERVER" "$IRC_PORT" | tee -a ircin
