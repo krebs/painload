@@ -13,13 +13,13 @@ isodir=$bdir/iso
 isomnt=$bdir/isomount
 rootdir=$bdir/root
 outdir=$bdir/out
-auto_url=${2:conf.krebsco.de/arch_autoinstall}
+auto_url=${2:-conf.krebsco.de/arch_autoinstall}
 info "bdir is at $bdir"
 [ ! -e "$isofile" ] && die "$isofile does not exist."
 esudo "$@"
 arch_label="$(get_volid "$isofile")"
 info "Arch iso label is ${arch_label}"
-
+info "auto_url is $auto_url"
 
 info "cleanup root dir"
 rm -rf $bdir
@@ -59,7 +59,7 @@ Just Wait until everything finished.
 
 - Make sure that RJ45 is connected
 - you can bail out of the progress at any time with CTRL-C
-    /krebs/autoinstall <install-disk (/dev/sdx)>
+    /krebs/autoinstall (args)
 EOD
 /krebs/autoinstall
 EOL
@@ -91,7 +91,7 @@ rm -f "${outdir}/${outfile}"
 xorriso -as mkisofs \
     -iso-level 3 \
     -full-iso9660-filenames \
-    -volid "ARCH_201311" \
+    -volid "${arch_label}" \
     -appid "Shackspace Krebs Installer" \
     -publisher "Shackspace/Krebs" \
     -preparer "prepared by krebs" \
