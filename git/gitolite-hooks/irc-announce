@@ -65,8 +65,8 @@ privmsg_cat() { awk '{ print "PRIVMSG "ENVIRON["IRC_CHANNEL"]" :"$0 }'; }
   echo2 "NICK $IRC_NICK"
 
   # wait for MODE message
-  # CAVEAT 3 second was enough while testing...^_^
-  sleep 3
+  # CAVEAT 5 second was enough while testing...^_^
+  sleep 5
 
   echo2 "JOIN $IRC_CHANNEL"
 
