@@ -5,7 +5,7 @@ set -euf
 #     any relevant gitolite LOCAL_CODE!
 # CAVEAT we hope that IRC_NICK is unique
 IRC_NICK="gl$GL_TID"
-IRC_CHANNEL='#testing'
+IRC_CHANNEL='#retiolum'
 IRC_SERVER='ire.retiolum'
 IRC_PORT=6667
 
