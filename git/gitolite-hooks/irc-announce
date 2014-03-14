@@ -81,7 +81,7 @@ privmsg_cat() { awk '{ print "PRIVMSG "ENVIRON["IRC_CHANNEL"]" :"$0 }'; }
       "$reponame" \
       "$username" \
       "$commit_count" \
-      "$(test $commit_count == 1 || echo s)" \
+      "$(test $commit_count = 1 || echo s)" \
       "$(hostname)" \
       "$ref_name" \
     | privmsg_cat \
