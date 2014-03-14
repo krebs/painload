@@ -1,13 +1,18 @@
 #! /bin/sh
 set -euf
 
+config_file="$HOME/.local/krebs/irc-announce"
+if test -f "$config_file"; then
+  . "$config_file"
+fi
+
 # XXX when changing IRC_CHANNEL or IRC_SERVER/_PORT, don't forget to update
 #     any relevant gitolite LOCAL_CODE!
 # CAVEAT we hope that IRC_NICK is unique
-IRC_NICK="gl$GL_TID"
-IRC_CHANNEL='#retiolum'
-IRC_SERVER='ire.retiolum'
-IRC_PORT=6667
+IRC_NICK="${IRC_NICK-gl$GL_TID}"
+IRC_CHANNEL="${IRC_CHANNEL-#retiolum}"
+IRC_SERVER="${IRC_SERVER-ire.retiolum}"
+IRC_PORT="${IRC_PORT-6667}"
 
 # for privmsg_cat below
 export IRC_CHANNEL
@@ -85,6 +90,11 @@ privmsg_cat() { awk '{ print "PRIVMSG "ENVIRON["IRC_CHANNEL"]" :"$0 }'; }
     | sed 's/^/14/;s/ / /' \
     | privmsg_cat \
     | cat2
+
+  echo2 "PART $IRC_CHANNEL"
+
+  # TESTME does this sleep help to send all messages?
+  sleep 5
 
   echo2 'QUIT :Gone to have lunch'
 
