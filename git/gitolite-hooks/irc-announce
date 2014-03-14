@@ -72,6 +72,7 @@ privmsg_cat() { awk '{ print "PRIVMSG "ENVIRON["IRC_CHANNEL"]" :"$0 }'; }
 
   echo "$interested_users" \
     | tr ' ' '\n' \
+    | grep -v "^$GL_USER" \
     | sed 's/$/: poke/' \
     | privmsg_cat \
     | cat2
