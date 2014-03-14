@@ -57,6 +57,19 @@ cat2() { tee /dev/stderr; }
 # privmsg_cat transforms stdin to a privmsg
 privmsg_cat() { awk '{ print "PRIVMSG "ENVIRON["IRC_CHANNEL"]" :"$0 }'; }
 
+# ircin is used to feed the output of netcat back to the "irc client"
+# so we can implement expect-like behavior with sed^_^
+# XXX mkselfdestructingtmpfifo would be nice instead of this cruft
+tmpdir="$(mktemp -d irc-announce_XXXXXXXX)"
+cd "$tmpdir"
+mkfifo ircin
+trap "
+  rm ircin
+  cd '$OLDPWD'
+  rmdir '$tmpdir'
+  trap - EXIT INT QUIT
+" EXIT INT QUIT
+
 #
 #
 #
@@ -65,8 +78,7 @@ privmsg_cat() { awk '{ print "PRIVMSG "ENVIRON["IRC_CHANNEL"]" :"$0 }'; }
   echo2 "NICK $IRC_NICK"
 
   # wait for MODE message
-  # CAVEAT 1 second was enough while testing...^_^
-  sleep 1
+  sed -n '/^:[^ ]* MODE /q'
 
   echo2 "JOIN $IRC_CHANNEL"
 
@@ -81,7 +93,7 @@ privmsg_cat() { awk '{ print "PRIVMSG "ENVIRON["IRC_CHANNEL"]" :"$0 }'; }
       "$reponame" \
       "$username" \
       "$commit_count" \
-      "$(test $commit_count == 1 || echo s)" \
+      "$(test $commit_count = 1 || echo s)" \
       "$(hostname)" \
       "$ref_name" \
     | privmsg_cat \
@@ -94,11 +106,9 @@ privmsg_cat() { awk '{ print "PRIVMSG "ENVIRON["IRC_CHANNEL"]" :"$0 }'; }
 
   echo2 "PART $IRC_CHANNEL"
 
-  # TESTME does this sleep help to send all messages?
-  sleep 5
+  # wait for PART confirmation
+  sed -n '/:'"$IRC_NICK"'![^ ]* PART /q'
 
   echo2 'QUIT :Gone to have lunch'
-
-  printf 
-} \
-  | nc -c "$IRC_SERVER" "$IRC_PORT"
+} < ircin \
+  | nc "$IRC_SERVER" "$IRC_PORT" | tee -a ircin
