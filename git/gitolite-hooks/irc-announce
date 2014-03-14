@@ -1,6 +1,8 @@
 #! /bin/sh
 set -euf
 
+# XXX when changing IRC_CHANNEL or IRC_SERVER/_PORT, don't forget to update
+#     any relevant gitolite LOCAL_CODE!
 # CAVEAT we hope that IRC_NICK is unique
 IRC_NICK="gl$GL_TID"
 IRC_CHANNEL='#testing'
