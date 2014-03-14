@@ -84,6 +84,9 @@ privmsg_cat() { awk '{ print "PRIVMSG "ENVIRON["IRC_CHANNEL"]" :"$0 }'; }
     | privmsg_cat \
     | cat2
 
+  echo2 "PART $IRC_CHANNEL"
+
+  # TESTME does this sleep help to send all messages?
   sleep 5
 
   echo2 'QUIT :Gone to have lunch'
