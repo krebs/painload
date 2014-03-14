@@ -106,13 +106,9 @@ trap "
 
   echo2 "PART $IRC_CHANNEL"
 
-  # TESTME does this sleep help to send all messages?
-  sleep 5
+  # wait for PART confirmation
+  sed -n '/:'"$IRC_NICK"'![^ ]* PART /q'
 
   echo2 'QUIT :Gone to have lunch'
-
-  printf 
-  sleep 1
-  exit
 } < ircin \
   | nc "$IRC_SERVER" "$IRC_PORT" | tee -a ircin
