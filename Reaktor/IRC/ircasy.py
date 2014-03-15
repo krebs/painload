@@ -179,7 +179,7 @@ class asybot(asychat):
     regex = search('(\d+)$', self.nickname)
     if regex:
       theint = int(regex.group(0))
-      self.nickname = self.nickname.strip(theint) + str(theint + 1)
+      self.nickname = self.nickname.strip(str(theint)) + str(theint + 1)
     else:
       self.nickname = self.nickname + '0'
     self.handle_connect()
