@@ -178,7 +178,8 @@ class asybot(asychat):
   def on_nickinuse(self, prefix, command, params, rest):
     regex = re.search('(\d+)$', self.nickname)
     if regex:
-        theint = int(regex.group(0))
-        self.nickname = self.nickname.strip(theint) + str(theint + 1)
-    else self.nickname = self.nickname + '0'
+      theint = int(regex.group(0))
+      self.nickname = self.nickname.strip(theint) + str(theint + 1)
+    else:
+      self.nickname = self.nickname + '0'
     self.handle_connect()
