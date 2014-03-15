@@ -85,7 +85,10 @@ class asybot(asychat):
       alarm(self.hammer_interval)
 
   def collect_incoming_data(self, data):
-    self.data += data.decode()
+    try:
+      self.data += data.decode()
+    except Exception as e:
+      print('error decoding message: ' + str(e));
 
   def found_terminator(self):
     self.log.debug('<< %s' % self.data)
