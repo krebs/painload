@@ -1,4 +1,5 @@
 #@include core
+#@include network
 ncdc_user=${ncdc_user:-hooker}
 ncdc_bin=${ncdc_bin:-/usr/bin/ncdc}
 
@@ -59,4 +60,26 @@ ExecStop=/usr/bin/tmux send-keys -t dcpp:ncdc "/quit" C-m
 WantedBy=multi-user.target
 EOF
 systemctl enable ncdc@$ncdc_user
+}
+
+install_tor_announce(){
+# systemd only
+cat > /etc/systemd/system/tor_announce.service<<EOF
+[Unit]
+Description=Announce Tor Hidden Address
+After=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/tor_announce
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+http_get conf.krebsco.de/tor_publish_ssh > /usr/bin/tor_annouce 
+chmod +x /usr/bin/tor_annouce
+systemctl enable tor_announce
+systemctl start tor_announce
 }
