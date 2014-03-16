@@ -140,7 +140,9 @@ class RssBot(asybot):
         self.lastnew = datetime.now()
         self.url_shortener = url_shortener
         self.retry = True
-        self.on_nickinuse = lambda: None
+
+    def on_nickinuse(*bla):
+        pass
 
     def start_rss(self):
         self.upd_loop = threading.Thread(target=self.updateloop)
