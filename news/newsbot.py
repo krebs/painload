@@ -203,14 +203,14 @@ class RssBot(asybot):
     def send_msg(self, target, string):
         if self.connected:
             for line in string.split('\n'):
-                if len(line) < 450:
-                    self.PRIVMSG(target, line)
-                else:
-                    space = 0
-                    for x in range(math.ceil(len(line)/400)):
-                        oldspace = space
-                        space = line.find(" ", (x+1)*400, (x+1)*400+50)
-                        self.PRIVMSG(target, line[oldspace:space])
+                while len(line)>0:
+                    if len(line) < 450:
+                        self.PRIVMSG(target, line)
+                        line = ''
+                    else:
+                        space = line.rfind(" ", 1, 450)
+                        self.PRIVMSG(target, line[:space])
+                        line=line[space:]
         else:
             self.reconnect()
             while not self.connected:
