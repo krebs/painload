@@ -1,31 +1,40 @@
 var IRC = require('irc')
 var FeedParser = require('feedparser')
 var Request = require('request')
+var Parse = require('shell-quote').parse
+var FS = require('fs')
 
 var irc_server = 'ire.retiolum'
 var master_nick = 'knews'
-var news_channel = '&testing'
+var news_channel = '#news'
 var feeds_file = 'new_feeds'
 var feedbot_loop_delay = 60 * 1000 // [ms]
 
+var slaves = {}
+
 function main () {
-  // XXX mangle nick to not clash with newsbot.py
-  var master = new IRC.Client(irc_server, master_nick + '_2', {
+  var master = new IRC.Client(irc_server, master_nick, {
     channels: [ news_channel ],
   })
 
   master.on('message' + news_channel, function (nick, text, message) {
     if (is_talking_to(master_nick, text)) {
-      var parse = /^[^:]*:\s*(\S*\S)\s*$/.exec(text)
-      if (parse) {
-        client.say(to, nick + ': ' + parse[1] + '?')
+      var request = parse_request(text)
+      if (request) {
+        return run_command(request.method, request.params, function (error, result) {
+          if (error) {
+            return master.say(news_channel, '4' + error)
+          } else {
+            return master.say(news_channel, result)
+          }
+        })
       }
     }
   })
 
   master.once('registered', function () {
     // read feeds file and create a feedbot for each entry
-    require('fs')
+    FS
       .readFileSync(feeds_file)
       .toString()
       .split('\n')
@@ -45,15 +54,9 @@ function main () {
           return
         }
 
-        // XXX mangle nick to not clash with newsbot.py
-        var nick = parts[0] + '_2'
+        var nick = parts[0]
         var uri = parts[1]
         var channels = parts[2].split(' ')
-
-        // XXX mangle channel to not clash with newsbot.py
-        channels = channels.map(function (channel) {
-          return channel === '#news' ? news_channel : channel
-        })
 
         return create_feedbot(nick, uri, channels)
       })
@@ -64,6 +67,13 @@ function create_feedbot (nick, uri, channels) {
   var client = new IRC.Client(irc_server, nick, {
     channels: channels,
   })
+
+  slaves[nick] = {
+    client: client,
+    nick: nick,
+    uri: uri,
+    channels: channels,
+  }
 
   // say text in every joined channel
   function broadcast (text) {
@@ -150,6 +160,60 @@ function is_talking_to (my_nick, text) {
   return text.slice(0, my_nick.length) === my_nick
       && text[my_nick.length] === ':'
 }
+
+function parse_request (text) {
+  var parse = Parse(text)
+  return {
+    method: parse[1],
+    params: parse.slice(2),
+  }
+}
+
+function run_command (methodname, params, callback) {
+  var method = methods[methodname]
+  if (method) {
+    return method(params, callback)
+  } else {
+    return callback(new Error('dunno what ' + methodname + ' is'));
+  }
+}
+
+var methods = {}
+methods.add = function (params, callback) {
+  create_feedbot(params[0], params[1], [news_channel])
+  return callback(null)
+}
+methods.del = function (params, callback) {
+  var slave = slaves[params[0]]
+  if (slave) {
+    slave.client.disconnect()
+    delete slaves[params[0]]
+    return callback(null)
+  } else {
+    return callback(new Error('botname not found'))
+  }
+}
+methods.save = function (params, callback) {
+  var feeds = Object.keys(slaves)
+    .map(function (nick) {
+      return slaves[nick]
+    })
+    .map(function (slave) {
+      return [
+        slave.nick,
+        slave.uri,
+        slave.channels.join(' '),
+      ].join('|')
+    }).join('\n') + '\n'
+  return FS.writeFile(feeds_file, feeds, function (error) {
+    if (error) {
+      return callback(error)
+    } else {
+      return callback(null, 'Feeds saved')
+    }
+  })
+}
+
 
 if (require.main === module) {
   main()
