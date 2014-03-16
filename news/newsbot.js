@@ -73,6 +73,7 @@ function create_feedbot (nick, uri, channels) {
   }
   
   client.once('registered', loop_feedparser)
+  client.once('registered', deaf_myself)
 
   client.on('error', function (error) {
     console.log('Error:', error)
@@ -138,6 +139,9 @@ function create_feedbot (nick, uri, channels) {
 
       return setTimeout(loop_feedparser, feedbot_loop_delay)
     })
+  }
+  function deaf_myself () {
+    client.send('mode', nick, '+D')
   }
 }
 
