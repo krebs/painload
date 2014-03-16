@@ -8,13 +8,12 @@ ncdc_config(){
 }
 
 ncdc_configure_netshare(){
-    :${1?provide path to share}
+    : "${1?provide path to share}"
     rnd=`hexdump -n 2 -e '/2 "%u"' /dev/urandom`
-    rnd_name="share_$rnd"
-    info "setting active as true"
+    rnd_name="${2:-share_$rnd}"
     info "adding share"
-    (echo "/set active true" ;
-    echo "/share $rnd_name $1") | ncdc_config
+    
+    (echo "/share $rnd_name $1") | ncdc_config
 }
 
 ncdc_configure_nick(){
@@ -27,6 +26,7 @@ ncdc_configure_hub(){
     hubname="hub_$rnd"
     hub=${1?adcs://localhost:2781}
     info "configuring DC Hub: $hub, activating autconnect"
+    info "setting active as true"
     (echo "/open ${hubname} ${hub}" ;
     echo "/hset autoconnect true") | ncdc_config
 }
@@ -59,4 +59,34 @@ ExecStop=/usr/bin/tmux send-keys -t dcpp:ncdc "/quit" C-m
 WantedBy=multi-user.target
 EOF
 systemctl enable ncdc@$ncdc_user
+}
+
+# 20gig in bytes
+min_netshare_size=${min_netshare_size:-20000000000}
+get_disksize(){
+fdisk -l ${1?provide disk} | grep '^Disk ' | cut -d\  -f 5
+}
+
+prepare_netshares(){
+    count=0
+    fdisk -l  | grep '^Disk '  | egrep '(/dev/sd|/dev/hd)' | cut -d\  -f 2 | tr -d : | while read disk;do
+        size=$(get_disksize $disk)
+        if test "$size" -gt "$min_netshare_size";
+        then
+            info "using $disk with $size bytes"
+            dd if=/dev/zero of=$disk bs=1M count=1 >/dev/null
+            sleep 1
+            (printf "o\nn\np\n\n\n\nw\n\n") |fdisk $disk >/dev/null ||:
+            #partprobe $disk
+            mkfs.btrfs -f ${disk}1 >/dev/null
+            uuid="$(blkid ${disk}1 -o value | head -n 1)"
+            mountpoint="/media/vag${count}"
+            mkdir -p "$mountpoint"
+            echo "UUID=$uuid  $mountpoint btrfs rw,relatime,space_cache 0 0" >> /etc/fstab
+            echo "$mountpoint"
+            : $((count++))
+        else
+            info "skipping $disk"
+        fi
+    done
 }
