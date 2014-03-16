@@ -95,6 +95,17 @@ function create_feedbot (nick, uri, channels) {
       if (response.statusCode !== 200) {
         return this.emit('error', new Error('Bad status code'))
       }
+      var output = res
+      switch (res.headers['content-encoding']) {
+        case 'gzip':
+          output = zlib.createGunzip()
+          res.pipe(output)
+          break
+        case 'deflate':
+          output = zlib.createInflate()
+          res.pipe(output)
+          break
+      }
       this.pipe(feedparser)
     })
 
