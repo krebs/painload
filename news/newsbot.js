@@ -140,7 +140,9 @@ function create_feedbot (nick, uri, channels) {
         // (i.e. we already have a lastTitle)
         if (client.lastTitle) {
           newitems.forEach(function (item) {
-            broadcast(item.title + ' ' + item.link)
+            return getShortLink(item.link, function (error, shortlink) {
+              return broadcast(item.title + ' ' + shortlink)
+            })
           })
         }
 
@@ -176,6 +178,10 @@ function run_command (methodname, params, callback) {
   } else {
     return callback(new Error('dunno what ' + methodname + ' is'));
   }
+}
+
+function getShortLink (link, callback) {
+  return callback(null, link)
 }
 
 var methods = {}
