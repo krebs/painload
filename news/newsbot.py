@@ -214,8 +214,8 @@ class RssBot(asybot):
         else:
             self.reconnect()
             while not self.connected:
-               sleep(10)
                print(self.nickname + ' waiting for reconnect')
+               sleep(10)
             self.send_msg(target, string)
 
     def on_invite(self, prefix, command, params, rest):
