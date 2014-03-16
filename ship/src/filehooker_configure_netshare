@@ -2,5 +2,6 @@
 #@info
 #@strict
 #@include filehooker
-
-ncdc_configure_netshare "${1?provide share folder}"
+for i in $(prepare_netshares) ;do
+   ncdc_configure_netshare "$i"  "${i##*/}"
+done

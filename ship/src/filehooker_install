@@ -12,13 +12,31 @@
 ## for ncdc
 #@include filehooker
 pass=lolwut.aidsballs
+# 20gig
+#min_netshare_size=20000000000
 admin=pimp
 extra_pkg="vim sudo grub-bios ntp tor openssh btrfs-progs tmux"
 
 info "writing stdout to /tmp/install.log"
 
 
-rootdisk=${1?please provide the root disk via \$1}
+installer_disk(){
+    find /dev/disk/by-label/ -name ARCH_\* 2>/dev/null | xargs readlink
+}
+
+find_rootdisk(){
+    for i in sd vd hd;do
+        for j in a b c;do
+            dsk="/dev/$i$j"
+            test ! -e "$dsk" && continue
+            test "$(installer_disk)" == "$dsk" && continue
+            test "$(get_disksize $dsk)" -gt "$min_netshare_size" && info "not using $dsk as it is too big" && continue
+            echo "$dsk" && return
+        done
+    done
+}
+
+rootdisk=$(find_rootdisk)
 test "$rootdisk" || die "cannot find your root disk"
 
 info "Your rootdisk is $rootdisk"
@@ -36,21 +54,16 @@ sleep 1
 info "generating filesystem on /boot"
 mkfs.ext2 ${rootdisk}1
 info "Done"
+sleep 3
+sync
+vgchange -an
+info "generating filesystems"
+mkfs.btrfs -f ${rootdisk}2
 sleep 1
-info "starting LVM magic"
-vgchange -an ||:
-vgremove -f pool0 ||:
-pvcreate ${rootdisk}2
-vgcreate -ff pool0 ${rootdisk}2
-lvcreate -l 100%free -n root pool0
-info "finished creating LVM"
-sleep 1
-info "generating filesystems on the LVM"
-mkfs.ext4 /dev/mapper/pool0-root
 info "finished generating filesystems"
 sleep 1
 info "mounting"
-mount /dev/mapper/pool0-root /mnt
+mount ${rootdisk}2 /mnt
 mkdir /mnt/boot
 mount ${rootdisk}1 /mnt/boot
 
@@ -66,7 +79,7 @@ if [ -n "${user_pkg:-}" ] ;then
 else
   info "No additional packages set by user (\$user_pkg unset)"
 fi
-pacstrap /mnt base base-devel $extra_pkg ${user_pkg:-}
+pacstrap /mnt base $extra_pkg ${user_pkg:-}
 info "installation done"
 sleep 1
 info "generating configs"
@@ -86,9 +99,8 @@ echo "LANG=en_US.UTF-8"  >> /etc/locale.conf
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 locale-gen
 echo "filehooker$RANDOM" > /etc/hostname
-sed -i 's/block/& lvm2/g' /etc/mkinitcpio.conf 
 info "Done! "
-mkinitcpio -p linux
+mkinitcpio -p linux ||
 info "setting root password"
 printf "${pass}\n${pass}\n" | (passwd )
 info "adding user"
@@ -111,13 +123,21 @@ useradd -m hooker
 exit
 EOF
 ######## END CHROOT ##########
+sync
 
 info "configuring tor"
 torrc=/mnt/etc/tor/torrc
 hidden_service_dir=/var/lib/tor/hidden_service/
 configure_hidden_service
-info "publishing hidden service address"
-cat $hidden_service_dir/hostname | send_irc
+#info "publishing hidden service address"
+#cat $hidden_service_dir/hostname | send_irc
 info "configure ncdc"
 curl conf.krebsco.de/filehooker_configure_ncdc | arch-chroot /mnt
-info "We're all done, simply reboot!"
+info "configuring netshares"
+( curl conf.krebsco.de/filehooker_configure_netshare )| arch-chroot /mnt
+info "configuring tor announce"
+curl conf.krebsco.de/install_tor_announce | arch-chroot /mnt
+info "We're all done, rebooting!"
+sync
+sleep 5
+reboot
