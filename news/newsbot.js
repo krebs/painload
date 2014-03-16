@@ -20,6 +20,7 @@ function main () {
       if (parse) {
         client.say(to, nick + ': ' + parse[1] + '?')
       }
+    }
   })
 
   master.once('registered', function () {
