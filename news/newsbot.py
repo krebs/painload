@@ -17,7 +17,7 @@ from time import sleep
 
 ## Newsbot Controller Class
 class NewsBot(asybot):
-    def __init__(self, name, channels=['#test'], server='ire', port=6667, timeout=60, loglevel=logging.ERROR, url_shortener='http://wall'):
+    def __init__(self, name, channels=['#test'], server='ire', port=6667, timeout=60, loglevel=logging.ERROR, url_shortener='http://localhost'):
         asybot.__init__(self, server, port, name, channels, loglevel=loglevel)
         self.to = timeout
         self.url_shortener = url_shortener
@@ -140,7 +140,9 @@ class RssBot(asybot):
         self.lastnew = datetime.now()
         self.url_shortener = url_shortener
         self.retry = True
-        self.on_nickinuse = lambda: None
+
+    def on_nickinuse(*bla):
+        pass
 
     def start_rss(self):
         self.upd_loop = threading.Thread(target=self.updateloop)
@@ -223,12 +225,16 @@ class RssBot(asybot):
             self.push('JOIN ' + chan)
             self.channels.append(chan)
 
+    def on_welcome(self, prefix, command, params, rest):
+        asybot.on_welcome(self, prefix, command, params, rest)
+        self.push('MODE ' + self.nickname + ' +D')
+
 feedfile = 'new_feeds'
-url_shortener = 'http://wall'
+url_shortener = 'http://go'
 init_channels = ['#news']
 
 bots = {}
-knews = NewsBot('knews', init_channels)
+knews = NewsBot('knews', init_channels, url_shortener=url_shortener)
 
 #config file reading
 F = open(feedfile, "r")
