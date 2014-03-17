@@ -146,7 +146,7 @@ function create_feedbot (nick, uri, channels) {
     feedparser.on('end', function () {
 
       if (client.lastItems) {
-        items.forEach(function (item)) {
+        items.forEach(function (item) {
           if (!client.lastItems.hasOwnProperty(item.title)) {
             broadcast_new_item(item)
           }
