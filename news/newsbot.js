@@ -12,6 +12,7 @@ var master_nick = 'knews'
 var news_channel = '#news'
 var feeds_file = 'new_feeds'
 var feedbot_loop_delay = 60 * 1000 // [ms]
+var feedbot_create_delay = 200 // [ms]
 var url_shortener_host = 'go'
 
 var slaves = {}
@@ -51,7 +52,7 @@ function main () {
       .filter(function (line) {
         return line.length > 0
       })
-      .forEach(function (line) {
+      .forEach(function (line, i) {
         var parts = line.split('|')
         if (parts.length !== 3) {
           console.log('bad new_feeds line ' + lines + ': ' + line)
@@ -62,7 +63,9 @@ function main () {
         var uri = parts[1]
         var channels = parts[2].split(' ')
 
-        return create_feedbot(nick, uri, channels)
+        setTimeout(function () {
+          return create_feedbot(nick, uri, channels)
+        }, i*feedbot_create_delay)
       })
   })
 }
