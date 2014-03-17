@@ -85,6 +85,12 @@ function create_feedbot (nick, uri, channels) {
       client.say(channel, text)
     })
   }
+
+  function broadcast_new_item (item) {
+    return getShortLink(item.link, function (error, shortlink) {
+      return broadcast(item.title + ' ' + shortlink)
+    })
+  }
   
   client.once('registered', loop_feedparser)
   client.once('registered', deaf_myself)
@@ -134,35 +140,19 @@ function create_feedbot (nick, uri, channels) {
       }
     })
     feedparser.on('end', function () {
-      items = items.sort(function (a, b) {
-        return a.date - b.date
+
+      if (client.lastItems) {
+        items.forEach(function (item)) {
+          if (!client.lastItems.hasOwnProperty(item.title)) {
+            broadcast_new_item(item)
+          }
+        })
+      }
+
+      client.lastItems = {}
+      items.forEach(function (item) {
+        client.lastItems[item.title] = true
       })
-
-      var indexOfLastGuid = items
-        .map(function (x) { return x.guid })
-        .indexOf(client.lastGuid)
-
-      var newitems = items
-      var olditems = []
-
-      // if items contain lastGuid, then only items after that are news
-      if (!!~indexOfLastGuid) {
-        olditems = newitems.splice(0, indexOfLastGuid + 1)
-      }
-
-      if (newitems.length > 0) {
-        // only broadcast news if we're not starting up
-        // (i.e. we already have a lastGuid)
-        if (client.lastGuid) {
-          newitems.forEach(function (item) {
-            return getShortLink(item.link, function (error, shortlink) {
-              return broadcast(item.title + ' ' + shortlink)
-            })
-          })
-        }
-
-        client.lastGuid = newitems[newitems.length - 1].guid
-      }
 
       return setTimeout(loop_feedparser, feedbot_loop_delay)
     })
