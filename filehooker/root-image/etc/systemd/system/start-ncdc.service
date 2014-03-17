@@ -1,0 +1,13 @@
+[Unit]
+Description=ncdc autoconfig
+Requires=network.target local-fs.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+KillMode=none
+ExecStart=sh /krebs/bin/startup_ncdc.ship
+ExecStop=sudo -u hooker /usr/bin/tmux send-keys -t dcpp:ncdc "/quit" C-m
+
+[Install]
+WantedBy=multi-user.target

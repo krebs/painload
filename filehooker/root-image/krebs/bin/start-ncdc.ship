@@ -1,0 +1,17 @@
+#!/usr/bin/env ship
+set -euf
+#@include filehooker
+. /krebs/lib/filehooker
+#@include network
+ncdc_user="hooker"
+useradd -m $ncdc_user ||:
+
+dc_hub="adcs://elch.nsupdate.info:2781"
+ncdc_configure_hub "$dc_hub"
+
+nick=$(get_hostname)
+ncdc_configure_nick "$nick"
+
+share_all_partitions
+
+sudo -u $ncdc_user /usr/bin/tmux new-session -s dcpp -n ncdc -d ncdc

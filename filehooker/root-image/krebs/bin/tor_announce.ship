@@ -6,6 +6,7 @@
 #@include tor
 . /krebs/lib/tor
 
+sleep_time=5
 test -w "$torrc" || ( error "$torrc is not writable!"; exit 1 ) || exit 1
 
 configure_hidden_service
@@ -14,4 +15,10 @@ test ! -e $hidden_service_dir/hostname && \
   systemctl restart tor && \
   sleep 1
 
-cat $hidden_service_dir/hostname | send_irc
+while ! internet;do
+  info "no internet yet, sleeping"
+  sleep $sleep_time
+done
+
+NICK=$(get_hostname)
+cat "$hidden_service_dir/hostname" | send_irc

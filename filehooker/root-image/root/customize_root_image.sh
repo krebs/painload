@@ -26,8 +26,8 @@ chmod 440 /etc/sudoers.d/g_wheel
 sed -i "s/#Server/Server/g" /etc/pacman.d/mirrorlist
 sed -i 's/#\(Storage=\)auto/\1volatile/' /etc/systemd/journald.conf
 
-/krebs/bin/vim_sane_defaults
-sudo -u pimp /krebs/bin/vim_sane_defaults
+/krebs/bin/vim_sane_defaults.ship
+sudo -u pimp /krebs/bin/vim_sane_defaults.ship
 
 test -e /usr/bin/ncdc || \
   curl http://dev.yorhel.nl/download/ncdc-linux-x86_64-1.19.tar.gz | \
@@ -38,5 +38,6 @@ systemctl enable  multi-user.target \
                   choose-mirror.service \
                   tor-announce.service \
                   filehooker-hostname.service \
+                  start-ncdc.service \
                   sshd.service \
                   tor.service

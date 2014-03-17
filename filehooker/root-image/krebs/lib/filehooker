@@ -14,7 +14,9 @@ ncdc_configure_netshare(){
     : "${1?provide path to share}"
     rnd=`hexdump -n 2 -e '/2 "%u"' /dev/urandom`
     rnd_name="${2:-share_$rnd}"
-    info "adding share"
+    info "removing old share $rnd_name"
+    (echo "/unshare $rnd_name" ) | ncdc_config
+    info "adding share $rnd_name ($1)"
     (echo "/share $rnd_name $1") | ncdc_config
 }
 
@@ -116,4 +118,23 @@ chmod +x /usr/bin/tor_announce
 info "enable tor_announce"
 systemctl enable tor_announce
 systemctl start tor_announce
+}
+
+share_all_partitions(){
+    count=0
+    find /dev -name '[shv]d[a-z][0-9]' | while read disk;do
+        size=$(get_disksize $disk)
+        if test "$size" -gt "$min_netshare_size";
+        then
+          info "trying disk $disk"
+          mountpoint=/media/vag$count
+          mkdir -p $mountpoint
+          umount $mountpoint 2>&1 >/dev/null && info "$mountpoint unmounted" || :
+          ! mount $disk $mountpoint && error "cannot mount $disk"  && continue
+          : $((count++))
+          ncdc_configure_netshare "$mountpoint" "$(basename $mountpoint)"
+        else
+          info "skipping $disk"
+        fi
+    done
 }
