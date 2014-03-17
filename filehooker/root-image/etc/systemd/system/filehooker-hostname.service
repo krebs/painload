@@ -1,0 +1,11 @@
+[Unit]
+Description=change filehooker hostname
+Before=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/krebs/bin/filehooker_set_hostname.sh
+
+[Install]
+WantedBy=multi-user.target

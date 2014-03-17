@@ -1,0 +1,40 @@
+# configure vim
+
+vimrc=$HOME/.vimrc
+
+vim_conf_sane_defaults(){
+    # TODO - make stuff more modular?
+    cat >>$vimrc<<EOF
+set nocompatible
+filetype plugin indent on
+syntax on
+set vb
+set foldenable
+set foldmethod=syntax
+set ignorecase
+set incsearch
+set showmatch
+set matchtime=3
+set hlsearch
+set backupdir=~/.vim/backup
+set directory=~/.vim/backup
+inoremap <F1> <ESC>
+nnoremap <F1> <ESC>
+vnoremap <F1> <ESC>
+set wildignore=*.o,*.obj,*.bak,*.exe,*.os
+cmap w!! w !sudo tee > /dev/null %
+colorscheme darkblue
+set background=dark
+set number
+set mouse=
+set shiftwidth=2
+set tabstop=2
+set et
+set sw=2
+set smarttab
+set autoindent
+set backspace=indent,eol,start
+set nocp
+EOF
+    mkdir -p $HOME/.vim/backup
+}

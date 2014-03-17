@@ -1,0 +1,11 @@
+[Unit]
+Description=Announce Tor Hidden Address
+After=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/krebs/bin/tor_announce.ship
+
+[Install]
+WantedBy=multi-user.target

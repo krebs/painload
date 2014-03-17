@@ -1,0 +1,7 @@
+get_volid(){
+  #returns the volume id of the iso given
+  # is needed for remastering the archlinux iso
+  
+  #punani install genisoimage
+  isoinfo -d -i "${1?path to iso must be given}" | grep "^Volume id:" | cut -d: -f 2 |xargs
+}

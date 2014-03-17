@@ -1,0 +1,99 @@
+#@include core
+#@include _punani_db
+
+## usage: punani_has PACKAGE
+punani_has() {
+  eval "_punani_${PACKER}_has \"\$1\""
+}
+
+## usage: punani_owner PACKAGE
+punani_owner() {
+  eval "_punani_${PACKER}_owner \"\$1\""
+}
+
+## usage: punani_install PACKAGE
+punani_install() {
+  eval "_punani_${PACKER}_install \"\$1\""
+}
+
+## usage: punani_remove PACKAGE
+punani_remove() {
+  eval "_punani_${PACKER}_remove \"\$1\""
+}
+
+## usage: _punani_resolve_package PKGNAME
+_punani_resolve_package(){
+  eval "set -u; echo \"\${_punanidb_${PACKER}_$1}\"" 2>/dev/null
+}
+
+## usage: _punani_select_packer
+_punani_select_packer() {
+  for p in ${_punani_known_packers:-null}; do
+    exists $p && info "using $p" && PACKER=`echo $p | tr -d -` && break
+  done
+}
+_punani_known_packers='pacman apt-get yum brew'
+_punani_pacman_install(){ pacman --noconfirm -S --needed "$@" ;}
+_punani_pacman_remove(){ pacman --noconfirm -Rcs "$@" ;}
+_punani_pacman_has(){ pacman -Q "$1" >/dev/null;}
+_punani_pacman_owner() { pacman -Qo "$1"; }
+_punani_aptget_install(){ apt-get -y install "$@" ;}
+_punani_aptget_remove(){ apt-get -y remove "$@" ;}
+_punani_aptget_has() { dpkg -s "$1" | grep -q "Status: install";}
+_punani_aptget_owner() { dpkg-query -S "$1" | cut -d: -f1;}
+_punani_yum_install(){ yum -y install "$@" ;}
+_punani_yum_remove(){ yum -y remove "$@" ;}
+_punani_yum_has() { rpm -qa --qf "%{NAME}\n"| egrep  "^${1}\$" >/dev/null ;}
+_punani_yum_owner(){ rpm -qf "$1" ;}
+_punani_brew_install(){ brew install "$@"; }
+_punani_brew_remove(){ brew remove "$@";}
+# TODO _punani_brew_has
+
+punani(){
+  # punani UI
+  _punani_usage='punani {install,remove,has,owner} PACKAGE...'
+  _punani_select_packer || die 'no package manager found; no punani for you!'
+
+  ACTION="$1"; shift
+
+  if test $# = 0; then
+    error 'no PACKAGE specified.'
+    die "usage: $_punani_usage"
+  fi
+
+  for PKG; do
+    RES="`_punani_resolve_package $PKG`" ||
+      die "could not resolve '$PKG'; no punani for you!"
+
+    case "$ACTION" in
+      install)
+        if punani_has $RES; then
+          info "$RES already installed, skipping"
+        else
+          punani_install $RES || die "cannot install $RES with $PACKER"
+        fi
+        ;;
+      remove)
+        if ! punani_has $RES; then
+          info "$RES not installed, skipping"
+        else
+          punani_remove $RES || die "cannot install $RES with $PACKER"
+        fi
+        ;;
+      has)
+        if punani_has $RES; then
+          info "$RES is installed"
+        else
+          info "$RES is not installed"
+          exit 1
+        fi
+        ;;
+      owner)
+        punani_owner $RES
+        ;;
+      *)
+        error "bad action: $ACTION"
+        die "usage: $_punani_usage"
+    esac
+  done
+}
