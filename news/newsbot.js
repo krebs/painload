@@ -88,6 +88,10 @@ function create_feedbot (nick, uri, channels) {
   client.once('registered', loop_feedparser)
   client.once('registered', deaf_myself)
 
+  client.on('invite', function (channel, from, message) {
+    client.join(channel, null)
+  })
+
   client.on('error', function (error) {
     console.log('Error:', error)
   })
