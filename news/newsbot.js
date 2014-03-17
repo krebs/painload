@@ -228,10 +228,11 @@ methods.add = function (params, callback) {
   }
 }
 methods.del = function (params, callback) {
-  var slave = slaves[params[0]]
-  if (slave) {
+  var nick = params[0]
+  if (slaves.hasOwnProperty(nick)) {
+    var slave = slaves[nick]
     slave.client.disconnect()
-    delete slaves[params[0]]
+    delete slaves[nick]
     return callback(null)
   } else {
     return callback(new Error('botname not found'))
