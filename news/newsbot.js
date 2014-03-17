@@ -76,7 +76,6 @@ function create_feedbot (nick, uri, channels) {
     client: client,
     nick: nick,
     uri: uri,
-    channels: channels,
   }
 
   // say text in every joined channel
@@ -247,7 +246,7 @@ methods.save = function (params, callback) {
       return [
         slave.nick,
         slave.uri,
-        slave.channels.join(' '),
+        Object.keys(client.chans).join(' '),
       ].join('|')
     }).join('\n') + '\n'
   return FS.writeFile(feeds_file, feeds, function (error) {
