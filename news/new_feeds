@@ -180,3 +180,4 @@ reddit_prog|http://www.reddit.com/r/programming/new/.rss|#news
 bmj|[object Object]|#news
 dod|http://www.defense.gov/news/afps2.xml|#news
 greenpeace|http://feeds.feedburner.com/GreenpeaceNews|#news
+painload|https://github.com/krebscode/painload/commits/master.atom|#news
