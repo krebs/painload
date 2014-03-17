@@ -186,8 +186,12 @@ function getShortLink (link, callback) {
 
 var methods = {}
 methods.add = function (params, callback) {
-  create_feedbot(params[0], params[1], [news_channel])
-  return callback(null)
+  if (slaves.hasOwnProperty(params[0])) {
+    return callback(new Error('name already taken'))
+  } else {
+    create_feedbot(params[0], params[1], [news_channel])
+    return callback(null)
+  }
 }
 methods.del = function (params, callback) {
   var slave = slaves[params[0]]
