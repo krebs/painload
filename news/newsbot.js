@@ -3,12 +3,16 @@ var FeedParser = require('feedparser')
 var Request = require('request')
 var Parse = require('shell-quote').parse
 var FS = require('fs')
+var HTTP = require('http')
+var FormData = require('form-data')
+var URL = require('url')
 
 var irc_server = 'ire.retiolum'
 var master_nick = 'knews'
 var news_channel = '#news'
 var feeds_file = 'new_feeds'
 var feedbot_loop_delay = 60 * 1000 // [ms]
+var url_shortener_host = 'go'
 
 var slaves = {}
 
@@ -192,7 +196,26 @@ function run_command (methodname, params, callback) {
 }
 
 function getShortLink (link, callback) {
-  return callback(null, link)
+  var form = new FormData()
+  form.append('uri', link)
+
+  var request = HTTP.request({
+    method: 'post',
+    host: url_shortener_host,
+    path: '/',
+    headers: form.getHeaders(),
+  })
+  form.pipe(request)
+
+  request.on('response', function (response) {
+    var data = ''
+    response.on('data', function (chunk) {
+      data += chunk
+    })
+    response.on('end', function () {
+      callback(null, data.replace(/\r\n$/,'') + '#' + URL.parse(link).host)
+    })
+  })
 }
 
 var methods = {}
