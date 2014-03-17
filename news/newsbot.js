@@ -70,13 +70,13 @@ function main () {
 function create_feedbot (nick, uri, channels) {
   var client = new IRC.Client(irc_server, nick, {
     channels: channels,
+    autoRejoin: false,
   })
 
   slaves[nick] = {
     client: client,
     nick: nick,
     uri: uri,
-    channels: channels,
   }
 
   // say text in every joined channel
@@ -94,6 +94,10 @@ function create_feedbot (nick, uri, channels) {
   
   client.once('registered', loop_feedparser)
   client.once('registered', deaf_myself)
+
+  client.on('invite', function (channel, from, message) {
+    client.join(channel, null)
+  })
 
   client.on('error', function (error) {
     console.log('Error:', error)
@@ -237,7 +241,7 @@ methods.save = function (params, callback) {
       return [
         slave.nick,
         slave.uri,
-        slave.channels.join(' '),
+        Object.keys(slave.client.chans).join(' '),
       ].join('|')
     }).join('\n') + '\n'
   return FS.writeFile(feeds_file, feeds, function (error) {
