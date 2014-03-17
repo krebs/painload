@@ -1,0 +1,32 @@
+{
+  "name": "news",
+  "version": "0.0.0",
+  "description": "",
+  "main": "newsbot.js",
+  "dependencies": {
+    "feedparser": "*",
+    "form-data": "*",
+    "irc": "*",
+    "request": "*",
+    "shell-quote": "*"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krebscode/painload"
+  },
+  "keywords": [
+    "irc",
+    "news",
+    "feed"
+  ],
+  "author": "krebs",
+  "license": "WTFPLv2",
+  "bugs": {
+    "url": "https://github.com/krebscode/painload/issues"
+  },
+  "homepage": "https://github.com/krebscode/painload"
+}
