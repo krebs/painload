@@ -1,6 +1,6 @@
 # configure vim
 
-vimrc=$HOME/.vimrc
+vimrc=${vimrc:-$HOME/.vimrc}
 
 vim_conf_sane_defaults(){
     # TODO - make stuff more modular?

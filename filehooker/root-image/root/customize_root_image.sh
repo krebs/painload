@@ -12,16 +12,22 @@ cp -aT /etc/skel/ /root/
 
 useradd -m -p "" -g users -G "adm,audio,floppy,log,network,rfkill,scanner,storage,optical,power,wheel" -s /usr/bin/zsh pimp || :
 
-mkdir -p /home/pimp/.ssh/
+mkdir -p /home/pimp/.ssh/ /root/.ssh/
 cp /krebs/etc/authorized_keys /home/pimp/.ssh/
 chown pimp -R /home/pimp/.ssh/
 chmod 700 -R /home/pimp/.ssh/ 
+
+cp /krebs/etc/authorized_keys /root/.ssh/
+
 chown -R root:root /etc /root /krebs /usr/bin 
 chmod 750 /etc/sudoers.d
 chmod 440 /etc/sudoers.d/g_wheel
 
 sed -i "s/#Server/Server/g" /etc/pacman.d/mirrorlist
 sed -i 's/#\(Storage=\)auto/\1volatile/' /etc/systemd/journald.conf
+
+/krebs/bin/vim_sane_defaults
+sudo -u pimp /krebs/bin/vim_sane_defaults
 
 test -e /usr/bin/ncdc || \
   curl http://dev.yorhel.nl/download/ncdc-linux-x86_64-1.19.tar.gz | \
