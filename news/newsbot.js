@@ -70,6 +70,7 @@ function main () {
 function create_feedbot (nick, uri, channels) {
   var client = new IRC.Client(irc_server, nick, {
     channels: channels,
+    autoRejoin: false,
   })
 
   slaves[nick] = {
