@@ -89,7 +89,7 @@ send_irc(){
   IRCCHANNEL=${IRCCHANNEL:-"#krebs_incoming"}
   IRCSERVER=${IRCSERVER:-"irc.freenode.net"}
   IRCPORT=${IRCPORT:-6667}
-  NICK="${HOSTN}_$(head /dev/urandom | tr -dc "0123456789" | head -c3)"
+  NICK="${NICK:-${HOSTN}_$(head /dev/urandom | tr -dc "0123456789" | head -c3)}"
   info "starting irc connect as $NICK"
   (   echo "NICK $NICK";
       echo "USER $NICK $IRCSERVER bla : $NICK";
