@@ -134,22 +134,22 @@ function create_feedbot (nick, uri, channels) {
         return a.date - b.date
       })
 
-      var indexOfLastTitle = items
-        .map(function (x) { return x.title })
-        .indexOf(client.lastTitle)
+      var indexOfLastGuid = items
+        .map(function (x) { return x.guid })
+        .indexOf(client.lastGuid)
 
       var newitems = items
       var olditems = []
 
-      // if items contain lastTitle, then only items after that are news
-      if (!!~indexOfLastTitle) {
-        olditems = newitems.splice(0, indexOfLastTitle + 1)
+      // if items contain lastGuid, then only items after that are news
+      if (!!~indexOfLastGuid) {
+        olditems = newitems.splice(0, indexOfLastGuid + 1)
       }
 
       if (newitems.length > 0) {
         // only broadcast news if we're not starting up
-        // (i.e. we already have a lastTitle)
-        if (client.lastTitle) {
+        // (i.e. we already have a lastGuid)
+        if (client.lastGuid) {
           newitems.forEach(function (item) {
             return getShortLink(item.link, function (error, shortlink) {
               return broadcast(item.title + ' ' + shortlink)
@@ -157,7 +157,7 @@ function create_feedbot (nick, uri, channels) {
           })
         }
 
-        client.lastTitle = newitems[newitems.length - 1].title
+        client.lastGuid = newitems[newitems.length - 1].guid
       }
 
       return setTimeout(loop_feedparser, feedbot_loop_delay)
