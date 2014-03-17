@@ -250,7 +250,7 @@ methods.save = function (params, callback) {
       return [
         slave.nick,
         slave.uri,
-        Object.keys(client.chans).join(' '),
+        Object.keys(slave.client.chans).join(' '),
       ].join('|')
     }).join('\n') + '\n'
   return FS.writeFile(feeds_file, feeds, function (error) {
