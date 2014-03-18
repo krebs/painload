@@ -140,6 +140,7 @@ function create_feedbot (nick, uri, channels) {
 
     feedparser.on('error', function (error) {
       broadcast('4feedparser ' + error)
+      return continue_loop()
     })
     feedparser.on('readable', function () {
       for (var item; item = this.read(); ) {
@@ -161,8 +162,12 @@ function create_feedbot (nick, uri, channels) {
         client.lastItems[item.title] = true
       })
 
-      return setTimeout(loop_feedparser, feedbot_loop_delay)
+      return continue_loop()
     })
+
+    function continue_loop () {
+      setTimeout(loop_feedparser, feedbot_loop_delay)
+    }
   }
   function deaf_myself () {
     client.send('mode', nick, '+D')
