@@ -199,7 +199,12 @@ function run_command (methodname, params, callback) {
 
 function getShortLink (link, callback) {
   var form = new FormData()
-  form.append('uri', link)
+  try {
+    form.append('uri', link)
+  } catch (err) {
+    console.log('link:', link)
+    throw err
+  }
 
   var request = HTTP.request({
     method: 'post',
