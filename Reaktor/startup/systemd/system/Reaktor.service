@@ -1,0 +1,12 @@
+[Unit]
+Description=Reaktor
+After=network.target nss-lookup.target
+
+[Service]
+Type=forking
+PIDFile=/run/ntpd.pid
+ExecStart=/krebs/Reaktor/index
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
