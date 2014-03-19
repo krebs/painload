@@ -3,7 +3,7 @@ Description=Reaktor for user %i
 After=network.target nss-lookup.target
 
 [Service]
-Type=forking
+Type=normal
 #TODO - make reaktor path variable
 User=%i
 ExecStart=/krebs/painload/Reaktor/index
