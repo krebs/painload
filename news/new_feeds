@@ -18,7 +18,6 @@ bdt_pressemitteilungen|http://bundestag.de/service/rss/Bundestag_Presse.rss|#new
 bdt_wd|http://bundestag.de/service/rss/Bundestag_WD.rss|#news #bundestag
 bitcoinboard|http://bitcoinboard.net/feed/|#news #financial
 bitcoinpakistan|https://bitcoinspakistan.com/feed/|#news #financial
-bmj|http://www.bmj.com/rss|#news
 businessweek|http://www.businessweek.com/feeds/homepage.rss|#news
 cancer|http://feeds.feedburner.com/ncinewsreleases?format=xml|#news
 carta|http://feeds2.feedburner.com/carta-standard-rss|#news
@@ -44,7 +43,6 @@ csm|http://rss.csmonitor.com/feeds/csm|#news
 csm_world|http://rss.csmonitor.com/feeds/world|#news
 cyberguerrilla|https://www.cyberguerrilla.org/a/2012/?feed=rss2|#news
 danisch|http://www.danisch.de/blog/feed/|#news
-dod|http://www.defense.gov/news/rss/|#news
 dwn|http://deutsche-wirtschafts-nachrichten.de/feed/customfeed/|#news
 ecat|http://ecat.com/feed|#news
 eia_press|http://www.eia.gov/rss/press_rss.xml|#news
@@ -60,7 +58,6 @@ faz_feui|http://www.faz.net/rss/aktuell/feuilleton/|#news
 faz_politik|http://www.faz.net/rss/aktuell/politik/|#news
 faz_wirtschaft|http://www.faz.net/rss/aktuell/wirtschaft/|#news #financial
 fbi|http://www.fbi.gov/homepage/RSS|#news #bullerei
-fbi_nat_press|http://www.fbi.gov/news/rss|#news #bullerei
 fbi_news|http://www.fbi.gov/news/news_blog/rss.xml|#news
 fbi_press|http://www.fbi.gov/news/current/rss.xml|#news #bullerei
 fbi_stories|http://www.fbi.gov/news/stories/all-stories/rss.xml|#news #bullerei
@@ -75,7 +72,6 @@ GerForPol|http://www.german-foreign-policy.com/de/news/rss-2.0|#news
 gmanet|http://www.gmanetwork.com/news/rss/news|#news
 golem|http://www.golem.de/rss.php?feed=RSS1.0|#news
 google|http://news.google.com/?output=rss|#news
-greenpeace|http://www.greenpeace.de/nachrichten/feed/rss2/|#news
 guardian_uk|http://feeds.theguardian.com/theguardian/uk-news/rss|#news
 gulli|http://ticker.gulli.com/rss/|#news
 handelsblatt|http://www.handelsblatt.com/contentexport/feed/schlagzeilen|#news #financial
@@ -98,8 +94,6 @@ LtU|http://lambda-the-ultimate.org/rss.xml|#news
 lukepalmer|http://lukepalmer.wordpress.com/feed/|#news
 mit|http://web.mit.edu/newsoffice/rss-feeds.feed?type=rss|#news
 mongrel2_master|https://github.com/zedshaw/mongrel2/commits/master.atom|#news
-nasa_iotd|http://www.nasa-usa.de/rss/dyn/lg_image_of_the_day.rss|#news
-nasa_news|http://www.nasa-usa.de/rss/dyn/breaking_news.rss|#news
 nds|http://www.nachdenkseiten.de/?feed=atom|#news
 netzpolitik|https://netzpolitik.org/feed/|#news
 newsbtc|http://newsbtc.com/feed/|#news #financial
@@ -122,7 +116,6 @@ reddit_4chan|http://www.reddit.com/r/4chan/new/.rss|#news #brainfuck
 reddit_anticonsum|http://www.reddit.com/r/Anticonsumption/new/.rss|#news
 reddit_btc|http://www.reddit.com/r/Bitcoin/new/.rss|#news #financial
 reddit_consp|http://reddit.com/r/conspiracy/.rss|#news
-reddit_prog|http://reddit.com/r/programming/|#news
 reddit_sci|http://www.reddit.com/r/science/.rss|#news
 reddit_tech|http://www.reddit.com/r/technology/.rss|#news
 reddit_tpp|http://www.reddit.com/r/twitchplayspokemon/.rss|#news #tpp
@@ -182,5 +175,9 @@ weechat|http://dev.weechat.org/feed/atom|#news
 wp_world|http://feeds.washingtonpost.com/rss/rss_blogpost|#news
 xkcd|https://xkcd.com/rss.xml|#news
 yahoo|http://news.yahoo.com/rss/|#news
-z0r|https://www.facebook.com/feeds/page.php?format=atom10&id=278857186139|#news
 zdnet|http://www.zdnet.com/news/rss.xml|#news
+reddit_prog|http://www.reddit.com/r/programming/new/.rss|#news
+bmj|[object Object]|#news
+dod|http://www.defense.gov/news/afps2.xml|#news
+greenpeace|http://feeds.feedburner.com/GreenpeaceNews|#news
+painload|https://github.com/krebscode/painload/commits/master.atom|#news
