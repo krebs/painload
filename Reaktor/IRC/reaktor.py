@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os
 from ircasy import asybot
 from asyncore import loop
