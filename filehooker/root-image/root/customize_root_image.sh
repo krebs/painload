@@ -23,7 +23,7 @@ cp /krebs/etc/authorized_keys /root/.ssh/
 
 useradd -m hooker ||:
 
-chown -R root:root /etc /root /krebs /usr/bin 
+chown -R root:root /etc /root /krebs
 chmod 750 /etc/sudoers.d
 chmod 440 /etc/sudoers.d/g_wheel
 
