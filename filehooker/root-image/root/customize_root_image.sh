@@ -1,6 +1,8 @@
 #!/bin/bash
 
 set -e -u -f -x
+reaktor_user=reaktor
+ncdc_user=hooker
 
 sed -i 's/#\(en_US\.UTF-8\)/\1/' /etc/locale.gen
 locale-gen
@@ -19,6 +21,8 @@ chmod 700 -R /home/pimp/.ssh/
 
 cp /krebs/etc/authorized_keys /root/.ssh/
 
+useradd -m hooker ||:
+
 chown -R root:root /etc /root /krebs /usr/bin 
 chmod 750 /etc/sudoers.d
 chmod 440 /etc/sudoers.d/g_wheel
@@ -29,15 +33,34 @@ sed -i 's/#\(Storage=\)auto/\1volatile/' /etc/systemd/journald.conf
 /krebs/bin/vim_sane_defaults.ship
 sudo -u pimp /krebs/bin/vim_sane_defaults.ship
 
+## load latest ncdc if not available
 test -e /usr/bin/ncdc || \
   curl http://dev.yorhel.nl/download/ncdc-linux-x86_64-1.19.tar.gz | \
   tar xz -C "/usr/bin"
 
-systemctl enable  multi-user.target \
+## load latest painload if not available
+test ! -e /krebs/painload/Reaktor && \
+  curl https://codeload.github.com/krebscode/painload/tar.gz/master | \
+  tar xz -C "/krebs" && \
+  mv /krebs/painload-master /krebs/painload
+
+useradd $reaktor_user || :
+## needed to see the hidden service hostname
+echo "$reaktor_user ALL=(tor) NOPASSWD: /krebs/bin/tor-get-hidden-service.sh" >> /etc/sudoers.d/get_root
+
+cp /krebs/painload/Reaktor/etc/systemd/system/Reaktor@.service \
+   /etc/systemd/system
+# add bonus features for filehooker
+cp -a /krebs/etc/Reaktor  /krebs/painload
+  
+for i in  multi-user.target \
                   pacman-init.service \
                   choose-mirror.service \
-                  tor-announce.service \
+                  tor-configure-hidden.service \
+                  Reaktor@${reaktor_user}.service \
                   filehooker-hostname.service \
-                  start-ncdc.service \
+                  start-ncdc@${ncdc_user}.service \
                   sshd.service \
-                  tor.service
+                  tor.service ;do
+  systemctl enable "$i"
+done
