@@ -4,6 +4,7 @@ After=network.target nss-lookup.target
 
 [Service]
 Type=forking
+#TODO - make reaktor path variable
 User=%i
 ExecStart=/krebs/painload/Reaktor/index
 Restart=always
