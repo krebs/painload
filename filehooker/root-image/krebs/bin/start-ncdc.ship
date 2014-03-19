@@ -7,7 +7,7 @@ ncdc_user="hooker"
 useradd -m $ncdc_user ||:
 
 dc_hub="adcs://elch.nsupdate.info:2781"
-ncdc_configure_hub "$dc_hub"
+ncdc_configure_hub "$dc_hub" "elch"
 
 nick=$(get_hostname)
 ncdc_configure_nick "$nick"
@@ -15,3 +15,4 @@ ncdc_configure_nick "$nick"
 share_all_partitions
 
 sudo -u $ncdc_user /usr/bin/tmux new-session -s dcpp -n ncdc -d ncdc
+exit 0
