@@ -1,4 +1,5 @@
 arch-install-scripts
+python
 btrfs-progs
 crda
 dhclient
@@ -7,7 +8,6 @@ dmraid
 dnsmasq
 dnsutils
 dosfstools
-elinks
 ethtool
 f2fs-tools
 fsarchiver
@@ -15,10 +15,7 @@ gnu-netcat
 gpm
 gptfdisk
 grml-zsh-config
-grub
-haveged
 hdparm
-irssi
 lftp
 linux-atm
 mtools
@@ -28,22 +25,14 @@ ntfs-3g
 ntp
 openconnect
 openssh
-openvpn
-parted
 partimage
-pptpclient
 rfkill
 rsync
-speedtouch
 sudo
 tcpdump
-testdisk
-usb_modeswitch
-vpnc
 wget
 wireless_tools
 wpa_actiond
-wvdial
 zsh
 vim
 tor
