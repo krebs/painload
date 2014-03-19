@@ -27,8 +27,8 @@ ncdc_configure_nick(){
 }
 ncdc_configure_hub(){
     rnd=`hexdump -n 2 -e '/2 "%u"' /dev/urandom`
-    hubname="hub_$rnd"
     hub=${1?adcs://localhost:2781}
+    hubname="${2:-hub_$rnd}"
     info "configuring DC Hub: $hub, activating autconnect"
     info "setting active as true"
     (echo "/open ${hubname} ${hub}" ;
