@@ -1,6 +1,6 @@
 [Unit]
 Description=change filehooker hostname
-Before=network.target
+Before=network.target nss-lookup.target
 
 [Service]
 Type=oneshot
