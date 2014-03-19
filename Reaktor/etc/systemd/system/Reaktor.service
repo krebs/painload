@@ -1,9 +1,10 @@
 [Unit]
-Description=Reaktor
+Description=Reaktor for user %i
 After=network.target nss-lookup.target
 
 [Service]
 Type=forking
+User=%i
 ExecStart=/krebs/painload/Reaktor/index
 Restart=always
 
