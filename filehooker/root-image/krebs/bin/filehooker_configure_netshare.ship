@@ -1,7 +1,0 @@
-#!/bin/sh
-#@info
-#@strict
-#@include filehooker
-#for i in $(prepare_netshares) ;do
-   #ncdc_configure_netshare "$i"  "${i##*/}"
-#done
