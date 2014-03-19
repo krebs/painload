@@ -14,11 +14,3 @@ test ! -e $hidden_service_dir/hostname && \
   info "hidden service file does not exist, restarting tor" && \
   systemctl restart tor && \
   sleep 1
-
-while ! internet;do
-  info "no internet yet, sleeping"
-  sleep $sleep_time
-done
-
-NICK=$(get_hostname)
-cat "$hidden_service_dir/hostname" | send_irc
