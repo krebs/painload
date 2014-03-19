@@ -1,0 +1,11 @@
+[Unit]
+Description=Reaktor
+After=network.target nss-lookup.target
+
+[Service]
+Type=forking
+ExecStart=/krebs/painload/Reaktor/index
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
