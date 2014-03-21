@@ -131,6 +131,7 @@ share_all_partitions(){
           mkdir -p $mountpoint
           umount $mountpoint 2>&1 >/dev/null && info "$mountpoint unmounted" || :
           ! mount $disk $mountpoint && error "cannot mount $disk"  && continue
+          chown "$ncdc_user" "$mountpoint"
           : $((count++))
           ncdc_configure_netshare "$mountpoint" "$(basename $mountpoint)"
         else
