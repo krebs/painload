@@ -16,5 +16,11 @@ realshare="/media/$share"
 test ! -e "$sharepath" && echo "$sharepath does not exist!" && exit 23
 
 sudo -u $ncdc_user /usr/bin/mkdir -p "$realshare"
-sudo -u $ncdc_user /usr/bin/tmux new-window -t dcpp -c "$realshare" "lftpget \"$target\""
-echo "download started"
+if ! sudo -u $ncdc_user /usr/bin/tmux has-session -t dl >/dev/null 2>&1 ;then
+  sudo -u $ncdc_user /usr/bin/tmux new-session -s dl -d  -c "$realshare" "lftpget \"$target\""
+else
+  sudo -u $ncdc_user /usr/bin/tmux new-window -t dl  -c "$realshare" "lftpget \"$target\""
+fi
+#sudo -u $ncdc_user /usr/bin/tmux new-window -t dl 
+#cd "$realshare" ;sudo -u hooker /usr/bin/lftpget "$target"
+echo "download started, check with 'list_downloads'"
