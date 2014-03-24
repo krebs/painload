@@ -9,7 +9,8 @@ ncdc_bin=${ncdc_bin:-/usr/bin/ncdc}
 ncdc_config(){
     # maybe we want to use the running ncdc process and communicate via tmux send-keys ?
     txt="$(cat)"
-    (sleep 1;printf "%s" "$txt";printf "/quit\n") | sudo -u $ncdc_user "$ncdc_bin" 2>/dev/null || \
+#    printf "%s" "$txt"
+    ! sudo -u $ncdc_user /usr/bin/tmux has-session -t dcpp && echo "ncdc session must be running" && exit 1
        sudo -u $ncdc_user /usr/bin/tmux send-keys -t dcpp:ncdc "$txt"  C-m
 }
 

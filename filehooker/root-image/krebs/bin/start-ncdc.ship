@@ -6,6 +6,9 @@ set -euf
 ncdc_user="hooker"
 useradd -m $ncdc_user ||:
 
+sudo -u $ncdc_user /usr/bin/tmux new-session -s dcpp -n ncdc -d ncdc 2>/dev/null || echo "ncdc is already running"
+
+
 dc_hub="adcs://elch.nsupdate.info:2781"
 ncdc_configure_hub "$dc_hub" "elch"
 
@@ -14,5 +17,4 @@ ncdc_configure_nick "$nick"
 
 share_all_partitions
 
-sudo -u $ncdc_user /usr/bin/tmux new-session -s dcpp -n ncdc -d ncdc
 exit 0
