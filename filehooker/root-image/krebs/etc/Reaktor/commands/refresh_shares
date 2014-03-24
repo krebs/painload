@@ -1,0 +1,3 @@
+#!/bin/sh
+
+sudo /krebs/bin/refresh-shares.ship 2>&1

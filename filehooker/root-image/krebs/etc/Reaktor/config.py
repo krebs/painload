@@ -28,6 +28,7 @@ commands = [
   default_command('rev'),
   default_command('uptime'),
   default_command('shares'),
+  default_command('refresh_shares'),
   default_command('onion'),
   default_command('nocommand'),
   # command not found
