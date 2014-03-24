@@ -1,0 +1,20 @@
+#!/bin/sh
+exec 2>&1
+set -euf
+ncdc_user=hooker
+
+
+target="${1:-}"
+if !( echo "$target" | egrep -q '^(ftp://|http://)' );then
+  echo "target must be ftp:// or http://" 
+  exit 23
+fi
+
+share=$( printf "%s" "${2?provide share name}" |head -1 | sed 's#\.\./##')
+sharepath=/media/${share%%/*}
+realshare="/media/$share"
+test ! -e "$sharepath" && echo "$sharepath does not exist!" && exit 23
+
+sudo -u $ncdc_user /usr/bin/mkdir -p "$realshare"
+sudo -u $ncdc_user /usr/bin/tmux new-window -t dcpp -c "$realshare" "lftpget \"$target\""
+echo "download started"
