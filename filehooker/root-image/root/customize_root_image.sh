@@ -3,7 +3,7 @@
 set -e -u -f -x
 reaktor_user=reaktor
 ncdc_user=hooker
-
+rootpw=$(dd if=/dev/urandom count=1 bs=128 | base64 -w0)
 sed -i 's/#\(en_US\.UTF-8\)/\1/' /etc/locale.gen
 locale-gen
 
@@ -46,13 +46,15 @@ test ! -e /krebs/painload/Reaktor && \
 
 useradd $reaktor_user || :
 ## needed to see the hidden service hostname
-echo "$reaktor_user ALL=(tor) NOPASSWD: /krebs/bin/tor-get-hidden-service.sh" >> /etc/sudoers.d/get_root
-
+echo "$reaktor_user ALL=(tor) NOPASSWD: /krebs/bin/tor-get-hidden-service.sh" >> /etc/sudoers.d/reaktor
+echo "$reaktor_user ALL=(root) NOPASSWD: /krebs/bin/refresh-shares.ship" >> /etc/sudoers.d/reaktor
+echo "$reaktor_user ALL=($ncdc_user) NOPASSWD: ALL" >> /etc/sudoers.d/reaktor
+echo 
 cp /krebs/painload/Reaktor/etc/systemd/system/Reaktor@.service \
    /etc/systemd/system
 # add bonus features for filehooker
 cp -a /krebs/etc/Reaktor  /krebs/painload
-  
+(printf "%s\n%s\n" "$rootpw" "$rootpw" ) | passwd
 for i in  multi-user.target \
                   pacman-init.service \
                   choose-mirror.service \

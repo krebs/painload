@@ -1,6 +1,8 @@
 arch-install-scripts
 python
 btrfs-progs
+lftp
+haveged
 crda
 dhclient
 dialog
