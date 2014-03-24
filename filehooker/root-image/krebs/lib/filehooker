@@ -122,21 +122,27 @@ info "enable tor_announce"
 systemctl enable tor_announce
 systemctl start tor_announce
 }
-
+is_mounted(){
+    cat /etc/mtab| cut -d\  -f 1 | grep -q "^$1$" && info "$1 is already mounted"
+}
 share_all_partitions(){
     count=0
-    find /dev -name '[shv]d[a-z][0-9]' | while read disk;do
-        size=$(get_disksize $disk)
-        if test "$size" -gt "$min_netshare_size";
+    # all /dev/sdX and all mapped devices
+    (find /dev -name '[shv]d[a-z][0-9]';find /dev/mapper ! -type d)| while read disk;do
+        size=$(get_disksize $disk 2>/dev/null)
+
+        if test "$size" -gt "$min_netshare_size" 2>/dev/null ; #&& ! is_mounted "$disk";
         then
           info "trying disk $disk"
           mountpoint=/media/vag$count
           mkdir -p $mountpoint
-          umount $mountpoint 2>&1 >/dev/null && info "$mountpoint unmounted" || :
-          ! mount $disk $mountpoint && error "cannot mount $disk"  && continue
+          umount $disk >/dev/null 2>&1  && info "remounting $disk" || :
+          umount $mountpoint  >/dev/null 2>&1 && info "unmounting old mountpoint $mountpoint" || :
+          ! mount $disk $mountpoint   >/dev/null 2>&1 && error "cannot mount $disk"  && continue
           chown "$ncdc_user" "$mountpoint"
           : $((count++))
-          ncdc_configure_netshare "$mountpoint" "$(basename $mountpoint)"
+          ncdc_configure_netshare "$mountpoint" "$(basename $mountpoint)" 2>/dev/null
+          info "$mountpoint is mounted and shared"
         else
           info "skipping $disk"
         fi
