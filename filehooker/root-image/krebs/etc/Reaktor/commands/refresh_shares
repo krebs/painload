@@ -1,3 +1,4 @@
 #!/bin/sh
 
 sudo /krebs/bin/refresh-shares.ship 2>&1
+sudo -u $ncdc_user /krebs/bin/update-search.sh 2>&1
