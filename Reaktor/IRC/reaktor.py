@@ -12,10 +12,10 @@ getconf = make_getconf(config_filename)
 
 import logging,logging.handlers
 log = logging.getLogger('asybot')
-hdlr = logging.handlers.SysLogHandler(facility=logging.handlers.SysLogHandler.LOG_DAEMON)
-formatter = logging.Formatter( '%(filename)s: %(levelname)s: %(message)s')
-hdlr.setFormatter(formatter)
-log.addHandler(hdlr)
+#hdlr = logging.handlers.SysLogHandler(address='/dev/log', facility=logging.handlers.SysLogHandler.LOG_DAEMON)
+#formatter = logging.Formatter( '%(filename)s: %(levelname)s: %(message)s')
+#hdlr.setFormatter(formatter)
+#log.addHandler(hdlr)
 logging.basicConfig(level = logging.DEBUG if getconf('debug') else logging.INFO)
 
 restart_timeout =  getconf('irc_restart_timeout') or 5
@@ -96,13 +96,5 @@ class Reaktor(asybot):
       self.ME(target, 'mimimi')
 
 if __name__ == "__main__":
-  while True:
-    try:
-      Reaktor()
-      loop()
-    except Exception as e:
-      from time import sleep
-      log.error("Something went wrong when running Reaktor, \
-              waiting for %d seconds" % restart_timeout)
-      log.debug("Exception: %s" % str(e))
-      sleep(restart_timeout)
+  Reaktor()
+  loop()
