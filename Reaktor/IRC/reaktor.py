@@ -44,6 +44,11 @@ class Reaktor(asybot):
 
     env = {}
     env['_from'] = prefix.split('!', 1)[0]
+    log.debug('self:' +self.nickname)
+    if self.nickname in target:
+      target.remove(self.nickname)
+      target.append(env['_from'])
+    log.debug('target:' +str(target))
     env['config_filename'] = os.path.abspath(config_filename)
     start = time()
     try:
