@@ -22,10 +22,10 @@ class asybot(asychat):
     asychat.__init__(self)
     #logger magic
     self.log = logging.getLogger('asybot_' + nickname)
-    hdlr = logging.handlers.SysLogHandler(facility=logging.handlers.SysLogHandler.LOG_DAEMON)
-    formatter = logging.Formatter( '%(filename)s: %(levelname)s: %(message)s')
-    hdlr.setFormatter(formatter)
-    self.log.addHandler(hdlr)
+    #hdlr = logging.handlers.SysLogHandler(facility=logging.handlers.SysLogHandler.LOG_DAEMON)
+    #formatter = logging.Formatter( '%(filename)s: %(levelname)s: %(message)s')
+    #hdlr.setFormatter(formatter)
+    #self.log.addHandler(hdlr)
     logging.basicConfig(level = loglevel)
 
     self.nickname = nickname
@@ -45,7 +45,7 @@ class asybot(asychat):
     else:
       self.hostname = nickname
 
-    self.retry = False
+    self.retry = True
     self.server = server
     self.port = port
     self.channels = channels
