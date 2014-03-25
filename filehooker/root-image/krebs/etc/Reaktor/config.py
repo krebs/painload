@@ -27,7 +27,6 @@ def default_command(cmd):
 public_commands = [
   default_command('caps'),
   default_command('hello'),
-  default_command('reload'),
   default_command('search'),
   default_command('list_downloads'),
   default_command('badcommand'),
