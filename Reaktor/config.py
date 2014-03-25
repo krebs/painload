@@ -10,6 +10,7 @@ irc_kill_timeout = 360
 irc_nickname = name
 irc_server = 'irc.freenode.org'
 irc_port = 6667
+#irc_restart_timeout = 5
 irc_channels = [
   '#krebs'
 ]

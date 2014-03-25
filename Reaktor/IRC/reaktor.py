@@ -18,6 +18,7 @@ hdlr.setFormatter(formatter)
 log.addHandler(hdlr)
 logging.basicConfig(level = logging.DEBUG if getconf('debug') else logging.INFO)
 
+restart_timeout =  getconf('irc_restart_timeout') or 5
 
 class Reaktor(asybot):
   def __init__(self):
@@ -68,5 +69,14 @@ class Reaktor(asybot):
       self.ME(target, 'mimimi')
 
 if __name__ == "__main__":
-  Reaktor()
-  loop()
+  while True:
+    try:
+      Reaktor()
+      loop()
+    except Exception as e:
+      from time import sleep
+      log.error("Something went wrong when running Reaktor, \
+              waiting for %d seconds" % restart_timeout)
+      log.debug("Exception: %s" % str(e))
+      sleep(restart_timeout)
+
