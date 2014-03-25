@@ -20,6 +20,16 @@ logging.basicConfig(level = logging.DEBUG if getconf('debug') else logging.INFO)
 
 restart_timeout =  getconf('irc_restart_timeout') or 5
 
+def is_admin(prefix):
+  try:
+    with open(getconf('auth_file')) as f:
+      for line in f:
+        if line.strip() == prefix:
+          return True
+  except Exception as e:
+    log.info(e)
+  return False
+
 class Reaktor(asybot):
   def __init__(self):
     asybot.__init__(self, getconf('irc_server'), getconf('irc_port'), getconf('irc_nickname'), getconf('irc_channels'), hammer_interval=getconf('irc_hammer_interval'), alarm_timeout=getconf('irc_alarm_timeout'), kill_timeout=getconf('irc_kill_timeout'))
@@ -28,8 +38,16 @@ class Reaktor(asybot):
     for command in getconf('commands'):
       y = match(command['pattern'], rest)
       if y:
-        self.execute_command(command, y, prefix, params)
-        break
+        if not is_admin(prefix):
+          self.PRIVMSG(params,'unauthorized!')
+        else:
+          return self.execute_command(command, y, prefix, params)
+
+    for command in getconf('public_commands'):
+      y = match(command['pattern'], rest)
+      if y:
+        return self.execute_command(command, y, prefix, params)
+
 
   def execute_command(self, command, match, prefix, target):
     from os.path import realpath, dirname, join
@@ -43,12 +61,16 @@ class Reaktor(asybot):
       myargv += shlex.split(match.groupdict()['args'])
 
     env = {}
+    env['_prefix'] = prefix
     env['_from'] = prefix.split('!', 1)[0]
+
     log.debug('self:' +self.nickname)
+    # when receiving /query, answer to the user, not to self
     if self.nickname in target:
       target.remove(self.nickname)
       target.append(env['_from'])
     log.debug('target:' +str(target))
+
     env['config_filename'] = os.path.abspath(config_filename)
     start = time()
     try:
@@ -84,4 +106,3 @@ if __name__ == "__main__":
               waiting for %d seconds" % restart_timeout)
       log.debug("Exception: %s" % str(e))
       sleep(restart_timeout)
-

@@ -10,21 +10,21 @@ irc_kill_timeout = 360
 irc_nickname = name
 irc_server = 'irc.freenode.org'
 irc_port = 6667
-#irc_restart_timeout = 5
+irc_restart_timeout = 5
 irc_channels = [
   '#krebs'
 ]
-
+admin_file='admin.lst'
+auth_file='auth.lst'
 def default_command(cmd):
   return {
     'capname': cmd,
     'pattern': '^(?:' + name + '|\\*):\\s*' + cmd + '\\s*(?:\\s+(?P<args>.*))?$',
     'argv': [ 'commands/' + cmd ] }
 
-commands = [
+public_commands = [
   default_command('caps'),
   default_command('hello'),
-  default_command('reload'),
   default_command('badcommand'),
   default_command('rev'),
   default_command('uptime'),
@@ -34,5 +34,12 @@ commands = [
     'argv': [ 'commands/respond','You are made of stupid!'] },
   # "highlight"
   { 'pattern': '.*\\b' + name + '\\b.*',
-    'argv': [ 'commands/say', 'I\'m famous' ] }
+    'argv': [ 'commands/say', 'I\'m famous' ] },
+  # identify via direct connect
+  { 'capname': 'identify',
+    'pattern': 'identify' +  '\\s*(?:\\s+(?P<args>.*))?$',
+    'argv' : [ 'commands/identify' ]}
+]
+commands = [
+  default_command('reload')
 ]
