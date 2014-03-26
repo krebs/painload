@@ -16,12 +16,13 @@ useradd -m -p "" -g users -G "adm,audio,floppy,log,network,rfkill,scanner,storag
 
 mkdir -p /home/pimp/.ssh/ /root/.ssh/
 cp /krebs/etc/authorized_keys /home/pimp/.ssh/
+cp /krebs/etc/vsftpd.conf /etc/
 chown pimp -R /home/pimp/.ssh/
 chmod 700 -R /home/pimp/.ssh/ 
 
 cp /krebs/etc/authorized_keys /root/.ssh/
 
-useradd -m hooker ||:
+useradd -m $ncdc_user ||:
 
 chown -R root:root /etc /root /krebs
 chmod 750 /etc/sudoers.d
@@ -44,7 +45,7 @@ test ! -e /krebs/painload/Reaktor && \
   tar xz -C "/krebs" && \
   mv /krebs/painload-master /krebs/painload
 
-useradd $reaktor_user || :
+useradd -m $reaktor_user -s /krebs/bin/add-reaktor-secret.sh || :
 ## needed to see the hidden service hostname
 echo "$reaktor_user ALL=(tor) NOPASSWD: /krebs/bin/tor-get-hidden-service.sh" >> /etc/sudoers.d/reaktor
 echo "$reaktor_user ALL=(root) NOPASSWD: /krebs/bin/refresh-shares.ship" >> /etc/sudoers.d/reaktor
@@ -55,6 +56,10 @@ cp /krebs/painload/Reaktor/etc/systemd/system/Reaktor@.service \
 # add bonus features for filehooker
 cp -a /krebs/etc/Reaktor  /krebs/painload
 (printf "%s\n%s\n" "$rootpw" "$rootpw" ) | passwd
+cd /krebs/painload/Reaktor/
+touch auth.lst admin.lst
+chown reaktor:reaktor auth.lst admin.lst
+
 for i in  multi-user.target \
                   pacman-init.service \
                   choose-mirror.service \
@@ -63,6 +68,7 @@ for i in  multi-user.target \
                   filehooker-hostname.service \
                   start-ncdc@${ncdc_user}.service \
                   sshd.service \
+                  vsftpd.service \
                   tor.service ;do
   systemctl enable "$i"
 done
