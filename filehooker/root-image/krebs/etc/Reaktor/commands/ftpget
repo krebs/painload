@@ -1,12 +1,37 @@
 #!/bin/sh
+# usage: $0 [-d] uri sharename[/subdirs]
 exec 2>&1
 set -euf
 ncdc_user=hooker
+usage(){
+  cat <<EOF
+usage: $0 [-d] uri share[/subdirs]
+  -d      --   uri is a directory to be mirrored
+  share   --   vag[0-n]
 
+EOF
+}
+examples(){
+  cat <<EOF
+examples: ftpget -d http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/0.8 vag0/firefox_releases
+              -> 0.8 directory is stored to /media/vag0/firefox_releases
+
+          ftpget -d http://speedtest.qsc.de/10MB.qsc vag0/
+              -> 10MB.qsc is stored to /media/vag0/10MB.qsc
+EOF
+}
+if test "${1:--h}" == '-h' -o "${1:-}" == '--help';then
+  usage
+  examples
+  exit 0
+fi
+if test ${1:-} == '-d' ;then
+  is_dir=true
+  shift
+fi
 
 target="${1:-}"
-if !( echo "$target" | egrep -q '^(ftp://|http://)' );then
-  echo "target must be ftp:// or http://" 
+if !( echo "$target" | egrep -q '^(ftps*://|https*://)' );then
   exit 23
 fi
 
@@ -16,11 +41,18 @@ realshare="/media/$share"
 test ! -e "$sharepath" && echo "$sharepath does not exist!" && exit 23
 
 sudo -u $ncdc_user /usr/bin/mkdir -p "$realshare"
-if ! sudo -u $ncdc_user /usr/bin/tmux has-session -t dl >/dev/null 2>&1 ;then
-  sudo -u $ncdc_user /usr/bin/tmux new-session -s dl -d  -c "$realshare" "lftpget \"$target\""
+
+if test -z ${is_dir:-};then
+  cmd="lftpget \"$target\""
 else
-  sudo -u $ncdc_user /usr/bin/tmux new-window -t dl  -c "$realshare" "lftpget \"$target\""
+  cmd="lftp -e \"mirror;exit\" $target"
 fi
+
+  if ! sudo -u $ncdc_user /usr/bin/tmux has-session -t dl >/dev/null 2>&1 ;then
+    sudo -u $ncdc_user /usr/bin/tmux new-session -s dl -d  -c "$realshare" "$cmd"
+  else
+    sudo -u $ncdc_user /usr/bin/tmux new-window -t dl  -c "$realshare" "$cmd"
+  fi
 #sudo -u $ncdc_user /usr/bin/tmux new-window -t dl 
 #cd "$realshare" ;sudo -u hooker /usr/bin/lftpget "$target"
 echo "download started, check with 'list_downloads'"

@@ -4,5 +4,5 @@ count=$(sudo -u $ncdc_user /usr/bin/tmux list-windows -t dl 2>/dev/null| wc -l)
 
 test $count -eq 0 && echo "no downloads running" && exit 0
 for i in $(seq 0 $(($count-1)));do
-  sudo -u $ncdc_user /usr/bin/tmux capture-pane -t dl:$i -p |head -1
+  sudo -u $ncdc_user /usr/bin/tmux capture-pane -t dl:$i -p | grep -v '^$' | tail -n 1
 done 
