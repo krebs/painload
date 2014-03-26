@@ -31,6 +31,7 @@ public_commands = [
   default_command('list_downloads'),
   default_command('badcommand'),
   default_command('rev'),
+  default_command('io'),
   default_command('ips'),
   default_command('uptime'),
   default_command('shares'),

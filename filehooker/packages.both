@@ -1,5 +1,7 @@
 arch-install-scripts
 python
+mlocate
+vsftpd
 btrfs-progs
 lftp
 haveged
