@@ -1,0 +1,25 @@
+#!/usr/bin/zsh
+printf '%-10s %-7s %-7s %-7s %-7s\n'  IFACE rxkB/s txkB/s rxTotal txTotal
+sar -n DEV 1 3 | grep Average: | grep -v IFACE | grep -v ' lo ' | while read line;do
+  dev=$(echo $line | awk  '{print $2}')
+  rxkb=$(echo $line | awk '{print $5}')
+  txkb=$(echo $line | awk '{print $6}')
+  total_bytes_r=$(cat /proc/net/dev | grep ${dev}: | awk '{print $2}')
+  total_bytes_t=$(cat /proc/net/dev | grep ${dev}: | awk '{print $10}')
+ 
+  printf '%-10s %-7s %-7s %-7s %-7s\n'  $dev $rxkb $txkb $((total_bytes_r / (1024*1024))) $((total_bytes_t / (1024*1024)))
+done
+printf "%-10s %-7s %-7s\n" "DSK" "rxkB/s" "txkB/s"
+sar -p -d 1 3 | grep Average: | grep -v ' DEV ' |while read line;
+do
+  dsk=$(echo $line | awk '{print $2}')
+  rd_sec=$(echo $line | awk '{print $4}')
+  wr_sec=$(echo $line | awk '{print $5}')
+  if echo $dsk | egrep -q '(sd|hd|vd)';then
+    # TODO for some reason 0.00 can only be interpreted correctly as arithmetic
+    # expession by zsh
+    #
+    # rd is counted in blocks (which is 512 bytes)
+    printf "%-10s %-7.2f %-7.2f\n" "/dev/$dsk" "$((rd_sec*2))" "$((wr_sec*2))"
+  fi
+done
