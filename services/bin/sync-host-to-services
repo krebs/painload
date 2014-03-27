@@ -1,0 +1,15 @@
+#!/bin/sh
+green='\e[0;32m'
+red='\e[0;31m'
+nc='\e[0m'
+
+outdir=${1?please provide services-outdir}
+find  /etc/tinc/retiolum/hosts/ -type f | while read hostfile;do
+  host=$(basename "$hostfile")
+  if test -e "$outdir/$host";then
+    echo "${green}$host already exists$nc"
+  else
+    echo "${red}$host missing, adding${nc}"
+    cat ../services.txt | sed "s#{{hostname}}#$host#" > $outdir/$host
+  fi
+done
