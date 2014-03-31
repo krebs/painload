@@ -7,5 +7,5 @@ set -euf
 ncdc_user="hooker"
 
 share_all_partitions
-
+systemctl restart hddtemp.service
 exit 0
