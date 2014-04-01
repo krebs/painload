@@ -1,0 +1,31 @@
+#?/bin/sh
+# from http://graphite.wikidot.com/installation
+
+git clone https://github.com/graphite-project/graphite-web.git
+git clone https://github.com/graphite-project/carbon.git
+git clone https://github.com/graphite-project/whisper.git
+
+pacman -S python2 gcc pkg-config cairo
+for i in whisper carbon graphite-web;do
+  cd $i
+  pip2 install -r requirements.txt||:
+  python2 setup.py install
+done
+cd /opt/graphite/conf
+cp carbon.conf.example carbon.conf
+cp storage-schemas.conf.example storage-schemas.conf
+cd /opt/graphite/webapp/graphite
+cp local_settings.py.example local_settings.py
+PYTHONPATH=/opt/graphite/webapp django-admin.py syncdb --settings=graphite.settings
+# push in the texts
+
+useradd -m graphite -d /opt/graphite -r
+chown -R graphite /opt/graphite
+cd here
+cp carbon.service /opt/systemd/system/
+systemctl enable carbon
+systemctl start carbon
+cp graphite-web.service /opt/systemd/system/
+systemctl enable graphite-web
+systemctl start graphite-web
+
