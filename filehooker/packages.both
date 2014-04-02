@@ -1,6 +1,9 @@
 arch-install-scripts
 python
+hddtemp
 mlocate
+collectd
+sysstat
 vsftpd
 btrfs-progs
 lftp
