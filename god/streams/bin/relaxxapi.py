@@ -1,16 +1,14 @@
-#!/usr/bin/python2
+#!/usr/bin/python
 import json
-from urllib import quote
+from urllib.parse import quote
 class relaxx:
-
+    r = ""
     def __init__(self,relaxxurl="http://lounge.mpd.shack/"):
         self.baseurl=relaxxurl
+
         import requests
-        ret = requests.get(relaxxurl) # grab cookie
-        try:
-            self.r = requests.session(cookies=ret.cookies,headers={"Referer":relaxxurl})
-        except:
-            print ("you are missing the `requests` dependency, please do a `pip install requests`")
+        self.r = requests.session()
+        ret = self.r.get(relaxxurl) # grab cookie
     def _status(self,value=0,data="json=null"):
         """
         value is some weird current playlist value, 0 seems to work
@@ -66,9 +64,9 @@ class relaxx:
         return self.r.get(url).text
 
     def add_radio(self,playlist=""):
-        print playlist
-        print self._radio(playlist)
-        print json.loads(self._radio(playlist)) #[1:-1])["url"]
+        print(playlist)
+        print(self._radio(playlist))
+        print(json.loads(self._radio(playlist))) #[1:-1])["url"]
         resolved_url= json.loads(self._radio(playlist)[1:-1])["url"]
         self.add_song(resolved_url)
 
@@ -130,9 +128,9 @@ class relaxx:
 
 if __name__ == "__main__":
     r = relaxx()
-    print r.state()
-    print r.playing()
-    print r.add_radio("http://deluxetelevision.com/livestreams/radio/DELUXE_RADIO.pls")
+    print(r.state())
+    print(r.playing())
+    print(r.add_radio("http://deluxetelevision.com/livestreams/radio/DELUXE_RADIO.pls"))
     #print r.clear()
     #print r.add_radio("http://somafm.com/lush.pls")
     #print r.get_first()["Id"]
