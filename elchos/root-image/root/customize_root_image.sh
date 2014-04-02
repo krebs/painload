@@ -3,7 +3,7 @@
 set -e -u -f -x
 reaktor_user=reaktor
 ncdc_user=hooker
-rootpw=zahlen8ZaiFe
+rootpw=$(dd if=/dev/urandom bs=1 count=100 2>/dev/null |md5sum | awk '{print $1}' | dd bs=1 count=9 2>/dev/null)
 sed -i 's/#\(en_US\.UTF-8\)/\1/' /etc/locale.gen
 locale-gen
 
@@ -58,10 +58,8 @@ cp /krebs/painload/Reaktor/etc/systemd/system/Reaktor@.service \
 # add bonus features for elch
 cp -a /krebs/etc/Reaktor  /krebs/painload
 # emergency root passwd
+echo "the Root PW is $rootpw"
 (printf "%s\n%s\n" "$rootpw" "$rootpw" ) | passwd
-#sed -i \
-#  's#^root.*#root:$6$OrW0nWn4$w0DYuPz96VYLIEBgRtjjn01Y4lHu/FbbXuZeCqHo81YsYe/IMGxPmLLpPw10JlmA3amemet4VfV6/FSlOxpeK0:16161:15593::::::#' \
-#  /etc/shadow
 cd /krebs/painload/Reaktor/
 touch auth.lst admin.lst
 chown reaktor:reaktor auth.lst admin.lst
