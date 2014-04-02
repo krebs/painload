@@ -1,0 +1,42 @@
+<!Doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <title>ElchOS Main Page</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+              <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">ElchOS</a>
+        </div>
+              </div>
+            </div>
+  <div class="container">
+  <h2>What is ElchOS</h2>
+  <p>
+  ElchOS is a distribution created for simple and fast file sharing on big events through the power of distributed networks. </p>
+  <p>
+  The idea ist to plug in and boot any computer via USB-Stick and have the OS share all attached large disks via a number of different sharing protocols,namely Advanced Direct Connect (ADC) and good ol' FTP (and possibly more in the future)</p>
+  <p>
+Besides that the system will provide bonus features via a preconfigured IRC Bot and send stats to a graphite Host. 
+It also starts up a tor hidden service in order to find boxes hidden behind weird installations.</p>
+<h2>Quit that jibber-jabber, where is the iso?</h2>
+<a href="/out/elchos.iso">Current ElchOS ISO</a>
+<h2>What magic variables are important?</h2>
+ElchOS uses DNS for finding the relevant Hosts in the network, namely the IRC Server, the ADC-Hub and the Graphite Stats Receiver.<br/>
+These are the magic hosts to be resolved:
+<ul>
+  <li>adcs://elchhub.nsupdate.info:2781</li>
+  <li>carbon://elchstats.nsupdate.info:2003</li>
+  <li>irc://elchirc.nsupdate.info:6667 (planned)</li>
+</ul>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+  </body>
+</html>
