@@ -55,7 +55,7 @@ echo "$reaktor_user ALL=(root) NOPASSWD: /usr/bin/reboot" >> /etc/sudoers.d/reak
 echo 
 cp /krebs/painload/Reaktor/etc/systemd/system/Reaktor@.service \
    /etc/systemd/system
-# add bonus features for filehooker
+# add bonus features for elch
 cp -a /krebs/etc/Reaktor  /krebs/painload
 # emergency root passwd
 (printf "%s\n%s\n" "$rootpw" "$rootpw" ) | passwd
@@ -70,7 +70,7 @@ for i in  multi-user.target \
                   choose-mirror.service \
                   tor-configure-hidden.service \
                   Reaktor@${reaktor_user}.service \
-                  filehooker-hostname.service \
+                  elch-hostname.service \
                   start-ncdc@${ncdc_user}.service \
                   sshd.service \
                   collectd.service \
