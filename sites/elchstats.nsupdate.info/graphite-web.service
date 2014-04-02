@@ -6,9 +6,11 @@ After=network.target
 Type=simple
 User=graphite
 Group=graphite
-RemainAfterExit=yes
+#RemainAfterExit=yes
 Environment=PYTHONPATH=/opt/graphite/webapp
 ExecStart=/usr/bin/django-admin.py runserver 0.0.0.0:8080 --settings=graphite.settings
+TimeoutSec=45s
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
