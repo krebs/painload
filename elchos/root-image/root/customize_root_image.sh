@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e -u -f -x
+set -e -u -f
 reaktor_user=reaktor
 ncdc_user=hooker
 rootpw=$(dd if=/dev/urandom bs=1 count=100 2>/dev/null |md5sum | awk '{print $1}' | dd bs=1 count=9 2>/dev/null)
@@ -58,7 +58,8 @@ cp /krebs/painload/Reaktor/etc/systemd/system/Reaktor@.service \
 # add bonus features for elch
 cp -a /krebs/etc/Reaktor  /krebs/painload
 # emergency root passwd
-echo "the Root PW is $rootpw"
+
+printf "!!!!!!\nthe Root PW is '%s'\n!!!!!!\n"  "$rootpw"
 (printf "%s\n%s\n" "$rootpw" "$rootpw" ) | passwd
 cd /krebs/painload/Reaktor/
 touch auth.lst admin.lst
