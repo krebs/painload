@@ -4,16 +4,19 @@ set -euf
 . /krebs/lib/filehooker
 #@include network
 ncdc_user="hooker"
+
 useradd -m $ncdc_user ||:
 
 sudo -u $ncdc_user /usr/bin/tmux new-session -s dcpp -n ncdc -d ncdc 2>/dev/null || echo "ncdc is already running"
 
-
-dc_hub="adcs://elch.nsupdate.info:2781"
+nick=$(cat /etc/hostname)
+echo "using nick $nick"
+ncdc_configure_nick "$nick"
+sleep 1
+dc_hub="adcs://elchhub.nsupdate.info:2781"
+echo "connecting to $dc_hub"
 ncdc_configure_hub "$dc_hub" "elch"
 
-nick=$(get_hostname)
-ncdc_configure_nick "$nick"
 
 share_all_partitions
 

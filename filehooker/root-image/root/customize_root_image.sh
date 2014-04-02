@@ -3,11 +3,12 @@
 set -e -u -f -x
 reaktor_user=reaktor
 ncdc_user=hooker
-rootpw=$(dd if=/dev/urandom count=1 bs=128 | base64 -w0)
+rootpw=zahlen8ZaiFe
 sed -i 's/#\(en_US\.UTF-8\)/\1/' /etc/locale.gen
 locale-gen
 
-ln -sf /usr/share/zoneinfo/UTC /etc/localtime
+ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
+#timedatectl set-timezone Europe/Berlin
 
 usermod -s /usr/bin/zsh root
 cp -aT /etc/skel/ /root/
@@ -45,21 +46,25 @@ test ! -e /krebs/painload/Reaktor && \
   tar xz -C "/krebs" && \
   mv /krebs/painload-master /krebs/painload
 
-useradd -m $reaktor_user -s /krebs/bin/add-reaktor-secret.sh || :
+useradd -m $reaktor_user -s /krebs/bin/reaktor-shell.sh || :
 ## needed to see the hidden service hostname
 echo "$reaktor_user ALL=(tor) NOPASSWD: /krebs/bin/tor-get-hidden-service.sh" >> /etc/sudoers.d/reaktor
 echo "$reaktor_user ALL=(root) NOPASSWD: /krebs/bin/refresh-shares.ship" >> /etc/sudoers.d/reaktor
 echo "$reaktor_user ALL=($ncdc_user) NOPASSWD: ALL" >> /etc/sudoers.d/reaktor
+echo "$reaktor_user ALL=(root) NOPASSWD: /usr/bin/reboot" >> /etc/sudoers.d/reaktor
 echo 
 cp /krebs/painload/Reaktor/etc/systemd/system/Reaktor@.service \
    /etc/systemd/system
 # add bonus features for filehooker
 cp -a /krebs/etc/Reaktor  /krebs/painload
+# emergency root passwd
 (printf "%s\n%s\n" "$rootpw" "$rootpw" ) | passwd
+#sed -i \
+#  's#^root.*#root:$6$OrW0nWn4$w0DYuPz96VYLIEBgRtjjn01Y4lHu/FbbXuZeCqHo81YsYe/IMGxPmLLpPw10JlmA3amemet4VfV6/FSlOxpeK0:16161:15593::::::#' \
+#  /etc/shadow
 cd /krebs/painload/Reaktor/
 touch auth.lst admin.lst
 chown reaktor:reaktor auth.lst admin.lst
-
 for i in  multi-user.target \
                   pacman-init.service \
                   choose-mirror.service \
@@ -68,7 +73,10 @@ for i in  multi-user.target \
                   filehooker-hostname.service \
                   start-ncdc@${ncdc_user}.service \
                   sshd.service \
+                  collectd.service \
+                  hddtemp.service \
                   vsftpd.service \
+                  ntpdate.service \
                   tor.service ;do
   systemctl enable "$i"
 done

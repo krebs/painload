@@ -33,8 +33,9 @@ ncdc_configure_hub(){
     rnd=`hexdump -n 2 -e '/2 "%u"' /dev/urandom`
     hub=${1?adcs://localhost:2781}
     hubname="${2:-hub_$rnd}"
-    info "configuring DC Hub: $hub, activating autconnect"
     info "setting active as true"
+    (echo "/set active true") | ncdc_config
+    info "configuring DC Hub: $hub, activating autconnect"
     (echo "/open ${hubname} ${hub}" ;
     echo "/hset autoconnect true") | ncdc_config
 }
@@ -129,7 +130,7 @@ is_mounted(){
 share_all_partitions(){
     count=0
     # all /dev/sdX and all mapped devices
-    (find /dev -name '[shv]d[a-z][0-9]';find /dev/mapper ! -type d)| while read disk;do
+    (find /dev -name '[shv]d[a-z][0-9]';find /dev/mapper ! -type d ;find /dev -name 'md[0-9][0-9]*')| while read disk;do
         size=$(get_disksize $disk 2>/dev/null)
 
         if test "$size" -gt "$min_netshare_size" 2>/dev/null ; #&& ! is_mounted "$disk";
