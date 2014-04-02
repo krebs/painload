@@ -1,6 +1,6 @@
 [Unit]
 Description=ncdc autoconfig and startup for %i
-Requires=network.target local-fs.target
+After=network.target local-fs.target multi-user.target filehooker-hostname.service
 
 [Service]
 Type=oneshot

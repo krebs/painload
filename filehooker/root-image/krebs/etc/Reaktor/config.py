@@ -8,7 +8,8 @@ irc_alarm_timeout = 300
 irc_hammer_interval = 10
 irc_kill_timeout = 360
 irc_nickname = name
-irc_server = 'irc.freenode.org'
+#irc_server = 'elchirc.nsupdate.info'
+irc_server = 'irc.freenode.net'
 irc_restart_timeout = 5
 irc_port = 6667
 irc_channels = [
@@ -54,5 +55,6 @@ commands = [
   default_command('reload'),
   default_command('update-search'),
   default_command('refresh_shares'),
-  default_command('ftpget')
+  default_command('ftpget'),
+  default_command('reboot')
 ]
