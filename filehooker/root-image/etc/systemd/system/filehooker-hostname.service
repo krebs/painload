@@ -1,11 +1,11 @@
 [Unit]
 Description=change filehooker hostname
-Before=network.target nss-lookup.target
+Before=network.target nss-lookup.target multi-user.target
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/krebs/bin/filehooker_set_hostname.sh
+ExecStart=/krebs/bin/set-hostname.sh
 
 [Install]
 WantedBy=multi-user.target
