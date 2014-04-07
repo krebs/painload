@@ -1,5 +1,5 @@
 [Unit]
-Description=change filehooker hostname
+Description=change elchOS hostname
 Before=network.target nss-lookup.target multi-user.target
 
 [Service]
