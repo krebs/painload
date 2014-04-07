@@ -1,0 +1,44 @@
+curl https://aur.archlinux.org/packages/ad/adchpp/adchpp.tar.gz > adchpp.tar.gz
+tar xf adchpp.tar.gz
+cd adchpp
+# install all the deps
+makepkg 
+pacman -U adchpp-*-x86_64.pkg.tar.xz
+vi /etc/adchpp/adchpp.xml
+# change description etc
+# add to servers:
+#    <Server Port="2781" TLS="1" Certificate="/etc/adchpp/certs/cacert.pem" 
+#                                PrivateKey="/etc/adchpp/certs/privkey.pem" 
+#                                TrustedPath="/etc/adchpp/certs/trusted/" 
+#                                DHParams="/etc/adchpp/certs/dhparam.pem"/>
+
+
+mkdir /etc/adchpp/certs
+cd /etc/adchpp/certs
+openssl genrsa -out privkey.pem 4096
+openssl req -new -x509 -key privkey.pem -out cacert.pem
+openssl dhparam -outform PEM -out dhparam.pem 1024
+
+cat > /var/lib/adchpp/motd.txt <<EOF
+Welcome  to  the  Elch Hub
+  xx  xx                  xx  xx
+xxxx  xx    xxxx  xxxx  xxxx  xx
+xxxx  xx    xxxx  xxxx  xxxx  xx
+  xxxxxx      xx    xx    xxxxxx
+  xxxxxx    xxxxxxxxxx    xxxxxx
+    xx    xxxxxxxxxxxxxx    xx  
+    xxxxxxxxxxxxxxxxxxxxxxxxxx  
+          xxxxxxxxxxxxxx        
+      xxxxxxxxxxxxxxxxxxxxxx    
+      xx      xxxxxx      xx    
+    xx    xx  xx  xx  xx    xx  
+    xx    xx  xx  xx  xx    xx  
+    xx  xxxx  xx  xx  xxxx  xx  
+
+[!]  SSL  is  at  port  2781  
+        connect  via  adcs://elchhub.nsupdate.info:2781/
+        better  start  using  it
+EOF
+
+systemctl enable adchpp
+systemctl start adchpp

@@ -13,7 +13,7 @@ irc_server = 'irc.freenode.net'
 irc_restart_timeout = 5
 irc_port = 6667
 irc_channels = [
-  '#filehooker'
+  '#elchOS'
 ]
 
 admin_file='admin.lst'
