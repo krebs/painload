@@ -113,6 +113,9 @@ class asybot(asychat):
     elif command == 'KICK':
       self.on_kick(prefix, command, params, rest)
 
+    elif command == 'JOIN':
+      self.on_join(prefix, command, params, rest))
+
     elif command == '433':
       # ERR_NICKNAMEINUSE, retry with another name
       self.on_nickinuse(prefix, command, params, rest)
@@ -168,6 +171,9 @@ class asybot(asychat):
     if params[-1] == self.nickname:
       for chan in params[:-1]:
         self.channels.remove(chan)
+
+  def on_join(self, prefix, command, params, rest):
+    pass
 
   def on_privmsg(self, prefix, command, params, rest):
     pass
