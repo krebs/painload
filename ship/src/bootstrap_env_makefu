@@ -92,6 +92,21 @@ Bundle 'snipMate'
 Bundle 'tpope/vim-fugitive'
 Bundle 'Valloric/YouCompleteMe'
 Bundle 'scrooloose/syntastic'
+Bundle 'scrooloose/syntastic'
+Bundle 'sjl/gundo.vim'
+
+nnoremap <F5> :GundoToggle<CR>
+set undodir=~/.vim/undo
+set undofile
+"maximum number of changes that can be undone
+set undolevels=1000000
+"maximum number lines to save for undo on a buffer reload
+set undoreload=10000000
+
+set pastetoggle=<F2>
+set showmode
+filetype plugin indent on
+
 
 filetype plugin indent on
 
@@ -122,7 +137,7 @@ vim_conf_sane_defaults
 
 #install all the vim stuff with the help of vundle
 cd $HOME/.vim
-mkdir -p bundle
+mkdir -p bundle undo backup
 info "Fetching vim-vundle"
 git clone https://github.com/gmarik/vundle.git bundle/vundle > /dev/null && \
   info "Vim Vundle deployed"
