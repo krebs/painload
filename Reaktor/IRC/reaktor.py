@@ -34,6 +34,10 @@ class Reaktor(asybot):
   def __init__(self):
     asybot.__init__(self, getconf('irc_server'), getconf('irc_port'), getconf('irc_nickname'), getconf('irc_channels'), hammer_interval=getconf('irc_hammer_interval'), alarm_timeout=getconf('irc_alarm_timeout'), kill_timeout=getconf('irc_kill_timeout'))
 
+  def on_join(self, prefix, command, params, rest):
+    for command in getconf('on_join'):
+      self.execute_command(command, None, prefix, params)
+
   def on_privmsg(self, prefix, command, params, rest):
     for command in getconf('commands'):
       y = match(command['pattern'], rest)
@@ -57,7 +61,8 @@ class Reaktor(asybot):
     #TODO: allow only commands below ./commands/
     exe = join(dirname(realpath(dirname(__file__))), command['argv'][0])
     myargv = [exe] + command['argv'][1:]
-    if match.groupdict().get('args',None):
+
+    if match and match.groupdict().get('args', None):
       myargv += shlex.split(match.groupdict()['args'])
 
     cwd = getconf('workdir')

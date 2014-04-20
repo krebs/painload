@@ -32,6 +32,12 @@ public_commands = [
   default_command('rev'),
   default_command('uptime'),
   default_command('nocommand'),
+  {
+    'capname': 'tell',
+    'pattern': '^' + name + ':\\s*' + 'tell' + '\\s*(?:\\s+(?P<args>.*))?$',
+    'argv': [ 'commands/tell-on_privmsg' ],
+    'env': { 'state_file': workdir + '/tell.txt' }
+  },
   # command not found
   { 'pattern': '^(?:' + name + '|\\*):.*',
     'argv': [ 'commands/respond','You are made of stupid!'] },
@@ -45,4 +51,12 @@ public_commands = [
 ]
 commands = [
   default_command('reload')
+]
+
+on_join = [
+  {
+    'capname': 'tell',
+    'argv': [ 'commands/tell-on_join' ],
+    'env': { 'state_file': workdir + '/tell.txt' }
+  }
 ]
