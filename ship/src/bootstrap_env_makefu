@@ -68,8 +68,13 @@ test -r ~/TODO  && cat ~/TODO
 
 setopt menu_complete
 unsetopt correct_all
+export PYTHONSTARTUP=~/.pythonrc
 EOF
-
+info 'deploying pythonrc'
+cat > $HOME/.pythonrc <<EOF
+import rlcompleter, readline
+readline.parse_and_bind('tab:complete')
+EOF
 info "deploying vim config"
 if [ -e $HOME/.vim ] ; then
   oldvim=$HOME/.vim.`date +%Y%M%d`
