@@ -62,7 +62,7 @@ class Reaktor(asybot):
 
     cwd = getconf('workdir')
 
-    env = {}
+    env = command.get('env', {})
     env['_prefix'] = prefix
     env['_from'] = prefix.split('!', 1)[0]
 
