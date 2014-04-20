@@ -1,8 +1,11 @@
+from os import environ
 
 debug = True
 
 # CAVEAT name should not contains regex magic
 name = 'crabmanner'
+
+workdir = environ['HOME'] + '/state'
 
 irc_alarm_timeout = 300
 irc_hammer_interval = 10

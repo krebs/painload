@@ -60,6 +60,8 @@ class Reaktor(asybot):
     if match.groupdict().get('args',None):
       myargv += shlex.split(match.groupdict()['args'])
 
+    cwd = getconf('workdir')
+
     env = {}
     env['_prefix'] = prefix
     env['_from'] = prefix.split('!', 1)[0]
@@ -74,7 +76,7 @@ class Reaktor(asybot):
     env['config_filename'] = os.path.abspath(config_filename)
     start = time()
     try:
-      p = popen(myargv, bufsize=1, stdout=PIPE, stderr=PIPE, env=env)
+      p = popen(myargv, bufsize=1, stdout=PIPE, stderr=PIPE, env=env, cwd=cwd)
     except (OSError, Exception) as error:
       self.ME(target, 'brain damaged')
       log.error('OSError@%s: %s' % (myargv, error))
