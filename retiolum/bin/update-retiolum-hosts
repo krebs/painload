@@ -8,7 +8,7 @@ if test "${nosudo-false}" != true -a `id -u` != 0; then
 fi
 
 # cd //retiolum
-cd $(dirname $(readlink -f $0))/..
+cd -P "$(dirname "$0")/.."
 
 mkdir -p /etc/tinc/retiolum/hosts
 rsync -va -I --delete hosts/ /etc/tinc/retiolum/hosts/
