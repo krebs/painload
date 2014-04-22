@@ -201,9 +201,9 @@ LocalDiscovery = yes
 AutoConnect = 3
 
 #ConnectTos
-ConnectTo = slowpoke
+ConnectTo = fastpoke
 ConnectTo = pigstarter
-ConnectTo = pico
+ConnectTo = kheurop
 EOF
 
   host2subnet $MASK4
