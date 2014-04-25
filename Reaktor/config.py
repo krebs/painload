@@ -1,11 +1,11 @@
-from os import environ
+from os.path import abspath, expanduser
+import re
 
 debug = True
 
-# CAVEAT name should not contains regex magic
 name = 'crabmanner'
 
-workdir = environ['HOME'] + '/state'
+workdir = expanduser('~') + '/state'
 
 irc_alarm_timeout = 300
 irc_hammer_interval = 10
@@ -19,14 +19,25 @@ irc_channels = [
 ]
 admin_file='admin.lst'
 auth_file='auth.lst'
-def default_command(cmd):
+
+config_filename = abspath(__file__)
+
+# me is used, so name cannot kill our patterns below
+me = '\\b' + re.escape(name) + '\\b'
+me_or_us = '(?:' + me + '|\\*)'
+
+def default_command(cmd, env={}):
   return {
     'capname': cmd,
-    'pattern': '^(?:' + name + '|\\*):\\s*' + cmd + '\\s*(?:\\s+(?P<args>.*))?$',
-    'argv': [ 'commands/' + cmd ] }
+    'pattern': '^' + me_or_us + ':\\s*' + cmd + '\\s*(?:\\s+(?P<args>.*))?$',
+    'argv': [ 'commands/' + cmd ],
+    'env': env
+  }
 
 public_commands = [
-  default_command('caps'),
+  default_command('caps', env={
+    'config_filename': config_filename
+  }),
   default_command('hello'),
   default_command('badcommand'),
   default_command('rev'),
@@ -34,19 +45,19 @@ public_commands = [
   default_command('nocommand'),
   {
     'capname': 'tell',
-    'pattern': '^' + name + ':\\s*' + 'tell' + '\\s*(?:\\s+(?P<args>.*))?$',
+    'pattern': '^' + me_or_us + ':\\s*' + 'tell' + '\\s*(?:\\s+(?P<args>.*))?$',
     'argv': [ 'commands/tell-on_privmsg' ],
     'env': { 'state_file': workdir + '/tell.txt' }
   },
   # command not found
-  { 'pattern': '^(?:' + name + '|\\*):.*',
+  { 'pattern': '^' + me_or_us + ':.*',
     'argv': [ 'commands/respond','You are made of stupid!'] },
   # "highlight"
-  { 'pattern': '.*\\b' + name + '\\b.*',
+  { 'pattern': '.*' + me + '.*',
     'argv': [ 'commands/say', 'I\'m famous' ] },
   # identify via direct connect
   { 'capname': 'identify',
-    'pattern': '^identify' +  '\\s*(?:\\s+(?P<args>.*))?$',
+    'pattern': '^identify' + '\\s*(?:\\s+(?P<args>.*))?$',
     'argv' : [ 'commands/identify' ]}
 ]
 commands = [

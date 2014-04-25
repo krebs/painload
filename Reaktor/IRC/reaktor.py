@@ -36,7 +36,7 @@ class Reaktor(asybot):
     return False
 
   def on_join(self, prefix, command, params, rest):
-    for command in getconf('on_join'):
+    for command in getconf('on_join', []):
       self.execute_command(command, None, prefix, params)
 
   def on_privmsg(self, prefix, command, params, rest):
@@ -81,7 +81,6 @@ class Reaktor(asybot):
       target.append(env['_from'])
     log.debug('target:' +str(target))
 
-    env['config_filename'] = os.path.abspath(self.config)
     start = time()
     try:
       p = popen(myargv, bufsize=1, stdout=PIPE, stderr=PIPE, env=env, cwd=cwd)
