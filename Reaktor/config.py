@@ -1,11 +1,11 @@
-from os import environ
+from os.path import expanduser
 
 debug = True
 
 # CAVEAT name should not contains regex magic
 name = 'crabmanner'
 
-workdir = environ['HOME'] + '/state'
+workdir = expanduser('~') + '/state'
 
 irc_alarm_timeout = 300
 irc_hammer_interval = 10
