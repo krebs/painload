@@ -1,8 +1,8 @@
 from os.path import expanduser
+import re
 
 debug = True
 
-# CAVEAT name should not contains regex magic
 name = 'crabmanner'
 
 workdir = expanduser('~') + '/state'
@@ -19,10 +19,14 @@ irc_channels = [
 ]
 admin_file='admin.lst'
 auth_file='auth.lst'
+
+# name_re is used, so name cannot kill our patterns below
+name_re = re.escape(name)
+
 def default_command(cmd):
   return {
     'capname': cmd,
-    'pattern': '^(?:' + name + '|\\*):\\s*' + cmd + '\\s*(?:\\s+(?P<args>.*))?$',
+    'pattern': '^(?:' + name_re + '|\\*):\\s*' + cmd + '\\s*(?:\\s+(?P<args>.*))?$',
     'argv': [ 'commands/' + cmd ] }
 
 public_commands = [
@@ -34,15 +38,15 @@ public_commands = [
   default_command('nocommand'),
   {
     'capname': 'tell',
-    'pattern': '^' + name + ':\\s*' + 'tell' + '\\s*(?:\\s+(?P<args>.*))?$',
+    'pattern': '^' + name_re + ':\\s*' + 'tell' + '\\s*(?:\\s+(?P<args>.*))?$',
     'argv': [ 'commands/tell-on_privmsg' ],
     'env': { 'state_file': workdir + '/tell.txt' }
   },
   # command not found
-  { 'pattern': '^(?:' + name + '|\\*):.*',
+  { 'pattern': '^(?:' + name_re + '|\\*):.*',
     'argv': [ 'commands/respond','You are made of stupid!'] },
   # "highlight"
-  { 'pattern': '.*\\b' + name + '\\b.*',
+  { 'pattern': '.*\\b' + name_re + '\\b.*',
     'argv': [ 'commands/say', 'I\'m famous' ] },
   # identify via direct connect
   { 'capname': 'identify',
