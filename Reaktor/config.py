@@ -20,13 +20,14 @@ irc_channels = [
 admin_file='admin.lst'
 auth_file='auth.lst'
 
-# name_re is used, so name cannot kill our patterns below
-name_re = re.escape(name)
+# me is used, so name cannot kill our patterns below
+me = '\\b' + re.escape(name) + '\\b'
+me_or_us = '(?:' + me + '|\\*)'
 
 def default_command(cmd):
   return {
     'capname': cmd,
-    'pattern': '^(?:' + name_re + '|\\*):\\s*' + cmd + '\\s*(?:\\s+(?P<args>.*))?$',
+    'pattern': '^' + me_or_us + ':\\s*' + cmd + '\\s*(?:\\s+(?P<args>.*))?$',
     'argv': [ 'commands/' + cmd ] }
 
 public_commands = [
@@ -38,19 +39,19 @@ public_commands = [
   default_command('nocommand'),
   {
     'capname': 'tell',
-    'pattern': '^' + name_re + ':\\s*' + 'tell' + '\\s*(?:\\s+(?P<args>.*))?$',
+    'pattern': '^' + me_or_us + ':\\s*' + 'tell' + '\\s*(?:\\s+(?P<args>.*))?$',
     'argv': [ 'commands/tell-on_privmsg' ],
     'env': { 'state_file': workdir + '/tell.txt' }
   },
   # command not found
-  { 'pattern': '^(?:' + name_re + '|\\*):.*',
+  { 'pattern': '^' + me_or_us + ':.*',
     'argv': [ 'commands/respond','You are made of stupid!'] },
   # "highlight"
-  { 'pattern': '.*\\b' + name_re + '\\b.*',
+  { 'pattern': '.*' + me + '.*',
     'argv': [ 'commands/say', 'I\'m famous' ] },
   # identify via direct connect
   { 'capname': 'identify',
-    'pattern': '^identify' +  '\\s*(?:\\s+(?P<args>.*))?$',
+    'pattern': '^identify' + '\\s*(?:\\s+(?P<args>.*))?$',
     'argv' : [ 'commands/identify' ]}
 ]
 commands = [
