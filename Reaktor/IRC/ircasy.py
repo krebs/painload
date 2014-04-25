@@ -114,7 +114,10 @@ class asybot(asychat):
       self.on_kick(prefix, command, params, rest)
 
     elif command == 'JOIN':
-      self.on_join(prefix, command, params, rest)
+      try:
+        self.on_join(prefix, command, params, rest)
+      except: 
+        pass
 
     elif command == '433':
       # ERR_NICKNAMEINUSE, retry with another name

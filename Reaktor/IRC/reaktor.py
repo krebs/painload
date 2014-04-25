@@ -6,9 +6,9 @@ from translate_colors import translate_colors
 import shlex
 from re import split, search, match
 
-config_filename = './config.py'
+default_config = './config.py'
 from getconf import make_getconf
-getconf = make_getconf(config_filename)
+getconf = None
 
 import logging,logging.handlers
 log = logging.getLogger('asybot')
@@ -16,23 +16,24 @@ log = logging.getLogger('asybot')
 #formatter = logging.Formatter( '%(filename)s: %(levelname)s: %(message)s')
 #hdlr.setFormatter(formatter)
 #log.addHandler(hdlr)
-logging.basicConfig(level = logging.DEBUG if getconf('debug') else logging.INFO)
 
-restart_timeout =  getconf('irc_restart_timeout') or 5
 
-def is_admin(prefix):
-  try:
-    with open(getconf('auth_file')) as f:
-      for line in f:
-        if line.strip() == prefix:
-          return True
-  except Exception as e:
-    log.info(e)
-  return False
 
 class Reaktor(asybot):
-  def __init__(self):
+  def __init__(self,config=default_config):
+    self.config = config
+    log.info("using config file %s"%(config))
     asybot.__init__(self, getconf('irc_server'), getconf('irc_port'), getconf('irc_nickname'), getconf('irc_channels'), hammer_interval=getconf('irc_hammer_interval'), alarm_timeout=getconf('irc_alarm_timeout'), kill_timeout=getconf('irc_kill_timeout'))
+
+  def is_admin(self,prefix):
+    try:
+      with open(getconf('auth_file')) as f:
+        for line in f:
+          if line.strip() == prefix:
+            return True
+    except Exception as e:
+      log.info(e)
+    return False
 
   def on_join(self, prefix, command, params, rest):
     for command in getconf('on_join'):
@@ -42,7 +43,7 @@ class Reaktor(asybot):
     for command in getconf('commands'):
       y = match(command['pattern'], rest)
       if y:
-        if not is_admin(prefix):
+        if not self.is_admin(prefix):
           self.PRIVMSG(params,'unauthorized!')
         else:
           return self.execute_command(command, y, prefix, params)
@@ -61,9 +62,11 @@ class Reaktor(asybot):
     #TODO: allow only commands below ./commands/
     exe = join(dirname(realpath(dirname(__file__))), command['argv'][0])
     myargv = [exe] + command['argv'][1:]
-
-    if match and match.groupdict().get('args', None):
-      myargv += shlex.split(match.groupdict()['args'])
+    try:
+      if match and match.groupdict().get('args', None):
+        myargv += shlex.split(match.groupdict()['args'])
+    except:
+        log.info("cannot parse args!")
 
     cwd = getconf('workdir')
 
@@ -78,7 +81,7 @@ class Reaktor(asybot):
       target.append(env['_from'])
     log.debug('target:' +str(target))
 
-    env['config_filename'] = os.path.abspath(config_filename)
+    env['config_filename'] = os.path.abspath(self.config)
     start = time()
     try:
       p = popen(myargv, bufsize=1, stdout=PIPE, stderr=PIPE, env=env, cwd=cwd)
@@ -103,5 +106,9 @@ class Reaktor(asybot):
       self.ME(target, 'mimimi')
 
 if __name__ == "__main__":
-  Reaktor()
+  import sys
+  conf = sys.argv[1] if len(sys.argv) == 2 else default_config
+  getconf = make_getconf(conf)
+  logging.basicConfig(level = logging.DEBUG if getconf('debug') else logging.INFO)
+  Reaktor(conf)
   loop()
