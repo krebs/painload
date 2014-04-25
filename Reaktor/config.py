@@ -56,7 +56,11 @@ public_commands = [
   # identify via direct connect
   { 'capname': 'identify',
     'pattern': '^identify' + '\\s*(?:\\s+(?P<args>.*))?$',
-    'argv' : [ 'commands/identify' ]}
+    'argv' : [ 'commands/identify' ],
+    'env': {
+      'config_filename': config_filename
+    }
+  }
 ]
 commands = [
   default_command('reload')
