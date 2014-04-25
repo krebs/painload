@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import os
 from ircasy import asybot
 from asyncore import loop
@@ -69,6 +69,9 @@ class Reaktor(asybot):
         log.info("cannot parse args!")
 
     cwd = getconf('workdir')
+    if not os.access(cwd,os.W_OK):
+        log.error("Workdir '%s' is not Writable! Falling back to root dir"%cwd)
+        cwd = "/"
 
     env = command.get('env', {})
     env['_prefix'] = prefix
