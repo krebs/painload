@@ -26,10 +26,11 @@ config_filename = abspath(__file__)
 me = '\\b' + re.escape(name) + '\\b'
 me_or_us = '(?:' + me + '|\\*)'
 
-def default_command(cmd, env={}):
+def default_command(cap, cmd=None, env={}):
+  if cmd == None: cmd=cap
   return {
-    'capname': cmd,
-    'pattern': '^' + me_or_us + ':\\s*' + cmd + '\\s*(?:\\s+(?P<args>.*))?$',
+    'capname': cap,
+    'pattern': '^' + me_or_us + ':\\s*' + cap + '\\s*(?:\\s+(?P<args>.*))?$',
     'argv': [ 'commands/' + cmd ],
     'env': env
   }
@@ -43,12 +44,9 @@ public_commands = [
   default_command('rev'),
   default_command('uptime'),
   default_command('nocommand'),
-  {
-    'capname': 'tell',
-    'pattern': '^' + me_or_us + ':\\s*' + 'tell' + '\\s*(?:\\s+(?P<args>.*))?$',
-    'argv': [ 'commands/tell-on_privmsg' ],
-    'env': { 'state_file': workdir + '/tell.txt' }
-  },
+  default_command('tell', cmd='tell-on_privmsg', env={
+    'state_file': workdir + '/tell.txt'
+  }),
   # command not found
   { 'pattern': '^' + me_or_us + ':.*',
     'argv': [ 'commands/respond','You are made of stupid!'] },
