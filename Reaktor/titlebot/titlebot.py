@@ -36,7 +36,7 @@ def default_command(cmd):
 def dot_command(cmd):
   return {
     'capname': cmd,
-    'pattern': '\\.' + cmd + '\\s*(?:\\s+(?P<args>.*))?$',
+    'pattern': '^\\.' + cmd + '\\s*(?:\\s+(?P<args>.*))?$',
     'argv': [ 'titlebot/commands/' + cmd ] }
 
 public_commands = [
