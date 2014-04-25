@@ -1,6 +1,6 @@
-from os import environ,mkdir
+from os import environ,mkdir,abspath
 
-debug = False
+debug = True
 
 # CAVEAT name should not contains regex magic
 name = 'bgt_titlebot'
@@ -21,18 +21,27 @@ irc_restart_timeout = 5
 irc_channels = [
   '#binaergewitter'
 ]
+admin_file=workdir+'/admin.lst'
+auth_file=workdir+'/auth.lst'
 
-admin_file=workdir+'/'+'admin.lst'
+config_filename = abspath(__file__)
+
 try: 
     with open(admin_file,"x"): pass
 except: pass
-auth_file=workdir+'/'+'auth.lst'
 
-def default_command(cmd):
+# me is used, so name cannot kill our patterns below
+me = '\\b' + re.escape(name) + '\\b'
+me_or_us = '(?:' + me + '|\\*)'
+
+def default_command(cmd, env=None):
+  if not env: env = {}
   return {
     'capname': cmd,
-    'pattern': '^(?:' + name + '|\\*):\\s*' + cmd + '\\s*(?:\\s+(?P<args>.*))?$',
-    'argv': [ 'commands/' + cmd ] }
+    'pattern': '^' + me_or_us + ':\\s*' + cmd + '\\s*(?:\\s+(?P<args>.*))?$',
+    'argv': [ 'commands/' + cmd ],
+    'env': env
+  }
 def titlebot_cmd(cmd):
   return {
     'capname': cmd,
@@ -40,7 +49,9 @@ def titlebot_cmd(cmd):
     'argv': [ 'titlebot/commands/' + cmd ] }
 
 public_commands = [
-  default_command('caps'),
+  default_command('caps', env={
+    'config_filename': config_filename
+  }),
   default_command('hello'),
   default_command('badcommand'),
   default_command('rev'),
@@ -54,7 +65,7 @@ public_commands = [
   titlebot_cmd('down'),
   # identify via direct connect
   { 'capname': 'identify',
-    'pattern': '^identify' +  '\\s*(?:\\s+(?P<args>.*))?$',
+    'pattern': '^identify' + '\\s*(?:\\s+(?P<args>.*))?$',
     'argv' : [ 'commands/identify' ]}
 ]
 commands = [
