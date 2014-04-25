@@ -26,12 +26,22 @@ config_filename = abspath(__file__)
 me = '\\b' + re.escape(name) + '\\b'
 me_or_us = '(?:' + me + '|\\*)'
 
-def default_command(cmd, env=None):
+def default_command(cap, cmd=None, env=None):
   if not env: env = {}
+  if cmd == None: cmd=cap
   return {
-    'capname': cmd,
-    'pattern': '^' + me_or_us + ':\\s*' + cmd + '\\s*(?:\\s+(?P<args>.*))?$',
+    'capname': cap,
+    'pattern': '^' + me_or_us + ':\\s*' + cap + '\\s*(?:\\s+(?P<args>.*))?$',
     'argv': [ 'commands/' + cmd ],
+    'env': env
+  }
+
+def simple_command(cap, cmd=None, env={}):
+  if cmd == None: cmd=cap
+  return {
+    'capname': cap,
+    'pattern': '^' + cap + '\\s*(?:\\s+(?P<args>.*))?$',
+    'argv' : [ 'commands/' + cmd ],
     'env': env
   }
 
@@ -44,12 +54,9 @@ public_commands = [
   default_command('rev'),
   default_command('uptime'),
   default_command('nocommand'),
-  {
-    'capname': 'tell',
-    'pattern': '^' + me_or_us + ':\\s*' + 'tell' + '\\s*(?:\\s+(?P<args>.*))?$',
-    'argv': [ 'commands/tell-on_privmsg' ],
-    'env': { 'state_file': workdir + '/tell.txt' }
-  },
+  default_command('tell', cmd='tell-on_privmsg', env={
+    'state_file': workdir + '/tell.txt'
+  }),
   # command not found
   { 'pattern': '^' + me_or_us + ':.*',
     'argv': [ 'commands/respond','You are made of stupid!'] },
@@ -57,9 +64,9 @@ public_commands = [
   { 'pattern': '.*' + me + '.*',
     'argv': [ 'commands/say', 'I\'m famous' ] },
   # identify via direct connect
-  { 'capname': 'identify',
-    'pattern': '^identify' + '\\s*(?:\\s+(?P<args>.*))?$',
-    'argv' : [ 'commands/identify' ]}
+  simple_command('identify', env={
+    'config_filename': config_filename
+  })
 ]
 commands = [
   default_command('reload')

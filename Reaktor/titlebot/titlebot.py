@@ -1,6 +1,7 @@
-from os import environ,mkdir,abspath
+from os import environ,mkdir
+from os.path import abspath, expanduser
 
-debug = True
+debug = False
 
 # CAVEAT name should not contains regex magic
 name = 'bgt_titlebot'
