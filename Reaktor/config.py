@@ -35,6 +35,15 @@ def default_command(cap, cmd=None, env={}):
     'env': env
   }
 
+def simple_command(cap, cmd=None, env={}):
+  if cmd == None: cmd=cap
+  return {
+    'capname': cap,
+    'pattern': '^' + cap + '\\s*(?:\\s+(?P<args>.*))?$',
+    'argv' : [ 'commands/' + cmd ],
+    'env': env
+  }
+
 public_commands = [
   default_command('caps', env={
     'config_filename': config_filename
@@ -54,13 +63,9 @@ public_commands = [
   { 'pattern': '.*' + me + '.*',
     'argv': [ 'commands/say', 'I\'m famous' ] },
   # identify via direct connect
-  { 'capname': 'identify',
-    'pattern': '^identify' + '\\s*(?:\\s+(?P<args>.*))?$',
-    'argv' : [ 'commands/identify' ],
-    'env': {
-      'config_filename': config_filename
-    }
-  }
+  simple_command('identify', env={
+    'config_filename': config_filename
+  })
 ]
 commands = [
   default_command('reload')
