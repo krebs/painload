@@ -46,7 +46,7 @@ public_commands = [
     'argv': [ 'commands/say', 'I\'m famous' ] },
   # identify via direct connect
   { 'capname': 'identify',
-    'pattern': 'identify' +  '\\s*(?:\\s+(?P<args>.*))?$',
+    'pattern': '^identify' +  '\\s*(?:\\s+(?P<args>.*))?$',
     'argv' : [ 'commands/identify' ]}
 ]
 commands = [
