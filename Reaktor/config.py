@@ -1,4 +1,4 @@
-from os.path import expanduser
+from os.path import abspath, expanduser
 import re
 
 debug = True
@@ -20,18 +20,24 @@ irc_channels = [
 admin_file='admin.lst'
 auth_file='auth.lst'
 
+config_filename = abspath(__file__)
+
 # me is used, so name cannot kill our patterns below
 me = '\\b' + re.escape(name) + '\\b'
 me_or_us = '(?:' + me + '|\\*)'
 
-def default_command(cmd):
+def default_command(cmd, env={}):
   return {
     'capname': cmd,
     'pattern': '^' + me_or_us + ':\\s*' + cmd + '\\s*(?:\\s+(?P<args>.*))?$',
-    'argv': [ 'commands/' + cmd ] }
+    'argv': [ 'commands/' + cmd ],
+    'env': env
+  }
 
 public_commands = [
-  default_command('caps'),
+  default_command('caps', env={
+    'config_filename': config_filename
+  }),
   default_command('hello'),
   default_command('badcommand'),
   default_command('rev'),

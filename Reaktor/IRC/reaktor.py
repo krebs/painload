@@ -81,7 +81,6 @@ class Reaktor(asybot):
       target.append(env['_from'])
     log.debug('target:' +str(target))
 
-    env['config_filename'] = os.path.abspath(self.config)
     start = time()
     try:
       p = popen(myargv, bufsize=1, stdout=PIPE, stderr=PIPE, env=env, cwd=cwd)
