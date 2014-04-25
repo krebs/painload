@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+import json
+from os import environ
+import sys
+import os
+# krebs polling
+import poll
+
+f = 'suggestions.json'
+db = poll.load_db(f)
+votes = []
+try:
+    votes = sys.argv[1:]
+except:
+    print("""usage: up number (...)
+    upvotes one or more entries based on .list""")
+    sys.exit(1)
+
+voter = environ['_prefix']
+for vote in votes:
+    try:
+        vote = int(vote)
+        db[vote]['votes'][voter] = 1
+    except:
+        print("voting for #%s failed" %vote)
+print("Thanks for your votes %s"%environ['_from'])
+poll.save_db(f,db)

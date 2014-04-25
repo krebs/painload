@@ -1,0 +1,19 @@
+#!/usr/bin/env python3
+import json
+from os import environ
+import sys
+import os
+# krebs polling
+import poll
+
+f = 'suggestions.json'
+title=" ".join(sys.argv[1:])
+db = poll.load_db(f)
+
+suggester = environ['_from']
+if not poll.title_in_db(title,db):
+    db.append( { 'by': suggester,
+                  'votes':{},'title': title})
+    print("Thank you for your suggestion '%s'!"%environ["_from"])
+    print("To vote type '.up %d'"%(len(db)-1))
+poll.save_db(f,db)
