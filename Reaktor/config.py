@@ -17,8 +17,8 @@ irc_restart_timeout = 5
 irc_channels = [
   '#krebs'
 ]
-admin_file='admin.lst'
-auth_file='auth.lst'
+admin_file=workdir+'/admin.lst'
+auth_file=workdir+'/auth.lst'
 
 config_filename = abspath(__file__)
 
@@ -26,7 +26,8 @@ config_filename = abspath(__file__)
 me = '\\b' + re.escape(name) + '\\b'
 me_or_us = '(?:' + me + '|\\*)'
 
-def default_command(cmd, env={}):
+def default_command(cmd, env=None):
+  if not env: env = {}
   return {
     'capname': cmd,
     'pattern': '^' + me_or_us + ':\\s*' + cmd + '\\s*(?:\\s+(?P<args>.*))?$',
