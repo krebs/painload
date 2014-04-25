@@ -60,6 +60,7 @@ public_commands = [
   default_command('nocommand'),
   titlebot_cmd('list'),
   titlebot_cmd('help'),
+  titlebot_cmd('highest'),
   titlebot_cmd('up'),
   titlebot_cmd('new'),
   titlebot_cmd('undo'),

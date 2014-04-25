@@ -17,11 +17,11 @@ if len(sys.argv) > 1 and ("-h" in sys.argv[1]  or "usage" == sys.argv[1]):
 if len(sys.argv) > 1 and ("votes" in sys.argv[1]):
     use = poll.sort_by_votes(db)
 elif len(sys.argv) > 1 and ("age" in sys.argv[1]) or len(sys.argv) == 1:
-    pass
+    use = db
 else:
     print("unknown sorting method")
     sys.exit(1)
 
-for entry in poll.sort_by_votes(db):
+for entry in use:
     print("#%d %s (votes: %d)" %
             (db.index(entry),entry['title'],sum(entry['votes'].values())))
