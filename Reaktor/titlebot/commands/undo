@@ -16,12 +16,16 @@ except:
     undos vote of one or more entries based on .list""")
     sys.exit(1)
 voter = environ['_prefix']
+voter_name = environ['_from']
 for vote in votes:
     try:
         vote = int(vote)
-        del(db[vote]['votes'][voter] )
-        print("undid vote by %s for #%d" %(environ['_from'],vote))
+        if not voter in db[vote]['votes']:
+            print("%s, you never voted for '%s'!"%(voter_name,db[vote]['title']))
+        else:
+            del(db[vote]['votes'][voter] )
+            print("%s undid vote for '%s'" %(voter_name,db[vote]['title'] ))
     except:
-        print("undo voting for #%s failed" %vote)
+        print("%s undo voting for #%d failed" %(voter_name,vote))
 
 poll.save_db(f,db)

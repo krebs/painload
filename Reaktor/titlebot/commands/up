@@ -9,19 +9,25 @@ import poll
 f = 'suggestions.json'
 db = poll.load_db(f)
 votes = []
-try:
-    votes = sys.argv[1:]
-except:
+votes = sys.argv[1:]
+if not votes:
     print("""usage: up number (...)
     upvotes one or more entries based on .list""")
     sys.exit(1)
 
 voter = environ['_prefix']
+voter_name =environ['_from']
 for vote in votes:
     try:
         vote = int(vote)
-        db[vote]['votes'][voter] = 1
+        if vote < 0:
+            raise Exception()
+        if voter in db[vote]['votes']:
+            print("%s, you already have voted for '%s'"%(voter_name,db[vote]['title']) )
+        else:
+            db[vote]['votes'][voter] = 1
+            print("%s voted for '%s'"%(voter_name,db[vote]['title']))
     except:
-        print("voting for #%s failed" %vote)
-print("Thanks for your votes %s"%environ['_from'])
+        print("%s, voting for #%s failed" %(voter_name,vote))
+
 poll.save_db(f,db)

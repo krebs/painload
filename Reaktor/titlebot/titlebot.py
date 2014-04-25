@@ -1,6 +1,6 @@
 from os import environ,mkdir
 from os.path import abspath, expanduser
-
+import re
 debug = False
 
 # CAVEAT name should not contains regex magic
