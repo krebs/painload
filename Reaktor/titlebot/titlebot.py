@@ -33,7 +33,7 @@ def default_command(cmd):
     'capname': cmd,
     'pattern': '^(?:' + name + '|\\*):\\s*' + cmd + '\\s*(?:\\s+(?P<args>.*))?$',
     'argv': [ 'commands/' + cmd ] }
-def dot_command(cmd):
+def titlebot_cmd(cmd):
   return {
     'capname': cmd,
     'pattern': '\\.' + cmd + '\\s*(?:\\s+(?P<args>.*))?$',
@@ -46,19 +46,19 @@ public_commands = [
   default_command('rev'),
   default_command('uptime'),
   default_command('nocommand'),
-  dot_command('list'),
-  dot_command('help'),
-  dot_command('up'),
-  dot_command('new'),
-  dot_command('undo'),
-  dot_command('down'),
+  titlebot_cmd('list'),
+  titlebot_cmd('help'),
+  titlebot_cmd('up'),
+  titlebot_cmd('new'),
+  titlebot_cmd('undo'),
+  titlebot_cmd('down'),
   # identify via direct connect
   { 'capname': 'identify',
-    'pattern': 'identify' +  '\\s*(?:\\s+(?P<args>.*))?$',
+    'pattern': '^identify' +  '\\s*(?:\\s+(?P<args>.*))?$',
     'argv' : [ 'commands/identify' ]}
 ]
 commands = [
   default_command('reload'),
-  dot_command('clear')
+  titlebot_cmd('clear')
 ]
 
