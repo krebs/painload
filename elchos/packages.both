@@ -45,3 +45,5 @@ vim
 tor
 tmux
 pacman-mirrorlist
+avahi
+nss-mdns

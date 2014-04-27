@@ -1,7 +1,7 @@
 from os.path import abspath, expanduser
 import re
 
-debug = True
+debug = False
 
 name = 'crabmanner'
 

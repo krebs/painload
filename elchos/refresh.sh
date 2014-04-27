@@ -3,6 +3,6 @@ set -eu
 cd "$(dirname "$(readlink -f "$0")")"
 rm -rvf  out/ work
 ./build.sh -N elchos -v
-# cp -v out/filehooker* /home/makefu/isos
+cp -v out/elchos* /home/makefu/isos
 # TODO internal
-# virsh reset vm1 ||:
+virsh reset vm1 ||:
