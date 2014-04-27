@@ -10,4 +10,4 @@ def load_config(filename):
 
 config = load_config(os.environ['config_filename'])
 print('Private: '+' '.join(filter(None,[ x.get('capname',None) for x in config.commands])))
-print('Public:  '+' '.join(filter(None,[ x.get('capname',None) for x in config.public_commands])))
+print('Public: '+' '.join(filter(None,[ x.get('capname',None) for x in config.public_commands])))

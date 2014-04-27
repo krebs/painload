@@ -9,14 +9,17 @@ import os
 def make_getconf(filename):
 
 
-    def getconf(prop):
+    def getconf(prop, default_value=None):
         prop_split = prop.split('.')
         string = ''
         config = load_config(filename)
         #imp.reload(config)
         tmp = config.__dict__
         for pr in prop_split:
-            tmp = tmp[pr]
+            if pr in tmp:
+                tmp = tmp[pr]
+            else:
+                return default_value
         return tmp
 
     return getconf
