@@ -97,7 +97,6 @@ Bundle 'snipMate'
 Bundle 'tpope/vim-fugitive'
 Bundle 'Valloric/YouCompleteMe'
 Bundle 'scrooloose/syntastic'
-Bundle 'scrooloose/syntastic'
 Bundle 'sjl/gundo.vim'
 
 nnoremap <F5> :GundoToggle<CR>
