@@ -23,7 +23,17 @@ refresh_supernode_keys(){
     fi
   done && return 1
 }
-
+port_open(){
+  # $1 - host
+  # $2 - port
+  #  nc -zw 2 $1 $2
+  echo | run_telnet "$1" "$2" & pid=$!
+  { sleep 5; kill $pid;} & wid=$!
+  wait $pid 
+  RET=$?
+  kill $wid >/dev/null 2>&1
+  return $RET
+}
 find_supernodes(){
   cd $hosts_dir
   set +f
@@ -37,7 +47,7 @@ find_supernodes(){
       ' $name`"; then
       port=${Port-655}
       for host in $Address; do
-        if nc -zw 2 $host $port 2>/dev/null; then
+        if port_open $host $port 2>/dev/null; then
           echo "$name [('$host', $port)]"
         fi &
       done
@@ -63,7 +73,7 @@ find_active_nodes(){
       ' $name`"; then
       port=${Port-655}
       for host in $Address; do
-        if nc -zw 2 $host $port 2>/dev/null; then
+        if port_open $host $port 2>/dev/null; then
           echo "$name [('$host', $port)]"
         fi &
       done

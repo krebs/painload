@@ -5,7 +5,7 @@ After=network.target nss-lookup.target
 [Service]
 Type=normal
 #TODO - make reaktor path variable
-User=%i
+User=reaktor
 ExecStart=/krebs/painload/Reaktor/index
 Restart=always
 RestartSec=3

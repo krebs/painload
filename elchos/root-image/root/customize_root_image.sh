@@ -57,8 +57,8 @@ cp /krebs/painload/Reaktor/etc/systemd/system/Reaktor@.service \
    /etc/systemd/system
 # add bonus features for elch
 cp -a /krebs/etc/Reaktor  /krebs/painload
-# emergency root passwd
 
+# emergency root passwd
 printf "!!!!!!\nthe Root PW is '%s'\n!!!!!!\n"  "$rootpw"
 (printf "%s\n%s\n" "$rootpw" "$rootpw" ) | passwd
 cd /krebs/painload/Reaktor/
@@ -68,7 +68,7 @@ for i in  multi-user.target \
                   pacman-init.service \
                   choose-mirror.service \
                   tor-configure-hidden.service \
-                  Reaktor@${reaktor_user}.service \
+                  Reaktor.service \
                   elch-hostname.service \
                   start-ncdc@${ncdc_user}.service \
                   sshd.service \
