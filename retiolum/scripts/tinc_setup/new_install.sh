@@ -43,7 +43,7 @@ main(){
   RAND4=1
   RAND6=1
 
-  if $(echo $HOSN | grep -q -); then
+  if $(echo $HOSTN | grep -q -); then
     echo 'invalid hostname, - not allowed'
     exit 1
   fi
