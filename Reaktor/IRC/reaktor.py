@@ -86,8 +86,9 @@ class Reaktor(asybot):
 
     start = time()
     try:
+      print(myargv)
       p = popen(myargv, bufsize=1, stdout=PIPE, stderr=PIPE, env=env, cwd=cwd)
-    except (OSError, Exception) as error:
+    except Exception as error:
       self.ME(target, 'brain damaged')
       log.error('OSError@%s: %s' % (myargv, error))
       return

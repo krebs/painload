@@ -5,7 +5,8 @@ debug = False
 
 name = 'crabmanner'
 
-workdir = expanduser('~') + '/state'
+#workdir = expanduser('~') + '/state'
+workdir = '/home/reaktor/state'
 
 irc_alarm_timeout = 300
 irc_hammer_interval = 10

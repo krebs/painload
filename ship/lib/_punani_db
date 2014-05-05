@@ -19,7 +19,7 @@ _punanidb_aptget_pip2=python-pip
 _punanidb_pacman_virtualenv=python-virtualenv
 _punanidb_aptget_virtualenv=python-virtualenv
 
-_punanidb_pacman_gpp=g++
+_punanidb_pacman_gpp=gcc
 _punanidb_aptget_gpp=gcc
 
 _punanidb_pacman_python2_dev=python2
