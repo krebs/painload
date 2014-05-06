@@ -1,0 +1,3 @@
+#!/bin/sh
+ncdc_user=hooker
+sudo -u $ncdc_user /krebs/bin/update-search.sh

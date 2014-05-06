@@ -43,6 +43,11 @@ main(){
   RAND4=1
   RAND6=1
 
+  if $(echo $HOSTN | grep -q -); then
+    echo 'invalid hostname, - not allowed'
+    exit 1
+  fi
+
 
   if [ $IP4 -eq 0 ]; then
     RAND4=1
@@ -196,9 +201,9 @@ LocalDiscovery = yes
 AutoConnect = 3
 
 #ConnectTos
-ConnectTo = slowpoke
+ConnectTo = fastpoke
 ConnectTo = pigstarter
-ConnectTo = pico
+ConnectTo = kheurop
 EOF
 
   host2subnet $MASK4

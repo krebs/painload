@@ -22,10 +22,10 @@ class asybot(asychat):
     asychat.__init__(self)
     #logger magic
     self.log = logging.getLogger('asybot_' + nickname)
-    hdlr = logging.handlers.SysLogHandler(facility=logging.handlers.SysLogHandler.LOG_DAEMON)
-    formatter = logging.Formatter( '%(filename)s: %(levelname)s: %(message)s')
-    hdlr.setFormatter(formatter)
-    self.log.addHandler(hdlr)
+    #hdlr = logging.handlers.SysLogHandler(facility=logging.handlers.SysLogHandler.LOG_DAEMON)
+    #formatter = logging.Formatter( '%(filename)s: %(levelname)s: %(message)s')
+    #hdlr.setFormatter(formatter)
+    #self.log.addHandler(hdlr)
     logging.basicConfig(level = loglevel)
 
     self.nickname = nickname
@@ -45,7 +45,7 @@ class asybot(asychat):
     else:
       self.hostname = nickname
 
-    self.retry = False
+    self.retry = True
     self.server = server
     self.port = port
     self.channels = channels
@@ -85,7 +85,10 @@ class asybot(asychat):
       alarm(self.hammer_interval)
 
   def collect_incoming_data(self, data):
-    self.data += data.decode()
+    try:
+      self.data += data.decode()
+    except Exception as e:
+      print('error decoding message: ' + str(e));
 
   def found_terminator(self):
     self.log.debug('<< %s' % self.data)
@@ -107,13 +110,15 @@ class asybot(asychat):
     elif command == 'INVITE':
       self.on_invite(prefix, command, params, rest)
 
+    elif command == 'KICK':
+      self.on_kick(prefix, command, params, rest)
+
+    elif command == 'JOIN':
+      self.on_join(prefix, command, params, rest)
+
     elif command == '433':
       # ERR_NICKNAMEINUSE, retry with another name
-      _, nickname, int, _ = split('^.*[^0-9]([0-9]+)$', self.nickname) \
-          if search('[0-9]$', self.nickname) \
-          else ['', self.nickname, 0, '']
-      self.nickname = nickname + str(int + 1)
-      self.handle_connect()
+      self.on_nickinuse(prefix, command, params, rest)
 
     elif command == '376':
       self.on_welcome(prefix, command, params, rest)
@@ -158,11 +163,29 @@ class asybot(asychat):
   def ME(self, target, text):
     self.PRIVMSG(target, ('ACTION ' + text + ''))
 
-  def on_privmsg(self, prefix, command, params, rest):
-    pass
-
   def on_welcome(self, prefix, command, params, rest):
     self.push('JOIN %s' % ','.join(self.channels))
 
+  def on_kick(self, prefix, command, params, rest):
+    self.log.debug(params)
+    if params[-1] == self.nickname:
+      for chan in params[:-1]:
+        self.channels.remove(chan)
+
+  def on_join(self, prefix, command, params, rest):
+    pass
+
+  def on_privmsg(self, prefix, command, params, rest):
+    pass
+
   def on_invite(self, prefix, command, params, rest):
     pass
+
+  def on_nickinuse(self, prefix, command, params, rest):
+    regex = search('(\d+)$', self.nickname)
+    if regex:
+      theint = int(regex.group(0))
+      self.nickname = self.nickname.strip(str(theint)) + str(theint + 1)
+    else:
+      self.nickname = self.nickname + '0'
+    self.handle_connect()

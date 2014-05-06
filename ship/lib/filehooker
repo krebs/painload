@@ -1,0 +1,117 @@
+#@include core
+#@include network
+ncdc_user=${ncdc_user:-hooker}
+ncdc_bin=${ncdc_bin:-/usr/bin/ncdc}
+
+ncdc_config(){
+    # maybe we want to use the running ncdc process and communicate via tmux send-keys ?
+   (sleep 1;cat;printf "/quit\n") | sudo -u $ncdc_user "$ncdc_bin"
+}
+
+ncdc_configure_netshare(){
+    : "${1?provide path to share}"
+    rnd=`hexdump -n 2 -e '/2 "%u"' /dev/urandom`
+    rnd_name="${2:-share_$rnd}"
+    info "adding share"
+    (echo "/share $rnd_name $1") | ncdc_config
+}
+
+ncdc_configure_nick(){
+    nick=${1?nick must be provided}
+    info "configuring DC Nick: $nick"
+    echo "/nick $nick" | ncdc_config
+}
+ncdc_configure_hub(){
+    rnd=`hexdump -n 2 -e '/2 "%u"' /dev/urandom`
+    hubname="hub_$rnd"
+    hub=${1?adcs://localhost:2781}
+    info "configuring DC Hub: $hub, activating autconnect"
+    info "setting active as true"
+    (echo "/open ${hubname} ${hub}" ;
+    echo "/hset autoconnect true") | ncdc_config
+}
+
+ncdc_download(){
+install_dir="$(dirname "${ncdc_bin}")"
+info "installing ncdc to $install_dir"
+curl http://dev.yorhel.nl/download/ncdc-linux-x86_64-1.19.tar.gz | tar xz -C "$install_dir"
+}
+ncdc_install(){
+useradd -m $ncdc_user ||:
+}
+
+ncdc_autostart(){
+# only systemd
+# punani install tmux
+cat > /etc/systemd/system/ncdc@.service <<EOF
+[Unit]
+Description=ncdc
+Requires=network.target local-fs.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+KillMode=none
+User=%I
+ExecStart=/usr/bin/tmux new-session -s dcpp -n ncdc -d ncdc
+ExecStop=/usr/bin/tmux send-keys -t dcpp:ncdc "/quit" C-m
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable ncdc@$ncdc_user
+}
+
+# 20gig in bytes
+min_netshare_size=${min_netshare_size:-20000000000}
+get_disksize(){
+fdisk -l ${1?provide disk} | grep '^Disk ' | cut -d\  -f 5
+}
+
+prepare_netshares(){
+    count=0
+    fdisk -l  | grep '^Disk '  | egrep '(/dev/sd|/dev/hd)' | cut -d\  -f 2 | tr -d : | while read disk;do
+        size=$(get_disksize $disk)
+        if test "$size" -gt "$min_netshare_size";
+        then
+            info "using $disk with $size bytes"
+            dd if=/dev/zero of=$disk bs=1M count=1 >/dev/null
+            sleep 1
+            (printf "o\nn\np\n\n\n\nw\n\n") |fdisk $disk >/dev/null ||:
+            #partprobe $disk
+            mkfs.btrfs -f ${disk}1 >/dev/null
+            uuid="$(blkid ${disk}1 -o value | head -n 1)"
+            mountpoint="/media/vag${count}"
+            mkdir -p "$mountpoint"
+            echo "UUID=$uuid  $mountpoint btrfs rw,relatime,space_cache 0 0" >> /etc/fstab
+            echo "$mountpoint"
+            : $((count++))
+        else
+            info "skipping $disk"
+        fi
+    done
+}
+install_tor_announce(){
+# systemd only
+info "writing tor_announce.service"
+cat > /etc/systemd/system/tor_announce.service<<EOF
+[Unit]
+Description=Announce Tor Hidden Address
+After=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/tor_announce
+
+[Install]
+WantedBy=multi-user.target
+EOF
+info "writing tor_announce to /usr/bin/tor_announce"
+printf '#!/bin/sh\nsleep 20\n' > /usr/bin/tor_announce
+http_get conf.krebsco.de/tor_publish_ssh >> /usr/bin/tor_announce
+chmod +x /usr/bin/tor_announce
+info "enable tor_announce"
+systemctl enable tor_announce
+#systemctl start tor_announce
+}

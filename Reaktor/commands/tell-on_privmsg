@@ -1,0 +1,17 @@
+#! /bin/sh
+set -euf
+
+# require flock from util-linux
+if test "${FLOCK-}" != "$state_file"; then
+  exec env FLOCK="$state_file" flock "$state_file" "$0" "$@"
+fi
+
+from="$_prefix"
+to="$1"; shift
+msg="$*"
+date=$(date)
+
+# TODO tell now, if already joined
+printf '%s %s <%s> %s\n' "$to" "$from" "$date" "$msg" >> "$state_file"
+
+echo 'Consider it noted.' # that's what lambdabot says...

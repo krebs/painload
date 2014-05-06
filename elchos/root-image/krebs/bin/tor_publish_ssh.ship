@@ -1,0 +1,12 @@
+#!/usr/bin/env ship
+#@include core
+. /krebs/lib/core
+#@include network
+. /krebs/lib/network
+#@include tor
+. /krebs/lib/tor
+
+test -w "$torrc" || ( error "$torrc is not writable!"; exit 1 ) || exit 1
+
+configure_hidden_service
+cat $hidden_service_dir/hostname | send_irc

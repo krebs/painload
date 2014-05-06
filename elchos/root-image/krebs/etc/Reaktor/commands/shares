@@ -1,0 +1,2 @@
+#!/bin/sh
+df -h | grep '/media/'

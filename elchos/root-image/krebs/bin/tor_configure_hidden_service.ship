@@ -1,0 +1,16 @@
+#!/bin/sh
+#@include core
+. /krebs/lib/core
+#@include network
+. /krebs/lib/network
+#@include tor
+. /krebs/lib/tor
+
+sleep_time=5
+test -w "$torrc" || ( error "$torrc is not writable!"; exit 1 ) || exit 1
+
+configure_hidden_service
+test ! -e $hidden_service_dir/hostname && \
+  info "hidden service file does not exist, restarting tor" && \
+  systemctl restart tor && \
+  sleep 1

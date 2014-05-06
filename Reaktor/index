@@ -4,4 +4,4 @@ set -euf
 # cd //Reaktor
 cd $(dirname $(readlink -f $0))
 
-exec IRC/index
+exec IRC/index "$@"

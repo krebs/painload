@@ -1,0 +1,6 @@
+#!/bin/sh
+#@info
+#@include core
+#@include retiolum
+
+find_supernodes

@@ -17,7 +17,7 @@ from time import sleep
 
 ## Newsbot Controller Class
 class NewsBot(asybot):
-    def __init__(self, name, channels=['#test'], server='ire', port=6667, timeout=60, loglevel=logging.ERROR, url_shortener='http://wall'):
+    def __init__(self, name, channels=['#test'], server='ire', port=6667, timeout=60, loglevel=logging.ERROR, url_shortener='http://localhost'):
         asybot.__init__(self, server, port, name, channels, loglevel=loglevel)
         self.to = timeout
         self.url_shortener = url_shortener
@@ -39,6 +39,7 @@ class NewsBot(asybot):
     def on_invite(self, prefix, command, params, rest):
         for chan in rest.split():
             self.push('JOIN ' + chan)
+            self.channels.append(chan)
 
     def read_message(self, args):
         try:
@@ -138,6 +139,10 @@ class RssBot(asybot):
         self.loop = True
         self.lastnew = datetime.now()
         self.url_shortener = url_shortener
+        self.retry = True
+
+    def on_nickinuse(*bla):
+        pass
 
     def start_rss(self):
         self.upd_loop = threading.Thread(target=self.updateloop)
@@ -174,8 +179,8 @@ class RssBot(asybot):
                         self.sendall(entry.title + ' ' + shorturl)
                         self.oldnews.append(entry.link)
                         self.lastnew = datetime.now()
-            except:
-                print(self.nickname + ': rss timeout occured')
+            except Exception as e:
+                print(str(datetime.now().hour) + ':' + str(datetime.now().minute) + ' ' + self.nickname + ': ' + str(e))
             sleep(self.to)
 
     def shortenurl(self, url):
@@ -192,36 +197,44 @@ class RssBot(asybot):
             self.send_msg(target, feed.title + ' ' + self.shortenurl(feed.link))
 
     def sendall(self, string):
-        self.send_msg(self.channels, string)
+        try:
+            self.send_msg(self.channels, string)
+        except Exception as e:
+            print(self.nickname + ': failed sending all to ' + str(self.channels) + ' because of ' + str(e));
 
     def send_msg(self, target, string):
         if self.connected:
             for line in string.split('\n'):
-                if len(line) < 450:
-                    self.PRIVMSG(target, line)
-                else:
-                    space = 0
-                    for x in range(math.ceil(len(line)/400)):
-                        oldspace = space
-                        space = line.find(" ", (x+1)*400, (x+1)*400+50)
-                        self.PRIVMSG(target, line[oldspace:space])
+                while len(line)>0:
+                    if len(line) < 450:
+                        self.PRIVMSG(target, line)
+                        line = ''
+                    else:
+                        space = line.rfind(" ", 1, 450)
+                        self.PRIVMSG(target, line[:space])
+                        line=line[space:]
         else:
             self.reconnect()
             while not self.connected:
-               sleep(3)
-               print('waiting for reconnect')
-            self.send_msg(string)
+               print(self.nickname + ' waiting for reconnect')
+               sleep(10)
+            self.send_msg(target, string)
 
     def on_invite(self, prefix, command, params, rest):
         for chan in rest.split():
             self.push('JOIN ' + chan)
+            self.channels.append(chan)
+
+    def on_welcome(self, prefix, command, params, rest):
+        asybot.on_welcome(self, prefix, command, params, rest)
+        self.push('MODE ' + self.nickname + ' +D')
 
 feedfile = 'new_feeds'
-url_shortener = 'http://wall'
+url_shortener = 'http://go'
 init_channels = ['#news']
 
 bots = {}
-knews = NewsBot('knews')
+knews = NewsBot('knews', init_channels, url_shortener=url_shortener)
 
 #config file reading
 F = open(feedfile, "r")
@@ -231,9 +244,16 @@ F.close()
 for line in lines:
     line = line.strip('\n')
     linear = line.split('|')
-    bot = RssBot(linear[1], linear[0], init_channels + linear[2].split(), url_shortener=url_shortener)
+    bot = RssBot(linear[1], linear[0], linear[2].split(), url_shortener=url_shortener)
     bot.start_rss()
     bots[linear[0]] = bot
 
-th = threading.Thread(target=loop)
+def thread_handler():
+    while True:
+        try:
+            loop()
+        except Exception as e:
+            print('ohoh ' + e)
+
+th = threading.Thread(target=thread_handler)
 th.start()

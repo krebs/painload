@@ -3,13 +3,12 @@
 #@include core
 #@include color
 #@include network
+#@include tor
 pass=shackit
 shack_printer_ip=10.42.0.135
 extra_pkg="xorg vim xfce4 feh chromium zsh sudo git flashplugin alsa-oss alsa-lib alsa-utils grub-bios slim ntp tor network-manager-applet networkmanager openssh cups cups-filters"
 
 info "writing stdout to /tmp/install.log"
-exec >> /tmp/install.log
-tail -f /tmp/install.log&
 defer 'pkill tail'
 
 installer_disk(){
@@ -35,7 +34,7 @@ sleep 3
 umount /mnt/boot ||:
 umount /mnt ||:
 info "starting partitioning"
-(printf "o\nn\np\n\n\n+256M\n\a\nn\np\n\n\n\nw\n\n") |fdisk $rootdisk
+(printf "o\nn\np\n\n\n+256M\n\a\nn\np\n\n\n\nw\n\n") |fdisk $rootdisk||:
 info "done partitioning"
 sleep 1
 info "generating filesystem on /boot"
@@ -84,7 +83,7 @@ info "generating configs"
 genfstab -U -p /mnt > /mnt/etc/fstab
 
 info "beginning chroot!"
-arch-chroot /mnt | tee -a /tmp/install.log  << EOF
+arch-chroot /mnt << EOF
 
 msg() { printf "\$*\n" >&2; }
 info()  { msg "$green\$*$nc"; }
@@ -119,7 +118,7 @@ done
 
 ### CUPS
 mkdir -p /etc/cups
-cat >>/etc/cups/printers.conf<<EOF
+cat >>/etc/cups/printers.conf<<EOT
 <Printer HP_LaserJet_5000_Series>
 Info Shack Printer HP 5000
 Location lounge
@@ -137,7 +136,7 @@ KLimit 0
 OpPolicy default
 ErrorPolicy stop-printer
 </Printer>
-EOF
+EOT
 
 info "installing grub"
 grub-install ${rootdisk} 2>/dev/null
@@ -155,7 +154,11 @@ EOF
 info "configuring tor"
 torrc=/mnt/etc/tor/torrc
 hidden_service_dir=/var/lib/tor/hidden_service/
-#@include tor
 configure_hidden_service
+#TODO publish tor address after reboot
+#info "publishing hidden service address"
+#cat $hidden_service_dir/hostname | send_irc
+
 
 info "We're all done, simply reboot!"
+reboot

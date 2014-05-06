@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+import json
+from os import environ
+import sys
+import os
+# krebs polling
+import poll
+
+f = 'suggestions.json'
+db = poll.load_db(f)
+votes = []
+try:
+    votes = sys.argv[1:]
+except:
+    print("""usage: undo number (...)
+    undos vote of one or more entries based on .list""")
+    sys.exit(1)
+voter = environ['_prefix']
+voter_name = environ['_from']
+for vote in votes:
+    try:
+        vote = int(vote)
+        if not voter in db[vote]['votes']:
+            print("%s, you never voted for '%s'!"%(voter_name,db[vote]['title']))
+        else:
+            del(db[vote]['votes'][voter] )
+            print("%s undid vote for '%s'" %(voter_name,db[vote]['title'] ))
+    except:
+        print("%s undo voting for #%d failed" %(voter_name,vote))
+
+poll.save_db(f,db)

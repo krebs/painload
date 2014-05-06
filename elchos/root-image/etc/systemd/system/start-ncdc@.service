@@ -1,0 +1,13 @@
+[Unit]
+Description=ncdc autoconfig and startup for %i
+After=network.target local-fs.target multi-user.target elch-hostname.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+#KillMode=none
+ExecStart=/usr/bin/tmux new-session -n startup -d "/bin/sh /krebs/bin/start-ncdc.ship"
+ExecStop=/usr/bin/sudo -u %i /usr/bin/tmux send-keys -t dcpp:ncdc "/quit" C-m
+
+[Install]
+WantedBy=multi-user.target

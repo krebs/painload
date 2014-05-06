@@ -1,0 +1,80 @@
+# logging
+msg() { echo "$*" >&2; }
+info()  { msg "** $*"; }
+error() { msg "!! $*"; }
+## usage: die [REASON...]
+die() {
+  test $# -gt 0 && error "$*"
+  error 'Bailing out.'
+  exit 1
+}
+exists(){ 
+  type "$1" >/dev/null 2>/dev/null; 
+}
+
+is_root(){
+  test $(id -u) -eq 0
+}
+
+defer(){
+  #close enough
+  trapstr="$1;${trapstr:-exit}"
+  trap "$trapstr" INT TERM EXIT KILL
+}
+
+esudo(){
+  # weaksauce esudo (expect sudo)
+  if ! is_root; then
+    # for the record:
+    # exec sudo -E "$0" "$@"
+    error "You are not root enough for this script"
+    exit 23 # go to hell
+  fi
+}
+
+get_hostname(){
+  # finds the current hostname
+  #   if ENV HOSTN is set echo $HOSTN
+  #   We try the following:
+  #      $HOSTN
+  #      $HOSTNAME
+  #      hostname
+  #      uci system.hostname
+  #      /etc/hostname
+  #   if everything fails, it returns 1 and prints 'unknown'
+
+  if [ -n "${HOSTN:-}" ] ;     then printf "${HOSTN:-}" 
+  elif [ -n "${HOSTNAME:-}" ] ;then printf "$HOSTNAME"
+  elif exists hostname ;       then printf "$(hostname)"
+  elif exists uci    ;         then printf "$(uci get system.@system[0].hostname)"
+  elif [ -e /etc/hostname ]   ;then printf "$(cat /etc/hostname)"
+  else                              printf "unknown"; return 1
+  fi
+  return 0
+}
+
+line_to_dot(){ 
+  while read line; do printf .; done;
+}
+
+get_os(){
+  # TODO: find all the release files
+  #if grep -q 'Linux' /etc/*release 2>/dev/null || grep -qe 'Linux' /etc/issue 2>/dev/null; then
+  if grep -q 'Linux' /etc/lsb-release 2>/dev/null || grep -q 'Linux' /etc/issue 2>/dev/null; then
+    echo 'linux'
+  elif test -e /etc/preferred-apps/google.xml; then
+    echo 'android'
+  elif test -e /etc/openwrt_release; then
+    echo 'openwrt'
+  elif uname -s | grep -qi 'darwin'; then
+    echo 'osx'
+  else
+    warn "Cannot determine your operating system, falling back to Linux"
+    echo 'linux'
+  fi
+}
+
+# user management
+has_user(){
+    egrep "^$1:" /etc/passwd >/dev/null
+}

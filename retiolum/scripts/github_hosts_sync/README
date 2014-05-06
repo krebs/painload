@@ -1,0 +1,26 @@
+#? /bin/sh
+
+useradd -m hosts-sync
+cp systemd/hosts-sync.service /etc/systemd/system/
+cp systemd/hosts-sync.conf /etc/conf.d/
+
+sudo -u hosts-sync -i ssh-keygen
+add /home/hosts-sync/.ssh/id_rsa.pub as github/krebscode/hosts deploy key
+sudo -u hosts-sync -i git clone git@github.com:krebscode/hosts.git ~hosts-sync/hosts # to accept the remote key (and have an initial copy)
+
+sudo -u hosts-sync -i git config --global user.email hosts-sync@ire.retiolum
+sudo -u hosts-sync -i git config --global user.name hosts-sync
+sudo -u hosts-sync -i git config --global push.default simple
+
+systemctl start hosts-sync
+systemctl enable hosts-sync
+
+TODO firewall setup
+
+#? /bin/sh (update service)
+git pull
+cp retiolum/scripts/github_hosts_sync/systemd/hosts-sync.service /etc/systemd/system/
+systemctl daemon-reload
+systemctl restart hosts-sync
+
+

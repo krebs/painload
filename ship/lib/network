@@ -76,6 +76,17 @@ run_telnet(){
   port="$2"
   $(which_telnet) "$host" "$port"
 }
+port_open(){
+  # $1 - host
+  # $2 - port
+  #  nc -zw 2 $1 $2
+  echo | run_telnet "$1" "$2" & pid=$!
+  { sleep 5; kill $pid;} & wid=$!
+  wait $pid 
+  RET=$?
+  kill $wid >/dev/null 2>&1
+  return $RET
+}
 
 send_irc(){
   ## reads from stdin, writes to IRC
@@ -95,5 +106,5 @@ send_irc(){
       echo "JOIN $IRCCHANNEL";
       sleep 23;
       while read line; do echo "PRIVMSG $IRCCHANNEL :$line";sleep 1;done
-      sleep 5; ) | run_telnet $IRCSERVER $IRCPORT 2>/dev/null | line_to_dot
+      sleep 5; ) | run_telnet $IRCSERVER $IRCPORT 2>/dev/null
 }

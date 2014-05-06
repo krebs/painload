@@ -1,0 +1,11 @@
+#!/bin/sh
+#@strict
+#@include core
+#@include vim
+#@include punani
+#@mainifyme
+info "installing punani"
+punani install vim
+touch $vimrc
+info "configuring vim"
+vim_conf_sane_defaults

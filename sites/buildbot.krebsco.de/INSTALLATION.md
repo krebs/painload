@@ -1,11 +1,12 @@
 #?/bin/sh
 # something like this
 
-useradd ci
-punani install python-virtualenv 
+useradd ci -m
+punani install python2-virtualenv 
 su ci
-virtualenv buildbot
-echo ". $HOME/buildbot/bin/activate" >~/.bashrc
+virtualenv2 buildbot
+echo ". $HOME/buildbot/bin/activate" >>~/.bashrc
+. ~/.bashrc
 pip install buildbot-slave buildbot
 buildbot create-master master
 # tahoe cp krebs:master.conf master/master.conf

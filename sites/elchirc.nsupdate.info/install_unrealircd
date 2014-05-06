@@ -1,0 +1,19 @@
+pacman -S unrealircd
+# in /etc/unrealircd/unrealircd.conf
+#  uncomment where it says FOR *NIX
+# remove the src/ from the start path as they are in /etc/unrealircd
+
+# uncomment motd ircd.motd
+# fix passwords for restart
+# comment in the .fr stuff
+# fix cloak-keys
+#
+
+# configure me,admin,class
+# curl unreal.x-tab.org/makecert.sh > makecert.sh
+# ./makecert.sh new -k server.key.pem -c server.cert.pem -r server.req.pem -b 2048 -d 9001
+#
+# cp /krebs/cholerab/bling/krebs-v2.txt ircd.motd
+#
+# systemctl enable unrealircd
+# systemctl start unrealircd

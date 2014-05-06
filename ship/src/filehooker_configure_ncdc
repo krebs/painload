@@ -1,0 +1,15 @@
+#!/bin/sh
+#@info
+#@strict
+#@include filehooker
+
+dc_hub="adcs://elch.nsupdate.info:2781"
+rnd=`hexdump -n 2 -e '/2 "%u"' /dev/urandom`
+nick="filehooker_$rnd"
+
+
+ncdc_install
+ncdc_autostart
+
+ncdc_configure_nick "$nick"
+ncdc_configure_hub "$dc_hub"

@@ -1,0 +1,11 @@
+#!/bin/sh
+#TODO:
+#!/usr/bin/env ship
+set -euf
+#@include filehooker
+. /krebs/lib/filehooker
+ncdc_user="hooker"
+
+share_all_partitions
+systemctl restart hddtemp.service
+exit 0

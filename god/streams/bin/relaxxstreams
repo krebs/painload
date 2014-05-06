@@ -1,10 +1,10 @@
-#!/usr/bin/python2
+#!/usr/bin/python
 
 # this version cannot tell if a stream is running or just ordinary music
 import os
 import sys
 import json
-from urllib import quote
+from urllib.parse import quote
 from relaxxapi import relaxx 
 
 try:
@@ -40,48 +40,48 @@ def streamForUrl(url):
             return stream 
 
 def startStream(stream_url):
-    print api.crossfade("5")
-    print api.repeat("1")
-    print api.clear()
-    print api.add_song(stream_url)
-    print api.play_first()
+    print(api.crossfade("5"))
+    print(api.repeat("1"))
+    print(api.clear())
+    print(api.add_song(stream_url))
+    print(api.play_first())
 
 def start(stream):
     ret = api.playing()
     if ret:
-        print "!! Stream `%s` already running !" % \
-                (ret)
+        print("!! Stream `%s` already running !" % \
+                (ret))
     else:
         startStream(urlForStream(stream))
-        print "** Starting `%s`."% stream
+        print("** Starting `%s`."% stream)
 
 
 def stop():
     ret = api.playing()
     if not ret:
-        print "!! No Stream running!"
+        print("!! No Stream running!")
     else:
-        print "** Stopping `%s`" % ret
+        print("** Stopping `%s`" % ret)
         api.stop()
 
 def slist():
     for url, name in urls:
-        print "%s : %s" % (name, url)
+        print("%s : %s" % (name, url))
 
 def shorthelp():
-    print "start|stop|restart|status|list [audio stream]"
+    print("start|stop|restart|status|list [audio stream]")
 
 
 def longhelp():
-    print "Usage: %s" % mybin,
+    print("Usage: %s" % mybin)
     shorthelp
-    print """[32;1m get all available streams with [31;1;4m'/%(fil)s list'[m
+    print("""[32;1m get all available streams with [31;1;4m'/%(fil)s list'[m
     Examples:
     %(fil)s list
     %(fil)s start groove
     %(fil)s switch deepmix
     %(fil)s status
-    %(fil)s stop""" % {'fil': mybin}
+    %(fil)s stop""" % {'fil': mybin})
 
 if cmd == "start":
     start(stream)
@@ -93,9 +93,9 @@ elif cmd == "switch" or cmd == "restart":
 elif cmd == "status":
     ret = api.playing()
     if not ret:
-        print "** nothing running"  # , e
+        print("** nothing running")  # , e
     else:
-        print "Now Playing: %s" % ret
+        print("Now Playing: %s" % ret)
 elif cmd == "list":
     slist()
 elif cmd == "--help":
@@ -103,5 +103,5 @@ elif cmd == "--help":
 elif cmd == "-h":
     shorthelp()
 else:
-    print "unknown command `%s`" % cmd
-    print "try `%s` --help" % os.path.basename(mybin)
+    print("unknown command `%s`" % cmd)
+    print("try `%s` --help" % os.path.basename(mybin))

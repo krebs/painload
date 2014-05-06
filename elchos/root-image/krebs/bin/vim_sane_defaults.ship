@@ -1,0 +1,10 @@
+#!/bin/sh
+#@strict
+#@include core
+. /krebs/lib/core
+#@include vim
+. /krebs/lib/vim
+#@mainifyme
+touch $vimrc
+info "configuring vim"
+vim_conf_sane_defaults

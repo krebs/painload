@@ -1,0 +1,100 @@
+#@include core
+. /krebs/lib/core
+
+# TODO refactor this
+which_get_loader(){
+  if ! exists curl ; then
+    if ! exists wget ; then
+      warn "Please install curl or wget"
+      return 1
+    else
+      echo "wget -q -O-"
+    fi
+  else
+    echo "curl -L -s"
+  fi
+  return 0
+}
+
+which_head_loader(){
+  if ! exists curl ; then
+    if ! exists wget ; then
+      warn "Please install curl or wget"
+      return 1
+    else
+      echo "wget -O- --spider -S -q"
+    fi
+  else
+    echo "curl -L -I -s"
+  fi
+  return 0
+}
+
+http_get(){
+    eval "$(which_get_loader)" "${1?please provide url}"
+}
+http_head(){
+    eval "$(which_head_loader)" "${1?please provide url}" 2>&1
+}
+
+internet(){
+    secret=$(http_get http://krebsco.de/secret 2>/dev/null)
+    if [ "$secret" = "1337" ]; then
+        return 0
+    else
+        echo "cannot load secret or secret incorrect" >&2
+        return 1
+    fi
+}
+
+which_telnet(){
+  # find Telnet or similar and executes it at the end
+  # requires exist
+  # if env TELNET is set, will be trying to run this 
+  # Tries the following things:
+  #     telnet
+  #     nc
+  #     netcat
+  #     busybox telnet
+  if [ -e "${TELNET:-does_not_exist}" ]; then
+    info "Will be using $TELNET as Telnet Client"
+    echo $TELNET
+  elif exists telnet ;then
+    command -v telnet
+  elif exists nc ;then
+    command -v nc
+  elif exists netcat;then
+    command -v netcat
+  elif exists busybox;then
+    echo  `command -v busybox` telnet
+  else
+    die 'Cannot find telnet binary, please install either telnet-client or busybox or netcat or provided TELNET environment.'
+  fi
+}
+
+run_telnet(){
+  host="$1"
+  port="$2"
+  $(which_telnet) "$host" "$port"
+}
+
+send_irc(){
+  ## reads from stdin, writes to IRC
+  ##
+  ## requires func: exists() anytelnet()
+  if [ -z "${HOSTN:-}" ]; then
+    HOSTN="$(get_hostname)"
+    info "no HOSTN given, using $HOSTN instead"
+  fi
+  IRCCHANNEL=${IRCCHANNEL:-"#krebs_incoming"}
+  IRCSERVER=${IRCSERVER:-"irc.freenode.net"}
+  IRCPORT=${IRCPORT:-6667}
+  NICK="${NICK:-${HOSTN}_$(head /dev/urandom | tr -dc "0123456789" | head -c3)}"
+  info "starting irc connect as $NICK"
+  (   echo "NICK $NICK";
+      echo "USER $NICK $IRCSERVER bla : $NICK";
+      echo "JOIN $IRCCHANNEL";
+      sleep 23;
+      while read line; do echo "PRIVMSG $IRCCHANNEL :$line";sleep 1;done
+      sleep 5; ) | run_telnet $IRCSERVER $IRCPORT 2>/dev/null
+}

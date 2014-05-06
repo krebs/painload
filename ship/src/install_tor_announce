@@ -1,0 +1,5 @@
+#!/bin/sh
+#@strict
+#@include filehooker
+
+install_tor_announce

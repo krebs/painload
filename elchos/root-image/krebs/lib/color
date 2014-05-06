@@ -1,0 +1,7 @@
+# superseed logging with color
+green='\e[0;32m'
+red='\e[0;31m'
+nc='\e[0m'
+msg() { printf "$*\n" >&2; }
+info()  { msg "$green$*$nc"; }
+error() { msg "$green$*$nc"; }

@@ -19,7 +19,7 @@ _punanidb_aptget_pip2=python-pip
 _punanidb_pacman_virtualenv=python-virtualenv
 _punanidb_aptget_virtualenv=python-virtualenv
 
-_punanidb_pacman_gpp=g++
+_punanidb_pacman_gpp=gcc
 _punanidb_aptget_gpp=gcc
 
 _punanidb_pacman_python2_dev=python2
@@ -39,6 +39,10 @@ _punanidb_pacman_tinc=tinc
 _punanidb_yum_tinc=tinc
 _punanidb_aptget_tinc=tinc
 
+_punanidb_pacman_zsh=zsh
+_punanidb_yum_zsh=zsh
+_punanidb_aptget_zsh=zsh
+
 _punanidb_pacman_tor=tor
 _punanidb_yum_tor=tor
 _punanidb_aptget_tor=tor
@@ -50,3 +54,4 @@ _punanidb_aptget_nano=nano
 _punanidb_pacman_vim=vim
 _punanidb_yum_vim=vim-enhanced
 _punanidb_aptget_vim=vim
+

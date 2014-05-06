@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+import json
+from os import environ
+import sys
+import os
+import poll
+
+f = 'suggestions.json'
+title=" ".join(sys.argv[1:])
+db = poll.load_db(f)
+if len(sys.argv) > 1 and ("-h" in sys.argv[1]  or "usage" == sys.argv[1]):
+    print("""usage: list <(age|votes)>
+    sort by age or by votes (default: age)
+""")
+    sys.exit(0)
+
+if len(sys.argv) > 1 and ("votes" in sys.argv[1]):
+    use = poll.sort_by_votes(db)
+elif len(sys.argv) > 1 and ("age" in sys.argv[1]) or len(sys.argv) == 1:
+    use = db
+else:
+    print("unknown sorting method")
+    sys.exit(1)
+
+for entry in use:
+    print("#%d %s (votes: %d)" %
+            (db.index(entry),entry['title'],sum(entry['votes'].values())))

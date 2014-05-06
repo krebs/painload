@@ -1,0 +1,15 @@
+[Unit]
+Description=Graphite Carbon
+After=network.target
+
+[Service]
+Type=forking
+User=graphite
+Group=graphite
+RemainAfterExit=yes
+PIDFile=/opt/graphite/storage/carbon-cache-a.pid
+ExecStart=/opt/graphite/bin/carbon-cache.py start
+ExecStop=/opt/graphite/bin/carbon-cache.py stop
+
+[Install]
+WantedBy=multi-user.target

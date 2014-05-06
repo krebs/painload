@@ -7,11 +7,8 @@ if test "${nosudo-false}" != true -a `id -u` != 0; then
   exit 23 # go to hell
 fi
 
-list_hosts="$(
-  basename="`readlink -f "$0"`"
-  bindir="`dirname "$basename"`"
-  echo "$bindir/hosts"
-)"
+list_hosts=$(cd -P "$(dirname "$0")" && pwd -P)/hosts
+
 hosts() { "$list_hosts"; }
 
 hosts="${hosts-/etc/hosts}"

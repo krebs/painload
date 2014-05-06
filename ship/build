@@ -44,7 +44,7 @@ EOF
 build_strict_mode() { cat<<EOF
 $1a\\
 set -euf\\
-set -o posix || :
+(set -o posix 2>/dev/null) && set -o posix || :
 EOF
 }
 

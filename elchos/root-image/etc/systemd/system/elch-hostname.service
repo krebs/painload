@@ -1,0 +1,11 @@
+[Unit]
+Description=change elchOS hostname
+Before=network.target nss-lookup.target multi-user.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/krebs/bin/set-hostname.sh
+
+[Install]
+WantedBy=multi-user.target
