@@ -77,6 +77,7 @@ class Reaktor(asybot):
     env['_prefix'] = prefix
     env['_from'] = prefix.split('!', 1)[0]
 
+    env.update(os.environ)
     log.debug('self:' +self.nickname)
     # when receiving /query, answer to the user, not to self
     if self.nickname in target:
