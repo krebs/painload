@@ -1,5 +1,10 @@
 #!/bin/sh
 
+cat <<EOF >&2
+NOTE: The google speech-to-text api v1 has been made obsolete!
+Code is here only for reference and will most likely not work anymore.
+EOF
+
 _get_content_type(){
     file -b --mime-type "$1"
 }
