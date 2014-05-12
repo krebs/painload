@@ -1,12 +1,15 @@
 import socket
 name = socket.gethostname()
-source = "/krebs/config.sh"
+cfg_file = "/krebs/config.sh"
 
 # TODO: shell config file cannot contain variables or anything fancy
 ret ={}
+
+import shlex
+## load config file, lex split every line, split at =
 with open(cfg_file) as f:
     for line in f:
-        k,v = line.split("=")
+        k,v = shlex.split(line)[0].split("=",1)
         ret[k] = v
 
 #irc_server = 'irc.freenode.net'

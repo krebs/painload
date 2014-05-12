@@ -2,7 +2,7 @@
 
 set -e -u -f
 reaktor_user=reaktor
-ncdc_user=hooker
+ncdc_user=elch
 rootpw=$(dd if=/dev/urandom bs=1 count=100 2>/dev/null |md5sum | awk '{print $1}' | dd bs=1 count=9 2>/dev/null)
 sed -i 's/#\(en_US\.UTF-8\)/\1/' /etc/locale.gen
 locale-gen
@@ -53,15 +53,12 @@ echo "$reaktor_user ALL=(root) NOPASSWD: /krebs/bin/refresh-shares.ship" >> /etc
 echo "$reaktor_user ALL=($ncdc_user) NOPASSWD: ALL" >> /etc/sudoers.d/reaktor
 echo "$reaktor_user ALL=(root) NOPASSWD: /usr/bin/reboot" >> /etc/sudoers.d/reaktor
 
-# add bonus features for elch
-cp -a /krebs/etc/Reaktor  /krebs/painload
-
 # emergency root passwd
-printf "!!!!!!\nthe Root PW is '%s'\n!!!!!!\n"  "$rootpw"
+printf "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\nthe Root PW is '%s'\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"  "$rootpw"
 (printf "%s\n%s\n" "$rootpw" "$rootpw" ) | passwd
 cd /krebs/painload/Reaktor/
 touch auth.lst admin.lst
-chown reaktor:reaktor auth.lst admin.lst
+chown $reaktor_user:$reaktor_user auth.lst admin.lst
 for i in  multi-user.target \
                   pacman-init.service \
                   choose-mirror.service \

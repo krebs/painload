@@ -2,7 +2,7 @@
 . /krebs/lib/core
 #@include network
 . /krebs/lib/network
-ncdc_user=${ncdc_user:-hooker}
+ncdc_user=${ncdc_user:-elch}
 ncdc_bin=${ncdc_bin:-/usr/bin/ncdc}
 
 

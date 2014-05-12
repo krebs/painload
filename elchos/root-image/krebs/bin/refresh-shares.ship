@@ -4,7 +4,7 @@
 set -euf
 #@include filehooker
 . /krebs/lib/filehooker
-ncdc_user="hooker"
+ncdc_user="elch"
 
 share_all_partitions
 systemctl restart hddtemp.service
