@@ -1,0 +1,14 @@
+[Unit]
+Description=Reaktor for user %i
+After=network.target nss-lookup.target
+
+[Service]
+Type=normal
+#TODO - make reaktor path variable
+User=reaktor
+ExecStart=/krebs/painload/Reaktor/index elchos/config.py
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

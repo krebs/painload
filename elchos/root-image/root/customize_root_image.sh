@@ -52,9 +52,7 @@ echo "$reaktor_user ALL=(tor) NOPASSWD: /krebs/bin/tor-get-hidden-service.sh" >>
 echo "$reaktor_user ALL=(root) NOPASSWD: /krebs/bin/refresh-shares.ship" >> /etc/sudoers.d/reaktor
 echo "$reaktor_user ALL=($ncdc_user) NOPASSWD: ALL" >> /etc/sudoers.d/reaktor
 echo "$reaktor_user ALL=(root) NOPASSWD: /usr/bin/reboot" >> /etc/sudoers.d/reaktor
-echo 
-cp /krebs/painload/Reaktor/etc/systemd/system/Reaktor@.service \
-   /etc/systemd/system
+
 # add bonus features for elch
 cp -a /krebs/etc/Reaktor  /krebs/painload
 
