@@ -15,7 +15,7 @@ if not votes:
     upvotes one or more entries based on .list""")
     sys.exit(1)
 
-voter = environ['_prefix']
+voter = environ['_prefix'].split("@")[1]
 voter_name =environ['_from']
 for vote in votes:
     try:

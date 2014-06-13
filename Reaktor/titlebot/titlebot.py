@@ -6,7 +6,7 @@ debug = False
 # CAVEAT name should not contains regex magic
 name = 'bgt_titlebot'
 
-workdir = '/tmp/state'
+workdir = '/home/titlebot/state'
 
 try:
   mkdir(workdir)
@@ -68,7 +68,8 @@ public_commands = [
   # identify via direct connect
   { 'capname': 'identify',
     'pattern': '^identify' + '\\s*(?:\\s+(?P<args>.*))?$',
-    'argv' : [ 'commands/identify' ]}
+    'argv' : [ 'commands/identify' ],
+    'env':{'config_filename': config_filename}}
 ]
 commands = [
   default_command('reload'),
