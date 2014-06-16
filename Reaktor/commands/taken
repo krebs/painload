@@ -1,0 +1,28 @@
+#!/bin/sh
+#!/bin/bash
+ 
+# domainavailable
+# Fast, domain name checker to use from the shell
+# Use globs for real fun:
+# domainavailable blah{1..3}.{com,net,org,co.uk}
+# Inspired by foca / giles:
+# http://gilesbowkett.blogspot.com/2009/02/simple-bash-domain-availability.html
+ 
+trap 'exit 1' INT TERM EXIT
+ 
+for d in $@;
+do
+if host $d | grep "NXDOMAIN" >&/dev/null; then
+    if whois $d | grep -Ei "(No match|NOT FOUND|Status: free)" >&/dev/null; then
+        echo "$d available";
+    else
+        if whois $d >&/dev/null;then
+            echo "$d taken";
+        else
+            echo "$d - whois not available"
+        fi
+    fi
+else
+    echo "$d taken";
+fi
+done
