@@ -8,21 +8,21 @@
 # Inspired by foca / giles:
 # http://gilesbowkett.blogspot.com/2009/02/simple-bash-domain-availability.html
  
-trap 'exit 1' INT TERM EXIT
- 
 for d in $@;
 do
-if host $d | grep "NXDOMAIN" >&/dev/null; then
-    if whois $d | grep -Ei "(No match|NOT FOUND|Status: free)" >&/dev/null; then
+if host "$d" | grep "NXDOMAIN" >&/dev/null; then
+    w=$(whois "$d")
+    if ! test "$?" -eq 0 ;then
+        echo "$d - whois not available"
+    elif echo "$w" | grep -Ei "(No match|NOT FOUND|Status: free)" >&/dev/null; then
         echo "$d available";
+    elif echo "$w"| grep -Ei "(Status: invalid)" >&/dev/null ;then
+        echo "$d invalid"
     else
-        if whois $d >&/dev/null;then
-            echo "$d taken";
-        else
-            echo "$d - whois not available"
-        fi
+        echo "$d taken";
     fi
 else
     echo "$d taken";
 fi
 done
+exit 0
