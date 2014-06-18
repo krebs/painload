@@ -89,15 +89,22 @@ class asybot(asychat):
       self.data += data.decode()
     except Exception as e:
       print('error decoding message: ' + str(e));
+      print('current data: %s' % self.data);
+      print('received data: %s' % data);
+      print('trying to decode as latin1')
+      self.data += data.decode('latin1')
 
   def found_terminator(self):
     self.log.debug('<< %s' % self.data)
 
     message = self.data
     self.data = ''
-
-    _, prefix, command, params, rest, _ = \
-        split('^(?::(\S+)\s)?(\S+)((?:\s[^:]\S*)*)(?:\s:(.*))?$', message)
+    try:
+        _, prefix, command, params, rest, _ = \
+            split('^(?::(\S+)\s)?(\S+)((?:\s[^:]\S*)*)(?:\s:(.*))?$', message)
+    except Exception as e:
+        print("cannot split message :(\nmsg: %s"%message)
+        return
     params = params.split(' ')[1:]
 
     if command == 'PING':
@@ -126,10 +133,13 @@ class asybot(asychat):
     self.reset_alarm()
 
   def push(self, message):
-    self.log.debug('>> %s' % message)
-    msg = (message + self.myterminator).encode()
-    self.log.debug('>> %s' % msg)
-    asychat.push(self, msg)
+    try:
+      self.log.debug('>> %s' % message)
+      msg = (message + self.myterminator).encode()
+      self.log.debug('>> %s' % msg)
+      asychat.push(self, msg)
+    except:
+        pass
 
   def disconnect(self):
     self.push('QUIT')
