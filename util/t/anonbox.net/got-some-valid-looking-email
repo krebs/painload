@@ -12,5 +12,5 @@ anonbox.net >$tempfile
 } | {
   IFS=@. read _logname subdomain domain
 
-  echo "$uri" | grep -q "^https://$domain/$subdomain/[0-9a-f]*/$"
+  echo "$uri" | grep -q "^https://$domain/$subdomain/[^/][^/]*/$"
 }
