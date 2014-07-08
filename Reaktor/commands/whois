@@ -1,0 +1,4 @@
+#!/bin/sh
+(! type whois >/dev/null 2>/dev/null)  && echo "whois does not exist" && exit 0
+
+whois "${1?usage: $0 domain}" | sed -e '/^$/d' -e '/^%/d'  -e '/^Nserver/d' -e 's/^\[.*/---/' -e '/^Changed/d' -e '/^Status/d' -e '/^Type/d' -e '/^PostalCode/d' -e '/^Phone/d' -e '/^Fax/d' -e '/Last update of WHOIS database/Q' -e '/ID:/d'
