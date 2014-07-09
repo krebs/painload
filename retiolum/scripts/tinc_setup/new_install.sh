@@ -272,6 +272,8 @@ EOF
   
   # finish what you have begun!
   tincd -n $NETNAME
+  echo "if you are new, go into irc://freenode/krebs and introduce yourself"
+  echo "do not forget to add the host to the 'services' repository"
 }
 
 
