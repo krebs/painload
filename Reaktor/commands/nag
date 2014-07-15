@@ -1,17 +1,30 @@
 #! /bin/sh
 set -euf
 
-if test -e nag.hosts; then
+if test -e nag.hosts.ls; then
   echo "nag seems to run already... if not, then delete $workdir/nag.*, please"
   exit 23
 fi
 
-trap 'rm -f nag.hosts nag.services nag.patch' EXIT INT QUIT
+trap 'rm -f nag.hosts.ls nag.services.ls nag.patch' EXIT INT QUIT
 
-(cd "$hostsdir" && ls | sort) > nag.hosts
-(cd "$servicesdir" && ls | sort) > nag.services
+if ! test -d nag.hosts; then
+    git clone "$hosts_repo" nag.hosts | grep -v 'Alreay up-to-date.'
+else
+    (cd nag.hosts && git pull)
+fi
 
-diff -u nag.hosts nag.services > nag.patch || :
+if ! test -d nag.services; then
+    git clone "$services_repo" nag.services | grep -v 'Already up-to-date.'
+else
+    (cd nag.services && git pull)
+fi
+
+
+(cd nag.hosts && ls | sort) > nag.hosts.ls
+(cd nag.services && ls | sort) > nag.services.ls
+
+diff -u nag.hosts.ls nag.services.ls > nag.patch || :
 
 missing_services=$(sed -n '1d;2d;s/^-\(.*\)/\1/p' nag.patch | tr '\n' ' ')
 obsolete_services=$(sed -n '1d;2d;s/^+\(.*\)/\1/p' nag.patch | tr '\n' ' ')

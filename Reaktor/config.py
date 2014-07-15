@@ -86,8 +86,8 @@ on_ping = [
     'capname': 'nag',
     'argv': [ 'commands/nag' ],
     'env': {
-      'hostsdir': '/home/tv/krebs/hosts',
-      'servicesdir': '/home/tv/krebs/services'
+      'hosts_repo': 'https://github.com/krebscode/hosts',
+      'services_repo': '/home/tv/krebs/services'
     },
     'targets': irc_channels
   }
