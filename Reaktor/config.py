@@ -71,6 +71,11 @@ public_commands = [
 ]
 commands = [
   default_command('reload')
+  default_command('nag', env={
+    'workdir': workdir,
+    'hostsdir': '/home/tv/krebs/hosts',
+    'servicesdir': '/home/tv/krebs/services'
+  })
 ]
 
 on_join = [
