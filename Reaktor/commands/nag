@@ -9,15 +9,15 @@ fi
 trap 'rm -f nag.hosts.ls nag.services.ls nag.patch' EXIT INT QUIT
 
 if ! test -d nag.hosts; then
-    git clone "$hosts_repo" nag.hosts | grep -v 'Alreay up-to-date.'
+    git clone "$hosts_repo" nag.hosts
 else
-    (cd nag.hosts && git pull)
+    (cd nag.hosts && git pull) | grep -v 'Already up-to-date.'
 fi
 
 if ! test -d nag.services; then
-    git clone "$services_repo" nag.services | grep -v 'Already up-to-date.'
+    git clone "$services_repo" nag.services
 else
-    (cd nag.services && git pull)
+    (cd nag.services && git pull) | grep -v 'Already up-to-date.'
 fi
 
 
