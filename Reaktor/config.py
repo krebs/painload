@@ -86,7 +86,6 @@ on_ping = [
     'capname': 'nag',
     'argv': [ 'commands/nag' ],
     'env': {
-      'workdir': workdir,
       'hostsdir': '/home/tv/krebs/hosts',
       'servicesdir': '/home/tv/krebs/services'
     },

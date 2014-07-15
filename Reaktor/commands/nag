@@ -1,8 +1,6 @@
 #! /bin/sh
 set -euf
 
-cd "$workdir"
-
 if test -e nag.hosts; then
   echo "nag seems to run already... if not, then delete $workdir/nag.*, please"
   exit 23
