@@ -110,6 +110,7 @@ class asybot(asychat):
     if command == 'PING':
       self.push('PONG :%s' % rest)
       self.log.debug("Replying to servers PING with PONG :%s" %rest)
+      self.on_ping(prefix, command, params, rest)
 
     elif command == 'PRIVMSG':
       self.on_privmsg(prefix, command, params, rest)
@@ -183,6 +184,9 @@ class asybot(asychat):
         self.channels.remove(chan)
 
   def on_join(self, prefix, command, params, rest):
+    pass
+
+  def on_ping(self, prefix, command, params, rest):
     pass
 
   def on_privmsg(self, prefix, command, params, rest):

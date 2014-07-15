@@ -71,11 +71,6 @@ public_commands = [
 ]
 commands = [
   default_command('reload'),
-  default_command('nag', env={
-    'workdir': workdir,
-    'hostsdir': '/home/tv/krebs/hosts',
-    'servicesdir': '/home/tv/krebs/services'
-  })
 ]
 
 on_join = [
@@ -83,5 +78,18 @@ on_join = [
     'capname': 'tell',
     'argv': [ 'commands/tell-on_join' ],
     'env': { 'state_file': workdir + '/tell.txt' }
+  }
+]
+
+on_ping = [
+  {
+    'capname': 'nag',
+    'argv': [ 'commands/nag' ],
+    'env': {
+      'workdir': workdir,
+      'hostsdir': '/home/tv/krebs/hosts',
+      'servicesdir': '/home/tv/krebs/services'
+    },
+    'targets': irc_channels
   }
 ]
