@@ -16,7 +16,8 @@ trap 'rm -f nag.hosts nag.services nag.patch' EXIT INT QUIT
 diff -u nag.hosts nag.services > nag.patch || :
 
 missing_services=$(sed -n '1d;2d;s/^-\(.*\)/\1/p' nag.patch | tr '\n' ' ')
-superfluous_services=$(sed -n '1d;2d;s/^+\(.*\)/\1/p' nag.patch | tr '\n' ' ')
+obsolete_services=$(sed -n '1d;2d;s/^+\(.*\)/\1/p' nag.patch | tr '\n' ' ')
+
 
 #
 # output
@@ -24,9 +25,9 @@ superfluous_services=$(sed -n '1d;2d;s/^+\(.*\)/\1/p' nag.patch | tr '\n' ' ')
 if test -n "$missing_services"; then
   echo missing services: $missing_services
 fi
-if test -n "$superfluous_services"; then
-  echo superfluous services: $superfluous_services
+if test -n "$obsolete_services"; then
+  echo obsolete services: $obsolete_services
 fi
-if test -z "$missing_services$superfluous_services"; then
+if test -z "$missing_services$obsolete_services"; then
   echo hosts and services are in sync
 fi
