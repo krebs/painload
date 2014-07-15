@@ -39,6 +39,12 @@ class Reaktor(asybot):
     for command in getconf('on_join', []):
       self.execute_command(command, None, prefix, params)
 
+  def on_ping(self, prefix, command, params, rest):
+    for command in getconf('on_ping', []):
+      prefix = '!' # => env = { _prefix: '!', _from: '' }
+      params = command.get('targets') # TODO why don't we get a list here and use ','.join() ?
+      self.execute_command(command, None, prefix, params)
+
   def on_privmsg(self, prefix, command, params, rest):
     for command in getconf('commands'):
       y = match(command['pattern'], rest)

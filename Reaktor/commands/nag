@@ -1,22 +1,41 @@
 #! /bin/sh
 set -euf
 
-cd "$workdir"
-
-if test -e nag.hosts; then
+if test -e nag.hosts.ls; then
   echo "nag seems to run already... if not, then delete $workdir/nag.*, please"
   exit 23
 fi
 
-trap 'rm -f nag.hosts nag.services nag.patch' EXIT INT QUIT
+trap 'rm -f nag.hosts.ls nag.services.ls nag.patch' EXIT INT QUIT
 
-(cd "$hostsdir" && ls | sort) > nag.hosts
-(cd "$servicesdir" && ls | sort) > nag.services
 
-diff -u nag.hosts nag.services > nag.patch || :
+# usage: git_pull_output_filter REPO_NAME
+git_pull_output_filter() {
+  sed -n 's/^ [0-9]\+ file change/'"$1"': &/p'
+}
+
+
+if ! test -d nag.hosts; then
+    git clone "$hosts_repo" nag.hosts
+else
+    (cd nag.hosts && git pull) | git_pull_output_filter hosts
+fi
+
+if ! test -d nag.services; then
+    git clone "$services_repo" nag.services
+else
+    (cd nag.services && git pull) | git_pull_output_filter services
+fi
+
+
+(cd nag.hosts && ls | sort) > nag.hosts.ls
+(cd nag.services && ls | sort) > nag.services.ls
+
+diff -u nag.hosts.ls nag.services.ls > nag.patch || :
 
 missing_services=$(sed -n '1d;2d;s/^-\(.*\)/\1/p' nag.patch | tr '\n' ' ')
-superfluous_services=$(sed -n '1d;2d;s/^+\(.*\)/\1/p' nag.patch | tr '\n' ' ')
+obsolete_services=$(sed -n '1d;2d;s/^+\(.*\)/\1/p' nag.patch | tr '\n' ' ')
+
 
 #
 # output
@@ -24,9 +43,6 @@ superfluous_services=$(sed -n '1d;2d;s/^+\(.*\)/\1/p' nag.patch | tr '\n' ' ')
 if test -n "$missing_services"; then
   echo missing services: $missing_services
 fi
-if test -n "$superfluous_services"; then
-  echo superfluous services: $superfluous_services
-fi
-if test -z "$missing_services$superfluous_services"; then
-  echo hosts and services are in sync
+if test -n "$obsolete_services"; then
+  echo obsolete services: $obsolete_services
 fi
