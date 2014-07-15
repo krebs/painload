@@ -26,6 +26,3 @@ fi
 if test -n "$obsolete_services"; then
   echo obsolete services: $obsolete_services
 fi
-if test -z "$missing_services$obsolete_services"; then
-  echo hosts and services are in sync
-fi
