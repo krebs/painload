@@ -1,0 +1,10 @@
+2014-07-15
+  useradd -m Reaktor
+  visudo # add Reaktor
+  sudo -u Reaktor -i mkdir /home/Reaktor/state
+  cd krebs/painload/Reaktor
+  $EDITOR config.py
+    # edit on_ping to point to some valid services_repo
+    # edit anything else relevant
+  # deploy Reaktor's pubkey to services_repo-host
+  sudo -u Reaktor -i $PWD/index
