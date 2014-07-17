@@ -4,6 +4,7 @@ BGT Title Poll Bot:
   .new TITLE              - suggest a new title
   .list <(age|votes)>     - list all suggestions
   .highest <NUM>          - lists the NUM highest voted suggestions
+  .top <NUM>              - alias for .highest
   .up NUM (NUM ...)       - upvote one or more suggestions from .list
   .undo NUM (NUM ...)     - undo an upvote
   .clear                  - clear the poll (auth required)
