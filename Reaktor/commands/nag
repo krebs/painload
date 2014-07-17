@@ -1,6 +1,5 @@
 #! /bin/sh
 set -euf
-
 if test -e nag.hosts.ls; then
   echo "nag seems to run already... if not, then delete $workdir/nag.*, please"
   exit 23
@@ -45,4 +44,8 @@ if test -n "$missing_services"; then
 fi
 if test -n "$obsolete_services"; then
   echo obsolete services: $obsolete_services
+fi
+# if asked directly, answer if there is nothing to nag about
+if test -z "$missing_services$obsolete_services" -a -n "${_from:-}";then
+  echo "nothing to nag about"
 fi

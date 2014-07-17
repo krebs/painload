@@ -93,7 +93,8 @@ class Reaktor(asybot):
 
     start = time()
     try:
-      print(myargv)
+      log.debug("Running : %s"%str(myargv))
+      log.debug("Environ : %s"%(str(env)))
       p = popen(myargv, bufsize=1, stdout=PIPE, stderr=PIPE, env=env, cwd=cwd)
     except Exception as error:
       self.ME(target, 'brain damaged')

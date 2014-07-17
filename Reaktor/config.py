@@ -58,6 +58,13 @@ public_commands = [
   default_command('tell', cmd='tell-on_privmsg', env={
     'state_file': workdir + '/tell.txt'
   }),
+  default_command('nag',env={
+      'hosts_repo': 'https://github.com/krebscode/hosts',
+      'services_repo': 'gitolite@localhost:services'
+    }),
+  simple_command('identify', env={
+    'config_filename': config_filename
+  }),
   # command not found
   { 'pattern': '^' + me_or_us + ':.*',
     'argv': [ 'commands/respond','You are made of stupid!'] },
@@ -65,9 +72,6 @@ public_commands = [
   { 'pattern': '.*' + me + '.*',
     'argv': [ 'commands/say', 'I\'m famous' ] },
   # identify via direct connect
-  simple_command('identify', env={
-    'config_filename': config_filename
-  })
 ]
 commands = [
   default_command('reload'),
@@ -87,7 +91,7 @@ on_ping = [
     'argv': [ 'commands/nag' ],
     'env': {
       'hosts_repo': 'https://github.com/krebscode/hosts',
-      'services_repo': '/home/tv/krebs/services'
+      'services_repo': 'gitolite@localhost:services'
     },
     'targets': irc_channels
   }
