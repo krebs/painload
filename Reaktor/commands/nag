@@ -35,17 +35,32 @@ diff -u nag.hosts.ls nag.services.ls > nag.patch || :
 missing_services=$(sed -n '1d;2d;s/^-\(.*\)/\1/p' nag.patch | tr '\n' ' ')
 obsolete_services=$(sed -n '1d;2d;s/^+\(.*\)/\1/p' nag.patch | tr '\n' ' ')
 
+if test "${inspect_services-false}" = true; then
+  missing_owners=$(set +f; cd nag.services && grep '^owner:$' * | cut -d: -f1)
+  missing_mailtos=$(set +f; cd nag.services && grep '^mailto:$' * | cut -d: -f1)
+fi
 
 #
 # output
 #
+did_nag=false
 if test -n "$missing_services"; then
   echo missing services: $missing_services
+  did_nag=true
 fi
 if test -n "$obsolete_services"; then
   echo obsolete services: $obsolete_services
+  did_nag=true
+fi
+if test -n "${missing_owners-}"; then
+  echo services with missing owner entry: $missing_owners
+  did_nag=true
+fi
+if test -n "${missing_mailtos-}"; then
+  echo services with missing mailto entry: $missing_mailtos
+  did_nag=true
 fi
 # if asked directly, answer if there is nothing to nag about
-if test -z "$missing_services$obsolete_services" -a -n "${_from:-}";then
+if test $did_nag = false -a -n "${_from:-}";then
   echo "nothing to nag about"
 fi

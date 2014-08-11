@@ -21,6 +21,12 @@ irc_channels = [
 admin_file=workdir+'/admin.lst'
 auth_file=workdir+'/auth.lst'
 
+nag_env={
+  'hosts_repo': 'https://github.com/krebscode/hosts',
+  'services_repo': 'gitolite@localhost:services',
+  'inspect_services': 'false'
+}
+
 config_filename = abspath(__file__)
 
 # me is used, so name cannot kill our patterns below
@@ -58,10 +64,7 @@ public_commands = [
   default_command('tell', cmd='tell-on_privmsg', env={
     'state_file': workdir + '/tell.txt'
   }),
-  default_command('nag',env={
-      'hosts_repo': 'https://github.com/krebscode/hosts',
-      'services_repo': 'gitolite@localhost:services'
-    }),
+  default_command('nag', env=nag_env),
   simple_command('identify', env={
     'config_filename': config_filename
   }),
@@ -89,10 +92,7 @@ on_ping = [
   {
     'capname': 'nag',
     'argv': [ 'commands/nag' ],
-    'env': {
-      'hosts_repo': 'https://github.com/krebscode/hosts',
-      'services_repo': 'gitolite@localhost:services'
-    },
+    'env': nag_env,
     'targets': irc_channels
   }
 ]
