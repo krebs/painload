@@ -40,26 +40,28 @@ if test "${inspect_services-false}" = true; then
   missing_mailtos=$(set +f; cd nag.services && grep '^mailto:$' * | cut -d: -f1)
 fi
 
+nag_missing_services='missing services'
+nag_obsolete_services='obsolete services'
+nag_missing_owners='services with missing owner entry'
+nag_missing_mailtos='services with missing mailto entry'
+
 #
 # output
 #
 did_nag=false
-if test -n "$missing_services"; then
-  echo missing services: $missing_services
-  did_nag=true
-fi
-if test -n "$obsolete_services"; then
-  echo obsolete services: $obsolete_services
-  did_nag=true
-fi
-if test -n "${missing_owners-}"; then
-  echo services with missing owner entry: $missing_owners
-  did_nag=true
-fi
-if test -n "${missing_mailtos-}"; then
-  echo services with missing mailto entry: $missing_mailtos
-  did_nag=true
-fi
+for i in \
+    missing_services \
+    obsolete_services \
+    missing_owners \
+    missing_mailtos
+do
+  eval "offenders=\$$i; nag_msg=\$nag_$i"
+  if test -n "$offenders"; then
+    echo $nag_msg: $offenders
+    did_nag=true
+  fi
+done
+
 # if asked directly, answer if there is nothing to nag about
 if test $did_nag = false -a -n "${_from:-}";then
   echo "nothing to nag about"
