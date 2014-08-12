@@ -55,7 +55,7 @@ for i in \
     missing_owners \
     missing_mailtos
 do
-  eval "offenders=\$$i; nag_msg=\$nag_$i"
+  eval "offenders=\${$i-}; nag_msg=\$nag_$i"
   if test -n "$offenders"; then
     echo $nag_msg: $offenders
     did_nag=true
