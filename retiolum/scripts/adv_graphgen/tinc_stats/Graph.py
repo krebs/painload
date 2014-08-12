@@ -2,6 +2,7 @@
 from BackwardsReader import BackwardsReader
 import sys,json,os
 from Supernodes import check_all_the_super
+from Services import add_services
 from Availability import get_node_availability
 import sys,json
 from time import time
@@ -128,21 +129,46 @@ def print_node(k,v):
       tinc
   """
 
-  node = "  "+k+"[label=\""
-  node += k+"\\l"
-  node += "availability: %f\\l" % v['availability'] 
+  node = "  "+k+"[label=<<TABLE border='0' title='%s' cellborder='1' >" %k
+  node += "<TR><TD colspan='2'><B>%s</B></TD></TR>"%k
+  if 'availability' in v:
+    node += "<TR><TD>availability:</TD><TD>%f</TD></TR>" % v['availability'] 
+
   if 'num_conns' in v:
-    node += "Num Connects:"+str(v['num_conns'])+"\\l"
-  node += "external:"+v['external-ip']+":"+v['external-port']+"\\l"
+    node += "<TR><TD>Num Connects:</TD><TD>%s</TD></TR>"%str(v['num_conns'])
+
+  node += "<TR><TD>external:</TD><TD>"+v['external-ip']+":"+v['external-port']+"</TD></TR>"
   for addr in v.get('internal-ip',['dunno lol']): 
-    node += "internal:%s\\l"%addr
-  node +="\""
+    node += "<TR><TD>internal:</TD><TD>%s</TD></TR>"%addr
+
+  if 'services' in v:
+    node +="<TR><TD colspan='2'><B>Services:</B></TD></TR>"
+    for service in v['services']:
+      try:uri,comment = service.split(" ",1)
+      except: 
+        uri = service
+        comment =""
+      node +="<TR >"
+      uri_proto=uri.split(":")[0]
+      uri_rest = uri.split(":")[1] 
+      if not uri_rest:
+        node +="<TD title='{0}' align='left' colspan='2' \
+href='{0}'><font color='darkred'>{0}</font>".format(uri)
+      else:
+        node +="<TD title='{0}' align='left' colspan='2' \
+href='{0}'><U>{0}</U>".format(uri)
+      if comment:
+        node += "<br align='left'/>    <I>{0}</I>".format(comment)
+      node +="</TD></TR>"
+  # end label
+  node +="</TABLE>>"
 
   if v['num_conns'] == 1:
     node += ",fillcolor=red"
   elif k in supernodes:
     node += ",fillcolor=steelblue1"
   node += "]"
+
   print(node)
 
 def print_anonymous_node(k,v):
@@ -206,7 +232,9 @@ if __name__ == "__main__":
   elif sys.argv[1] == "complete":
     for supernode,addr in check_all_the_super():
       supernodes.append(supernode)
+
     generate_availability_stats(nodes)
+    add_services(nodes)
     for k,v in nodes.items():
       print_node(k,v)
       print_edge(k,v)
@@ -219,3 +247,4 @@ if __name__ == "__main__":
 
   print_stat_node(nodes)
   print ('}')
+# vim: set sw=2:ts=2

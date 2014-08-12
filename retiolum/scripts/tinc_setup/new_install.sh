@@ -203,7 +203,9 @@ AutoConnect = 3
 #ConnectTos
 ConnectTo = fastpoke
 ConnectTo = pigstarter
-ConnectTo = kheurop
+ConnectTo = reimae
+ConnectTo = ire
+ConnectTo = tahoe
 EOF
 
   host2subnet $MASK4
