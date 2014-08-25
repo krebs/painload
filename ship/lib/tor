@@ -7,6 +7,7 @@ torrc=${torrc:-/etc/tor/torrc}
 hidden_service_dir=${hidden_service_dir:-/var/lib/tor/hidden_service/}
 
 configure_hidden_service(){
+    mkdir -p "$hidden_service_dir"
     if ! grep -q '^HiddenService' "$torrc"  ;then
         info "adding hidden service to $torrc"
         cat >> "$torrc" << EOF
