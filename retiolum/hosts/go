@@ -1,5 +1,7 @@
 Subnet = 10.243.109.132
 Subnet = 42:f9f0:be1f:b191:116a:3db0:d546:70d2
+# dn42 routing
+Subnet = 172.22.0.0/15
 
 -----BEGIN RSA PUBLIC KEY-----
 MIIBCgKCAQEAk1sJjMqgWjM87XwrIQp6QO2fXwbnMWhTYZNl4rC0pI2dDlYCQ2Ii
