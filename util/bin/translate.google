@@ -1,44 +1,13 @@
 #! /bin/sh
 set -euf
 
-A=Mozilla
-url=http://translate.google.com/
+sl=${SL:="auto"}
+tl=${TL:="en"}
 
-pwd="$(dirname "$(readlink -f "$0")")"
+text=$*
 
-for x in \
-    "$pwd/../../submodules/github/tmpvar" \
-    "$pwd/../../submodules/github/mikeal" \
-    "$pwd/../../submodules/github/NV" \
-    "$pwd/../../submodules/github/tautologistics" \
-; do
-  export NODE_PATH="`readlink -f "$x"`${NODE_PATH+:$NODE_PATH}"
-done
+url="http://translate.google.com/translate_a/t?client=t&sl=$sl&tl=$tl"
 
-# ensure query is ready
-(cd "$pwd/../.." && git submodule update --init)
-
-{
-  for arg; do echo "$arg"; done | sed -n '
-    s/^--\(.*=.*\)/\1/p;t
-    s/.*/text="${text+$text }&"/p;t
-  '
-  cat<<EOF
-  query() {
-    node "$(readlink -f "$pwd/../../submodules/github/visionmedia/query")" "\$@"
-  }
-  curl -sS -A "\${A-Mozilla}"  \\
-      -d "js=\${js-n}"         \\
-      -d "prev=\${prev-_t}"    \\
-      -d "hl=\${hl-en}"        \\
-      -d "layout=\${layout-2}" \\
-      -d "eotf=\${eotf-1}"     \\
-      -d "ie=UTF-8"            \\
-      -d "oe=UTF-8"            \\
-      -d "sl=\${sl-auto}"      \\
-      -d "tl=\${tl-en}"        \\
-      -d "text=\$text"         \\
-      "$url" |
-    query '#result_box' text
-EOF
-} | sh
+curl -A "Mozilla/5.0" -Ss "$url" --data-urlencode "text=$text" |
+  sed 's/\[\[\[\"//' |
+  cut -d \" -f 1
