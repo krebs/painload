@@ -1,0 +1,10 @@
+#!/bin/sh
+set -euf
+
+tl=${TL:="en"}
+
+text=$*
+
+url="http://translate.google.com/translate_tts?ie=UTF-8&tl=$tl"
+
+curl -A "Mozilla/5.0" -Ss "$url" --data-urlencode "q=$text"
