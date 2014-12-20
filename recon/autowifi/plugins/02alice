@@ -7,7 +7,7 @@
 # ESSID MAC CHANNEL ENCRYPTION 
 
 cd $(dirname $(readlink -f $0))
-. plugin_core
+. ./plugin_core
 
 parse_plugin_args "$@"
 

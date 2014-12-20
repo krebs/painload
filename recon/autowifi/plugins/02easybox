@@ -2,7 +2,7 @@
 #ESSID MAC CHANNEL ENCRYPTION WPA WPA2
 
 cd $(dirname $(readlink -f $0))
-. plugin_core
+. ./plugin_core
 parse_plugin_args "$@"
 
 if ! echo "$ESSID" | egrep -i "(EasyBox-|Arcor-|Vodafone-)" >/dev/null; then

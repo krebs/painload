@@ -4,7 +4,7 @@
 #   http://www.wardriving-forum.de/forum/f321/ezwlan-android-2-1-a-70045-4.html#post342481 
 
 cd $(dirname $(readlink -f $0))
-. plugin_core
+. ./plugin_core
 
 parse_plugin_args "$@"
 

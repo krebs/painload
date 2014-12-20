@@ -11,8 +11,6 @@ crack_wifi(){
   for i in plugins/*;do
     if RET=$(./$i "$@" 2>/dev/null);then
       echo "$@ - with crack $i succeeded - Key is $RET"
-    else
-      echo "crack $i failed"
     fi
   done
 }
