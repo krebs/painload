@@ -1,0 +1,59 @@
+#!/bin/sh
+start_wpa_supplicant(){ 
+    wpa_conf=${1?please supply wpa_supplicant.conf path}
+    killall wpa_supplicant
+    sleep 1
+cat>$wpa_conf<<EOF
+ctrl_interface=/var/run/wpa_supplicant
+EOF
+    wpa_supplicant -i $interface -c $wpa_conf -B
+    sleep 4
+}
+connect_wifi(){
+    # bssid ssid encryption-string key
+
+    wpa_cli reconfigure
+
+    int=$(wpa_cli add_network | tail -1)
+    wpa_cli set_network $int ssid \"$2\"
+    wpa_cli set_network $int bssid $1
+    #wpa_cli set_network $int ap_scan 1
+
+    if [ "$3" = "[ESS]" ]; then
+        wpa_cli set_network $int key_mgmt NONE
+    else
+        wpa_cli set_network $int key_mgmt WPA-PSK
+        wpa_cli set_network $int psk \"$4\"
+    fi
+    wpa_cli enable_network $int
+}
+
+wifi_scan(){
+    # usage: iwlist_scan $wifi-itf
+
+    count=0
+    wpa_cli scan >/dev/null
+    sleep 10
+    
+    wpa_cli scan_results 2>/dev/null | egrep "^..:" | sed 's/	/ /g' | (while IFS=' ' read MAC FREQ QUALITY ENCRYPTION ESSID
+    do
+        : $((count+=1))
+        print_wifi_env
+
+    done; echo WIFI_COUNT=$count)
+}
+
+print_wifi_env(){
+    # takes environment:
+    # MAC
+    # FREQ
+    # QUALITY
+    # ENCRYPTION
+    # ESSID
+    for i in MAC FREQ QUALITY ENCRYPTION ESSID;do
+        eval echo ${i}_${count}=\\\"\$"${i}"\\\"
+    done
+}
+wpa_supplicant_is_usable(){
+    wpa_cli status >/dev/null 2>&1
+}

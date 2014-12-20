@@ -1,0 +1,84 @@
+#!/bin/sh
+has_wps(){
+    # the-wpa_supplicant-encryption-string
+    echo "$1" | grep  -q "\[WPS\]"
+}
+try_wps_pin(){
+    # 
+    # ESSID MAC CHANNEL ENC WPA WPA2 PIN
+    #set -ef
+    ESSID="$1"
+    MAC="$2"
+    CHANNEL="$3"
+
+    # TODO  refactor to use all the encryption
+    # the wpa_supplicant encryption string
+    ENC="$4"
+
+    PIN="$5"
+
+    [ "$ENC" == "[ESS]" ] && return 2
+    WPA_CONF=/tmp/wpa_trywps.conf
+    WPA_LOG=/tmp/wpa_trywps.log
+    rm $WPA_LOG
+    #mkfifo $WPA_LOG
+    killall wpa_supplicant 2>/dev/null && sleep 1
+	
+    cat > $WPA_CONF <<EOF 
+ctrl_interface=/var/run/wpa_supplicant
+ctrl_interface_group=0
+update_config=1
+EOF
+    wpa_supplicant -Dwext -iwlan0 -c $WPA_CONF -f $WPA_LOG 2>&1 &
+    WPA_PID=$!
+    sleep 2
+    if !(sudo wpa_cli wps_reg $MAC $PIN  | grep -q OK) ;then
+        echo "wpa_cli wps_reg failed, bailing out!"
+        return 1
+    fi
+
+            # association failed
+            #    exit 1 ;;
+    # TODO probably not posix compatible...
+    timeout(){
+      ( timeout=10;
+        while [ $timeout -gt 0 ]; do 
+            sleep 1;
+            kill -0 $$ 2> /dev/null || exit 0; 
+            : $((timeout--));
+        done ;
+        echo "TIMEOUT REACHED" ; 
+        kill $$)&
+       exec $@
+    }
+
+    if (  timeout tail -f $WPA_LOG & echo "TAILPID: $!") | while read line ; do
+        bye(){
+            printf "%s:" "$2" >&2
+            kill $WPA_PID
+            kill -HUP $TAILPID
+            exit $1
+        }
+        # DEBUG
+        #echo $line >&2
+        case "$line" in
+            TAILPID:*)IFS=" " set -- $line; TAILPID=$2;;
+            *"WPS-FAIL msg=10 config_error=18"*) bye 1 "wrong pin";; 
+            *"CTRL-EVENT-EAP-FAILURE EAP authentication failed"*) bye 1 "rate limiting";; 
+            #*"Association request to the driver failed") bye 1 "wps not available";;       
+            #*CTRL-EVENT-DISCONNECTED*):;;
+            *"CTRL-EVENT-DISCONNECTED bssid="*"reason=3 locally_generated=1"*)bye 1 "authentication failed, wps deactivated?";;
+            "TIMEOUT REACHED")bye 1 "timeout reached";;
+            *CTRL-EVENT-TERMINATING*) bye 1 "wpa_supplicant died";;
+            *CTRL-EVENT-CONNECTED*) bye 0 "yay connected";; 
+        esac
+    done ; then
+        #echo "Connected!"
+        sed -n 's/[ \t]*psk="\(.*\)"$/\1/p' "$WPA_CONF"
+        return 0
+    else
+        #echo "failed!"
+        return 1
+    fi
+
+}

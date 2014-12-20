@@ -1,0 +1,41 @@
+#!/bin/sh
+parse_plugin_args(){
+    [ $# -ne 4 ] && plugin_usage && exit 1
+    # convenience function to put args in ENV variables
+    ESSID="$1"
+
+    # mac is returned without colon
+    MAC=$(printf "%s" "$2" | sed 's/://g')
+    # split up the mac address to vendor and private part
+    VENDOR_MAC=${MAC:0:6}
+    PRIVATE_MAC=${MAC:6:12}
+    CHANNEL="$3"
+    ENC="$4"
+    if [ ${#MAC} -ne 12 ] ;then
+        echo "MAC malformed"
+        exit 1
+    fi
+}
+plugin_usage(){
+    cat << EOF
+usage: $0 ESSID MAC CHANNEL ENC"
+
+    ESSID   - string
+    MAC     - 00:11:22:33:44:55
+    CHANNEL - 4
+    ENC     - wpa
+EOF
+    
+}
+
+check_vendor_mac(){
+  needle="$(printf $1 | tr '[A-Z]' '[a-z]')"
+  shift
+  for i in "$@";do
+    [ "$needle" == "$(printf $i | tr '[A-Z]' '[a-z]')" ] && return 0
+  done
+  return 1
+}
+check_painmode(){
+    test -z "${painmode:-}" && echo "painmode required" && exit 1
+}

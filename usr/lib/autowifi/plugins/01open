@@ -1,0 +1,6 @@
+#!/bin/sh
+#ESSID MAC CHANNEL ENCRYPTION 
+if [ "$4" == "[ESS]" ]; then
+    exit 0
+fi
+exit 1

@@ -1,0 +1,37 @@
+#!/bin/sh
+#ESSID MAC CHANNEL ENCRYPTION WPA WPA2
+
+cd $(dirname $(readlink -f $0))
+. ../lib/plugin_core
+parse_plugin_args "$@"
+
+if ! echo "$ESSID" | egrep -i "(EasyBox-|Arcor-|Vodafone-)" >/dev/null; then
+    echo "Essid $ESSID is not Default EasyBox|Arcor|Vodafone" 
+    exit 1
+else
+
+    # Fill up to 4 places with zeros, if necessary:
+    deci=$(printf "%04d" "0x${MAC:8:4}" | sed 's/.*\(....\)/\1/;s/./& /g')
+    #
+    # The digits M9 to M12 are just the last digits (9.-12.) of the MAC:
+    hexi=$(echo ${MAC:8:4} | sed 's/./& /g')
+    #echo 'M4 (Hex): ' ${hexi[@]}
+    # K1 = last byte of (d0 + d1 + h2 + h3)
+    # K2 = last byte of (h0 + h1 + d2 + d3)
+    c1=$(printf "%d + %d + %d + %d" ${deci:0:1} ${deci:2:1} 0x${hexi:4:1} 0x${hexi:6:1})
+    c2=$(printf "%d + %d + %d + %d" 0x${hexi:0:1} 0x${hexi:2:1} ${deci:4:1} ${deci:6:1})
+    K1=$((($c1)%16))
+    K2=$((($c2)%16))
+    #printf "K1: %x\n" $K1
+    #printf "K2: %x\n" $K2
+    X1=$((K1^${deci:6:1}))
+    X2=$((K1^${deci:4:1}))
+    X3=$((K1^${deci:2:1}))
+    Y1=$((K2^0x${hexi:2:1}))
+    Y2=$((K2^0x${hexi:4:1}))
+    Y3=$((K2^0x${hexi:6:1}))
+    Z1=$((0x${hexi:4:1}^${deci:6:1}))
+    Z2=$((0x${hexi:6:1}^${deci:4:1}))
+    Z3=$((K1^K2))
+    printf "%x%x%x%x%x%x%x%x%x\n" $X1 $Y1 $Z1 $X2 $Y2 $Z2 $X3 $Y3 $Z3 | tr a-f A-F
+fi

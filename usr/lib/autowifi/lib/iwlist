@@ -1,0 +1,55 @@
+#!/bin/sh
+
+print_iwlist_env(){
+    # takes environment:
+    #   count
+    #   MAC
+    #   CHANNEL
+    #   QUALITY
+    #   ENCRYPTION
+    #   ESSID
+    #   WPA
+    #   WPA2
+    for i in ESSID MAC CHANNEL QUALITY ENCRYPTION WPA WPA2;do
+        eval echo ${i}_${count}=\$${i}
+    done
+}
+
+iwlist_scan(){
+    # usage: iwlist_scan $wifi-itf
+    ifconfig $wifi up
+
+    count=0
+    
+    iwlist ${1:-} scan  2>/dev/null | ( while read line;
+    do
+        case "$line" in
+            *"Cell "*)
+                [ $count -eq  0 ] || print_iwlist_env
+                WPA=0
+                WPA2=0
+                : $((count+=1))
+                MAC="${line#*Address: }"
+                ;;
+            *Channel:*)
+                CHANNEL="${line#*:}"
+                ;;
+            *Quality=*)
+                QUALITY="`printf '%s' ${line#*Quality=} | cut -d/  -f 1`"
+                ;;
+            *"Encryption key:"*)
+                ENCRYPTION="${line#*key:}"
+                ;;
+            *ESSID:*)
+                ESSID="${line#*ESSID:}"
+                ;;
+            *"IE: IEEE 802.11i/WPA2"*)
+                WPA2=1
+                ;;
+            *"IE: WPA Version 1"*)
+                WPA=1
+                ;;
+            *);;
+        esac
+    done; print_iwlist_env ;echo WIFI_COUNT=$count)
+}

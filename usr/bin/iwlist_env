@@ -1,0 +1,33 @@
+#!/bin/sh
+
+count=0
+
+iwlist scan ${1:-} 2>/dev/null | ( while read line;
+do
+    case "$line" in
+        *"Cell "*)
+            #echo
+            : $((count+=1))
+            echo MAC_${count}="${line#*Address: }"
+            ;;
+        *Channel:*)
+            echo CHANNEL_${count}="${line#*:}"
+            ;;
+        *Quality=*)
+            echo QUALITY_${count}="`printf '%s' ${line#*Quality=} | cut -d/  -f 1`"
+            ;;
+        *"Encryption key:"*)
+            echo ENCRYPTION_${count}="${line#*key:}"
+            ;;
+        *ESSID:*)
+            echo ESSID_${count}="${line#*ESSID:}"
+            ;;
+        *"IE: IEEE 802.11i/WPA2"*)
+            echo WPA2_${count}=1
+            ;;
+        *"IE: WPA Version 1"*)
+            echo WPA_${count}=1
+            ;;
+        *);;
+    esac
+done; echo WIFI_COUNT=$count)
