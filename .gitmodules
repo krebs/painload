@@ -1,21 +1,3 @@
-[submodule "submodules/github/tmpvar/jsdom"]
-	path = submodules/github/tmpvar/jsdom
-	url = https://github.com/tmpvar/jsdom
-[submodule "submodules/github/mikeal/request"]
-	path = submodules/github/mikeal/request
-	url = https://github.com/mikeal/request.git
-[submodule "submodules/github/NV/cssom"]
-	path = submodules/github/NV/cssom
-	url = https://github.com/NV/CSSOM
-[submodule "submodules/github/tautologistics/node-htmlparser"]
-	path = submodules/github/tautologistics/node-htmlparser
-	url = https://github.com/tautologistics/node-htmlparser
-[submodule "submodules/github/makefu/dpfhack_display"]
-	path = submodules/github/makefu/dpfhack_display
-	url = https://github.com/makefu/dpfhack_pearl
-[submodule "submodules/github/jbalogh/python-irclib"]
-	path = submodules/github/jbalogh/python-irclib
-	url = https://github.com/jbalogh/python-irclib.git
 [submodule "Reaktor/repos/gxfr"]
 	path = Reaktor/repos/gxfr
 	url = https://github.com/makefu/gxfr.git
