@@ -8,7 +8,7 @@ cd "$(dirname "$(readlink -f "$0")")"
 echo "waiting for iwlist scan data..." >&2
 
 crack_wifi(){
-  for i in ../lib/autowifi/plugins/*;do
+  for i in plugins/*;do
     if RET=$(./$i "$@" 2>/dev/null);then
       echo "$@ - with crack $i succeeded - Key is $RET"
     fi
