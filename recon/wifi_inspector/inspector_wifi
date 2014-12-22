@@ -2,17 +2,31 @@
 # Usage; sudo iwlist wlan0 scan | ./inspector_wifi
 #
 #
-set -eu
+# set -eu
 
 cd "$(dirname "$(readlink -f "$0")")"
-echo "waiting for iwlist scan data..." >&2
+#echo "waiting for iwlist scan data..." >&2
 
 crack_wifi(){
   for i in plugins/*;do
     if RET=$(./$i "$@" 2>/dev/null);then
-      echo "$@ - with crack $i succeeded - Key is $RET"
+      if [ ! -z wpa_sup ]; then
+        make_config $@ $RET
+      else
+        echo "$@ - with crack $i succeeded - Key is $RET"
+      fi
     fi
   done
+}
+
+make_config(){
+  cat<<EOF
+network={
+  ssid="$1"
+  psk="$5"
+}
+EOF
+
 }
 
 shell_escape(){
@@ -60,16 +74,35 @@ iwlist_scan_parser(){
         esac
     done;
     crack_wifi "$ESSID" $MAC $CHANNEL any_encryption
-    echo WIFI_COUNT=$count
+    #echo WIFI_COUNT=$count
 }
 
-wifi_init(){
-  iwlist_scan_parser
-}
 
 loop_networks(){
     for i in `seq 1 $WIFI_COUNT`; do
         loop_over_cracks "$i"
     done
 }
+
+wifi_init(){
+  iwlist_scan_parser
+}
+
+print_wpa_supplicant(){
+  echo "args $@"
+}
+
+while getopts hw OPT; do
+  case "$OPT" in
+    h)
+      echo $USAGE
+      exit 0
+      ;;
+    w)
+      wpa_sup=1
+      ;;
+    *)
+      ;;
+  esac
+done
 wifi_init
