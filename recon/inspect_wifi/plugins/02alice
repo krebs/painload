@@ -11,7 +11,10 @@ cd $(dirname $(readlink -f $0))
 
 parse_plugin_args "$@"
 
-! check_vendor_mac $VENDOR_MAC "00255E" && echo "$VENDOR_MAC not affected" && exit 1
+if ! check_vendor_mac $VENDOR_MAC "00255E" ;then
+  echo "$VENDOR_MAC not affected"
+  exit 1
+fi
 
 # printf always makes string to lower, need that for correct md5sum
 ETHMAC=$( printf "%012x" $((0x${MAC}-1)) ) 

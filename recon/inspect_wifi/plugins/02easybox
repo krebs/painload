@@ -5,11 +5,10 @@ cd $(dirname $(readlink -f $0))
 . ./plugin_core
 parse_plugin_args "$@"
 
-if ! echo "$ESSID" | egrep -i "(EasyBox-|Arcor-|Vodafone-)" >/dev/null; then
+if ! echo "$ESSID" | grep -q '\(EasyBox-\|Arcor-\|Vodafone-\)'; then
     echo "Essid $ESSID is not Default EasyBox|Arcor|Vodafone" 
     exit 1
 else
-
     # Fill up to 4 places with zeros, if necessary:
     deci=$(printf "%04d" "0x${MAC:8:4}" | sed 's/.*\(....\)/\1/;s/./& /g')
     #
