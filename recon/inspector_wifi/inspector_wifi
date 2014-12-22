@@ -5,7 +5,16 @@
 # set -eu
 
 cd "$(dirname "$(readlink -f "$0")")"
-#echo "waiting for iwlist scan data..." >&2
+
+usage(){
+  echo '-h show this help'
+  echo '-w output in wpa_supplicant.conf format'
+  echo '-n normal output message'
+  echo ''
+  echo 'Example: iwlist wlan0 scan | ./inspector_wifi -w'
+
+  exit 0
+}
 
 crack_wifi(){
   for i in plugins/*;do
@@ -92,17 +101,22 @@ print_wpa_supplicant(){
   echo "args $@"
 }
 
-while getopts hw OPT; do
+
+if [ $# -eq 0 ]; then
+  usage
+fi
+
+while getopts wn OPT; do
   case "$OPT" in
-    h)
-      echo $USAGE
-      exit 0
-      ;;
     w)
       wpa_sup=1
       ;;
-    *)
+    n)
+      ;;
+    \?)
+      usage
       ;;
   esac
 done
-wifi_init
+
+iwlist_scan_parser
