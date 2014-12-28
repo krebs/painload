@@ -1,10 +1,24 @@
 #!/bin/sh
 set -euf
 
-tl=${TL:="en"}
+TL=${TL:="en"}
 
-text=$*
+usage(){
+  echo 'TL= can specifiy which language to use, default is "en"'
+  echo 'Example: TL="de" ./text2speech.google "whats up?" | mpv -)'
+  exit 0
+}
 
-url="http://translate.google.com/translate_tts?ie=UTF-8&tl=$tl"
+text2speech(){
+  text=$*
+  url="http://translate.google.com/translate_tts?ie=UTF-8&tl=$TL"
 
-curl -A "Mozilla/5.0" -Ss "$url" --data-urlencode "q=$text"
+  curl -A "Mozilla/5.0" -Ss "$url" --data-urlencode "q=$text"
+}
+
+if [ $# -eq 0 ]; then
+  usage
+fi
+
+text2speech $*
+

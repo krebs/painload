@@ -4,10 +4,24 @@ set -euf
 sl=${SL:="auto"}
 tl=${TL:="en"}
 
-text=$*
+usage(){
+  echo 'TL= targetlanguage, valid strings are in the style of "en", "pl" or "de". default "en"'
+  echo 'SL= sourcelanguage, same TL, default is auto'
+  echo 'Example: TL="de" ./translate.google whats up?'
 
-url="http://translate.google.com/translate_a/t?client=t&sl=$sl&tl=$tl"
+  exit 0
+}
 
-curl -A "Mozilla/5.0" -Ss "$url" --data-urlencode "text=$text" |
-  sed 's/\[\[\[\"//' |
-  cut -d \" -f 1
+translate(){
+  text=$*
+  url="http://translate.google.com/translate_a/t?client=t&sl=$sl&tl=$tl"
+  curl -A "Mozilla/5.0" -Ss "$url" --data-urlencode "text=$text" |
+    sed 's/\[\[\[\"//' |
+    cut -d \" -f 1
+}
+
+if [ $# -eq 0 ]; then
+  usage
+fi
+
+translate $*
