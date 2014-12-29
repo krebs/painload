@@ -5,7 +5,7 @@ TL=${TL:="en"}
 
 usage(){
   echo 'TL= can specifiy which language to use, default is "en"'
-  echo 'Example: TL="de" ./text2speech.google "whats up?" | mpv -)'
+  echo 'Example: TL="de" ./text2speech.google "whats up?" | mpv -'
   exit 0
 }
 
