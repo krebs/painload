@@ -34,7 +34,6 @@ chan_g|http://boards.4chan.org/g/index.rss|#news #brainfuck
 chan_int|http://boards.4chan.org/int/index.rss|#news #brainfuck
 cna|http://www.channelnewsasia.com/starterkit/servlet/cna/rss/home.xml|#news
 cryptanalysis|https://cryptanalys.is/rss.php|#news
-coindesk|http://feeds.feedburner.com/CoinDesk?format=xml|#news #financial
 coinspotting|http://coinspotting.com/rss|#news #financial
 cryptoarticles|http://www.cryptoarticles.com/crypto-news?format=rss|#news
 cryptocoinsnews|http://www.cryptocoinsnews.com/feed/|#news #financial
