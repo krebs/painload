@@ -1,0 +1,29 @@
+#! /bin/sh
+set -euf
+
+amount=$1
+tc=${TC:="usd"}
+sc=${SC:="eur"}
+
+usage(){
+  echo 'TC= targetcurrency, valid strings are in the style of "usd", "eur" or "sgd". default "usd"'
+  echo 'SC= sourcelanguage, same TC, default is eur'
+  echo 'Example: TC="sgd" ./currency.google 11'
+
+  exit 0
+}
+
+currency_convert(){
+  text=$*
+  url="http://www.google.com/finance/converter?a=$amount&from=$sc&to=$tc"
+  curl -A "Mozilla/5.0" -Ss "$url" |
+    sed '/res/!d;s/<[^>]*>//g' |
+    #sed 's/\[\[\[\"//' |
+    awk '{print $4}'
+}
+
+if [ $# -eq 0 ]; then
+  usage
+fi
+
+currency_convert $*
