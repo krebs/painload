@@ -1,5 +1,0 @@
-#!/bin/sh
-#usage:
-#echo aidsballs | pigbin
-
-curl -F 'p=<-' paste
