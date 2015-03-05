@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 curr=$(date '+%s%N')
 etime=${curr:0:${#curr}-6}
 if [[ $# -eq 0 ]];then
