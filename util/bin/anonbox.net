@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/sh
 #### anonbox.net [--check]
 #### anonbox account creator
 set -euf
