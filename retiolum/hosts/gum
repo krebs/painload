@@ -1,7 +1,7 @@
 Address= 195.154.108.70
 Subnet = 10.243.0.211
 Subnet = 42:f9f0:0000:0000:0000:0000:0000:70d2
-
+Aliases = paste
 
 -----BEGIN RSA PUBLIC KEY-----
 MIIBCgKCAQEAvgvzx3rT/3zLuCkzXk1ZkYBkG4lltxrLOLNivohw2XAzrYDIw/ZY
