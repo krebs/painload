@@ -8,7 +8,7 @@ cd /etc/tinc/$netname/hosts
 for i in `ls`; do
   hname="$i $i.retiolum"
   for j in `sed -En 's|^ *Aliases *= *(.+)|\1|p' $i`;do
-    hname="${hname} $j.retiolum $j"
+    hname="${hname} $j.$netname $j"
   done
   sed -En '
             s|^ *Subnet *= *([^ /]*)(/[0-9]*)? *$|\1   '"$hname"'|p
