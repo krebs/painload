@@ -5,6 +5,7 @@
   cd krebs/painload/Reaktor
   $EDITOR config.py
     # edit on_ping to point to some valid services_repo
+    # make sure to ssh as the user before to avoid 'unknown host' issue
     # edit anything else relevant
   # deploy Reaktor's pubkey to services_repo-host
   sudo -u Reaktor -i $PWD/index
