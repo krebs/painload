@@ -1,0 +1,61 @@
+#!/bin/sh -x
+set -euf
+
+main() {
+
+  if [ $# -ne 1 ]; then
+    usage
+    exit 1
+  fi
+
+  TINCDIR=$1
+
+  HOSTN=$(cat $TINCDIR/tinc.conf | awk '/Name ?=/ {gsub(/Name ?= ?/, ""); print}')
+  NICK="${HOSTN}_$(head /dev/urandom | tr -dc "0123456789" | head -c3)"
+
+  IRCCHANNEL=${IRCCHANNEL:-"#krebs_incoming"}
+  IRCSERVER=${IRCSERVER:-"irc.freenode.net"}
+  IRCPORT=${IRCPORT:-6667}
+
+  test -z ${HOSTSDIR+x} && find_hostdir
+
+  test -z ${TELNET+x} && find_telnet
+
+  (   echo "NICK $NICK";
+  echo "USER $NICK $IRCSERVER bla : $NICK";
+  echo "JOIN $IRCCHANNEL";
+  sleep 23;
+  echo "PRIVMSG $IRCCHANNEL : This is $HOSTN";
+  sed "s/^\(.*\)/PRIVMSG $IRCCHANNEL : \1/" $HOSTSDIR/$HOSTN;
+  sleep 5; ) | $TELNET $IRCSERVER $IRCPORT
+}
+
+exists() {
+  type "$1" >/dev/null 2>/dev/null;
+}
+
+find_hostdir() {
+  if [ -e "$TINCDIR/hosts" ]; then
+    HOSTSDIR="$TINCDIR/hosts"
+  else
+    echo 'cannot find hostsdir of tinc, please specify with HOSTSDIR=...'
+    exit 1
+  fi
+}
+
+find_telnet() {
+  if exists telnet >/dev/null; then
+    TELNET=$(command -v telnet)
+  else
+    echo "cannot find telnet binary, please install telnet-client"
+    echo "bailing out!"
+    exit 1
+  fi
+}
+
+usage() {
+  echo './propagate-config $TINCDIR'
+  echo 'If the hosts dir is not in $TINC_DIR you have to specify it using HOSTSDIR=$path_to_hostsdir ./propagate $TINCDIR.'
+}
+
+main "$@"
