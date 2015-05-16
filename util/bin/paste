@@ -1,0 +1,26 @@
+#!/bin/sh
+set -euf
+
+usage() {
+  echo 'paste reads from stdin and pastes to the specified paste service'
+  echo 'currently ix.io and paste.retiolum are supported'
+  echo 'default is paste.retiolum'
+  echo 'ex:'
+  echo 'cat somefile | paste ix.io'
+}
+
+hoster=${1:-paste.retiolum}
+
+case $hoster in
+  paste.retiolum|paste)
+    curl -sS -F 'file=@-;type=text/plain' \
+        http://paste.retiolum:5000/+upload \
+      | sed -n 's|.*href="\([^"]*\).*|http://paste.retiolum\1\n|p'
+    ;;
+  ix.io)
+    curl -sS -F 'f:1=<-' ix.io
+    ;;
+  *)
+    usage
+    ;;
+esac
