@@ -6,7 +6,7 @@ sc=${SC:="eur"}
 
 usage(){
   echo 'TC= targetcurrency, valid strings are in the style of "usd", "eur" or "sgd". default "usd"'
-  echo 'SC= sourcecurrency, same TC, default is eur'
+  echo 'SC= sourcecurrency, same as TC, default is eur'
   echo 'Example: TC="sgd" ./currency.google 11'
 
   exit 0
