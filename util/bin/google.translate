@@ -7,6 +7,7 @@ tl=${TL:="en"}
 usage(){
   echo 'TL= targetlanguage, valid strings are in the style of "en", "pl" or "de". default "en"'
   echo 'SL= sourcelanguage, same TL, default is auto'
+  echo 'valid languages: https://cloud.google.com/translate/v2/using_rest#language-params'
   echo 'Example: TL="de" ./translate.google "whats up?"'
 
   exit 0

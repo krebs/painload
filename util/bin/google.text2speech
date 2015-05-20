@@ -5,6 +5,7 @@ TL=${TL:="en"}
 
 usage(){
   echo 'TL= can specifiy which language to use, default is "en"'
+  echo 'valid languages: https://cloud.google.com/translate/v2/using_rest#language-params'
   echo 'Example: TL="de" ./text2speech.google "whats up?" | mpv -'
   exit 0
 }
