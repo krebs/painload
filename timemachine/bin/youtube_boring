@@ -1,0 +1,26 @@
+#!/bin/sh
+set -euf
+
+main() {
+  if [ ! $# -eq 0 ]; then
+    usage
+  fi
+
+  get_petite_video
+}
+
+get_petite_video() {
+  video=''
+  until [ ! $video = '' ]; do
+    video=$(curl -sS -L http://www.petittube.com/ | sed -n 's|.*http://www.youtube\.com\/v\/\([^?]*\).*|http://youtube.com/watch?v=\1|p')
+  done
+  echo $video
+}
+
+usage() {
+  echo 'returns the url to a boring youtube video'
+  echo 'scrapes http://www.petittube.com/'
+  echo 'example: mpv $(youtube_unseen)'
+}
+
+main
