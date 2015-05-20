@@ -1,0 +1,22 @@
+#!/bin/sh
+set -euf
+
+main() {
+  if [ ! $# -eq 0 ]; then
+    usage
+  fi
+
+  get_random_video
+}
+
+get_random_video() {
+  curl -Ss http://randomyoutube.net/watch | sed -n 's|.*\(http://www\.youtube.com/watch?v=.\{11\}\).*|\1|p'
+}
+
+usage() {
+  echo 'returns a random youtube video.'
+  echo 'scrapes http://randomyoutube.net/'
+  echo 'example: mpv $(youtube_random)'
+}
+
+main
