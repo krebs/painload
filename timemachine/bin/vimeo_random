@@ -1,0 +1,31 @@
+#!/bin/sh
+
+main() {
+  if [ ! $# -eq 0 ]; then
+    usage
+  else
+    until (check_vimeo_availabe $video); do
+      video="$(get_random_vimeo_url)"
+    done
+    echo $video
+  fi
+}
+
+get_random_vimeo_url() {
+  curl -Ss http://randomvimeovideo.com/ \
+  | sed -n 's|.*http\(://vimeo\.com/[0-9]*\).*|https\1|p' \
+  | uniq
+}
+
+check_vimeo_availabe() {
+  video_url=$1
+  test $(echo $video_url | wc -c) -lt 18 && return 1
+  curl -Ss -I "$video_url" | grep -q "HTTP/1\.1 200 OK"
+}
+
+usage() {
+  echo 'get a random vimeo video via http://randomvimeovideo.com/'
+  echo 'example: mpv $(vimeo_random)'
+}
+
+main "$@"
