@@ -51,6 +51,14 @@ Nahzielerfahrung n.
 - das Erlebnis der (endgültigen) Nichterreichung eines Nahziels (obwohl
   nur noch wenig ((quasi-) infinitesimal viel) nötig gewesen wäre).
 
+Protip n.
+[en]
+- (Probably vague) description how a task can be solved.
+  - Antonym: Spoiler
+  - Example:
+    - To defeat the Cyberdaemon, shoot at it until it dies.
+    - RTFM
+
 Punching Lemma n.
 [de]
 - Sozialer Druck zur Aufrechterhaltung der Ordnung in dem sozialen Geflaecht
@@ -95,6 +103,11 @@ Sanatorium n.
 - An Retiolum-based IRC-channel where all Reaktor-enabled nodes gather
   and lurk for relevant input.
 
+Spoiler n.
+[en]
+- A subset of walkthrough, i.e. any individual steps may be omitted.
+  - Antonym: Protip
+
 tatsaechlich, adv.
 [de]
 - Hinweis darauf, dass der Inhalt eines Satzes exakt der Realität entspricht.
@@ -104,6 +117,13 @@ Verkrebsung n.
 [de]
 - Synonym fuer die Installation von Krebs (oder eine einzelnen Krebs
   Komponente) auf einem beliebigem System.
+
+Walkthrough n.
+[en]
+- Description of the individual steps to complete a task.
+  - Examples:
+    - program code
+    - small-step semantics
 
 Wiederbelebung n.
 [de]
