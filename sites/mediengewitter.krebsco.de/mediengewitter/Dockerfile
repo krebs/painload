@@ -1,14 +1,9 @@
 FROM    ubuntu:latest
-RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
-RUN dpkg-divert --local --rename --add /sbin/initctl
-RUN ln -s /bin/true /sbin/initctl
 RUN apt-get update
-RUN apt-get install -y python-software-properties python g++ make
-RUN add-apt-repository -y ppa:chris-lea/node.js
-RUN apt-get update
-RUN apt-get -y install nodejs
+RUN apt-get install -y python gcc make  nodejs npm
+RUN ln -s /usr/bin/nodejs /usr/bin/node
 Add mediengewitter/ /mediengewitter
-RUN cd /mediengewitter && npm install 
+RUN cd /mediengewitter && npm install
 # -v /media/ext/magnet_pics/:/images
 EXPOSE 8080
 ENV PORT 8080
