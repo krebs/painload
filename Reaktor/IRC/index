@@ -1,6 +1,0 @@
-#! /bin/sh
-set -xeuf
-
-# cd //Reaktor
-cd $(dirname $(readlink -f $0))/..
-exec IRC/reaktor.py "$@"

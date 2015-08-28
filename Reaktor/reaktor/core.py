@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 import os
-from ircasy import asybot
+from reaktor.ircasy import asybot
 from asyncore import loop
-from translate_colors import translate_colors
+from reaktor.translate_colors import translate_colors
 import shlex
 from re import split, search, match
 
 default_config = './config.py'
-from getconf import make_getconf
-getconf = None
+from reaktor.getconf import make_getconf
 
 import logging,logging.handlers
-log = logging.getLogger('asybot')
+log = logging.getLogger('Reaktor')
 #hdlr = logging.handlers.SysLogHandler(address='/dev/log', facility=logging.handlers.SysLogHandler.LOG_DAEMON)
 #formatter = logging.Formatter( '%(filename)s: %(levelname)s: %(message)s')
 #hdlr.setFormatter(formatter)
@@ -20,14 +19,27 @@ log = logging.getLogger('asybot')
 
 
 class Reaktor(asybot):
-  def __init__(self,config=default_config):
+  def __init__(self,config=default_config,getconf=None):
     self.config = config
+
+    if not getconf:
+        self.getconf = make_getconf(self.conf)
+    else:
+        self.getconf = getconf
     log.info("using config file %s"%(config))
-    asybot.__init__(self, getconf('irc_server'), getconf('irc_port'), getconf('irc_nickname'), getconf('irc_channels'), hammer_interval=getconf('irc_hammer_interval'), alarm_timeout=getconf('irc_alarm_timeout'), kill_timeout=getconf('irc_kill_timeout'))
+
+    asybot.__init__(self,
+                getconf('irc_server'),
+                getconf('irc_port'),
+                getconf('irc_nickname'),
+                getconf('irc_channels'),
+                hammer_interval=getconf('irc_hammer_interval'),
+                alarm_timeout=getconf('irc_alarm_timeout'),
+                kill_timeout=getconf('irc_kill_timeout'))
 
   def is_admin(self,prefix):
     try:
-      with open(getconf('auth_file')) as f:
+      with open(self.getconf('auth_file')) as f:
         for line in f:
           if line.strip() == prefix:
             return True
@@ -36,17 +48,17 @@ class Reaktor(asybot):
     return False
 
   def on_join(self, prefix, command, params, rest):
-    for command in getconf('on_join', []):
+    for command in self.getconf('on_join', []):
       self.execute_command(command, None, prefix, params)
 
   def on_ping(self, prefix, command, params, rest):
-    for command in getconf('on_ping', []):
+    for command in self.getconf('on_ping', []):
       prefix = '!' # => env = { _prefix: '!', _from: '' }
       params = command.get('targets') # TODO why don't we get a list here and use ','.join() ?
       self.execute_command(command, None, prefix, params)
 
   def on_privmsg(self, prefix, command, params, rest):
-    for command in getconf('commands'):
+    for command in self.getconf('commands'):
       y = match(command['pattern'], rest)
       if y:
         if not self.is_admin(prefix):
@@ -54,7 +66,7 @@ class Reaktor(asybot):
         else:
           return self.execute_command(command, y, prefix, params)
 
-    for command in getconf('public_commands'):
+    for command in self.getconf('public_commands'):
       y = match(command['pattern'], rest)
       if y:
         return self.execute_command(command, y, prefix, params)
@@ -74,7 +86,7 @@ class Reaktor(asybot):
     except:
         log.info("cannot parse args!")
 
-    cwd = getconf('workdir')
+    cwd = self.getconf('workdir')
     if not os.access(cwd,os.W_OK):
         log.error("Workdir '%s' is not Writable! Falling back to root dir"%cwd)
         cwd = "/"
@@ -116,10 +128,15 @@ class Reaktor(asybot):
     if code != 0:
       self.ME(target, 'mimimi')
 
-if __name__ == "__main__":
+def main():
   import sys
   conf = sys.argv[1] if len(sys.argv) == 2 else default_config
   getconf = make_getconf(conf)
-  logging.basicConfig(level = logging.DEBUG if getconf('debug') else logging.INFO)
-  Reaktor(conf)
+  logging.basicConfig(level = logging.DEBUG if getconf('debug') else
+          logging.INFO)
+  log.debug("Debug enabled")
+  Reaktor(conf,getconf)
   loop()
+
+if __name__ == "__main__":
+    main()
