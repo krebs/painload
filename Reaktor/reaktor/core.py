@@ -58,6 +58,17 @@ class Reaktor(asybot):
       self.execute_command(command, None, prefix, params)
 
   def on_privmsg(self, prefix, command, params, rest):
+    if not ( self.nickname == self.getconf('name')):
+        # reload config if the name changed
+        # TODO: this sucks, use another sidechannel to tell config the new
+        # nickname
+        log.debug("nickname differs ('{}' to '{}')".format(
+                    self.nickname, self.getconf('name')))
+
+        os.environ['IRC_NICKNAME'] = self.nickname
+        self.getconf = make_getconf(self.config)
+        log.info('nickname changed to {}'.format(self.getconf('name')))
+
     for command in self.getconf('commands'):
       y = match(command['pattern'], rest)
       if y:

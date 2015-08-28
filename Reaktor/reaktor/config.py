@@ -1,12 +1,17 @@
-from os.path import abspath, expanduser
+import os
+from os.path import abspath, expanduser,dirname,join
+import reaktor # to get the path to the reaktor basedir
 import re
 
-debug = False
+debug = True
 
-name = 'crabmanner'
+# IRC_NICKNAME is set if the nick changes and the config is getting reloaded
+# TODO: do not implement functionality in the config :\
+name = os.environ.get('IRC_NICKNAME','crabmanner')
+
 
 #workdir = expanduser('~') + '/state'
-workdir = '/home/reaktor/state'
+workdir = './state'
 
 irc_alarm_timeout = 300
 irc_hammer_interval = 10
@@ -29,26 +34,52 @@ nag_env={
 
 config_filename = abspath(__file__)
 
+mod_dir=dirname(abspath(reaktor.__file__))
+# the commands dirname (
+dist_dir = abspath(join(mod_dir,".."))
+
 # me is used, so name cannot kill our patterns below
+
+# TODO: name may change after reconnect, then this pattern fails to match
+# this may need a complete refactor of how to create patterns and matches
 me = '\\b' + re.escape(name) + '\\b'
 me_or_us = '(?:' + me + '|\\*)'
 
+def distc(cmd):
+    """ builds a path to a cmd in the distribution command folder"""
+    return join(dist_dir,"commands",cmd)
+
+
+# using partial formatting {{}}
+indirect_pattern='^{}:\\s*{{}}\\s*(?:\\s+(?P<args>.*))?$'.format(me_or_us)
 def default_command(cap, cmd=None, env=None):
+  """ (botname|*): cmd args
+
+  query the bot in the channel, e.g.:
+    crabmanner: hello
+    *: hello
+  """
   if not env: env = {}
   if cmd == None: cmd=cap
   return {
     'capname': cap,
-    'pattern': '^' + me_or_us + ':\\s*' + cap + '\\s*(?:\\s+(?P<args>.*))?$',
-    'argv': [ 'commands/' + cmd ],
+    'pattern': indirect_pattern.format(cap),
+    'argv': [ distc(cmd) ],
     'env': env
   }
 
-def simple_command(cap, cmd=None, env={}):
+direct_pattern='^{}\\s*(?:\\s+(?P<args>.*))?$'
+def simple_command(cap, cmd=None, env=None):
+  """ cmd args
+
+  query the bot directly, e.g.: /msg crabmanner identity dick butt
+  """
+  if not env: env = {}
   if cmd == None: cmd=cap
   return {
     'capname': cap,
-    'pattern': '^' + cap + '\\s*(?:\\s+(?P<args>.*))?$',
-    'argv' : [ 'commands/' + cmd ],
+    'pattern': direct_pattern.format(cap),
+    'argv' : [ distc( cmd ) ],
     'env': env
   }
 
@@ -70,12 +101,13 @@ public_commands = [
   }),
   # command not found
   { 'pattern': '^' + me_or_us + ':.*',
-    'argv': [ 'commands/respond','You are made of stupid!'] },
+    'argv': [ distc('respond'),'You are made of stupid!'] },
   # "highlight"
   { 'pattern': '.*' + me + '.*',
-    'argv': [ 'commands/say', 'I\'m famous' ] },
+    'argv': [ distc('say'), 'I\'m famous' ] },
   # identify via direct connect
 ]
+
 commands = [
   default_command('reload'),
 ]
@@ -83,7 +115,7 @@ commands = [
 on_join = [
   {
     'capname': 'tell',
-    'argv': [ 'commands/tell-on_join' ],
+    'argv': [ distc('tell-on_join') ],
     'env': { 'state_file': workdir + '/tell.txt' }
   }
 ]
@@ -91,7 +123,7 @@ on_join = [
 on_ping = [
   {
     'capname': 'nag',
-    'argv': [ 'commands/nag' ],
+    'argv': [ distc('nag') ],
     'env': nag_env,
     'targets': irc_channels
   }
