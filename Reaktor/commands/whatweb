@@ -1,7 +1,17 @@
 #!/bin/sh
 #wrapper for WhatWeb
-here=$(dirname `readlink -f $0`)
-whatweb_bin="$here/../repos/whatweb/whatweb"
-[ ! -e "$whatweb_bin" ] &&  echo "!! Whatweb app does not exist" && exit 1 
+set -eu
+
+# whatweb is in path?
+whatweb=whatweb
+if ! type -p whatweb >/dev/null 2>&1 ;then
+  here=$(dirname `readlink -f $0`)
+  whatweb="$here/../repos/whatweb/whatweb"
+  if ! test -e "$whatweb" then
+    echo "!! cannot find usable whatweb installation in path or basedir ($whatweb)"
+    exit 1
+  fi
+fi
+
 [ -z "${1:-}" ] &&  echo "!! no host given" && exit 1
 exec $whatweb_bin --user-agent="Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0" -a 3 "$1" 2>&1
