@@ -13,7 +13,7 @@ setup(
 
     author='krebs',
     author_email='spam@krebsco.de',
-
+    install_requires = [ 'docopt' ],
     packages=['reaktor'],
     # optional non-python Deps:
     #   whatweb in path for 'whatweb'
@@ -27,7 +27,6 @@ setup(
             ]
         },
 
-    install_requires= [ ],
     classifiers=[
         "Intended Audience :: Developers",
         "Natural Language :: English",

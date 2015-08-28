@@ -1,16 +1,30 @@
 #!/usr/bin/env python3
+""" usage:
+        reaktor (get-config|run) [CONFIG]
+
+    `get-config`    writes the reaktor configuration to stdout
+                    if CONFIG is not given it will write the
+                    reaktor default config.
+
+                    use this for creating your own config
+
+
+"""
 import os
 from reaktor.ircasy import asybot
 from asyncore import loop
+import reaktor
 from reaktor.translate_colors import translate_colors
 import shlex
 from re import split, search, match
+from os.path import dirname
 
-default_config = './config.py'
+default_config = dirname(reaktor.__file__)+'/config.py'
 from reaktor.getconf import make_getconf
 
 import logging,logging.handlers
 log = logging.getLogger('Reaktor')
+
 #hdlr = logging.handlers.SysLogHandler(address='/dev/log', facility=logging.handlers.SysLogHandler.LOG_DAEMON)
 #formatter = logging.Formatter( '%(filename)s: %(levelname)s: %(message)s')
 #hdlr.setFormatter(formatter)
@@ -141,13 +155,21 @@ class Reaktor(asybot):
 
 def main():
   import sys
-  conf = sys.argv[1] if len(sys.argv) == 2 else default_config
+  from docopt import docopt
+  from docopt import docopt
+  args = docopt(__doc__)
+  conf = args['CONFIG'] if args['CONFIG'] else default_config
   getconf = make_getconf(conf)
   logging.basicConfig(level = logging.DEBUG if getconf('debug') else
           logging.INFO)
   log.debug("Debug enabled")
-  Reaktor(conf,getconf)
-  loop()
+
+  if args['run']:
+    Reaktor(conf,getconf)
+    loop()
+  elif args['get-config']:
+    print(open(conf).read())
 
 if __name__ == "__main__":
     main()
+
