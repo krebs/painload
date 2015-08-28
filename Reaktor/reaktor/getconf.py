@@ -1,14 +1,12 @@
-#getconf = make_getconf("dateiname.json") 
-#getconf(key) -> value                    
-#oder error                               
+#getconf = make_getconf("dateiname.json")
+#getconf(key) -> value
+#oder error
 
 import imp
 import os
 
 
 def make_getconf(filename):
-
-
     def getconf(prop, default_value=None):
         prop_split = prop.split('.')
         string = ''
@@ -29,5 +27,8 @@ def load_config(filename):
     dirname = os.path.dirname(filename)
     modname, ext = os.path.splitext(os.path.basename(filename))
     file, pathname, description = imp.find_module(modname, [ dirname ])
-    return imp.load_module(modname, file, pathname, description)
-
+    try:
+        ret = imp.load_module(modname, file, pathname, description)
+    finally:
+        if file: file.close()
+    return ret
