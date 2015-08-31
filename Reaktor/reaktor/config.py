@@ -10,8 +10,15 @@ debug = True
 name = os.environ.get('IRC_NICKNAME','crabmanner')
 
 
-#workdir = expanduser('~') + '/state'
-workdir = './state'
+#workdir = './state'
+workdir = expanduser('~') + '/state'
+
+# TODO: YAY more functionality in config.py ..
+# if this fails the bot will fail (which is ok)
+if not os.path.isdir(workdir): os.makedirs(workdir)
+
+
+
 
 irc_alarm_timeout = 300
 irc_hammer_interval = 10
@@ -36,7 +43,7 @@ config_filename = abspath(__file__)
 
 mod_dir=dirname(abspath(reaktor.__file__))
 # the commands dirname (
-dist_dir = abspath(join(mod_dir,".."))
+dist_dir = abspath(join(mod_dir))
 
 # me is used, so name cannot kill our patterns below
 

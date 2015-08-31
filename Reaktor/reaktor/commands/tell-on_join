@@ -1,13 +1,14 @@
 #! /bin/sh
 set -euf
 
-# require flock from util-linux
+# require flock from util-linux (pkgs.utillinux)
 if test "${FLOCK-}" != "$state_file"; then
   exec env FLOCK="$state_file" flock "$state_file" "$0" "$@"
 fi
 
 to="$_from"
 
+test -e "$state_file" || touch "$state_file"
 # print messages
 sed -n '/^'"$to"' /{
   s/^\([^ ]\+\) \([^ ]\+\) <\([^>]\+\)> \(.*\)/\1: \4 2-- \2, \3/p
