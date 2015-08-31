@@ -102,7 +102,8 @@ public_commands = [
   default_command('tell', cmd='tell-on_privmsg', env={
     'state_file': workdir + '/tell.txt'
   }),
-  default_command('nag', env=nag_env),
+  # TODO this is disabled until someone fixes it
+  #default_command('nag', env=nag_env),
   simple_command('identify', env={
     'config_filename': config_filename
   }),
