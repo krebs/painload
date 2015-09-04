@@ -1,9 +1,10 @@
 import sys
 from setuptools import setup
+import reaktor
 
 setup(
     name='Reaktor',
-    version='0.3.2',
+    version=reaktor.__version__,
 
     description='an IRC bot based on asyn* libs',
     long_description=open("README.md").read(),

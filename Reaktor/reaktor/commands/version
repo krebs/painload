@@ -1,0 +1,27 @@
+#!/usr/bin/env python
+
+url="https://pypi.python.org/pypi/Reaktor/json"
+import requests
+import reaktor
+cur_version = reaktor.__version__
+
+ret = requests.get(url).json()
+latest_version = ret["info"]["version"]
+
+def vt(v):
+    return tuple(map(int, (v.split("."))))
+
+try:
+    rel = ret["releases"][cur_version][0]["upload_time"]
+except:
+    rel = "unknown release date"
+print("{} - {}".format(cur_version,rel))
+if vt(latest_version) > vt(cur_version):
+    print("   newer release available: {}".format(latest_version))
+elif vt(latest_version) < vt(cur_version):
+    print("   ahead of official release: {}".format(latest_version))
+else:
+    # on the most current release
+    pass
+
+
