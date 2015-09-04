@@ -79,7 +79,7 @@ class Reaktor(asybot):
         log.debug("nickname differs ('{}' to '{}')".format(
                     self.nickname, self.getconf('name')))
 
-        os.environ['IRC_NICKNAME'] = self.nickname
+        os.environ['REAKTOR_NICKNAME'] = self.nickname
         self.getconf = make_getconf(self.config)
         log.info('nickname changed to {}'.format(self.getconf('name')))
 
@@ -116,11 +116,14 @@ class Reaktor(asybot):
         log.error("Workdir '%s' is not Writable! Falling back to root dir"%cwd)
         cwd = "/"
 
-    env = command.get('env', {})
+    env = {}
+
+    env.update(os.environ) # first merge os.environ
+    env.update(command.get('env', {})) # then env of cfg
+
     env['_prefix'] = prefix
     env['_from'] = prefix.split('!', 1)[0]
 
-    env.update(os.environ)
     log.debug('self:' +self.nickname)
     # when receiving /query, answer to the user, not to self
     if self.nickname in target:

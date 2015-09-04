@@ -1,0 +1,4 @@
+# TESTME environment override Issue
+- PATH in config for command
+- PATH in os.environ
+- PATH should get overwritten by config but os.environ persisted
