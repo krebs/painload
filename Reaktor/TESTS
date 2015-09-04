@@ -2,3 +2,18 @@
 - PATH in config for command
 - PATH in os.environ
 - PATH should get overwritten by config but os.environ persisted
+
+config.py:
+    public_commands= [
+      default_command('showPath', cmd='showPath', env={ 'PATH':'/run/current-system/sw/bin/' })
+      ]
+
+commands/showPath:
+  #!/bin/sh
+  env | grep '^PATH'
+
+# TESTME nick name changed
+- reaktor joins with given nickname,
+- asybot changes the nickname
+- when receiving Privmsg Reaktor checks its current
+  nickname with the configured and reloads config if required
