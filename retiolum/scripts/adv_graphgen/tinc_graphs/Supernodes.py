@@ -23,6 +23,7 @@ def find_potential_super(path="/etc/tinc/retiolum/hosts"):
       
       if addrs : yield (f ,[(addr ,int(port)) for addr in addrs])
 
+
 def try_connect(addr):
   try:
     from socket import socket,AF_INET,SOCK_STREAM
@@ -34,7 +35,7 @@ def try_connect(addr):
     return addr
   except Exception as e:
     pass
-    #return ()
+
 
 def check_one_super(ha):
     host,addrs = ha
@@ -44,16 +45,21 @@ def check_one_super(ha):
       if ret: valid_addrs.append(ret)
     if valid_addrs: return (host,valid_addrs)
 
-def check_all_the_super(path="/etc/tinc/retiolum/hosts"):
+
+def check_all_the_super(path):
   from multiprocessing import Pool
   p = Pool(20)
   return filter(None,p.map(check_one_super,find_potential_super(path)))
 
 
+def main():
+  import os
+  hostpath=os.environment.get("TINC_HOSTPATH", "/etc/tinc/retiolum/hosts")
 
-if __name__ == "__main__":
-  """
-  usage
-  """
-  for host,addrs in check_all_the_super():
+  for host,addrs in check_all_the_super(hostpath):
     print("%s %s" %(host,str(addrs)))
+    
+if __name__ == "__main__":
+    main()
+
+# vim: set expandtab:ts=:sw=2

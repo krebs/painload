@@ -1,8 +1,19 @@
 #!/usr/bin/python3
 # -*- coding: utf8 -*-
 import sys,json,os
-from Graph import delete_unused_nodes,resolve_myself
+from .Graph import delete_unused_nodes,resolve_myself
 GEODB=os.environ.get("GEOCITYDB","GeoLiteCity.dat")
+
+def copy_map():
+    from shutil import copytree
+    from os.path import dirname,join,realpath
+    if len(sys.argv) != 2 or sys.argv[1] == "--help" :
+        print("usage: {} <destination>".format(sys.argv[0])
+        print("  copies the map.html file to the <destination>") 
+        sys.exit(1)
+    dstdir=sys.argv[1]
+    copytree(realpath(join(dirname(__file__),'static/map.html')),dstdir)
+
 
 def add_geo(nodes):
   from pygeoip import GeoIP
@@ -14,8 +25,8 @@ def add_geo(nodes):
     except Exception as e:
       sys.stderr.write(str(e))
       sys.stderr.write("Cannot determine GeoData for %s\n"%k)
-
   return nodes
+
 def add_coords_to_edges(nodes):
   from pygeoip import GeoIP
   gi = GeoIP(GEODB)
@@ -48,7 +59,19 @@ def add_jitter(nodes):
     except Exception as e: pass
   return nodes
 
-if __name__ == "__main__":
+def main():
   import json
-  nodes = add_jitter(add_coords_to_edges(add_geo(resolve_myself(delete_unused_nodes(json.load(sys.stdin))))))
-  print (json.dumps(nodes))
+  try: 
+      with open(GEODB) as f: f.read()
+  except: 
+      print("cannot open {} (GEODB in env)".format(GEODB))
+      sys.exit(1)
+  try:
+    nodes = add_jitter(add_coords_to_edges(add_geo(resolve_myself(delete_unused_nodes(json.load(sys.stdin))))))
+    print (json.dumps(nodes))
+  except Exception as e:
+      print("cannot parse data received via stdin")
+      print(e)
+
+if __name__ == "__main__":
+    main()

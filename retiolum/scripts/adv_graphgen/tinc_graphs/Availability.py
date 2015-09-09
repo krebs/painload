@@ -1,14 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 
-import sys,json
+import sys,json,os
 """ TODO: Refactoring needed to pull the edges out of the node structures again,
 it should be easier to handle both structures"""
-DUMP_FILE = "/krebs/db/availability"
+DUMP_FILE = os.environment.get("AVAILABILITY_FILE","tinc-availability.json")
+hostpath=os.environment.get("TINC_HOSTPATH", "/etc/tinc/retiolum/hosts")
 
 def get_all_nodes():
-  import os
-  return os.listdir("/etc/tinc/retiolum/hosts")
+  return os.listdir(hostpath)
 
 def generate_stats():
   """ Generates availability statistics of the network and nodes
@@ -21,11 +21,13 @@ def generate_stats():
       jlines.append(json.loads(line))
     f.close()
   except Exception as e:
-    pass
+    print("Unable to open and parse Availability DB: {} (override with AVAILABILITY_FILE)".format(DUMP_FILE)
+    sys.exit(1)
+
   all_nodes = {}
   for k in get_all_nodes():
     all_nodes[k] = get_node_availability(k,jlines)
-  print ( json.dumps(all_nodes))
+  print (json.dumps(all_nodes))
 
 def get_node_availability(name,jlines):
   """ calculates the node availability by reading the generated dump file

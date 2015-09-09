@@ -1,4 +1,5 @@
-services_dir="/home/makefu/r/services"
+import os,sys
+services_dir=os.environment.get("SERIVCES_DIR","/home/reaktor/nag.services")
 def add_services(nodes):
     for k,v in nodes.items():
         n = nodes[k]
@@ -10,8 +11,15 @@ def add_services(nodes):
         except Exception as e:
             n["services"] = ["Error: No Service File!"]
     return nodes
-if __name__ == "__main__":
+def main():
     import json,sys
-    nodes = add_services(json.load(sys.stdin))
-    print (json.dumps(nodes,indent=4))
+    try:
+        nodes = add_services(json.load(sys.stdin))
+        print (json.dumps(nodes,indent=4))
+    except:
+        print("unable to parse json data from stdin")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
 # vim: set expandtab:ts=4:sw=4

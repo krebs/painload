@@ -1,0 +1,13 @@
+#!/bin/bash
+
+EXTERNAL_FOLDER=${EXTERNAL_FOLDER:-/var/www/euer.krebsco.de/graphs/retiolum}
+INTERNAL_FOLDER=${INTERNAL_FOLDER:-/var/www/euer/graphs/retiolum}
+GEOCTIYDB="${GEOCITYDB:-}"
+
+if test -n "$GEOCITYDB";then
+    # creates a marker file 
+    # TODO: copy map.html from 
+    tinc-stats2json | add-geodata > "$INTERNAL_FOLDER/marker.json"
+fi
+build-graphs anonymous "$EXTERNAL_FOLDER"
+build-graphs complete "$INTERNAL_FOLDER"

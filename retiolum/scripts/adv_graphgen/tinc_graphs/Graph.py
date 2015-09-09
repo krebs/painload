@@ -1,12 +1,12 @@
 #!/usr/bin/python
-from BackwardsReader import BackwardsReader
+from .BackwardsReader import BackwardsReader
 import sys,json,os
-from Supernodes import check_all_the_super
-from Services import add_services
-from Availability import get_node_availability
+from .Supernodes import check_all_the_super
+from .Services import add_services
+from .Availability import get_node_availability
 import sys,json
 from time import time
-DUMP_FILE = "/krebs/db/availability"
+DUMP_FILE = os.environment.get("AVAILABILITY_FILE", "tinc-availability.json")
 
 
 def resolve_myself(nodes):
@@ -18,6 +18,7 @@ def resolve_myself(nodes):
            if to['name'] == k:
              v["external-ip"] = to["addr"]
   return nodes
+
 
 def dump_graph(nodes):
   from time import time
@@ -209,7 +210,7 @@ def anonymize_nodes(nodes):
     i = str(int(i)+1)
   return newnodes
 
-if __name__ == "__main__":
+def main():
   supernodes= []
   if len(sys.argv) != 2 or  sys.argv[1] not in ["anonymous","complete"]: 
     print("usage: %s (anonymous|complete)")
@@ -247,4 +248,8 @@ if __name__ == "__main__":
 
   print_stat_node(nodes)
   print ('}')
+
+if __name__ == "__main__":
+  main()
+
 # vim: set sw=2:ts=2

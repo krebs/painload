@@ -28,10 +28,9 @@ This tool dumps all tinc node informations as json
 ENVIRONMENT VARIABLES:
   TINC_NETWORK   The tinc network to dump 
                       (default: retiolum)
-  LOG_FILE       If legacy tinc is used, defines the log file where tinc stats are dumped in
-                      (default: /var/log/everything.log)
 """ % argv[0])
   exit(1)
+
 def debug(func):
   from functools import wraps
   @wraps(func)
@@ -52,42 +51,18 @@ def parse_tinc_stats():
   elif which("tincctl"):
     return parse_new_input("tincctl")
   #old tinc
+  elif which("tincd"):
+      print("old tincd not supported")
+      sys.exit(1)
   else:
     raise Exception("no tinc executable found!")
-  
-#@debug
-def get_tinc_block(log_file):
-  """ returns an iterateable block from the given log file (syslog) 
-      This function became obsolete with the introduction of tincctl
-  """
-  from BackwardsReader import BackwardsReader
-  tinc_block = []
-  in_block = False
-  bf = BackwardsReader(log_file)
-  BOL = re.compile(".*tinc.%s\[[0-9]+\]: " % TINC_NETWORK)
-  while True:
-    line = bf.readline()
-    if not line:
-      raise Exception("end of file at log file? This should not happen!")
-    line = BOL.sub('',line).strip()
 
-    if END_SUBNET in line:
-      in_block = True
-
-    if not in_block:
-      continue
-    tinc_block.append(line)
-
-    if BEGIN_NODES in line:
-      break
-  return reversed(tinc_block)
 
 def parse_new_input(tinc_bin):
   nodes = {} 
   pnodes = subprocess.Popen(
           [tinc_bin,"-n",TINC_NETWORK,"dump","reachable","nodes"],
           stdout=subprocess.PIPE).communicate()[0].decode()
-  #pnodes = subprocess.check_output(["tincctl","-n",TINC_NETWORK,"dump","reachable","nodes"])
   for line in pnodes.split('\n'):
     if not line: continue
     l = line.split()
@@ -117,9 +92,12 @@ def parse_new_input(tinc_bin):
       pass #node does not exist
   return nodes
 
-if __name__ == '__main__':
+def main():
   from sys import argv
   if len(argv) > 1:
     usage()
   else:
     print (json.dumps(parse_tinc_stats()))
+
+if __name__ == '__main__':
+    main()
