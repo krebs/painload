@@ -15,12 +15,13 @@ setup(
     author_email='spam@krebsco.de',
     # you will also need graphviz and imagemagick
     install_requires = [ 'pygeoip' ],
-
+    scripts = ['scripts/all-the-graphs', 'scripts/build-graphs'],
     packages=['tinc_graphs'],
     entry_points={
         'console_scripts' : [
             'tinc-stats2json = tinc_graphs.Log2JSON:main',
             'tinc-build-graph = tinc_graphs.Graph:main',
+            'copy-map = tinc_graphs.Geo:copy_map',
             'add-geodata = tinc_graphs.Geo:main',
             'tinc-availability-stats = tinc_graphs.Availability:generate_stats',
             ]

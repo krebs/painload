@@ -1,11 +1,12 @@
 #!/usr/bin/python
+# TODO: Rewrite this shitty piece of software ...
 # -*- coding: utf8 -*-
 
 import sys,json,os
 """ TODO: Refactoring needed to pull the edges out of the node structures again,
 it should be easier to handle both structures"""
-DUMP_FILE = os.environment.get("AVAILABILITY_FILE","tinc-availability.json")
-hostpath=os.environment.get("TINC_HOSTPATH", "/etc/tinc/retiolum/hosts")
+DUMP_FILE = os.environ.get("AVAILABILITY_FILE","tinc-availability.json")
+hostpath=os.environ.get("TINC_HOSTPATH", "/etc/tinc/retiolum/hosts")
 
 def get_all_nodes():
   return os.listdir(hostpath)
@@ -16,12 +17,12 @@ def generate_stats():
   import json
   jlines = []
   try:
-    f = open(DUMP_FILE,'r')
+    f = open(DUMP_FILE,'r+')
     for line in f:
       jlines.append(json.loads(line))
     f.close()
   except Exception as e:
-    print("Unable to open and parse Availability DB: {} (override with AVAILABILITY_FILE)".format(DUMP_FILE)
+    print("Unable to open and parse Availability DB: {} (override with AVAILABILITY_FILE)".format(DUMP_FILE))
     sys.exit(1)
 
   all_nodes = {}

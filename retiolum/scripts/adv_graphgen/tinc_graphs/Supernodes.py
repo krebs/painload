@@ -7,21 +7,26 @@ def find_potential_super(path="/etc/tinc/retiolum/hosts"):
   needle_addr = re.compile("Address\s*=\s*(.*)")
   needle_port = re.compile("Port\s*=\s*(.*)")
   for f in os.listdir(path):
-    with open(path+"/"+f) as of:
-      addrs = []
-      port = "655"
+    try:
+      with open(path+"/"+f) as of:
+        addrs = []
+        port = "655"
 
-      for line in of.readlines():
+        for line in of.readlines():
 
-        addr_found = needle_addr.match(line)
-        if addr_found:
-          addrs.append(addr_found.group(1))
+          addr_found = needle_addr.match(line)
+          if addr_found:
+            addrs.append(addr_found.group(1))
 
-        port_found = needle_port.match(line)
-        if port_found:
-          port = port_found.group(1)
-      
-      if addrs : yield (f ,[(addr ,int(port)) for addr in addrs])
+          port_found = needle_port.match(line)
+          if port_found:
+            port = port_found.group(1)
+
+        if addrs : yield (f ,[(addr ,int(port)) for addr in addrs])
+    except FileNotFoundError as e:
+        print("Cannot open hosts directory to be used to find potential supernodes")
+        print("Directory used: {}".format(path))
+        raise
 
 
 def try_connect(addr):
@@ -54,11 +59,11 @@ def check_all_the_super(path):
 
 def main():
   import os
-  hostpath=os.environment.get("TINC_HOSTPATH", "/etc/tinc/retiolum/hosts")
+  hostpath=os.environ.get("TINC_HOSTPATH", "/etc/tinc/retiolum/hosts")
 
   for host,addrs in check_all_the_super(hostpath):
     print("%s %s" %(host,str(addrs)))
-    
+
 if __name__ == "__main__":
     main()
 

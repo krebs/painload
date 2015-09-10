@@ -1,5 +1,5 @@
 import os,sys
-services_dir=os.environment.get("SERIVCES_DIR","/home/reaktor/nag.services")
+services_dir=os.environ.get("SERIVCES_DIR","/home/reaktor/nag.services")
 def add_services(nodes):
     for k,v in nodes.items():
         n = nodes[k]
