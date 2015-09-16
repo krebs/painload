@@ -1,13 +1,16 @@
 #!/usr/bin/python
-from BackwardsReader import BackwardsReader
+from .BackwardsReader import BackwardsReader
 import sys,json,os
-from Supernodes import check_all_the_super
-from Services import add_services
-from Availability import get_node_availability
+from .Supernodes import check_all_the_super
+from .Services import add_services
+from .Availability import get_node_availability
 import sys,json
 from time import time
-DUMP_FILE = "/krebs/db/availability"
+DUMP_FILE = os.environ.get("AVAILABILITY_FILE", "tinc-availability.json")
+hostpath=os.environ.get("TINC_HOSTPATH", "/etc/tinc/retiolum/hosts")
 
+# will be filled later
+supernodes= []
 
 def resolve_myself(nodes):
   #resolve MYSELF to the real ip
@@ -18,6 +21,7 @@ def resolve_myself(nodes):
            if to['name'] == k:
              v["external-ip"] = to["addr"]
   return nodes
+
 
 def dump_graph(nodes):
   from time import time
@@ -33,23 +37,24 @@ def generate_availability_stats(nodes):
   """ generates stats of from availability
   """
   jlines = []
-  try:
-    f = BackwardsReader(DUMP_FILE)
-    lines_to_use = 1000
-    while True:
-      if lines_to_use == 0: break
-      line = f.readline()
-      if not line: break
-      jline = json.loads(line)
-      if not jline['nodes']: continue
+  # try:
+  #   f = BackwardsReader(DUMP_FILE)
+  #   lines_to_use = 1000
+  #   while True:
+  #     if lines_to_use == 0: break
+  #     line = f.readline()
+  #     if not line: break
+  #     jline = json.loads(line)
+  #     if not jline['nodes']: continue
 
-      jlines.append(jline)
-      lines_to_use -=1
-  except Exception as e: sys.stderr.write(str(e))
+  #     jlines.append(jline)
+  #     lines_to_use -=1
+  # except Exception as e: sys.stderr.write(str(e))
 
   for k,v in nodes.items():
-    v['availability'] = get_node_availability(k,jlines)
-    sys.stderr.write( "%s -> %f\n" %(k ,v['availability']))
+    # TODO: get this information in a different way
+    v['availability'] = get_node_availability(k,[])
+
 
 def generate_stats(nodes):
   """ Generates some statistics of the network and nodes
@@ -209,8 +214,7 @@ def anonymize_nodes(nodes):
     i = str(int(i)+1)
   return newnodes
 
-if __name__ == "__main__":
-  supernodes= []
+def main():
   if len(sys.argv) != 2 or  sys.argv[1] not in ["anonymous","complete"]: 
     print("usage: %s (anonymous|complete)")
     sys.exit(1)
@@ -230,21 +234,32 @@ if __name__ == "__main__":
       print_edge(k,v)
 
   elif sys.argv[1] == "complete":
-    for supernode,addr in check_all_the_super():
-      supernodes.append(supernode)
+    try:
+      for supernode,addr in check_all_the_super(hostpath):
+        supernodes.append(supernode)
+    except FileNotFoundError as e:
+      print("!! cannot load list of supernodes ({})".format(hostpath))
+      print("!! Use TINC_HOSTPATH env to override")
+      sys.exit(1)
 
     generate_availability_stats(nodes)
     add_services(nodes)
     for k,v in nodes.items():
       print_node(k,v)
       print_edge(k,v)
-    try:
-      dump_graph(nodes)
-    except Exception as e:
-      sys.stderr.write("Cannot dump graph: %s" % str(e))
+
+    #TODO: get availability somehow else
+    # try:
+    #   dump_graph(nodes)
+    # except Exception as e:
+    #   sys.stderr.write("Cannot dump graph: %s" % str(e))
   else:
     pass
 
   print_stat_node(nodes)
   print ('}')
+
+if __name__ == "__main__":
+  main()
+
 # vim: set sw=2:ts=2
