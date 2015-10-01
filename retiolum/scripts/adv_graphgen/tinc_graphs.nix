@@ -10,6 +10,8 @@ python3Packages.buildPythonPackage rec {
   propagatedBuildInputs = with pkgs;[
     graphviz
     imagemagick
+    librsvg
+    libpng
 
     # optional if you want geolocation:
     python3Packages.pygeoip

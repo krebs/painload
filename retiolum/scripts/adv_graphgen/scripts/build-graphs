@@ -1,5 +1,5 @@
 #!/bin/sh
-set -euf
+set -eufx
 mode=${1?arg1 must be either 'anonymous' or 'complete'}
 out=${2?arg2 must be set to an outdir}
 # for creating all the graphs
@@ -15,11 +15,11 @@ tinc-stats2json | tinc-build-graph  "$mode" > "$DOTFILE"
 i=1
 for setter in dot circo 'neato -Goverlap=prism ' sfdp
 do
-  tmpgraph=`mktemp --tmpdir=$1`
+  tmpgraph=`mktemp --tmpdir=$out`
   # first build, then move to avoid half-built graphs
   "$setter" -T$TYPE -o "$tmpgraph" "$DOTFILE" ||:
   chmod go+rx "$tmpgraph"
-  mv "$tmpgraph" "$1/retiolum_$i.$TYPE"
+  mv "$tmpgraph" "$out/retiolum_$i.$TYPE"
   i=`expr $i + 1`
 done
 
