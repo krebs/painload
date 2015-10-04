@@ -8,7 +8,7 @@ TYPE=svg
 TYPE2=png
 
 DOTFILE=`mktemp`
-trap 'rm "$DOTFILE"' INT TERM KILL EXIT
+trap 'rm -f "$DOTFILE"' INT TERM KILL EXIT
 
 tinc-stats2json | tinc-build-graph  "$mode" > "$DOTFILE"
 
