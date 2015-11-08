@@ -7,8 +7,8 @@ if test "${FLOCK-}" != "$state_file"; then
 fi
 
 from="$_prefix"
-to="$1"; shift
-msg="$*"
+to=${1%% *}
+msg=${1#* }
 date=$(date)
 
 # TODO tell now, if already joined
