@@ -107,7 +107,7 @@ class Reaktor(asybot):
     myargv = [exe] + command['argv'][1:]
     try:
       if match and match.groupdict().get('args', None):
-        myargv += shlex.split(match.groupdict()['args'])
+        myargv += [match.groupdict()['args']]
     except:
         log.info("cannot parse args!")
 
