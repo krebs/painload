@@ -51,6 +51,8 @@ do_work() {
   cd "$local_hosts"
   find . -name .git -prune -o -type f -exec git add \{\} \; >&2
   if git status --porcelain | grep -q .; then
+    git config user.email "$LOGNAME@$(hostname)"
+    git config user.name "$LOGNAME"
     git commit -m bump >&2
     git push >&2
   fi
