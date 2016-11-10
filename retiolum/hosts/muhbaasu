@@ -1,5 +1,3 @@
-Address = 217.160.206.154
-#Address = muhbaasu.de
 Subnet = 10.243.139.184
 Subnet = 42:d568:6106:ba30:753b:0f2a:8225:b1fb
 
@@ -11,3 +9,4 @@ KqVbkPdHhwoCIINuCVcOnJXzeo0FZtSEq3zVhscVm0PVdNfjct8a9KMsK0iUmuul
 YR0MIl2gGwskOGSI38QxlLouOlIGwus5f+KfC94ZP0pMwu5pT45UOUkVnlBXuZ9E
 igNHG2Vtm76nB3yYHndOvuDTOufatX61dQIDAQAB
 -----END RSA PUBLIC KEY-----
+

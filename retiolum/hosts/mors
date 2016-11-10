@@ -1,5 +1,6 @@
-Subnet = 42:0:0:0:0:0:0:dea7/128
-Subnet = 10.243.0.2/32
+Subnet = 10.243.0.2
+Subnet = 42:0:0:0:0:0:0:dea7
+
 -----BEGIN RSA PUBLIC KEY-----
 MIIBCgKCAQEAsj1PCibKOfF68gmFQ+wwyfhUWpqKqpznrJX1dZ+daae7l7nBHvsE
 H0QwkiMmk3aZy1beq3quM6gX13aT+/wMfWnLyuvT11T5C9JEf/IS91STpM2BRN+R
@@ -8,3 +9,4 @@ H0QwkiMmk3aZy1beq3quM6gX13aT+/wMfWnLyuvT11T5C9JEf/IS91STpM2BRN+R
 9sovca0q3DUar+kikEKVrVy26rZUlGuBLobMetDGioSawWkRSxVlfZvTHjAK5JzU
 O6y6hj0yQ1sp6W2JjU8ntDHf63aM71dB9QIDAQAB
 -----END RSA PUBLIC KEY-----
+

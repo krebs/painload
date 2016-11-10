@@ -1,5 +1,6 @@
-Subnet = 10.243.20.01/32
-Subnet = 42:0:0:0:0:0:0:2001/128
+Subnet = 10.243.20.1
+Subnet = 42:0:0:0:0:0:0:2001
+
 -----BEGIN RSA PUBLIC KEY-----
 MIIBCgKCAQEApXErmPSn2CO4V25lqxanCGCFgxEAjdzFUiTCCu0IvELEuCc3PqVA
 g4ecf8gGwPCbzMW/1txjlgbsQcm87U5enaCwzSv/pa7P9/memV74OhqEVOypFlDE
@@ -8,3 +9,4 @@ o87MClS+yPqpvp34QjW+1lqnOKvMkr6mDrmtcAjCOs9Ma16txyfjGVFi8KmYqIs1
 QEJmyC9Uocz5zuoSLUghgVRn9yl4+MEw6++akFDwKt/eMkcSq0GPB+3Rz/WLDiBs
 FK6BsssQWdwiEWpv6xIl1Fi+s7F0riq2cwIDAQAB
 -----END RSA PUBLIC KEY-----
+
