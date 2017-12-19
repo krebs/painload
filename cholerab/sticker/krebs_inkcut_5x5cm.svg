@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1000mm"
+   height="4000mm"
+   id="svg4376"
+   version="1.1"
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   sodipodi:docname="krebs_inkcut_5x5cm.svg">
+  <defs
+     id="defs4378" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="256"
+     inkscape:cx="43.032447"
+     inkscape:cy="-33.780447"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     showguides="true"
+     width="16px"
+     inkscape:snap-bbox="true"
+     inkscape:snap-global="true"
+     inkscape:object-paths="false"
+     inkscape:bbox-paths="false"
+     inkscape:object-nodes="false"
+     inkscape:snap-grids="true"
+     inkscape:window-width="1364"
+     inkscape:window-height="746"
+     inkscape:window-x="0"
+     inkscape:window-y="20"
+     inkscape:window-maximized="0"
+     units="mm"
+     inkscape:pagecheckerboard="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4384"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata4381">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,14065.748)">
+    <path
+       id="rect4446"
+       style="fill:#e4002b;fill-opacity:1;stroke-width:11.81102753"
+       d="m -62.866191,968.08735 v 35.43305 h 11.811027 v -35.43305 h 11.811028 v 59.05515 h -11.811028 v 11.811 h 23.622055 v -11.811 h 11.811027 v -11.811 h 11.8110277 v -11.8111 H -15.622082 V 979.89838 H 7.999973 v 35.43312 h 23.622055 v -11.8111 H 19.811 v -23.62202 h 23.622055 v 35.43312 11.811 h 11.811027 v 11.811 h 23.622055 v -11.811 H 67.05511 v -23.6221 H 55.244082 V 979.89838 H 67.05511 v -11.81103 h 11.811027 v 35.43305 h 11.811027 v -35.43305 h 11.811026 v 58.52715 l -11.811026,0.5315 v 23.6221 H 55.244082 v 11.811 h 23.622055 v 23.6221 h 11.811027 v 35.4331 H 78.866137 v -35.4331 H 67.250759 l -0.19559,-11.8111 H 31.622087 v 47.2442 H 19.811059 v -35.4331 H 8.000032 v 35.4331 H -3.8109953 v -47.2442 H -39.244077 v 11.8111 h -11.811028 v 35.4331 h -11.811027 v -35.4331 h 11.811027 v -23.6221 h 23.622055 v -11.811 h -35.433082 v -23.6221 h -11.811027 v -23.622 h -11.811027 v -23.62208 h 11.811027 V 968.0909 l 0.0014,0.004 0.832007,-5.3e-4 10.976554,-0.006 z"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" />
+    <path
+       style="fill:#e4002b;fill-opacity:1;stroke-width:11.81102753;image-rendering:auto"
+       d="m -27.43305,1086.2012 h 11.811027 v 35.4331 h -23.622054 v -11.8111 h 11.811027 l 0,-23.621 z"
+       id="rect5009"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccccc"
+       clip-path="none" />
+    <path
+       style="fill:#e4002b;fill-opacity:1;stroke-width:11.81102753"
+       d="m 43.433114,1086.2012 h 11.811027 v 23.622 h 11.811028 v 11.8111 H 43.433114 v -35.4321 z"
+       id="rect5009-9"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccccc" />
+  </g>
+</svg>
