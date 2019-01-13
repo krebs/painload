@@ -11,10 +11,10 @@
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    id="svg2876"
    version="1.1"
-   inkscape:version="0.47 r22583"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    width="891"
    height="743"
-   sodipodi:docname="krebs_plain.svg">
+   sodipodi:docname="krebs_42.svg">
   <metadata
      id="metadata2882">
     <rdf:RDF>
@@ -46,19 +46,19 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1436"
-     inkscape:window-height="856"
+     inkscape:window-width="1364"
+     inkscape:window-height="727"
      id="namedview2878"
      showgrid="false"
      inkscape:snap-to-guides="true"
      inkscape:snap-grids="true"
      inkscape:snap-bbox="true"
      inkscape:zoom="0.81830417"
-     inkscape:cx="267.69326"
-     inkscape:cy="420.38158"
-     inkscape:window-x="4"
+     inkscape:cx="218.81168"
+     inkscape:cy="224.85526"
+     inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="1"
+     inkscape:window-maximized="0"
      inkscape:current-layer="svg2876" />
   <path
      style="fill:#e4002b;fill-opacity:1"
@@ -72,15 +72,37 @@
      style="fill:#e4002b;fill-opacity:1"
      d="m 567.13302,617.3174 c -0.2648,-0.69275 -0.36494,-31.85984 -0.22253,-69.25984 l 0.25892,-68 23,0 23,0 0.5,45 0.5,45 22,0.5 22,0.5 0,23.5 0,23.5 -45.27747,0.26021 c -35.68808,0.2051 -45.37943,-0.007 -45.75892,-1 z"
      id="path2921" />
-  <text
-     xml:space="preserve"
-     style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Adore64;-inkscape-font-specification:Adore64"
-     x="152.65131"
-     y="714.11517"
-     id="text3744"><tspan
-       sodipodi:role="line"
-       id="tspan3746"
-       x="152.65131"
-       y="714.11517"
-       style="font-size:85px;fill:#e4002b;fill-opacity:1">42::/16</tspan></text>
+  <g
+     aria-label="42::/16"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Adore64;-inkscape-font-specification:Adore64;fill:#000000;fill-opacity:1;stroke:none"
+     id="text3744">
+    <path
+       d="m 184.52631,682.24017 h 21.25 v -10.625 h -21.25 z m -21.25,10.625 v -21.25 h 21.25 v -10.625 h 10.625 v -10.625 h 10.625 v -10.625 h 21.25 v 42.5 h 10.625 v 10.625 h -10.625 v 21.25 h -21.25 v -21.25 z"
+       style="font-size:85px;line-height:1.25;fill:#e4002b;fill-opacity:1"
+       id="path68" />
+    <path
+       d="m 258.90131,692.86517 v -10.625 h 21.25 v -10.625 h 10.625 v -21.25 h -21.25 v 10.625 h -21.25 v -10.625 h 10.625 v -10.625 h 42.5 v 10.625 h 10.625 v 21.25 h -10.625 v 10.625 h -21.25 v 10.625 h -10.625 v 10.625 h 42.5 v 10.625 h -63.75 v -21.25 z"
+       style="font-size:85px;line-height:1.25;fill:#e4002b;fill-opacity:1"
+       id="path70" />
+    <path
+       d="m 354.52631,660.99017 h 21.25 v 10.625 h -21.25 z m 21.25,42.5 h -21.25 v -10.625 h 21.25 z"
+       style="font-size:85px;line-height:1.25;fill:#e4002b;fill-opacity:1"
+       id="path72" />
+    <path
+       d="m 439.52631,660.99017 h 21.25 v 10.625 h -21.25 z m 21.25,42.5 h -21.25 v -10.625 h 21.25 z"
+       style="font-size:85px;line-height:1.25;fill:#e4002b;fill-opacity:1"
+       id="path74" />
+    <path
+       d="m 577.65131,650.36517 v 10.625 h -10.625 v 10.625 h -10.625 v 10.625 h -10.625 v 10.625 h -10.625 v 10.625 h -10.625 v 10.625 h -21.25 v -10.625 h 10.625 v -10.625 h 10.625 v -10.625 h 10.625 v -10.625 h 10.625 v -10.625 h 10.625 v -10.625 z"
+       style="font-size:85px;line-height:1.25;fill:#e4002b;fill-opacity:1"
+       id="path76" />
+    <path
+       d="m 588.27631,703.49017 h 21.25 v -31.875 h -10.625 v -10.625 h 10.625 v -21.25 h 21.25 v 63.75 h 21.25 v 10.625 h -63.75 z"
+       style="font-size:85px;line-height:1.25;fill:#e4002b;fill-opacity:1"
+       id="path78" />
+    <path
+       d="m 726.40131,639.74017 v 10.625 h 10.625 v 10.625 h -21.25 v -10.625 h -21.25 v 21.25 h 31.875 v 10.625 h 10.625 v 21.25 h -10.625 v 10.625 h -42.5 v -10.625 h -10.625 v -53.125 h 10.625 v -10.625 z m -10.625,63.75 v -21.25 h -21.25 v 21.25 z"
+       style="font-size:85px;line-height:1.25;fill:#e4002b;fill-opacity:1"
+       id="path80" />
+  </g>
 </svg>
