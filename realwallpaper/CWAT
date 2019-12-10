@@ -1,0 +1,39 @@
+#! /bin/sh
+set -efu
+
+prefix=/tmp/CWAT
+grib_path=$prefix.grib
+json_path=$prefix.json
+pgm_path=$prefix.pgm
+png_path=$prefix.png
+
+date=20191210
+# Possible values for hour: 00 06 12 18
+hour=12
+
+url="https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?file=gfs.t12z.pgrb2.0p25.anl&lev_entire_atmosphere_%5C%28considered_as_a_single_layer%5C%29=on&var_CWAT=on&leftlon=0&rightlon=360&toplat=90&bottomlat=-90&dir=%2Fgfs.$date%2F$hour"
+
+curl -fsS "$url" > "$grib_path"
+
+grib2json --data "$grib_path" > "$json_path"
+
+width=$(jq '.[0].header.nx' < "$json_path")
+height=$(jq '.[0].header.ny' < "$json_path")
+
+# The maximum gray value.  Must be bigger than 0 and less than 65536.
+maxval=256
+
+# pgm - Netpbm grayscale image format
+# http://netpbm.sourceforge.net/doc/pgm.html
+{
+  echo P2
+  echo "$width $height"
+  echo "$maxval"
+  cat "$json_path" |
+  jq --argjson maxval "$maxval" -c '
+    .[0].data[] * $maxval | round
+  ' |
+  xargs -n "$width"
+} > "$pgm_path"
+
+convert "$pgm_path" "$png_path"
