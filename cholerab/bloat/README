@@ -1,0 +1,33 @@
+# bloat/vodka-korn
+
+# Experiments
+
+## vodka-korn-1
+Test method: Exact Fisher test
+Hypothesis: Vodka and Korn cannot be distinguished.
+
+Test setup:
+Each subject must have had at least one of Vodka or Korn in the past.
+Each subject receives two 2cl shots without knowing what is in which glass.
+One is Korn and one is vodka.
+Each subject tastes and says what is in which glass.
+The result is recorded:
+  If Korn was named as Korn, then the variable a is counted up
+  If Korn was named as vodka, then b is counted up
+  If vodka was named as Korn, then c
+  If vodka was named as vodka, then d
+
+# Protocol
+
+## YYYY-mm-dd l=LOCATION; e=EXPERIMENT; n=SUBJECT_COUNT
+a=...
+b=...
+c=...
+d=...
+
+## 2023-01-03 l=c-base; e=vodka-korn-1; n=9
+a=6
+b=5
+c=5
+d=6
+
