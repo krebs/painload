@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1"
+     width="640" height="610"
+     xmlns="http://www.w3.org/2000/svg">
+  <g id="krebs" transform="scale(40)" fill="#E4002B">
+    <polygon points="
+       1,0   2,0
+       2,3   3,3
+       3,0   4,0
+       4,5   3,5
+       3,6   5,6
+       5,5   6,5
+       6,4   7,4
+       7,3   6,3
+       6,1   8,1
+       8,4  10,4
+      10,3   9,3
+       9,1  11,1
+      11,5  12,5
+      12,6  14,6
+      14,5  13,5
+      13,3  12,3
+      12,1  13,1
+      13,0  14,0
+      14,3  15,3
+      15,0  16,0
+      16,5  15,5
+      15,7  12,7
+      12,8  14,8
+      14,13 15,13
+      15,10 13,10
+      13,9  10,9
+      10,13  9,13
+       9,10  8,10
+       8,13  7,13
+       7,9   4,9
+       4,10  2,10
+       2,13  3,13
+       3,8   5,8
+       5,7   2,7
+       2,5   1,5
+       1,3   0,3
+       0,1   1,1
+    "/>
+    <polygon points="
+       5,10  6,10
+       6,13  4,13
+       4,12  5,12
+    "/>
+    <polygon points="
+      11,10 12,10
+      12,12 13,12
+      13,13 11,13
+    "/>
+  </g>
+  <g id="ipv6-range" transform="translate(70 540) scale(10)" fill="#E4002B">
+    <g id="forty-two">
+      <polygon id="four" points="
+        0,5 4,5
+        4,7 6,7
+        6,5 7,5
+        7,4 6,4
+        6,0 4,0
+        4,1 3,1
+        3,2 2,2
+        2,3 4,3
+        4,4 2,4
+        2,3 0,3
+      "/>
+      <polygon id="two" transform="translate(8)" points="
+        1,4 5,4
+        5,3 6,3
+        6,1 5,1
+        5,0 1,0
+        1,1 0,1
+        0,2 2,2
+        2,1 4,1
+        4,3 3,3
+        3,5 2,5
+        2,6 6,6
+        6,7 0,7
+        0,5 1,5
+      "/>
+    </g>
+    <g id="colons" transform="translate(16)">
+      <rect transform="translate( 2 2)" width="2" height="1"/>
+      <rect transform="translate( 2 5)" width="2" height="1"/>
+      <rect transform="translate(10 2)" width="2" height="1"/>
+      <rect transform="translate(10 5)" width="2" height="1"/>
+    </g>
+    <g id="slash" transform="translate(32)">
+      <polygon points="
+        0,7 2,7
+        2,6 3,6
+        3,5 4,5
+        4,4 5,4
+        5,3 6,3
+        6,2 7,2
+        7,1 5,1
+        5,2 4,2
+        4,3 3,3
+        3,4 2,4
+        2,5 1,5
+        1,6 0,6
+      "/>
+    </g>
+    <g id="sixteen" transform="translate(40)">
+      <polygon id="one" points="
+        0,7 6,7
+        6,6 4,6
+        4,0 2,0
+        2,2 1,2
+        1,3 2,3
+        2,6 0,6
+      "/>
+      <g id="six" transform="translate(8)">
+        <defs>
+          <mask id="six-mask">
+            <rect width="8" height="8" fill="#FFFFFF"/>
+            <rect width="2" height="2" fill="#000000" transform="translate(2 4)"/>
+          </mask>
+        </defs>
+        <polygon mask="url(#six-mask)" points="
+          1,7 5,7
+          5,6 6,6
+          6,4 5,4
+          5,3 2,3
+          2,1 4,1
+          4,2 6,2
+          6,1 5,1
+          5,0 1,0
+          1,1 0,1
+          0,6 1,6
+        "/>
+      </g>
+    </g>
+  </g>
+</svg>
